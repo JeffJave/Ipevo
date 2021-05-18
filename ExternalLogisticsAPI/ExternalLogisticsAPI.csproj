@@ -63,6 +63,7 @@
     <Compile Include="DAC\LUMVendCntrlProcessOrder.cs" />
     <Compile Include="DAC\LUMVendCntrlSetup.cs" />
     <Compile Include="DAC_Extensions\SOLineExtensions.cs" />
+    <Compile Include="LUM3DCartImportProc.cs" />
     <Compile Include="LUMSalesChanelSetup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
