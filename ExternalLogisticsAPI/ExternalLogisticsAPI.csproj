@@ -61,6 +61,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DAC\DCLFilter.cs" />
     <Compile Include="DAC\LUM3DCartProcessLog.cs" />
     <Compile Include="DAC\LUM3DCartProcessOrder.cs" />
     <Compile Include="DAC\LUM3DCartSetup.cs" />

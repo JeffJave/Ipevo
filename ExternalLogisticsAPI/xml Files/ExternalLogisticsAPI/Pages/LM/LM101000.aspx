@@ -31,6 +31,7 @@
 							<px:PXTextEdit runat="server" ID="CstPXTextEdit10" DataField="SecureURL" ></px:PXTextEdit>
 							<px:PXTextEdit runat="server" ID="CstPXTextEdit11" DataField="ClientID" ></px:PXTextEdit>
 							<px:PXTextEdit runat="server" ID="CstPXTextEdit12" DataField="ClientSecret" ></px:PXTextEdit>
+                            <px:PXTextEdit runat="server" ID="edAuthType" DataField="AuthType" ></px:PXTextEdit>
 							<px:PXTextEdit runat="server" ID="CstPXTextEdit13" DataField="AuthToken" ></px:PXTextEdit>
 							<px:PXLayoutRule GroupCaption="Integration Settings" runat="server" ID="CstPXLayoutRule14" StartGroup="True" ></px:PXLayoutRule>
 							<px:PXSelector runat="server" ID="CstPXSelector15" DataField="OrderType" ></px:PXSelector>

@@ -11,9 +11,11 @@
     </px:PXDataSource>
 </asp:Content>
 <asp:Content ID="cont2" ContentPlaceHolderID="phF" runat="Server">
-    <px:PXFormView ID="form" runat="server" DataSourceID="ds" DataMember="Document" Width="100%" Height="100px" AllowAutoHide="false">
+    <px:PXFormView ID="form" runat="server" DataSourceID="ds" DataMember="DocFilter" Width="100%" Height="100px" AllowAutoHide="false">
         <Template>
-            <px:PXLayoutRule ID="PXLayoutRule1" runat="server" StartRow="True" />
+            <px:PXDateTimeEdit runat="server" ID="edRevFrom" DataField="Received_from" />
+            <px:PXDateTimeEdit runat="server" ID="edRevTo" DataField="Received_to" />
+            <px:PXDropDown runat="server" ID="edCustomer_number" DataField="Customer_number"/>
         </Template>
     </px:PXFormView>
 </asp:Content>
@@ -30,6 +32,8 @@
                     <px:PXGridColumn DataField="OrderAmount"></px:PXGridColumn>
                     <px:PXGridColumn DataField="SalesTaxAmt"></px:PXGridColumn>
                     <px:PXGridColumn DataField="Processed"></px:PXGridColumn>
+                    <px:PXGridColumn DataField="LUMVendCntrlProcessLog__AcumaticaOrderID"/>
+                    <px:PXGridColumn DataField="LUMVendCntrlProcessLog__ErrorDesc"/>
                 </Columns>
             </px:PXGridLevel>
         </Levels>

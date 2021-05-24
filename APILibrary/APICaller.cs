@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using APILibrary.Model;
 using APILibrary.Model.Interface;
 using Newtonsoft.Json;
@@ -53,6 +54,17 @@ namespace APILibrary
                     ContentResult = _response.Content.ReadAsStringAsync().Result
                 };
             }
+        }
+    }
+
+    public static class APIFuncitoin
+    {
+        public static string CombineQueryString<T>(string _url ,T param)
+        {
+            var properties = from p in param.GetType().GetProperties()
+                where p.GetValue(param, null) != null
+                select p.Name + "=" + HttpUtility.UrlEncode(p.GetValue(param, null).ToString());
+            return $"{_url}?{string.Join("&", properties.ToArray())}";
         }
     }
 }

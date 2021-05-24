@@ -4,6 +4,7 @@
   <col name="SecureURL" type="NVarChar(255)" />
   <col name="ClientID" type="NVarChar(50)" />
   <col name="ClientSecret" type="NVarChar(50)" />
+  <col name="AuthType" type="NVarChar(20)" />
   <col name="AuthToken" type="NVarChar(512)" />
   <col name="OrderType" type="Char(2)" nullable="true" />
   <col name="CustomerID" type="Int" nullable="true" />
@@ -15,6 +16,10 @@
   <col name="LastModifiedByScreenID" type="Char(8)" />
   <col name="LastModifiedDateTime" type="DateTime" />
   <col name="tstamp" type="Timestamp" />
+  <index name="LUMVendCntrlSetup_NoteID" unique="true">
+    <col name="NoteID" />
+    <col name="CompanyID" />
+  </index>
   <index name="PK_LUMVendCntrlSetup" clustered="true" primary="true" unique="true">
     <col name="CompanyID" />
   </index>
