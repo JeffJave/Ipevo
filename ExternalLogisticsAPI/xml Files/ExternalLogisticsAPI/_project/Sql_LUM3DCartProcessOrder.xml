@@ -2,6 +2,7 @@
     <CDATA name="TableSchemaXml"><![CDATA[<table name="LUM3DCartProcessOrder">
   <col name="CompanyID" type="Int" default="Zero" />
   <col name="LineNumber" type="Int" />
+  <col name="InvoiceNumber" type="Int" nullable="true" />
   <col name="OrderID" type="NVarChar(50)" />
   <col name="CustomerID" type="NVarChar(50)" />
   <col name="OrderDate" type="DateTime" nullable="true" />
@@ -11,6 +12,7 @@
   <col name="LastUpdated" type="DateTime" nullable="true" />
   <col name="BillingEmailID" type="NVarChar(100)" nullable="true" />
   <col name="Processed" type="Bit" nullable="true" />
+  <col name="ProcessID" type="Int" nullable="true" />
   <col name="CreatedByID" type="UniqueIdentifier" />
   <col name="CreatedByScreenID" type="Char(8)" />
   <col name="CreatedDateTime" type="DateTime" />
