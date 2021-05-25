@@ -1,5 +1,6 @@
 ﻿using System;
 using PX.Data;
+using ExternalLogisticsAPI.Descripter;
 
 namespace ExternalLogisticsAPI.DAC
 {
@@ -7,11 +8,25 @@ namespace ExternalLogisticsAPI.DAC
     [PXCacheName("3DCart Process Order")]
     public class LUM3DCartProcessOrder : IBqlTable
     {
+        #region Selected
+        [PXBool()]
+        [PXUIField(DisplayName = "Selected")]
+        public virtual bool? Selected { get; set; }
+        public abstract class selected : PX.Data.BQL.BqlBool.Field<selected> { }
+        #endregion
+
         #region LineNumber
         [PXDBInt(IsKey = true)]
         [PXUIField(DisplayName = "Line Number")]
         public virtual int? LineNumber { get; set; }
         public abstract class lineNumber : PX.Data.BQL.BqlInt.Field<lineNumber> { }
+        #endregion
+
+        #region InvoiceNumber
+        [PXDBInt()]
+        [PXUIField(DisplayName = "Invoice Number")]
+        public virtual int? InvoiceNumber { get; set; }
+        public abstract class invoiceNumber : PX.Data.BQL.BqlInt.Field<invoiceNumber> { }
         #endregion
 
         #region OrderID
@@ -38,6 +53,7 @@ namespace ExternalLogisticsAPI.DAC
         #region OrderStatusID
         [PXDBString(30, IsUnicode = true, InputMask = "")]
         [PXUIField(DisplayName = "Order Status ID")]
+        [ThreeDCartOrderStatus.List]
         public virtual string OrderStatusID { get; set; }
         public abstract class orderStatusID : PX.Data.BQL.BqlString.Field<orderStatusID> { }
         #endregion
@@ -75,6 +91,13 @@ namespace ExternalLogisticsAPI.DAC
         [PXUIField(DisplayName = "Processed")]
         public virtual bool? Processed { get; set; }
         public abstract class processed : PX.Data.BQL.BqlBool.Field<processed> { }
+        #endregion
+
+        #region ProcessID
+        [PXDBInt()]
+        [PXUIField(DisplayName = "Process ID")]
+        public virtual int? ProcessID { get; set; }
+        public abstract class processID : PX.Data.BQL.BqlInt.Field<processID> { }
         #endregion
 
         #region CreatedByID
