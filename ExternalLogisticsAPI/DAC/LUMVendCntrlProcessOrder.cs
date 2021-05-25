@@ -9,56 +9,56 @@ namespace ExternalLogisticsAPI.DAC
     {
         #region LineNumber
         [PXDBInt(IsKey = true)]
-        [PXUIField(DisplayName = "Line Number")]
+        [PXUIField(DisplayName = "Line Number",Enabled = false)]
         public virtual int? LineNumber { get; set; }
         public abstract class lineNumber : PX.Data.BQL.BqlInt.Field<lineNumber> { }
         #endregion
 
         #region OrderID
         [PXDBString(50, IsUnicode = true, InputMask = "")]
-        [PXUIField(DisplayName = "Order ID")]
+        [PXUIField(DisplayName = "Order ID", Enabled = false)]
         public virtual string OrderID { get; set; }
         public abstract class orderID : PX.Data.BQL.BqlString.Field<orderID> { }
         #endregion
 
         #region ProcessID
         [PXDBLongIdentity(IsKey = true)]
-        [PXUIField(DisplayName = "Process ID")]
+        [PXUIField(DisplayName = "Process ID", Enabled = false)]
         public virtual Int64? ProcessID { get; set; }
         public abstract class processID : PX.Data.BQL.BqlInt.Field<processID> { }
         #endregion
 
         #region CustomerID
         [PXDBString(50, IsUnicode = true, InputMask = "")]
-        [PXUIField(DisplayName = "Customer ID")]
+        [PXUIField(DisplayName = "Customer ID", Enabled = false)]
         public virtual string CustomerID { get; set; }
         public abstract class customerID : PX.Data.BQL.BqlString.Field<customerID> { }
         #endregion
 
         #region OrderDate
         [PXDBDate()]
-        [PXUIField(DisplayName = "Order Date")]
+        [PXUIField(DisplayName = "Order Date", Enabled = false)]
         public virtual DateTime? OrderDate { get; set; }
         public abstract class orderDate : PX.Data.BQL.BqlDateTime.Field<orderDate> { }
         #endregion
 
         #region OrderStatusID
         [PXDBString(30, IsUnicode = true, InputMask = "")]
-        [PXUIField(DisplayName = "Order Status ID")]
+        [PXUIField(DisplayName = "Order Status ID", Enabled = false)]
         public virtual string OrderStatusID { get; set; }
         public abstract class orderStatusID : PX.Data.BQL.BqlString.Field<orderStatusID> { }
         #endregion
 
         #region OrderAmount
         [PXDBDecimal()]
-        [PXUIField(DisplayName = "Order Amount")]
+        [PXUIField(DisplayName = "Order Amount", Enabled = false)]
         public virtual Decimal? OrderAmount { get; set; }
         public abstract class orderAmount : PX.Data.BQL.BqlDecimal.Field<orderAmount> { }
         #endregion
 
         #region SalesTaxAmt
         [PXDBDecimal()]
-        [PXUIField(DisplayName = "Sales Tax Amt")]
+        [PXUIField(DisplayName = "Sales Tax Amt", Enabled = false)]
         public virtual Decimal? SalesTaxAmt { get; set; }
         public abstract class salesTaxAmt : PX.Data.BQL.BqlDecimal.Field<salesTaxAmt> { }
         #endregion
@@ -79,7 +79,7 @@ namespace ExternalLogisticsAPI.DAC
 
         #region Processed
         [PXDBBool()]
-        [PXUIField(DisplayName = "Processed")]
+        [PXUIField(DisplayName = "Processed", Enabled = false)]
         public virtual bool? Processed { get; set; }
         public abstract class processed : PX.Data.BQL.BqlBool.Field<processed> { }
         #endregion
