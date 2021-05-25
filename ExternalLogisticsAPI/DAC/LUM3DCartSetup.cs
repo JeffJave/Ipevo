@@ -12,6 +12,7 @@ namespace ExternalLogisticsAPI
         #region SecureURL
         [PXDBString(255, IsUnicode = true, InputMask = "")]
         [PXUIField(DisplayName = "Secure URL")]
+        [PXDefault()]
         public virtual string SecureURL { get; set; }
         public abstract class secureURL : PX.Data.BQL.BqlString.Field<secureURL> { }
         #endregion
@@ -19,13 +20,15 @@ namespace ExternalLogisticsAPI
         #region ClientID
         [PXDBString(50, IsUnicode = true, InputMask = "")]
         [PXUIField(DisplayName = "Client ID")]
+        [PXDefault()]
         public virtual string ClientID { get; set; }
         public abstract class clientID : PX.Data.BQL.BqlString.Field<clientID> { }
         #endregion
 
         #region ClientSecret
-        [PXRSACryptString(IsUnicode = true)]
+        [PXRSACryptString(IsUnicode = true, IsEncryptionRequired = false)]
         [PXUIField(DisplayName = "Client Secret")]
+        [PXDefault()]
         public virtual string ClientSecret { get; set; }
         public abstract class clientSecret : PX.Data.BQL.BqlString.Field<clientSecret> { }
         #endregion
@@ -33,6 +36,7 @@ namespace ExternalLogisticsAPI
         #region AuthToken
         [PXRSACryptString(IsUnicode = true)]
         [PXUIField(DisplayName = "Auth Token")]
+        [PXDefault()]
         public virtual string AuthToken { get; set; }
         public abstract class authToken : PX.Data.BQL.BqlString.Field<authToken> { }
         #endregion
