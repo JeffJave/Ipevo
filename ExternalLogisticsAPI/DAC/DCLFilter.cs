@@ -10,6 +10,7 @@ namespace ExternalLogisticsAPI.DAC
     public class DCLFilter : IBqlTable
     {
         [PXDate]
+        [PXDefault("2021/5/12")]
         [PXUIField(DisplayName = "Received from")]
         public virtual DateTime? Received_from { get; set; }
 
