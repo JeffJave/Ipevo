@@ -2,6 +2,7 @@
     <CDATA name="TableSchemaXml"><![CDATA[<table name="LUMVendCntrlProcessOrder">
   <col name="CompanyID" type="Int" default="Zero" />
   <col name="LineNumber" type="Int" />
+  <col name="ProcessID" type="BigInt" identity="true" />
   <col name="OrderID" type="NVarChar(50)" />
   <col name="CustomerID" type="NVarChar(50)" />
   <col name="OrderDate" type="DateTime" nullable="true" />
@@ -21,6 +22,7 @@
   <index name="PK_LUMVendCntrlProcessOrder" clustered="true" primary="true" unique="true">
     <col name="CompanyID" />
     <col name="LineNumber" />
+    <col name="ProcessID" />
   </index>
 </table>]]></CDATA>
 </Sql>

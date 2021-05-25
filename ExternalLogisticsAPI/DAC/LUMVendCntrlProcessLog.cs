@@ -14,10 +14,17 @@ namespace ExternalLogisticsAPI.DAC
         #endregion
 
         #region ProcessID
-        [PXDBInt()]
+        [PXDBLong]
         [PXUIField(DisplayName = "Process ID")]
-        public virtual int? ProcessID { get; set; }
+        public virtual Int64? ProcessID { get; set; }
         public abstract class processID : PX.Data.BQL.BqlInt.Field<processID> { }
+        #endregion
+
+        #region CustomerID
+        [PXDBString(200, IsUnicode = true, InputMask = "")]
+        [PXUIField(DisplayName = "Customer ID")]
+        public virtual string CustomerID { get; set; }
+        public abstract class customerID : PX.Data.BQL.BqlString.Field<customerID> { }
         #endregion
 
         #region OrderID

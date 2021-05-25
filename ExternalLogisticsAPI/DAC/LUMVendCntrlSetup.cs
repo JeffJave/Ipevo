@@ -37,6 +37,13 @@ namespace ExternalLogisticsAPI.DAC
         public abstract class authToken : PX.Data.BQL.BqlString.Field<authToken> { }
         #endregion
 
+        #region AuthType
+        [PXDBString(20)]
+        [PXUIField(DisplayName = "Auth Type")]
+        public virtual string AuthType { get; set; }
+        public abstract class authType : PX.Data.BQL.BqlString.Field<authType> { }
+        #endregion
+
         #region OrderType
         [PXDBString(2, IsFixed = true, IsUnicode = true, InputMask = ">aa")]
         [PXUIField(DisplayName = "Order Type")]
