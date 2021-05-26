@@ -22,6 +22,13 @@ namespace ExternalLogisticsAPI.DAC
         public abstract class lineNumber : PX.Data.BQL.BqlInt.Field<lineNumber> { }
         #endregion
 
+        #region ProcessID
+        [PXDBInt(IsKey = true)]
+        [PXUIField(DisplayName = "Process ID")]
+        public virtual int? ProcessID { get; set; }
+        public abstract class processID : PX.Data.BQL.BqlInt.Field<processID> { }
+        #endregion
+
         #region InvoiceNumber
         [PXDBInt()]
         [PXUIField(DisplayName = "Invoice Number")]
@@ -91,13 +98,6 @@ namespace ExternalLogisticsAPI.DAC
         [PXUIField(DisplayName = "Processed")]
         public virtual bool? Processed { get; set; }
         public abstract class processed : PX.Data.BQL.BqlBool.Field<processed> { }
-        #endregion
-
-        #region ProcessID
-        [PXDBInt()]
-        [PXUIField(DisplayName = "Process ID")]
-        public virtual int? ProcessID { get; set; }
-        public abstract class processID : PX.Data.BQL.BqlInt.Field<processID> { }
         #endregion
 
         #region CreatedByID
