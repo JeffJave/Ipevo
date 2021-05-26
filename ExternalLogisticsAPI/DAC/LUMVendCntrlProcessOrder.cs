@@ -7,6 +7,14 @@ namespace ExternalLogisticsAPI.DAC
     [PXCacheName("Vendor Central Process Order")]
     public class LUMVendCntrlProcessOrder : IBqlTable
     {
+
+        #region Selected
+        [PXBool()]
+        [PXUIField(DisplayName = "Selected")]
+        public virtual bool? Selected { get; set; }
+        public abstract class selected : PX.Data.BQL.BqlBool.Field<selected> { }
+        #endregion
+
         #region LineNumber
         [PXDBInt(IsKey = true)]
         [PXUIField(DisplayName = "Line Number",Enabled = false)]
