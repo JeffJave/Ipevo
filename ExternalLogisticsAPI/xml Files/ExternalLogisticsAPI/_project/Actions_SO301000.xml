@@ -1,0 +1,6 @@
+﻿<Actions ScreenID="SO301000">
+    <Action IsActive="True" ActionName="createDCLShipment" ActionType="G" MassProcessingScreen="SO501000" BatchMode="False" WindowMode="S">
+        <StateActionFields />
+        <StateActionParams />
+    </Action>
+</Actions>

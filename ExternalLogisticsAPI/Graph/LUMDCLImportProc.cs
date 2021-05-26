@@ -160,12 +160,12 @@ namespace ExternalLogisticsAPI.Graph
                             foreach (var line in _impRow.order_lines)
                             {
                                 var newTrancs = (SOLine)graph.Transactions.Cache.CreateInstance();
-                                graph.Transactions.Cache.SetValueExt<SOLine.inventoryID>(newTrancs, inventoryitems.Where(x => x.InventoryCD.Trim() == line.item_number)
-                                    .FirstOrDefault()?.InventoryID);
-                                graph.Transactions.Cache.SetValueExt<SOLine.orderQty>(newTrancs, decimal.Parse(line.quantity.ToString()));
-                                graph.Transactions.Cache.SetValueExt<SOLine.openQty>(newTrancs, decimal.Parse(line.quantity.ToString()));
-                                graph.Transactions.Cache.SetValue<SOLine.unitPrice>(newTrancs, line.price);
-                                graph.Transactions.Cache.SetValueExt<SOLine.manualPrice>(newTrancs, true);
+                                newTrancs.InventoryID = inventoryitems
+                                    .FirstOrDefault(x => x.InventoryCD.Trim() == line.item_number)?.InventoryID;
+                                //newTrancs.ManualPrice = true;
+                                newTrancs.OrderQty = (decimal)line.quantity;
+                                newTrancs.OpenQty = (decimal)line.quantity;
+                                newTrancs.UnitPrice = (decimal)line.price;
                                 graph.Transactions.Cache.Insert(newTrancs);
                             }
                             graph.Persist();
@@ -193,7 +193,7 @@ namespace ExternalLogisticsAPI.Graph
             var config = new DCL_Config()
             {
                 RequestMethod = HttpMethod.Get,
-                RequestUrl = APIFuncitoin.CombineQueryString(
+                RequestUrl = APIHelper.CombineQueryString(
                     setup.SecureURL,
                     new
                     {
