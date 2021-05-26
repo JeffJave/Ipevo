@@ -12,6 +12,8 @@ using System.Threading.Tasks;
 using System.Net.Http.Headers;
 using Newtonsoft.Json;
 using ExternalLogisticsAPI.DAC;
+using PX.Objects.TX;
+using PX.Objects.AR;
 
 namespace ExternalLogisticsAPI.Descripter
 {
@@ -77,18 +79,18 @@ namespace ExternalLogisticsAPI.Descripter
             {
                 LUM3DCartProcessOrder procOrder = new LUM3DCartProcessOrder()
                 {
-                    LineNumber = i + 1,
-                    InvoiceNumber = arrays[i].InvoiceNumber,
-                    OrderID = arrays[i].OrderID.ToString(),
-                    CustomerID = arrays[i].CustomerID == 0 ? null : arrays[i].CustomerID.ToString(),
-                    OrderDate = arrays[i].OrderDate,
-                    OrderStatusID = arrays[i].OrderStatusID.ToString(),
-                    OrderAmount = (decimal)arrays[i].OrderAmount,
-                    SalesTaxAmt = (decimal)(arrays[i].SalesTax + arrays[i].SalesTax2),
-                    LastUpdated = arrays[i].LastUpdate,
+                    LineNumber     = i + 1,
+                    ProcessID      = GetProcessID(graph),
+                    InvoiceNumber  = arrays[i].InvoiceNumber,
+                    OrderID        = arrays[i].OrderID.ToString(),
+                    CustomerID     = arrays[i].CustomerID == 0 ? null : arrays[i].CustomerID.ToString(),
+                    OrderDate      = arrays[i].OrderDate,
+                    OrderStatusID  = arrays[i].OrderStatusID.ToString(),
+                    OrderAmount    = (decimal)arrays[i].OrderAmount,
+                    SalesTaxAmt    = (decimal)(arrays[i].SalesTax + arrays[i].SalesTax2),
+                    LastUpdated    = arrays[i].LastUpdate,
                     BillingEmailID = arrays[i].BillingEmail,
-                    Processed = false,
-                    ProcessID = GetProcessID(graph)
+                    Processed      = false
                 };
 
                 graph.ImportOrderList.Cache.Insert(procOrder);
@@ -118,6 +120,8 @@ namespace ExternalLogisticsAPI.Descripter
                 CreateOrderDetail(orderEntry, curSetup, order);
 
                 orderEntry.Save.Press();
+
+                CreatePaymentProcess(order);
             }
             catch (PXException ex)
             {
@@ -135,8 +139,6 @@ namespace ExternalLogisticsAPI.Descripter
             {
                 List<MyArray> list = GetResponse(curSetup, "3dCartWebAPI/v2/Orders/" + order.CustomerOrderNbr).Result;
 
-                //order.PaymentMethodID = GetAcuPymtMethod(orderEntry, list[0].BillingPaymentMethod);
-
                 UpdateSOContactAddress(orderEntry, list, order);
 
                 var itemList = list.Find(x => x.OrderItemList.Count > 0).OrderItemList;
@@ -146,11 +148,19 @@ namespace ExternalLogisticsAPI.Descripter
                     SOLine line = orderEntry.Transactions.Cache.CreateInstance() as SOLine;
 
                     line.InventoryID = GetAcuInventoryID(orderEntry, itemList[i].ItemID);
-                    line.OrderQty = (decimal)itemList[i].ItemQuantity;
-                    line.UnitPrice = (decimal)itemList[i].ItemUnitPrice;
+                    line.OrderQty    = (decimal)itemList[i].ItemQuantity;
+                    line.UnitPrice   = (decimal)itemList[i].ItemUnitPrice;
 
                     orderEntry.Transactions.Insert(line);
                 }
+
+                orderEntry.Taxes.Cache.SetValueExt<SOTaxTran.curyTaxAmt>(orderEntry.Taxes.Current, list[0].SalesTax + list[0].SalesTax2);
+
+                order.PaymentMethodID = GetAcuPymtMethod(orderEntry, order.CustomerID, list[0].BillingPaymentMethod);
+                
+                // Refer to PX.AmazonIntegration project SetDocumentLevelDiscountandTaxData() to manully update SOOrder total amount fields.
+                order.CuryTaxTotal    = orderEntry.Taxes.Current.CuryTaxAmt;
+                order.CuryOrderTotal += order.CuryTaxTotal;
             }
             catch (PXException ex)
             {
@@ -194,8 +204,9 @@ namespace ExternalLogisticsAPI.Descripter
 
             for (int i = 0; i < shipList.Count; i++)
             {
-                order.OrderDesc = string.Format("Tracking Nbr. : {0}", shipList[i].ShipmentTrackingCode);
-                order.CuryPremiumFreightAmt = (decimal)shipList[i].ShipmentCost;
+                order.OrderDesc = string.IsNullOrEmpty(shipList[i].ShipmentTrackingCode) ? null : string.Format("Tracking Nbr. : {0}", shipList[i].ShipmentTrackingCode);
+
+                orderEntry.Document.Cache.SetValueExt<SOOrder.curyPremiumFreightAmt>(order, (decimal)shipList[i].ShipmentCost);
 
                 shipContact.OverrideContact = true;
                 shipContact.Attention       = shipList[i].ShipmentFirstName + "," + shipList[i].ShipmentLastName;
@@ -257,6 +268,52 @@ namespace ExternalLogisticsAPI.Descripter
         }
 
         /// <summary>
+        /// Manually create AR payment and related to specified sales order.
+        /// </summary>
+        public static void CreatePaymentProcess(SOOrder order)
+        {
+            ARPaymentEntry pymtEntry = PXGraph.CreateInstance<ARPaymentEntry>();
+
+            string paymentType = ARPaymentType.Payment;
+            
+            ARPayment payment = new ARPayment()
+            {
+                DocType = paymentType
+            };
+
+            payment = PXCache<ARPayment>.CreateCopy(pymtEntry.Document.Insert(payment));
+
+            payment.CustomerID = order.CustomerID;
+            payment.CustomerLocationID = order.CustomerLocationID;
+            payment.PaymentMethodID = order.PaymentMethodID;
+            payment.PMInstanceID = order.PMInstanceID;
+            payment.CuryOrigDocAmt = 0m;
+            payment.ExtRefNbr = order.OrderNbr;
+            payment.DocDesc = order.OrderDesc;
+
+            payment = pymtEntry.Document.Update(payment);
+
+            SOAdjust adj = new SOAdjust()
+            {
+                AdjdOrderType = order.OrderType.Trim(),
+                AdjdOrderNbr = order.OrderNbr.Trim()
+            };
+            pymtEntry.SOAdjustments.Insert(adj);
+
+            if (payment.CuryOrigDocAmt == 0m)
+            {
+                payment.CuryOrigDocAmt = payment.CurySOApplAmt;
+                payment = pymtEntry.Document.Update(payment);
+            }
+            pymtEntry.Actions.PressSave();
+
+            //if (orderParams.paymentGraph.Actions.Contains("Release"))
+            //{
+            //    orderParams.paymentGraph.Actions["Release"].Press();
+            //}
+        }
+
+        /// <summary>
         /// The process ID value is generated based on the number of executions.
         /// </summary>
         public static int? GetProcessID(PXGraph graph)
@@ -286,9 +343,10 @@ namespace ExternalLogisticsAPI.Descripter
         /// <summary>
         /// Get Acumatica payment method ID by payment description.
         /// </summary>
-        public static string GetAcuPymtMethod(PXGraph graph, string paymDescr)
+        public static string GetAcuPymtMethod(PXGraph graph, int? customerID, string paymDescr)
         {
-            PaymentMethod paymMethod = SelectFrom<PaymentMethod>.Where<PaymentMethod.descr.Contains<@P.AsString>>.View.Select(graph, paymDescr);
+            CustomerPaymentMethodC paymMethod = SelectFrom<CustomerPaymentMethodC>.Where<CustomerPaymentMethodC.descr.Contains<@P.AsString>
+                                                                                         .And<CustomerPaymentMethodC.bAccountID.IsEqual<@P.AsInt>>>.View.Select(graph, paymDescr, customerID);
 
             return paymMethod?.PaymentMethodID;
         }
