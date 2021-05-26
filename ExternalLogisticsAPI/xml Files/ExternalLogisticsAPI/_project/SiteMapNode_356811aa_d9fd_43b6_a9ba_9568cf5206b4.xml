@@ -25,7 +25,7 @@
         </layout>
         <data>
             <SiteMap>
-                <row Title="Import DCL Orders" Url="~/Pages/LM/LM502000.aspx" ScreenID="LM502000" NodeID="356811aa-d9fd-43b6-a9ba-9568cf5206b4" ParentID="00000000-0000-0000-0000-000000000000">
+                <row Title="Import Vendor Central Orders" Url="~/Pages/LM/LM502000.aspx" ScreenID="LM502000" NodeID="356811aa-d9fd-43b6-a9ba-9568cf5206b4" ParentID="00000000-0000-0000-0000-000000000000">
                     <MUIScreen IsPortal="0" WorkspaceID="e2c3849a-6280-41df-81f3-552b91adfae5" Order="90" SubcategoryID="32130442-2305-4394-9389-cf915b191d2a" />
                 </row>
             </SiteMap>

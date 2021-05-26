@@ -57,7 +57,7 @@ namespace APILibrary
         }
     }
 
-    public static class APIFuncitoin
+    public static class APIHelper
     {
         public static string CombineQueryString<T>(string _url ,T param)
         {
@@ -65,6 +65,11 @@ namespace APILibrary
                 where p.GetValue(param, null) != null
                 select p.Name + "=" + HttpUtility.UrlEncode(p.GetValue(param, null).ToString());
             return $"{_url}?{string.Join("&", properties.ToArray())}";
+        }
+
+        public static string GetJsonString<T>(T _obj) where  T: class
+        { 
+            return JsonConvert.SerializeObject(_obj);
         }
     }
 }
