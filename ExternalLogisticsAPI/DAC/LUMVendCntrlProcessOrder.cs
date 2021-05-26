@@ -29,6 +29,13 @@ namespace ExternalLogisticsAPI.DAC
         public abstract class orderID : PX.Data.BQL.BqlString.Field<orderID> { }
         #endregion
 
+        #region PoNumber
+        [PXDBString(100, IsUnicode = true, InputMask = "")]
+        [PXUIField(DisplayName = "PO. Number", Enabled = false)]
+        public virtual string PoNumber { get; set; }
+        public abstract class poNumber : PX.Data.BQL.BqlString.Field<poNumber> { }
+        #endregion
+
         #region ProcessID
         [PXDBLongIdentity(IsKey = true)]
         [PXUIField(DisplayName = "Process ID", Enabled = false)]
@@ -69,6 +76,13 @@ namespace ExternalLogisticsAPI.DAC
         [PXUIField(DisplayName = "Sales Tax Amt", Enabled = false)]
         public virtual Decimal? SalesTaxAmt { get; set; }
         public abstract class salesTaxAmt : PX.Data.BQL.BqlDecimal.Field<salesTaxAmt> { }
+        #endregion
+
+        #region OrderQty
+        [PXDBInt()]
+        [PXUIField(DisplayName = "Order Qty", Enabled = false)]
+        public virtual int? OrderQty { get; set; }
+        public abstract class orderQty : PX.Data.BQL.BqlDecimal.Field<orderQty> { }
         #endregion
 
         #region LastUpdated

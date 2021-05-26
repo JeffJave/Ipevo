@@ -89,8 +89,9 @@ namespace ExternalLogisticsAPI.Graph
                             temp.CustomerID = orders.customer_number;
                             temp.OrderDate = DateTime.Parse(orders.ordered_date);
                             temp.OrderStatusID = orders.order_status.ToString();
-                            temp.OrderAmount = orders.order_lines.Sum(x => x.quantity);
-                            temp.SalesTaxAmt = orders.order_subtotal;
+                            temp.OrderQty = orders.order_lines.Sum(x => x.quantity);
+                            temp.OrderAmount = orders.order_subtotal;
+                            temp.PoNumber = orders.po_number;
                             temp.LastUpdated = DateTime.Parse(orders.modified_at);
                             temp.Processed = false;
                         }
@@ -152,7 +153,8 @@ namespace ExternalLogisticsAPI.Graph
                             newOrder.OrderType = setup.OrderType;
                             newOrder.OrderDate = DateTime.Parse(_impRow.ordered_date);
                             newOrder.CustomerID = setup.CustomerID;
-                            newOrder.CustomerOrderNbr = _impRow.order_number;
+                            newOrder.CustomerOrderNbr = _impRow.po_number;
+                            newOrder.CustomerRefNbr = _impRow.customer_number;
                             newOrder.OrderDesc =
                                 $"Create SO BY Import Process |Tacking Number: {_impRow.shipments.FirstOrDefault().packages.First()?.tracking_number}";
                             newOrder = (SOOrder)graph.Document.Cache.Insert(newOrder);

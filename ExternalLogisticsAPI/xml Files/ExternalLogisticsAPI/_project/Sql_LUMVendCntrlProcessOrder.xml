@@ -6,7 +6,9 @@
   <col name="OrderID" type="NVarChar(50)" />
   <col name="CustomerID" type="NVarChar(50)" />
   <col name="OrderDate" type="DateTime" nullable="true" />
+  <col name="PoNumber" type="NVarChar(100)" nullable="true" />
   <col name="OrderStatusID" type="NVarChar(30)" nullable="true" />
+  <col name="OrderQty" type="Int" nullable="true" />
   <col name="OrderAmount" type="Decimal(18,2)" nullable="true" />
   <col name="SalesTaxAmt" type="Decimal(18,2)" nullable="true" />
   <col name="LastUpdated" type="DateTime" nullable="true" />
