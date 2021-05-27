@@ -57,7 +57,7 @@ namespace ExternalLogisticsAPI
             {
                 if (curFilter != null)
                 {
-                    ThreeDCartHelper.PrepareRecords(curSetup);
+                    ThreeDCartHelper.PrepareRecords(curSetup, curFilter.EndDate);
                 }
             });
 
