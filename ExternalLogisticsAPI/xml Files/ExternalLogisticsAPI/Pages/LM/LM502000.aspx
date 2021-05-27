@@ -29,12 +29,13 @@
                     <px:PXGridColumn DataField="OrderID"></px:PXGridColumn>
                     <px:PXGridColumn DataField="CustomerID"></px:PXGridColumn>
                     <px:PXGridColumn DataField="OrderDate"></px:PXGridColumn>
+                    <px:PXGridColumn DataField="PoNumber"></px:PXGridColumn>
                     <px:PXGridColumn DataField="OrderStatusID"></px:PXGridColumn>
+                    <px:PXGridColumn DataField="OrderQty"></px:PXGridColumn>
                     <px:PXGridColumn DataField="OrderAmount"></px:PXGridColumn>
-                    <px:PXGridColumn DataField="SalesTaxAmt"></px:PXGridColumn>
                     <px:PXGridColumn DataField="Processed"></px:PXGridColumn>
-<%--                    <px:PXGridColumn DataField="LUMVendCntrlProcessLog__AcumaticaOrderID"/>
-                    <px:PXGridColumn DataField="LUMVendCntrlProcessLog__ErrorDesc"/>--%>
+                    <%--<px:PXGridColumn DataField="LUMVendCntrlProcessLog__AcumaticaOrderID"/>--%>
+                    <px:PXGridColumn DataField="LUMVendCntrlProcessLog__ErrorDesc"/>
                 </Columns>
             </px:PXGridLevel>
         </Levels>
