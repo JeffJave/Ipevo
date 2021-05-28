@@ -1,7 +1,7 @@
 ﻿using PX.Data;
 using PX.Data.BQL;
 using PX.Data.BQL.Fluent;
-using PX.Objects.CA;
+using PX.Objects.AR;
 using PX.Objects.CR;
 using PX.Objects.IN;
 using PX.Objects.SO;
@@ -12,8 +12,6 @@ using System.Threading.Tasks;
 using System.Net.Http.Headers;
 using Newtonsoft.Json;
 using ExternalLogisticsAPI.DAC;
-using PX.Objects.TX;
-using PX.Objects.AR;
 
 namespace ExternalLogisticsAPI.Descripter
 {
@@ -24,6 +22,7 @@ namespace ExternalLogisticsAPI.Descripter
         public static async Task<List<MyArray>> GetResponse(LUM3DCartSetup setup, string specifyLocation)
         {
             string responseData = null;
+
             var baseAddress = new Uri(setup.SecureURL);
 
             using (var httpClient = new HttpClient { BaseAddress = baseAddress })
@@ -38,8 +37,13 @@ namespace ExternalLogisticsAPI.Descripter
 
                 httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", setup.AuthToken);
 
-                using (var response = await httpClient.GetAsync(specifyLocation) )
+                using (var response = await httpClient.GetAsync(specifyLocation))
                 {
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        throw new JsonReaderException(response.ReasonPhrase);
+                    }
+
                     responseData = await response.Content.ReadAsStringAsync();
 
                     return JsonConvert.DeserializeObject<List<MyArray>>(responseData);
@@ -47,7 +51,7 @@ namespace ExternalLogisticsAPI.Descripter
             }
         }
 
-        public static void PrepareRecords(LUM3DCartSetup curSetup)
+        public static void PrepareRecords(LUM3DCartSetup curSetup, DateTime? endDate)
         {
             LUM3DCartImportProc graph = PXGraph.CreateInstance<LUM3DCartImportProc>();
 
@@ -58,7 +62,8 @@ namespace ExternalLogisticsAPI.Descripter
                 try
                 {
                     DeleteWrkTableRecs();
-                    CreateProcessOrders(GetResponse(curSetup, "3dCartWebAPI/v2/Orders?datestart=05/13/2021 00:00:00&limit=1000&orderstatus=1").Result);
+                    CreateProcessOrders(GetResponse(curSetup, 
+                                                    string.Format("3dCartWebAPI/v2/Orders?datestart={0}&limit={1}&orderstatus={2}", endDate.Value.AddDays(-7), 1000, ThreeDCartOrderStatus.New)).Result);
                 }
                 catch (Exception ex)
                 {
