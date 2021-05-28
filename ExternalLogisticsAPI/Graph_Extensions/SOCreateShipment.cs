@@ -2,9 +2,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using APILibrary;
+using APILibrary.Model;
+using ExternalLogisticsAPI.DAC;
+using ExternalLogisticsAPI.Descripter;
+using Newtonsoft.Json;
 using PX.Data;
+using PX.Data.BQL.Fluent;
 using PX.Objects.AR;
 using PX.Objects.CN.Common.Extensions;
 using PX.Objects.CS;
@@ -14,27 +21,79 @@ namespace PX.Objects.SO
 {
     public class SOCreateShipmentExt : PXGraphExtension<SOCreateShipment>
     {
+        [PXHidden]
+        public SelectFrom<LUMVendCntrlSetup>.View DCLSetup;
+
+        #region Override Mehtod
+
+        public delegate IEnumerable OrdersDeletage();
         public delegate void AddCommonFiltersDelegate(SOOrderFilter filter, PXSelectBase<SOOrder> cmd);
 
         [PXOverride]
-        public void AddCommonFilters(SOOrderFilter filter, PXSelectBase<SOOrder> cmd, AddCommonFiltersDelegate baseMethod)
+        public virtual void AddCommonFilters(SOOrderFilter filter, PXSelectBase<SOOrder> cmd, AddCommonFiltersDelegate baseMethod)
         {
             baseMethod.Invoke(filter, cmd);
-            if (filter.Action.Contains("DCL"))
+            switch (filter.Action)
             {
-                cmd.WhereAnd<Where<SOOrder.status, Equal<SOOrderStatus.open>>>();
-                cmd.WhereAnd<Where<SOOrderExt.usrDCLShipmentCreated, Equal<False>,
-                    Or<SOOrderExt.usrDCLShipmentCreated, IsNull>>>();
+                case "SO301000$createDCLShipment":
+                    cmd.WhereAnd<Where<SOOrder.status, Equal<SOOrderStatus.open>>>();
+                    cmd.WhereAnd<Where<SOOrderExt.usrDCLShipmentCreated, Equal<False>,
+                        Or<SOOrderExt.usrDCLShipmentCreated, IsNull>>>();
+                    break;
+                case "SO301000$lumCallDCLShipemnt":
+                    cmd.WhereAnd<Where<SOOrder.status, Equal<SOOrderStatus.open>>>();
+                    cmd.WhereAnd<Where<SOOrderExt.usrDCLShipmentCreated, Equal<True>>>();
+                    break;
             }
         }
 
-        protected virtual PXSelectBase<SOOrder> MYCreateShipment(SOOrderFilter filter)
+        [PXOverride]
+        public virtual IEnumerable orders(OrdersDeletage baseMethod)
         {
-            return new PXSelectJoin<SOOrder, InnerJoin<SOOrderType, On<SOOrderType.orderType, Equal<SOOrder.orderType>>,
-                    LeftJoin<Carrier, On<SOOrder.shipVia, Equal<Carrier.carrierID>>,
-                        LeftJoinSingleTable<Customer, On<SOOrder.customerID, Equal<Customer.bAccountID>>>>>,
-                Where<SOOrderExt.usrDCLShipmentCreated, Equal<False>,
-                    And<Customer.bAccountID, IsNull, Or<Match<Customer, Current<AccessInfo.userName>>>>>>(Base);
+            var filterResult = baseMethod.Invoke();
+            switch (Base.Filter.Current.Action)
+            {
+                // Filter Data By DCL order_number
+                case "SO301000$lumCallDCLShipemnt":
+                    List<string> lstOrderNumbers = new List<string>();
+                    // Combine Query String
+                    foreach (SOOrder item in filterResult)
+                    {
+                        if (!string.IsNullOrEmpty(item.CustomerRefNbr))
+                            lstOrderNumbers.Add(item.CustomerRefNbr);
+                    }
+
+                    // Get DCL SO. Data
+                    var dclOrders = JsonConvert.DeserializeObject<OrderResponse>(
+                        DCLHelper.CallDCLToGetSOByOrderNumbers(
+                            this.DCLSetup.Select().RowCast<LUMVendCntrlSetup>().FirstOrDefault(),
+                            string.Join(",", lstOrderNumbers.ToArray())).ContentResult);
+
+                    if (dclOrders.orders != null)
+                    {
+                        foreach (SOOrder item in filterResult)
+                        {
+                            if (dclOrders.orders.Any(x =>
+                                x.order_number == item.CustomerRefNbr &&
+                                !string.IsNullOrEmpty(x.shipping_carrier) &&
+                                x.shipments.Any(s =>
+                                    s.packages.Any(p => !string.IsNullOrEmpty(p.tracking_number)))))
+                                yield return item;
+                        }
+                    }
+                    break;
+                default:
+                    foreach (var item in filterResult)
+                        yield return item;
+                    break;
+            }
         }
+
+        #endregion
+
+
+        #region Method
+
+        #endregion
     }
 }

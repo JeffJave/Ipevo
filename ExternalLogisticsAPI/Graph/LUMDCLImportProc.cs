@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using APILibrary;
 using APILibrary.Model;
 using ExternalLogisticsAPI.DAC;
+using ExternalLogisticsAPI.Descripter;
 using Newtonsoft.Json;
 using PX.Data;
 using PX.Data.BQL.Fluent;
@@ -66,7 +67,7 @@ namespace ExternalLogisticsAPI.Graph
             {
                 try
                 {
-                    var result = CallApi();
+                    var result = DCLHelper.CallDCLToGetSOByFilter(this.DCLSetup.Select().RowCast<LUMVendCntrlSetup>().FirstOrDefault(),this.DocFilter.Current);
                     if (result.StatusCode == HttpStatusCode.OK)
                     {
                         // Delete temp table data
@@ -75,25 +76,25 @@ namespace ExternalLogisticsAPI.Graph
                         this.ImportOrderList.Cache.Clear();
 
                         int count = 1;
-                        var _orders = JsonConvert.DeserializeObject<OrderResponse>(result.ContentResult);
+                        var _dclOrders = JsonConvert.DeserializeObject<OrderResponse>(result.ContentResult);
                         // insert data to temp table
-                        foreach (var orders in _orders.orders)
+                        foreach (var orders in _dclOrders.orders)
                         {
 
                             if(this.ImportLog.Select().RowCast<LUMVendCntrlProcessLog>().Any(x => x.OrderID == orders.order_number && !string.IsNullOrEmpty(x.AcumaticaOrderID) && x.ImportStatus == true))
                                 continue;
-                            var temp = this.ImportOrderList.Insert(
+                            var _soOrder = this.ImportOrderList.Insert(
                                 (LUMVendCntrlProcessOrder)this.ImportOrderList.Cache.CreateInstance());
-                            temp.LineNumber = count++;
-                            temp.OrderID = orders.order_number;
-                            temp.CustomerID = orders.customer_number;
-                            temp.OrderDate = DateTime.Parse(orders.ordered_date);
-                            temp.OrderStatusID = orders.order_status.ToString();
-                            temp.OrderQty = orders.order_lines.Sum(x => x.quantity);
-                            temp.OrderAmount = orders.order_subtotal;
-                            temp.PoNumber = orders.po_number;
-                            temp.LastUpdated = DateTime.Parse(orders.modified_at);
-                            temp.Processed = false;
+                            _soOrder.LineNumber = count++;
+                            _soOrder.OrderID = orders.order_number;
+                            _soOrder.CustomerID = orders.customer_number;
+                            _soOrder.OrderDate = DateTime.Parse(orders.ordered_date);
+                            _soOrder.OrderStatusID = orders.order_status.ToString();
+                            _soOrder.OrderQty = orders.order_lines.Sum(x => x.quantity);
+                            _soOrder.OrderAmount = orders.order_subtotal;
+                            _soOrder.PoNumber = orders.po_number;
+                            _soOrder.LastUpdated = DateTime.Parse(orders.modified_at);
+                            _soOrder.Processed = false;
                         }
 
                         this.Actions.PressSave();
@@ -108,9 +109,11 @@ namespace ExternalLogisticsAPI.Graph
                 }
             });
             return adapter.Get();
-        } 
+        }
 
         #endregion
+
+        #region Method
 
         /// <summary> Create SO Data </summary>
         public virtual void ImportRecords(List<LUMVendCntrlProcessOrder> list, DCLFilter currentFilter)
@@ -118,18 +121,12 @@ namespace ExternalLogisticsAPI.Graph
             try
             {
                 var setup = this.DCLSetup.Select().RowCast<LUMVendCntrlSetup>().FirstOrDefault();
-                var result = CallApi();
+                var result = DCLHelper.CallDCLToGetSOByFilter(this.DCLSetup.Select().RowCast<LUMVendCntrlSetup>().FirstOrDefault(), this.DocFilter.Current);
                 if (result.StatusCode == HttpStatusCode.OK)
                 {
                     var _apiOrders = JsonConvert.DeserializeObject<OrderResponse>(result.ContentResult);
-                    var intersectedList =
-                        from t in _apiOrders.orders.ToList()
-                        join v in list on t.order_number equals v.OrderID
-                        select new { apiOrder = t, LineNbr = v.LineNumber };
-                    int count = 0;
-
                     var inventoryitems = SelectFrom<InventoryItem>.View.Select(this).RowCast<InventoryItem>().ToList();
-                    var LogData = SelectFrom<LUMVendCntrlProcessLog>
+                    var LogDatas = SelectFrom<LUMVendCntrlProcessLog>
                         .Where<LUMVendCntrlProcessLog.importStatus.IsEqual<True>
                             .And<LUMVendCntrlProcessLog.acumaticaOrderID.IsNotNull>>.View.Select(this)
                         .RowCast<LUMVendCntrlProcessLog>().ToList();
@@ -143,35 +140,37 @@ namespace ExternalLogisticsAPI.Graph
                             if (_impRow == null)
                                 throw new Exception("Cant not mapping API Data");
                             // Check Data is Exists
-                            var existsData = LogData.Where(x =>
+                            var existsLog = LogDatas.Where(x =>
                                 x.OrderID == item.OrderID && x.CustomerID == item.CustomerID).ToList();
-                            if (existsData.Any())
-                                throw new Exception($"This Order has been Created, SONbr: {existsData.FirstOrDefault()?.AcumaticaOrderType} {existsData.FirstOrDefault()?.AcumaticaOrderID}");
-
+                            if (existsLog.Any())
+                                throw new Exception($"This Order has been Created, SONbr: {existsLog.FirstOrDefault()?.AcumaticaOrderType} {existsLog.FirstOrDefault()?.AcumaticaOrderID}");
+                            // SOOrder
                             var graph = PXGraph.CreateInstance<SOOrderEntry>();
                             var newOrder = (SOOrder)graph.Document.Cache.CreateInstance();
                             newOrder.OrderType = setup.OrderType;
                             newOrder.OrderDate = DateTime.Parse(_impRow.ordered_date);
                             newOrder.CustomerID = setup.CustomerID;
                             newOrder.CustomerOrderNbr = _impRow.po_number;
-                            newOrder.CustomerRefNbr = _impRow.customer_number;
+                            newOrder.CustomerRefNbr = _impRow.order_number;
                             newOrder.OrderDesc =
-                                $"Create SO BY Import Process |Tacking Number: {_impRow.shipments.FirstOrDefault().packages.First()?.tracking_number}";
+                                $"Create SO BY Import Process |Tacking Number: {_impRow.shipments.FirstOrDefault().packages.FirstOrDefault()?.tracking_number}";
                             newOrder = (SOOrder)graph.Document.Cache.Insert(newOrder);
 
                             foreach (var line in _impRow.order_lines)
                             {
-                                var newTrancs = (SOLine)graph.Transactions.Cache.CreateInstance();
-                                newTrancs.InventoryID = inventoryitems
+                                // SOLine
+                                var newTranc = (SOLine)graph.Transactions.Cache.CreateInstance();
+                                newTranc.InventoryID = inventoryitems
                                     .FirstOrDefault(x => x.InventoryCD.Trim() == line.item_number)?.InventoryID;
-                                //newTrancs.ManualPrice = true;
-                                newTrancs.OrderQty = (decimal)line.quantity;
-                                newTrancs.OpenQty = (decimal)line.quantity;
-                                newTrancs.UnitPrice = (decimal)line.price;
-                                graph.Transactions.Cache.Insert(newTrancs);
+                                //newTranc.ManualPrice = true;
+                                newTranc.OrderQty = (decimal)line.quantity;
+                                newTranc.OpenQty = (decimal)line.quantity;
+                                newTranc.UnitPrice = (decimal)line.price;
+                                graph.Transactions.Cache.Insert(newTranc);
                             }
                             graph.Persist();
                             item.Processed = true;
+                            // Update Process Order
                             this.ImportOrderList.Cache.Update(item);
                             InsertImpLog(setup, item, true, string.Empty, newOrder.OrderNbr);
                         }
@@ -187,27 +186,6 @@ namespace ExternalLogisticsAPI.Graph
             {
                 throw new PXOperationCompletedWithErrorException(e.Message, e);
             }
-        }
-
-        public LumAPIResultModel CallApi()
-        {
-            var setup = this.DCLSetup.Select().RowCast<LUMVendCntrlSetup>().FirstOrDefault();
-            var config = new DCL_Config()
-            {
-                RequestMethod = HttpMethod.Get,
-                RequestUrl = APIHelper.CombineQueryString(
-                    setup.SecureURL,
-                    new
-                    {
-                        Received_from = this.DocFilter.Current.Received_from?.ToString("yyyy-MM-dd"),
-                        Received_to = this.DocFilter.Current.Received_to?.ToString("yyyy-MM-dd"),
-                        Filter = $"Customer_number eq {this.DocFilter.Current.Customer_number}"
-                    }),
-                AuthType = setup.AuthType,
-                Token = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{setup.ClientID}:{setup.ClientSecret}"))
-            };
-            var caller = new APICaller(config);
-            return caller.CallApi();
         }
 
         /// <summary> Insert Log Data </summary>
@@ -239,7 +217,9 @@ namespace ExternalLogisticsAPI.Graph
 
             if (IsUpdated)
                 this.ImportLog.Cache.Update(model);
-        }
+        } 
+
+        #endregion
     }
 
 }

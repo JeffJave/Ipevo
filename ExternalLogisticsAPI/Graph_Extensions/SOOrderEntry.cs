@@ -6,12 +6,18 @@ using System.Text;
 using System.Threading.Tasks;
 using APILibrary;
 using APILibrary.Model;
+using ExternalLogisticsAPI.DAC;
+using ExternalLogisticsAPI.Descripter;
 using Newtonsoft.Json;
+using PX.Common;
 using PX.Data;
 using PX.Data.BQL;
 using PX.Data.BQL.Fluent;
 using PX.Data.Licensing;
+using PX.Data.Update.ExchangeService;
 using PX.Objects.AR;
+using PX.Objects.Common;
+using PX.Objects.CS;
 using PX.Objects.IN;
 using PX.Objects.SO;
 
@@ -19,7 +25,12 @@ namespace ExternalLogisticsAPI.Graph_Extensions
 {
     public class SOOrderEntryExt : PXGraphExtension<SOOrderEntry>
     {
+
+        [PXHidden]
+        public SelectFrom<LUMVendCntrlSetup>.View DCLSetup;
+
         public PXAction<SOOrder> createDCLShipment;
+        public PXAction<SOOrder> lumCallDCLShipemnt;
 
         [PXButton]
         [PXUIField(DisplayName = "Create Shipment in DCL", Enabled = true, MapEnableRights = PXCacheRights.Select, Visible = false)]
@@ -38,6 +49,11 @@ namespace ExternalLogisticsAPI.Graph_Extensions
                 CombineDLCShipmentEntity(model, order);
                 PXNoteAttribute.SetNote(Base.Document.Cache, order, APIHelper.GetJsonString(model));
                 order.GetExtension<SOOrderExt>().UsrDCLShipmentCreated = true;
+                /*
+                 *
+                 * Send Data to DCL for Create Shipment(Implement)
+                 *
+                 */
                 Base.Document.Cache.Update(order);
             }
 
@@ -45,8 +61,82 @@ namespace ExternalLogisticsAPI.Graph_Extensions
             return adapter.Get();
         }
 
+        [PXButton]
+        [PXUIField(DisplayName = "Call DCL for Shipment", Enabled = true, MapEnableRights = PXCacheRights.Select, Visible = false)]
+        protected virtual IEnumerable LumCallDCLShipemnt(PXAdapter adapter, [PXDate] DateTime? shipDate, [PXInt] int? siteID, [SOOperation.List] string operation)
+        {
+            try
+            {
+                using (PXTransactionScope sc = new PXTransactionScope() )
+                {
+                    Base.CreateShipmentIssue(adapter, shipDate, siteID);
+                    var processResult = PXProcessing<SOOrder>.GetItemMessage();
+                    if (processResult.ErrorLevel != PXErrorLevel.RowInfo)
+                        return adapter.Get();
+                    var _order = adapter.Get<SOOrder>().ToList()[0];
+
+                    // Get DCL SO. Data(理論上資料一定存在)
+                    var dclOrders = JsonConvert.DeserializeObject<OrderResponse>(
+                        DCLHelper.CallDCLToGetSOByOrderNumbers(
+                            this.DCLSetup.Select().RowCast<LUMVendCntrlSetup>().FirstOrDefault(), _order.CustomerRefNbr).ContentResult);
+
+                    // Create SOShipment Graph
+                    var graph = PXGraph.CreateInstance<SOShipmentEntry>();
+
+                    // Find SOShipment
+                    var _soOrderShipments =
+                        FbqlSelect<SelectFromBase<SOOrderShipment, TypeArrayOf<IFbqlJoin>.Empty>.Where<BqlChainableConditionBase<TypeArrayOf<IBqlBinary>.FilledWith<And<Compare<SOOrderShipment.orderType, Equal<P.AsString>>>>>.And<BqlOperand<SOOrderShipment.orderNbr, IBqlString>.IsEqual<P.AsString>>>, SOOrderShipment>.View.Select(Base, _order.OrderType, _order.OrderNbr)
+                            .RowCast<SOOrderShipment>();
+                    foreach (var refItem in _soOrderShipments)
+                    {
+                        // Create new Adapter
+                        var newAdapter = new PXAdapter(graph.Document) { Searches = new Object[] { refItem.ShipmentNbr } };
+                        // Select Current Shipment
+                        var _soShipment = newAdapter.Get<SOShipment>().ToList()[0];
+
+                        try
+                        {
+                            if (dclOrders.orders == null)
+                                _soShipment.ShipmentDesc = "Can not Mapping DCL Data";
+                            else
+                            {
+                                // Get Carrier and TrackingNbr
+                                var shippingCarrier = dclOrders.orders.FirstOrDefault().shipping_carrier;
+                                var packagesInfo = dclOrders.orders.FirstOrDefault().shipments.SelectMany(x => x.packages);
+                                _soShipment.ShipmentDesc = $"Carrier: {shippingCarrier}|" +
+                                                           $"TrackingNbr: {string.Join("|", packagesInfo.Select(x => x.tracking_number))}";
+                                if (_soShipment.ShipmentDesc.Length > 256)
+                                    _soShipment.ShipmentDesc = _soShipment.ShipmentDesc.Substring(0, 255);
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            _soShipment.ShipmentDesc = e.Message;
+                        }
+
+                        // Update Data
+                        graph.Document.Update(_soShipment);
+
+                        // Remove Hold
+                        graph.releaseFromHold.PressButton(newAdapter);
+
+                        // Confirm Shipment
+                        graph.confirmShipmentAction.PressButton(newAdapter);
+                    }
+                    sc.Complete();
+                }
+            }
+            catch (Exception e)
+            {
+                PXProcessing.SetError<SOOrder>(e.Message);
+            }
+           
+            return adapter.Get();
+        }
+
         #region Method
 
+        /// <summary> Combine DCL Shipment MetaData(JSON) </summary>
         public void CombineDLCShipmentEntity(DCLShipment model, SOOrder soOrder)
         {
             if (model == null)
@@ -86,10 +176,10 @@ namespace ExternalLogisticsAPI.Graph_Extensions
             {
                 new Order()
                 {
-                    order_number = soOrder.OrderNbr,
+                    order_number = soOrder.CustomerRefNbr,
                     account_number = soOrder.ShipVia == "UPSGROUND" ?"19311" : "19310",
                     ordered_date = soOrder.OrderDate?.ToString("yyyy-MM-dd"),
-                    po_number = "",
+                    po_number = soOrder.CustomerOrderNbr,
                     customer_number = GetCurrAcctCD(soOrder.CustomerID),
                     acknowledgement_email = "logistic@ipevo.com",
                     freight_account = "00500",
@@ -134,7 +224,7 @@ namespace ExternalLogisticsAPI.Graph_Extensions
                     payment_type = string.Empty,
                     terms = string.Empty,
                     fob = string.Empty,
-                    custom_field1 = soOrder.CustomerOrderNbr,
+                    custom_field1 = soOrder.OrderNbr,
                     packing_list_type = 0,
                     packing_list_comments = string.Empty,
                     shipping_instructions = $@"1.Please note that use the plastic wrapper to secure all cartons onto the pallets for this order.\r\n
@@ -153,5 +243,20 @@ namespace ExternalLogisticsAPI.Graph_Extensions
         }
 
         #endregion
+
+    }
+
+    internal class LumShipmentDocView : PXView
+    {
+        List<object> _Records;
+        internal LumShipmentDocView(PXGraph graph, BqlCommand command, List<object> records)
+            : base(graph, true, command)
+        {
+            _Records = records;
+        }
+        public override List<object> Select(object[] currents, object[] parameters, object[] searches, string[] sortcolumns, bool[] descendings, PXFilterRow[] filters, ref int startRow, int maximumRows, ref int totalRows)
+        {
+            return _Records;
+        }
     }
 }
