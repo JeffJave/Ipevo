@@ -52,6 +52,7 @@
     <Compile Include="Model\DCL_Shipment.cs" />
     <Compile Include="Model\Interface\IAPIConfig.cs" />
     <Compile Include="Model\LumAPIResultModel.cs" />
+    <Compile Include="Model\TaxCloudExeptionCert.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />
