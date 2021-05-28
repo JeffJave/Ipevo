@@ -5,7 +5,7 @@
   <col name="ProcessID" type="Int" />
   <col name="InvoiceNumber" type="Int" nullable="true" />
   <col name="OrderID" type="NVarChar(50)" />
-  <col name="CustomerID" type="NVarChar(50)" nullable="true />
+  <col name="CustomerID" type="NVarChar(50)" nullable="true" />
   <col name="OrderDate" type="DateTime" nullable="true" />
   <col name="OrderStatusID" type="NVarChar(30)" nullable="true" />
   <col name="OrderAmount" type="Decimal(18,2)" nullable="true" />
