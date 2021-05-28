@@ -22,7 +22,7 @@
 		<Levels>
 			<px:PXGridLevel DataMember="ImportOrderList">
 			    <Columns>
-				<px:PXGridColumn DataField="Selected" Width="40" Type="CheckBox" TextAlign="Center" CommitChanges="True" ></px:PXGridColumn>
+				<px:PXGridColumn AllowCheckAll="True" DataField="Selected" Width="40" Type="CheckBox" TextAlign="Center" CommitChanges="True" ></px:PXGridColumn>
 				<px:PXGridColumn DataField="InvoiceNumber" Width="70" ></px:PXGridColumn>
 				<px:PXGridColumn DataField="OrderID" Width="180" ></px:PXGridColumn>
 				<px:PXGridColumn DataField="CustomerID" Width="180" ></px:PXGridColumn>
