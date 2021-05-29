@@ -27,7 +27,7 @@ namespace PX.Objects.AR
         #endregion
         public string Number2English(decimal num)
         {
-            string nu = string.Format("{0:0.00}", Convert.ToString(num));
+            string nu = num.ToString("#00.00");
             string dollars = "";
             string cents = "";
             string tp = "";
