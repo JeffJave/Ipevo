@@ -1,1 +1,32 @@
-﻿<Page path="~/Pages/LM/LM101000.aspx" ControlId="1" pageSource="tVZRb9owEH5upf0Hy1MfR0i7dlsF1aoAKxJsiFC6t8mQK1h1nMxxWujDfvvOCWkIhGZULE/x5Xz33efzl2ucfCUDNgPSY3IW40uTOu8p6bNIgzIfOlyg7Y+VWyJrxCZjDk81P7FRch3roP0IUt9xBXHYpFrFQMmYCe4xDUP4HUOkm/SeiQjtTuCtwvb6dt2u1+s1FoWL2jSipCvnoLiOmtSk+pU5UDLi2uy4ldq8eAloSk6u3h03sIQU3WgZAhlzpWMmBkzPq3Cb3bgfk186gdRYAOm2mnSK77aBmZgGgk3hJhAeKPMxnLdcSoaxZFiQC+oRA2GYo0a4uBz8bDHN3CBWU0gieViRSl2j1BXhRXxiKhklHN1xz+DEGk/ou2Oyekwh35mPXu0FIpVM9IIZjzSfRteDbq1323eZgMiZMwnCBR2Ha5sHivtMLU2lmGWuAFoOUzpBedRwmBATNn1wAt9n0osSCtBulXxA60ZVhm5rja+rHfSd7qavs5s9PB9icvXBn4AqgE8iazbZ4jPHlhF+A3w2Rw/7vB4uKHH10tD9/IFLDxaXxDbdtE47uRYieDI9fMM9yLo0ZaurwU+YOMohGhsZwQJTnLVITi26jMAPBXb8ar3a02PLINbDWMAmeAPZifS6y0eDGGN+U4G5SWmXJAuHhZoHskmxBQgeuuZyhuVerQ4pD1HMbpC2Pa535s4c7JTMDgfhmcOZxgpuh708Q+b4xvinhfiO4Ngd3dbBwp+VhMciFOiDpTgvpMCOmY+CB5BV8dfOv3iQXbwhM8XMYu1Aq3vkoqxHqvrABQFTHaid8TOHz4UqfygvFVZKrM2AMx85RoF9eCXmi8+n4vnEkQ58owkmbsN6uTkZk+k92331xiA9LMbB6IqJihvYCZRv9DADdo/rVDar5aQgFevqlCLIAJAhLkGt1MblCAMyVCW43qQNXw6nDfurQ31fedg/hb2nQuyfoUyDXhEJ8spTnRq8RCKSu7OpG4nxcHWd7atM/02b7NIfWHUj/rM82ee79ClLknlup9hLsOyLnYqVZ3rxzq+6taVBVkGESvpqc0+JCDasfBZpmGHF5c+QDFmMSyNHdzjfBE+UtCXD+dLLmO9zmQ1Ep2byQejZ7rUJDzNtjXZ/AQ==" />
+﻿<Page path="~/Pages/LM/LM101000.aspx" ControlId="3" pageSource="tVZRb9owEH6ftP9geerjGtKu3VYBWhXaFQk2RGi7t8mQK1h17MxxWtqH/fadkxqSNhTGGE/J5XzffZ/PH27ufSEDNgXSY3Ka4UOLBu8o6bPUgLYfzrnA2G9vGUm9ERtfcbjfj/MYJaeZUWd3IM0115AlLWp0BpRcMcEjZmAIvzJITYveMJFiPFDRU9le32/4jUZjn6XJfH+SUtKVM9DcpC1qoX66BEpG3NgVl9LYhyhvmpK99ts3TaRQdDd6SIBccW0yJgbMzNb1bVfjegQ/CZQ0SIB0Oy06wWfftpmHBoJN4EKJCLT9mMw6ISXDTDIkFIK+w0JYhpBmMj8Z/Ogww0KV6QnkpSKkpIvctMjF/lI+tlRGuUjXPLKNIsk9assUP8vkG4sx62yOrUomemrKU8Mn6emgu9+77IdMQBrMmAQRgsmS0uKB5jHTD5Yqosw0QCdg2hRtYqMBE2LMJreBimMmozRXIf/i1Xyy4WfUrOheSbX2ChEPVot4/oqGuE3EgvUhHoOuUMhLGzZ+oeqyOSf7BfDpDDP8o0YypyQ0D1b0x/dcRjA/Ib4dqrL45FQIdW9H+YJH4IbVadY1EKdtp/GiTxsmI5gjzmGHlFXO00YQJwJPQCnmFvfYg8rMMBPwnIolEKSmnPLB9o/Fv2plj1cxOflLwBLDlWxRHAuCg2C4nCL59tOeLUvUtGD7Pou4WdmAS/ALfc85iMhu2CTTcDnsLWFc4r+AHFRAAsFxbLqd3WIc1mAgHQ1mtzhHFRycqdlI3YLcCKQ0GNUd7uJJmmpmX0o7vX54juuGZ6MBCUHAxCi9EsQlfKrw/a6jwosp8WqrTmPUHY359pXCi5yP1T3LUqNi6yK2eNNbnDAnbHEmXz2pVyAjJBUggGbivxxY/0nzQIkslk70OjXOlY6tU7sqN/heGPp6i6vYV9kxC4aOIBniK+gnBww5UgRaaWUV8y3Zf96xXW1jWY2tPGsbJH8b49oGqM4hN3Kvl7/10BDltpWf4udelgd3Tu9wK9OsHdHdGKdf+7e78axu7J7+0Sr7dFgucyXSXzmqf7zSUpeAi+znRuHVe6RXcbN2TVqtQze98s2qaa9fIX+E/N7IuLRmdo03NnVPyZlkeG+O3D70uXRXvAN7l0NIt7p8a0W4F9fVPw==">
+    <PXLayoutRule ID="CstPXLayoutRule4" ParentId="phF_tab_Items#0_CstPXLayoutRule4" TypeFullName="PX.Web.UI.PXLayoutRule">
+        <Prop Key="ControlSize" />
+    </PXLayoutRule>
+    <PXLayoutRule ID="CstPXLayoutRule6" ParentId="phF_tab_Items#0_CstPXLayoutRule6" TypeFullName="PX.Web.UI.PXLayoutRule">
+        <Prop Key="ControlSize" />
+    </PXLayoutRule>
+    <PXTabItem Text="Vendor Central" ParentId="phF_tab_Items#1" TypeFullName="PX.Web.UI.PXTabItem">
+        <Children Key="Template">
+            <AddItem>
+                <PXLayoutRule TypeFullName="PX.Web.UI.PXLayoutRule">
+                    <Prop Key="Virtual:ApplyStylesheetSkin" />
+                    <Prop Key="ID" Value="CstPXLayoutRule1" />
+                    <Prop Key="StartColumn" Value="True" />
+                    <Children Key="Controls" />
+                </PXLayoutRule>
+            </AddItem>
+            <PXLayoutRule ID="CstPXLayoutRule1" OriginalIndex="0" />
+        </Children>
+    </PXTabItem>
+    <PXLayoutRule ID="CstPXLayoutRule9" ParentId="phF_tab_Items#1_CstformSetup_CstPXLayoutRule9" TypeFullName="PX.Web.UI.PXLayoutRule">
+        <Prop Key="GroupCaption" Value="API Settings" />
+    </PXLayoutRule>
+    <PXLayoutRule ID="CstPXLayoutRule14" ParentId="phF_tab_Items#1_CstformSetup_CstPXLayoutRule14" TypeFullName="PX.Web.UI.PXLayoutRule">
+        <Prop Key="ID" Value="CstPXLayoutRule14" />
+        <Prop Key="StartGroup" Value="True" />
+        <Prop Key="StartColumn" />
+        <Prop Key="ColumnSpan" />
+        <Prop Key="GroupCaption" Value="Integration Settings" />
+        <Prop Key="ControlSize" />
+    </PXLayoutRule>
+</Page>

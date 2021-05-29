@@ -19,7 +19,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\Bin\</OutputPath>
+    <OutputPath>..\..\..\..\Bin\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
@@ -53,7 +53,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DAC_Extensions\LocationExtensions.cs" />
     <Compile Include="DAC_Extensions\ARInvoiceExtension.cs" />
     <Compile Include="Graph_Extensions\SOInvoiceEntry_Extension.cs" />
     <Compile Include="Graph_Extensions\ARPaymentEntry.cs" />
