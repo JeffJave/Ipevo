@@ -72,7 +72,7 @@ namespace ExternalLogisticsAPI.Graph
                     {
                         // Delete temp table data
                         PXDatabase.Delete<LUMVendCntrlProcessOrder>(
-                            new PXDataFieldRestrict<LUMVendCntrlProcessOrder.createdByID>(Accessinfo.UserID));
+                            new PXDataFieldRestrict<LUMVendCntrlProcessOrder.customerID>("AMZ"));
                         this.ImportOrderList.Cache.Clear();
 
                         int count = 1;
