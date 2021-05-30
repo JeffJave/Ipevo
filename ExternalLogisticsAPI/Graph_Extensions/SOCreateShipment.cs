@@ -73,6 +73,15 @@ namespace PX.Objects.SO
                     {
                         foreach (SOOrder item in filterResult)
                         {
+                            /*
+                             *
+                             *
+                             *Debug mode  DCL.order_number = SO.CustomerRefNbr
+                             *Release mode DCL.order_nu,ber = SO.orderNumber
+                             *
+                             *
+                             *
+                             */
                             if (dclOrders.orders.Any(x =>
                                 x.order_number == item.CustomerRefNbr &&
                                 !string.IsNullOrEmpty(x.shipping_carrier) &&
