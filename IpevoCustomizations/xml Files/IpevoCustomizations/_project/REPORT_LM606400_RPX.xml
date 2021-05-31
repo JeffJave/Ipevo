@@ -1,5 +1,8 @@
 ﻿<Report Name="lm606400.rpx">
     <Report Name="report1" version="20201103">
+        <CommonSettings>
+            <ViewPdf>True</ViewPdf>
+        </CommonSettings>
         <EmbeddedImages>
             <EmbeddedImage>
                 <ImageData>/9j/4AAQSkZJRgABAQEAYABgAAD/4SK6RXhpZgAATU0AKgAAAAgABgALAAIAAAAmAAAIYgESAAMAAAABAAEAAAExAAIAAAAmAAAIiAEyAAIAAAAUAAAIrodpAAQAAAABAAAIwuocAAcAAAgMAAAAVgAAEUYc6gAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
@@ -106,6 +109,42 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
             </ReportParameter>
             <ReportParameter>
                 <ColumnSpan>2</ColumnSpan>
+                <DefaultValue>HSCODECA</DefaultValue>
+                <Name>Attribute_HSCODECA</Name>
+                <Visible>False</Visible>
+            </ReportParameter>
+            <ReportParameter>
+                <ColumnSpan>2</ColumnSpan>
+                <DefaultValue>HSCODEEU</DefaultValue>
+                <Name>Attribute_HSCODEEU</Name>
+                <Visible>False</Visible>
+            </ReportParameter>
+            <ReportParameter>
+                <ColumnSpan>2</ColumnSpan>
+                <DefaultValue>HSCODEJP</DefaultValue>
+                <Name>Attribute_HSCODEJP</Name>
+                <Visible>False</Visible>
+            </ReportParameter>
+            <ReportParameter>
+                <ColumnSpan>2</ColumnSpan>
+                <DefaultValue>HSCODENL</DefaultValue>
+                <Name>Attribute_HSCODENL</Name>
+                <Visible>False</Visible>
+            </ReportParameter>
+            <ReportParameter>
+                <ColumnSpan>2</ColumnSpan>
+                <DefaultValue>HSCODEUK</DefaultValue>
+                <Name>Attribute_HSCODEUK</Name>
+                <Visible>False</Visible>
+            </ReportParameter>
+            <ReportParameter>
+                <ColumnSpan>2</ColumnSpan>
+                <DefaultValue>HSCODEUS</DefaultValue>
+                <Name>Attribute_HSCODEUS</Name>
+                <Visible>False</Visible>
+            </ReportParameter>
+            <ReportParameter>
+                <ColumnSpan>2</ColumnSpan>
                 <DefaultValue>VENDENGNA</DefaultValue>
                 <Name>Attribute_VENDENGNA</Name>
                 <Visible>False</Visible>
@@ -184,6 +223,96 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                     <RelationRow>
                         <ChildField>@Attribute_HSCODE</ChildField>
                         <ParentField>AttrHSCODE.AttributeID</ParentField>
+                    </RelationRow>
+                </Links>
+                <ParentName>InventoryItem</ParentName>
+            </ReportRelation>
+            <ReportRelation>
+                <ChildAlias>AttrHSCODECA</ChildAlias>
+                <ChildName>CSAnswers</ChildName>
+                <Links>
+                    <RelationRow>
+                        <ChildField>RefNoteID</ChildField>
+                        <ParentField>NoteID</ParentField>
+                    </RelationRow>
+                    <RelationRow>
+                        <ChildField>@Attribute_HSCODECA</ChildField>
+                        <ParentField>AttrHSCODECA.AttributeID</ParentField>
+                    </RelationRow>
+                </Links>
+                <ParentName>InventoryItem</ParentName>
+            </ReportRelation>
+            <ReportRelation>
+                <ChildAlias>AttrHSCODEEU</ChildAlias>
+                <ChildName>CSAnswers</ChildName>
+                <Links>
+                    <RelationRow>
+                        <ChildField>RefNoteID</ChildField>
+                        <ParentField>NoteID</ParentField>
+                    </RelationRow>
+                    <RelationRow>
+                        <ChildField>@Attribute_HSCODEEU</ChildField>
+                        <ParentField>AttrHSCODEEU.AttributeID</ParentField>
+                    </RelationRow>
+                </Links>
+                <ParentName>InventoryItem</ParentName>
+            </ReportRelation>
+            <ReportRelation>
+                <ChildAlias>AttrHSCODEJP</ChildAlias>
+                <ChildName>CSAnswers</ChildName>
+                <Links>
+                    <RelationRow>
+                        <ChildField>RefNoteID</ChildField>
+                        <ParentField>NoteID</ParentField>
+                    </RelationRow>
+                    <RelationRow>
+                        <ChildField>@Attribute_HSCODEJP</ChildField>
+                        <ParentField>AttrHSCODEJP.AttributeID</ParentField>
+                    </RelationRow>
+                </Links>
+                <ParentName>InventoryItem</ParentName>
+            </ReportRelation>
+            <ReportRelation>
+                <ChildAlias>AttrHSCODENL</ChildAlias>
+                <ChildName>CSAnswers</ChildName>
+                <Links>
+                    <RelationRow>
+                        <ChildField>RefNoteID</ChildField>
+                        <ParentField>NoteID</ParentField>
+                    </RelationRow>
+                    <RelationRow>
+                        <ChildField>@Attribute_HSCODENL</ChildField>
+                        <ParentField>AttrHSCODENL.AttributeID</ParentField>
+                    </RelationRow>
+                </Links>
+                <ParentName>InventoryItem</ParentName>
+            </ReportRelation>
+            <ReportRelation>
+                <ChildAlias>AttrHSCODEUK</ChildAlias>
+                <ChildName>CSAnswers</ChildName>
+                <Links>
+                    <RelationRow>
+                        <ChildField>RefNoteID</ChildField>
+                        <ParentField>NoteID</ParentField>
+                    </RelationRow>
+                    <RelationRow>
+                        <ChildField>@Attribute_HSCODEUK</ChildField>
+                        <ParentField>AttrHSCODEUK.AttributeID</ParentField>
+                    </RelationRow>
+                </Links>
+                <ParentName>InventoryItem</ParentName>
+            </ReportRelation>
+            <ReportRelation>
+                <ChildAlias>AttrHSCODEUS</ChildAlias>
+                <ChildName>CSAnswers</ChildName>
+                <Links>
+                    <RelationRow>
+                        <ChildField>RefNoteID</ChildField>
+                        <ParentField>NoteID</ParentField>
+                    </RelationRow>
+                    <RelationRow>
+                        <ChildField>@Attribute_HSCODEUS</ChildField>
+                        <ParentField>AttrHSCODEUS.AttributeID</ParentField>
                     </RelationRow>
                 </Links>
                 <ParentName>InventoryItem</ParentName>
@@ -3886,22 +4015,22 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                             </TextBox>
                             <TextBox Name="textBox34">
                                 <Location>0px, 64px</Location>
-                                <Size>56px, 16px</Size>
+                                <Size>80px, 16px</Size>
                                 <Style>
                                     <Padding>
                                         <Left>4px</Left>
                                     </Padding>
                                     <VerticalAlign>Middle</VerticalAlign>
                                 </Style>
-                                <Value>HS Code:</Value>
+                                <Value>=IsNull([SOShipment.FOBPoint] + ' ', '') + 'HS Code:'</Value>
                             </TextBox>
                             <TextBox Name="textBox35">
-                                <Location>56px, 64px</Location>
-                                <Size>256px, 16px</Size>
+                                <Location>80px, 64px</Location>
+                                <Size>232px, 16px</Size>
                                 <Style>
                                     <VerticalAlign>Middle</VerticalAlign>
                                 </Style>
-                                <Value>=[AttrHSCODE.Value]</Value>
+                                <Value>=IIF([SOShipment.FOBPoint] = 'CA', [AttrHSCODECA.Value], #010;	IIF([SOShipment.FOBPoint] = 'EU', [AttrHSCODEEU.Value], #010;	IIF([SOShipment.FOBPoint] = 'JP', [AttrHSCODEJP.Value], #010;	IIF([SOShipment.FOBPoint] = 'NL', [AttrHSCODENL.Value], #010;	IIF([SOShipment.FOBPoint] = 'UK', [AttrHSCODEUK.Value], #010;	IIF([SOShipment.FOBPoint] = 'US', [AttrHSCODEUS.Value], #010;[AttrHSCODE.Value]))))))</Value>
                             </TextBox>
                             <TextBox Name="textBox36">
                                 <Location>112px, 48px</Location>
