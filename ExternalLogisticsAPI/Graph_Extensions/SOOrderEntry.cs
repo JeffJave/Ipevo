@@ -176,7 +176,7 @@ namespace ExternalLogisticsAPI.Graph_Extensions
             {
                 new Order()
                 {
-                    order_number = soOrder.CustomerRefNbr,
+                    order_number = soOrder.OrderNbr,
                     account_number = soOrder.ShipVia == "UPSGROUND" ?"19311" : "19310",
                     ordered_date = soOrder.OrderDate?.ToString("yyyy-MM-dd"),
                     po_number = soOrder.CustomerOrderNbr,

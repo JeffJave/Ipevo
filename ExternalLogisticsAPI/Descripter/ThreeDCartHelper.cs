@@ -160,9 +160,13 @@ namespace ExternalLogisticsAPI.Descripter
                 }
 
                 orderEntry.Taxes.Cache.SetValueExt<SOTaxTran.curyTaxAmt>(orderEntry.Taxes.Current, list[0].SalesTax + list[0].SalesTax2);
+                orderEntry.CurrentDocument.SetValueExt<SOOrder.paymentMethodID>(order, GetAcuPymtMethod(orderEntry, order.CustomerID, list[0].BillingPaymentMethod));
 
-                order.PaymentMethodID = GetAcuPymtMethod(orderEntry, order.CustomerID, list[0].BillingPaymentMethod);
-                
+                string tranID = list.Find(x => x.TransactionList.Count > 0).TransactionList[0].TransactionID;
+                int    index  = tranID.IndexOf(':') + 2; // Because there is a space between the ':' of transaction ID.
+
+                order.CustomerRefNbr = tranID.Contains(PX.Objects.PO.Messages.Completed) ? tranID.Substring(index, tranID.Length - index) : null;
+
                 // Refer to PX.AmazonIntegration project SetDocumentLevelDiscountandTaxData() to manully update SOOrder total amount fields.
                 order.CuryTaxTotal    = orderEntry.Taxes.Current.CuryTaxAmt;
                 order.CuryOrderTotal += order.CuryTaxTotal;
@@ -288,13 +292,13 @@ namespace ExternalLogisticsAPI.Descripter
 
             payment = PXCache<ARPayment>.CreateCopy(pymtEntry.Document.Insert(payment));
 
-            payment.CustomerID = order.CustomerID;
+            payment.CustomerID         = order.CustomerID;
             payment.CustomerLocationID = order.CustomerLocationID;
-            payment.PaymentMethodID = order.PaymentMethodID;
-            payment.PMInstanceID = order.PMInstanceID;
-            payment.CuryOrigDocAmt = 0m;
-            payment.ExtRefNbr = order.OrderNbr;
-            payment.DocDesc = order.OrderDesc;
+            payment.PaymentMethodID    = order.PaymentMethodID;
+            payment.PMInstanceID       = order.PMInstanceID;
+            payment.CuryOrigDocAmt     = 0m;
+            payment.ExtRefNbr          = order.CustomerRefNbr ?? order.OrderNbr;
+            payment.DocDesc            = order.OrderDesc;
 
             payment = pymtEntry.Document.Update(payment);
 
@@ -352,7 +356,6 @@ namespace ExternalLogisticsAPI.Descripter
         {
             CustomerPaymentMethodC paymMethod = SelectFrom<CustomerPaymentMethodC>.Where<CustomerPaymentMethodC.descr.Contains<@P.AsString>
                                                                                          .And<CustomerPaymentMethodC.bAccountID.IsEqual<@P.AsInt>>>.View.Select(graph, paymDescr, customerID);
-
             return paymMethod?.PaymentMethodID;
         }
 

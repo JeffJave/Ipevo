@@ -32,7 +32,7 @@ namespace ExternalLogisticsAPI.Graph
                 And<LUMVendCntrlProcessOrder.processID, Equal<LUMVendCntrlProcessLog.processID>>>>,
             Where<LUMVendCntrlProcessOrder.processed, Equal<False>,
                 And<LUMVendCntrlProcessOrder.orderDate, GreaterEqual<Current<DCLFilter.received_from>>,
-                    And<LUMVendCntrlProcessOrder.orderDate,LessEqual<Current<DCLFilter.received_to>>>>>> ImportOrderList;
+                    And<LUMVendCntrlProcessOrder.orderDate, LessEqual<Current<DCLFilter.received_to>>>>>> ImportOrderList;
 
         [PXHidden]
         [PXCacheName("ImportLog")]
@@ -67,12 +67,12 @@ namespace ExternalLogisticsAPI.Graph
             {
                 try
                 {
-                    var result = DCLHelper.CallDCLToGetSOByFilter(this.DCLSetup.Select().RowCast<LUMVendCntrlSetup>().FirstOrDefault(),this.DocFilter.Current);
+                    var result = DCLHelper.CallDCLToGetSOByFilter(this.DCLSetup.Select().RowCast<LUMVendCntrlSetup>().FirstOrDefault(), this.DocFilter.Current);
                     if (result.StatusCode == HttpStatusCode.OK)
                     {
                         // Delete temp table data
                         PXDatabase.Delete<LUMVendCntrlProcessOrder>(
-                            new PXDataFieldRestrict<LUMVendCntrlProcessOrder.createdByID>(Accessinfo.UserID));
+                            new PXDataFieldRestrict<LUMVendCntrlProcessOrder.customerID>("AMZ"));
                         this.ImportOrderList.Cache.Clear();
 
                         int count = 1;
@@ -81,7 +81,7 @@ namespace ExternalLogisticsAPI.Graph
                         foreach (var orders in _dclOrders.orders)
                         {
 
-                            if(this.ImportLog.Select().RowCast<LUMVendCntrlProcessLog>().Any(x => x.OrderID == orders.order_number && !string.IsNullOrEmpty(x.AcumaticaOrderID) && x.ImportStatus == true))
+                            if (this.ImportLog.Select().RowCast<LUMVendCntrlProcessLog>().Any(x => x.OrderID == orders.order_number && !string.IsNullOrEmpty(x.AcumaticaOrderID) && x.ImportStatus == true))
                                 continue;
                             var _soOrder = this.ImportOrderList.Insert(
                                 (LUMVendCntrlProcessOrder)this.ImportOrderList.Cache.CreateInstance());
@@ -120,71 +120,85 @@ namespace ExternalLogisticsAPI.Graph
         {
             try
             {
-                var setup = this.DCLSetup.Select().RowCast<LUMVendCntrlSetup>().FirstOrDefault();
-                var result = DCLHelper.CallDCLToGetSOByFilter(this.DCLSetup.Select().RowCast<LUMVendCntrlSetup>().FirstOrDefault(), this.DocFilter.Current);
-                if (result.StatusCode == HttpStatusCode.OK)
+                PXLongOperation.StartOperation(this, delegate ()
                 {
-                    var _apiOrders = JsonConvert.DeserializeObject<OrderResponse>(result.ContentResult);
-                    var inventoryitems = SelectFrom<InventoryItem>.View.Select(this).RowCast<InventoryItem>().ToList();
-                    var LogDatas = SelectFrom<LUMVendCntrlProcessLog>
-                        .Where<LUMVendCntrlProcessLog.importStatus.IsEqual<True>
-                            .And<LUMVendCntrlProcessLog.acumaticaOrderID.IsNotNull>>.View.Select(this)
-                        .RowCast<LUMVendCntrlProcessLog>().ToList();
-
-                    // Import Data 
-                    foreach (var item in list.Where(x => !x.Processed.Value))
+                    var setup = this.DCLSetup.Select().RowCast<LUMVendCntrlSetup>().FirstOrDefault();
+                    var result = DCLHelper.CallDCLToGetSOByFilter(
+                        this.DCLSetup.Select().RowCast<LUMVendCntrlSetup>().FirstOrDefault(), this.DocFilter.Current);
+                    if (result.StatusCode == HttpStatusCode.OK)
                     {
-                        var _impRow = _apiOrders.orders.Where(x => x.order_number == item.OrderID).FirstOrDefault();
-                        try
-                        {
-                            if (_impRow == null)
-                                throw new Exception("Cant not mapping API Data");
-                            // Check Data is Exists
-                            var existsLog = LogDatas.Where(x =>
-                                x.OrderID == item.OrderID && x.CustomerID == item.CustomerID).ToList();
-                            if (existsLog.Any())
-                                throw new Exception($"This Order has been Created, SONbr: {existsLog.FirstOrDefault()?.AcumaticaOrderType} {existsLog.FirstOrDefault()?.AcumaticaOrderID}");
-                            // SOOrder
-                            var graph = PXGraph.CreateInstance<SOOrderEntry>();
-                            var newOrder = (SOOrder)graph.Document.Cache.CreateInstance();
-                            newOrder.OrderType = setup.OrderType;
-                            newOrder.OrderDate = DateTime.Parse(_impRow.ordered_date);
-                            newOrder.CustomerID = setup.CustomerID;
-                            newOrder.CustomerOrderNbr = _impRow.po_number;
-                            newOrder.CustomerRefNbr = _impRow.order_number;
-                            newOrder.OrderDesc =
-                                $"Create SO BY Import Process |Tacking Number: {_impRow.shipments.FirstOrDefault().packages.FirstOrDefault()?.tracking_number}";
-                            newOrder = (SOOrder)graph.Document.Cache.Insert(newOrder);
+                        var _apiOrders = JsonConvert.DeserializeObject<OrderResponse>(result.ContentResult);
+                        var inventoryitems = SelectFrom<InventoryItem>.View.Select(this).RowCast<InventoryItem>()
+                            .ToList();
+                        var LogDatas = SelectFrom<LUMVendCntrlProcessLog>
+                            .Where<LUMVendCntrlProcessLog.importStatus.IsEqual<True>
+                                .And<LUMVendCntrlProcessLog.acumaticaOrderID.IsNotNull>>.View.Select(this)
+                            .RowCast<LUMVendCntrlProcessLog>().ToList();
 
-                            foreach (var line in _impRow.order_lines)
-                            {
-                                // SOLine
-                                var newTranc = (SOLine)graph.Transactions.Cache.CreateInstance();
-                                newTranc.InventoryID = inventoryitems
-                                    .FirstOrDefault(x => x.InventoryCD.Trim() == line.item_number)?.InventoryID;
-                                //newTranc.ManualPrice = true;
-                                newTranc.OrderQty = (decimal)line.quantity;
-                                newTranc.OpenQty = (decimal)line.quantity;
-                                newTranc.UnitPrice = (decimal)line.price;
-                                graph.Transactions.Cache.Insert(newTranc);
-                            }
-                            graph.Persist();
-                            item.Processed = true;
-                            // Update Process Order
-                            this.ImportOrderList.Cache.Update(item);
-                            InsertImpLog(setup, item, true, string.Empty, newOrder.OrderNbr);
-                        }
-                        catch (Exception e)
+                        // Import Data 
+                        int count = 0;
+                        foreach (var item in list.Where(x => !x.Processed.Value))
                         {
-                            InsertImpLog(setup, item, false, e.Message);
-                        }
-                    }// end ImpRow
-                    this.Actions.PressSave();
-                }
+                            var _impRow = _apiOrders.orders.Where(x => x.order_number == item.OrderID).FirstOrDefault();
+                            try
+                            {
+                                if (_impRow == null)
+                                    throw new Exception("Cant not mapping API Data");
+                                // Check Data is Exists
+                                var existsLog = LogDatas.Where(x =>
+                                    x.OrderID == item.OrderID && x.CustomerID == item.CustomerID).ToList();
+                                if (existsLog.Any())
+                                    throw new Exception(
+                                        $"This Order has been Created, SONbr: {existsLog.FirstOrDefault()?.AcumaticaOrderType} {existsLog.FirstOrDefault()?.AcumaticaOrderID}");
+                                // SOOrder
+                                var graph = PXGraph.CreateInstance<SOOrderEntry>();
+                                var newOrder = (SOOrder)graph.Document.Cache.CreateInstance();
+                                newOrder.OrderType = setup.OrderType;
+                                newOrder.OrderDate = DateTime.Parse(_impRow.ordered_date);
+                                newOrder.CustomerID = setup.CustomerID;
+                                newOrder.CustomerOrderNbr = _impRow.po_number;
+                                newOrder.CustomerRefNbr = _impRow.order_number;
+                                if (_impRow.stage_description == "Fully Shipped")
+                                    newOrder.OrderDesc = _impRow.stage_description == "Fully Shipped" ?
+                                        $"Create SO BY Import Process |Tacking Number: {_impRow.shipments.FirstOrDefault().packages.FirstOrDefault()?.tracking_number}" :
+                                        $"DCL Stage is {_impRow.stage_description}";
+                                newOrder = (SOOrder)graph.Document.Cache.Insert(newOrder);
+
+                                foreach (var line in _impRow.order_lines)
+                                {
+                                    // SOLine
+                                    var newTranc = (SOLine)graph.Transactions.Cache.CreateInstance();
+                                    newTranc.InventoryID = inventoryitems
+                                        .FirstOrDefault(x => x.InventoryCD.Trim() == line.item_number)?.InventoryID;
+                                    //newTranc.ManualPrice = true;
+                                    newTranc.OrderQty = (decimal)line.quantity;
+                                    newTranc.OpenQty = (decimal)line.quantity;
+                                    newTranc.UnitPrice = (decimal)line.price;
+                                    graph.Transactions.Cache.Insert(newTranc);
+                                }
+
+                                graph.Persist();
+                                item.Processed = true;
+                                // Update Process Order
+                                this.ImportOrderList.Cache.Update(item);
+                                InsertImpLog(setup, item, true, string.Empty, newOrder.OrderNbr);
+                            }
+                            catch (Exception e)
+                            {
+                                InsertImpLog(setup, item, false, e.Message);
+                                PXProcessing.SetError<LUMVendCntrlProcessOrder>(count, e.Message);
+                            }
+
+                            count++;
+                        } // end ImpRow
+
+                        this.Actions.PressSave();
+                    }
+                });
             }
             catch (Exception e)
             {
-                throw new PXOperationCompletedWithErrorException(e.Message, e);
+                throw new PXOperationCompletedWithErrorException(e.Message);
             }
         }
 
@@ -217,7 +231,7 @@ namespace ExternalLogisticsAPI.Graph
 
             if (IsUpdated)
                 this.ImportLog.Cache.Update(model);
-        } 
+        }
 
         #endregion
     }

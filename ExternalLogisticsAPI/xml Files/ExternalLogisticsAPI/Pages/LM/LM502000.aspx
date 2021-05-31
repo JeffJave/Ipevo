@@ -19,8 +19,8 @@
         </Template>
     </px:PXFormView>
 </asp:Content>
-<asp:Content ID="cont3" ContentPlaceHolderID="phG" runat="Server">
-    <px:PXGrid ID="grid" runat="server" DataSourceID="ds" Width="100%" Height="150px" SkinID="Details" AllowAutoHide="false">
+<asp:Content ID="cont3" ContentPlaceHolderID="phG" Runat="Server">
+    <px:PXGrid SyncPosition="True" ID="grid" runat="server" DataSourceID="ds" Width="100%" Height="150px" SkinID="PrimaryInquire" AllowAutoHide="false">
         <Levels>
             <px:PXGridLevel DataMember="ImportOrderList">
                 <Columns>
@@ -43,4 +43,15 @@
         <ActionBar>
         </ActionBar>
     </px:PXGrid>
+    
+    <script type="text/javascript">
+        window.onload = function () {
+            window.setTimeout(function () {
+                var Prepare = document.querySelectorAll('div[data-cmd="PrepareImport"]')[0].parentNode;
+                var Import = document.querySelectorAll('div[data-cmd="Process"]')[0].parentNode;
+                Import.parentNode.insertBefore(Prepare, Import);
+            }, 100);
+        };
+    </script>
+
 </asp:Content>
