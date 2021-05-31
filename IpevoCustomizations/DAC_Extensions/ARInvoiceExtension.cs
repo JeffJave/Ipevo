@@ -32,7 +32,7 @@ namespace PX.Objects.AR
             string cents = "";
             string tp = "";
             string[] temp;
-            string[] tx = { "", "THOUSAND,", "MILLION,", "BILLION,", "TRILLION," };
+            string[] tx = { "", "THOUSAND", "MILLION", "BILLION", "TRILLION" };
             
             if (decimal.Parse(nu) == 0) return "ZERO DOLLARS";
             else if (decimal.Parse(nu) <= 0) return "ERROR!! ";
@@ -69,20 +69,20 @@ namespace PX.Objects.AR
             }
             if (x == 0 && cents != "") // 如果整數部位= 0 ，且有小數
             {
-                dollars = "ZERO DOLLARS AND" + cents + " ONLY";
+                dollars = "ZERO DOLLARS AND" + cents + " ONLY.";
             }
             else
             {
                 if (cents == "")
                 {
-                    dollars = tp + "DOLLARS ONLY";
+                    dollars = tp + "DOLLARS ONLY.";
                 }
                 else
                 {
-                    dollars = tp + "DOLLARS AND" + cents + " ONLY";
+                    dollars = tp + "DOLLARS AND" + cents + " ONLY.";
                 }
             }
-            return dollars;
+            return dollars.Replace("  ", " ");
         }
         private string GetEnglish(string nu)
         {
