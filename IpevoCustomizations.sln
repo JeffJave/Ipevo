@@ -2,7 +2,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31112.23
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "IPEVEO", "..\..\..\", "{407B75C1-DF84-479F-BD54-F5A5D7012034}"
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "D:", "..\..\", "{407B75C1-DF84-479F-BD54-F5A5D7012034}"
 	ProjectSection(WebsiteProperties) = preProject
 		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.7.1"
 		ProjectReferences = "{9BC6D61A-5D4B-4D57-BC6B-5E3F9D04377E}|IpevoCustomizations.dll;"
@@ -39,6 +39,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "APILibrary", "APILibrary\AP
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LUMInterTenantTrans", "LUMInterTenantTrans\LUMInterTenantTrans.csproj", "{1120904B-4E07-4C1F-B692-1F54BF986034}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LumInventoryCustomizaton", "LumInventoryCustomizaton\LumInventoryCustomizaton.csproj", "{34D83293-E0F2-4513-8E7A-6F3B1AB110BD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -68,6 +70,10 @@ Global
 		{1120904B-4E07-4C1F-B692-1F54BF986034}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1120904B-4E07-4C1F-B692-1F54BF986034}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1120904B-4E07-4C1F-B692-1F54BF986034}.Release|Any CPU.Build.0 = Release|Any CPU
+		{34D83293-E0F2-4513-8E7A-6F3B1AB110BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{34D83293-E0F2-4513-8E7A-6F3B1AB110BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{34D83293-E0F2-4513-8E7A-6F3B1AB110BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{34D83293-E0F2-4513-8E7A-6F3B1AB110BD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
