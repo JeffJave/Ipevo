@@ -24,7 +24,7 @@ namespace PX.Objects.PO
     {
         #region UsrICSOCreated
         [PXDBBool]
-        [PXUIField(DisplayName = "ICSOCreated", Enabled = false)]
+        [PXUIField(DisplayName = "Created From IC SO", Enabled = false)]
         [PXDefault(false, PersistingCheck = PXPersistingCheck.Nothing)]
         public virtual bool? UsrICSOCreated { get; set; }
         public abstract class usrICSOCreated : PX.Data.BQL.BqlBool.Field<usrICSOCreated> { }
