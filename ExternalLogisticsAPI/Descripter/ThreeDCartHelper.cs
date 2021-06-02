@@ -98,7 +98,10 @@ namespace ExternalLogisticsAPI.Descripter
                     Processed      = false
                 };
 
-                graph.ImportOrderList.Cache.Insert(procOrder);
+                if (LUM3DCartProcessOrder.UK.Find(graph, procOrder.OrderID, procOrder.InvoiceNumber) == null)
+                {
+                    graph.ImportOrderList.Cache.Insert(procOrder);
+                }
             }
 
             graph.Actions.PressSave();
