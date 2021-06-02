@@ -89,7 +89,7 @@ namespace ExternalLogisticsAPI.Graph
                             _soOrder.OrderID = orders.order_number;
                             _soOrder.CustomerID = orders.customer_number;
                             _soOrder.OrderDate = DateTime.Parse(orders.ordered_date);
-                            _soOrder.OrderStatusID = orders.order_status.ToString();
+                            _soOrder.OrderStatusID = orders.order_stage.ToString();
                             _soOrder.OrderQty = orders.order_lines.Sum(x => x.quantity);
                             _soOrder.OrderAmount = orders.order_subtotal;
                             _soOrder.PoNumber = orders.po_number;
@@ -127,7 +127,7 @@ namespace ExternalLogisticsAPI.Graph
                         this.DCLSetup.Select().RowCast<LUMVendCntrlSetup>().FirstOrDefault(), this.DocFilter.Current);
                     if (result.StatusCode == HttpStatusCode.OK)
                     {
-                        var _apiOrders = JsonConvert.DeserializeObject<OrderResponse>(result.ContentResult);
+                        var apiOrders = JsonConvert.DeserializeObject<OrderResponse>(result.ContentResult);
                         var inventoryitems = SelectFrom<InventoryItem>.View.Select(this).RowCast<InventoryItem>()
                             .ToList();
                         var LogDatas = SelectFrom<LUMVendCntrlProcessLog>
@@ -136,13 +136,17 @@ namespace ExternalLogisticsAPI.Graph
                             .RowCast<LUMVendCntrlProcessLog>().ToList();
 
                         // Import Data 
+                        
                         int count = 0;
                         foreach (var item in list.Where(x => !x.Processed.Value))
                         {
-                            var _impRow = _apiOrders.orders.Where(x => x.order_number == item.OrderID).FirstOrDefault();
+                            // 
+                            var logNewOrderNbr = string.Empty;
+                            var logExceptionMsg = string.Empty;
+                            var impRow = apiOrders.orders.Where(x => x.order_number == item.OrderID).FirstOrDefault();
                             try
                             {
-                                if (_impRow == null)
+                                if (impRow == null)
                                     throw new Exception("Cant not mapping API Data");
                                 // Check Data is Exists
                                 var existsLog = LogDatas.Where(x =>
@@ -154,17 +158,18 @@ namespace ExternalLogisticsAPI.Graph
                                 var graph = PXGraph.CreateInstance<SOOrderEntry>();
                                 var newOrder = (SOOrder)graph.Document.Cache.CreateInstance();
                                 newOrder.OrderType = setup.OrderType;
-                                newOrder.OrderDate = DateTime.Parse(_impRow.ordered_date);
+                                newOrder.OrderDate = DateTime.Parse(impRow.ordered_date);
                                 newOrder.CustomerID = setup.CustomerID;
-                                newOrder.CustomerOrderNbr = _impRow.po_number;
-                                newOrder.CustomerRefNbr = _impRow.order_number;
-                                if (_impRow.stage_description == "Fully Shipped")
-                                    newOrder.OrderDesc = _impRow.stage_description == "Fully Shipped" ?
-                                        $"Create SO BY Import Process |Tacking Number: {_impRow.shipments.FirstOrDefault().packages.FirstOrDefault()?.tracking_number}" :
-                                        $"DCL Stage is {_impRow.stage_description}";
+                                newOrder.CustomerOrderNbr = impRow.po_number;
+                                newOrder.CustomerRefNbr = impRow.order_number;
+                                if (impRow.stage_description == "Fully Shipped")
+                                    newOrder.OrderDesc = impRow.stage_description == "Fully Shipped"
+                                        ? $"Create SO BY Import Process |Tacking Number: {impRow.shipments.FirstOrDefault().packages.FirstOrDefault()?.tracking_number}"
+                                        : $"DCL Stage is {impRow.stage_description}";
+                                
                                 newOrder = (SOOrder)graph.Document.Cache.Insert(newOrder);
 
-                                foreach (var line in _impRow.order_lines)
+                                foreach (var line in impRow.order_lines)
                                 {
                                     // SOLine
                                     var newTranc = (SOLine)graph.Transactions.Cache.CreateInstance();
@@ -181,14 +186,35 @@ namespace ExternalLogisticsAPI.Graph
                                 item.Processed = true;
                                 // Update Process Order
                                 this.ImportOrderList.Cache.Update(item);
-                                InsertImpLog(setup, item, true, string.Empty, newOrder.OrderNbr);
+                                logNewOrderNbr = newOrder.OrderNbr;
+
+                                #region Prepare Invoice
+
+                                var newAdapter = new PXAdapter(graph.Document)
+                                { Searches = new Object[] { newOrder.OrderType, newOrder.OrderNbr } };
+                                var cc = newAdapter.Get<SOOrder>().Count();
+                                graph.PrepareInvoice(newAdapter);
+
+                                #endregion
                             }
                             catch (Exception e)
                             {
-                                InsertImpLog(setup, item, false, e.Message);
-                                PXProcessing.SetError<LUMVendCntrlProcessOrder>(count, e.Message);
+                                // Prepare Invoice完成是throw exception
+                                if (e.Message?.ToLower() != "invoice")
+                                {
+                                    logExceptionMsg = e.Message;
+                                    PXProcessing.SetError<LUMVendCntrlProcessOrder>(count, e.Message);
+                                }
                             }
-
+                            finally
+                            {
+                                InsertImpLog(
+                                    setup,
+                                    item,
+                                    string.IsNullOrEmpty(logExceptionMsg),
+                                    logExceptionMsg,
+                                    string.IsNullOrEmpty(logNewOrderNbr) ? null : logNewOrderNbr);
+                            }
                             count++;
                         } // end ImpRow
 

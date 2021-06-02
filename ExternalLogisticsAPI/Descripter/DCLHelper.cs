@@ -24,7 +24,7 @@ namespace ExternalLogisticsAPI.Descripter
                     {
                         Received_from = filter.Received_from?.ToString("yyyy-MM-dd"),
                         Received_to = filter.Received_to?.ToString("yyyy-MM-dd"),
-                        Filter = $"Customer_number eq {filter.Customer_number}"
+                        Filter = $"Customer_number eq {filter.Customer_number}, order_stage eq 60"
                     }),
                 AuthType = setup.AuthType,
                 Token = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{setup.ClientID}:{setup.ClientSecret}"))
