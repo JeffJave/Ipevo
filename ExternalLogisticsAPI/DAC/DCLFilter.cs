@@ -11,14 +11,13 @@ namespace ExternalLogisticsAPI.DAC
     public class DCLFilter : IBqlTable
     {
         [PXDBDate]
-        [PXDefault("2021/5/12")]
-        [PXUIField(DisplayName = "Received from")]
+        [PXUIField(DisplayName = "Start Date")]
         public virtual DateTime? Received_from { get; set; }
         public abstract class received_from : PX.Data.BQL.BqlString.Field<received_from> { }
 
         [PXDBDate]
-        [PXDefault("2021/5/12")]
-        [PXUIField(DisplayName = "Received to")]
+        [PXDefault(typeof(AccessInfo.businessDate))]
+        [PXUIField(DisplayName = "End Date")]
         public virtual DateTime? Received_to { get; set; }
         public abstract class received_to : PX.Data.BQL.BqlString.Field<received_to> { }
 

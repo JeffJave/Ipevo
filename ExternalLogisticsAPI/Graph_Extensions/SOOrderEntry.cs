@@ -67,7 +67,7 @@ namespace ExternalLogisticsAPI.Graph_Extensions
         {
             try
             {
-                using (PXTransactionScope sc = new PXTransactionScope() )
+                using (PXTransactionScope sc = new PXTransactionScope())
                 {
                     Base.CreateShipmentIssue(adapter, shipDate, siteID);
                     var processResult = PXProcessing<SOOrder>.GetItemMessage();
@@ -130,13 +130,14 @@ namespace ExternalLogisticsAPI.Graph_Extensions
             {
                 PXProcessing.SetError<SOOrder>(e.Message);
             }
-           
+
             return adapter.Get();
         }
 
         #region Method
 
         /// <summary> Combine DCL Shipment MetaData(JSON) </summary>
+        /// Shipping Carrier and Server Rule : soOrder.OrderWeight >= 150 -> UPS FREIGHT ;other -> UPS(Default or ShipVia)
         public void CombineDLCShipmentEntity(DCLShipment model, SOOrder soOrder)
         {
             if (model == null)
@@ -172,6 +173,19 @@ namespace ExternalLogisticsAPI.Graph_Extensions
                 dclLines.Add(dclItem);
             }
 
+            string shippingCarrier = string.Empty;
+            string shippingService = string.Empty;
+
+            if (soOrder.OrderWeight >= 150 || soOrder.ShipVia == "UPSFREIGHT")
+            {
+                shippingCarrier = "UPS FREIGHT";
+                shippingService = "STANDARD";
+            }
+            else if(soOrder.ShipVia == "UPSGROUND")
+            {
+                shippingCarrier = "UPS";
+                shippingService = "GROUND";
+            }
             model.orders = new List<Order>()
             {
                 new Order()
@@ -183,8 +197,8 @@ namespace ExternalLogisticsAPI.Graph_Extensions
                     customer_number = GetCurrAcctCD(soOrder.CustomerID),
                     acknowledgement_email = "logistic@ipevo.com",
                     freight_account = "00500",
-                    shipping_carrier = soOrder.ShipVia?.Substring(0,3),
-                    shipping_service = soOrder.ShipVia?.Substring(3),
+                    shipping_carrier = shippingCarrier,
+                    shipping_service = shippingService,
                     system_id = "P",
                     shipping_address =  new ShippingAddress()
                     {
