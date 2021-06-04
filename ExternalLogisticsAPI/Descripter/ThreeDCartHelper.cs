@@ -98,7 +98,10 @@ namespace ExternalLogisticsAPI.Descripter
                     Processed      = false
                 };
 
-                graph.ImportOrderList.Cache.Insert(procOrder);
+                if (LUM3DCartProcessOrder.UK.Find(graph, procOrder.OrderID, procOrder.InvoiceNumber) == null)
+                {
+                    graph.ImportOrderList.Cache.Insert(procOrder);
+                }
             }
 
             graph.Actions.PressSave();
@@ -244,7 +247,8 @@ namespace ExternalLogisticsAPI.Descripter
         {
             ContactMaint contactGraph = PXGraph.CreateInstance<ContactMaint>();
 
-            Contact origContact = SelectFrom<Contact>.Where<Contact.eMail.IsEqual<@P.AsString>>.View.Select(contactGraph, myArray.BillingEmail);
+            Contact origContact = SelectFrom<Contact>.Where<Contact.eMail.IsEqual<@P.AsString>
+                                                            .And<Contact.bAccountID.IsEqual<@P.AsInt>>>.View.Select(contactGraph, myArray.BillingEmail, sOCustomeID);
 
             if (origContact == null)
             {

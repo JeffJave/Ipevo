@@ -25,6 +25,8 @@ namespace ExternalLogisticsAPI
         #region Constructor
         public LUM3DCartImportProc()
         {
+            this.Actions.Move(nameof(this.Cancel), nameof(this.PrepareRecords), true);
+
             SOOrderFilter currentFilter = this.Filter.Current;
 
             ImportOrderList.SetProcessCaption(PX.Objects.CR.Messages.Import);

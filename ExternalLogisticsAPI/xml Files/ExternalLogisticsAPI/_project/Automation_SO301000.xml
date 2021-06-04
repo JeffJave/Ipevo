@@ -153,5 +153,9 @@
             <StateActionFields />
             <StateActionParams />
         </Action>
+        <Action IsActive="True" ActionName="createSOContact" ActionType="G" AfterInMenu="createICPOAction" MenuFolderType="19" WindowMode="S">
+            <StateActionFields />
+            <StateActionParams />
+        </Action>
     </Actions>
 </Automation>

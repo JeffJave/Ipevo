@@ -1,6 +1,7 @@
 ﻿using System;
 using PX.Data;
 using ExternalLogisticsAPI.Descripter;
+using PX.Data.ReferentialIntegrity.Attributes;
 
 namespace ExternalLogisticsAPI.DAC
 {
@@ -8,6 +9,17 @@ namespace ExternalLogisticsAPI.DAC
     [PXCacheName("3DCart Process Order")]
     public class LUM3DCartProcessOrder : IBqlTable
     {
+        #region Keys
+        public class PK : PrimaryKeyOf<LUM3DCartProcessOrder>.By<lineNumber, processID>
+        {
+            public static LUM3DCartProcessOrder Find(PXGraph graph, int? lineNbr, int? processID) => FindBy(graph, lineNbr, processID);
+        }
+        public class UK : PrimaryKeyOf<LUM3DCartProcessOrder>.By<orderID, invoiceNumber>
+        {
+            public static LUM3DCartProcessOrder Find(PXGraph graph, string orderID, int? invoiceNumber) => FindBy(graph, orderID, invoiceNumber);
+        }
+        #endregion
+
         #region Selected
         [PXBool()]
         [PXUIField(DisplayName = "Selected")]

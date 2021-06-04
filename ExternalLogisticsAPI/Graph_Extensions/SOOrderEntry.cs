@@ -25,10 +25,10 @@ namespace ExternalLogisticsAPI.Graph_Extensions
 {
     public class SOOrderEntryExt : PXGraphExtension<SOOrderEntry>
     {
-
         [PXHidden]
         public SelectFrom<LUMVendCntrlSetup>.View DCLSetup;
 
+        #region  Actions
         public PXAction<SOOrder> createDCLShipment;
         public PXAction<SOOrder> lumCallDCLShipemnt;
 
@@ -134,8 +134,46 @@ namespace ExternalLogisticsAPI.Graph_Extensions
             return adapter.Get();
         }
 
-        #region Method
+        public PXAction<SOOrder> createSOContact;
+        [PXButton(CommitChanges = true)]
+        [PXUIField(DisplayName = "Create Contact", MapEnableRights = PXCacheRights.Select, Visible = true)]
+        protected virtual IEnumerable CreateSOContact(PXAdapter adapter)
+        {
+            SOOrder   order   = adapter.Get().RowCast<SOOrder>().First();
+            SOContact contact = Base.Billing_Contact.Current;
+            SOAddress address = Base.Billing_Address.Current;
 
+            if (contact != null && address != null)
+            {
+                if (string.IsNullOrEmpty(contact.Email) )
+                {
+                    throw new ArgumentNullException(string.Format("{0} {1}", PX.Objects.AR.Messages.ARBillingContact.Substring(3), nameof(SOContact.Email)) );
+                }
+
+                MyArray myArray = new MyArray()
+                {
+                    BillingEmail       = contact.Email,
+                    BillingLastName    = contact.Attention,
+                    BillingPhoneNumber = contact.Phone1,
+                    BillingAddress     = address.AddressLine1,
+                    BillingAddress2    = address.AddressLine2,
+                    BillingCity        = address.City,
+                    BillingCountry     = address.CountryID,
+                    BillingZipCode     = address.PostalCode,
+                    BillingState       = address.State
+                };
+
+                order.ContactID = ThreeDCartHelper.CreateSOContact(order.CustomerID, myArray);
+
+                Base.CurrentDocument.Cache.MarkUpdated(order);
+                Base.Save.Press();
+            }
+
+            return adapter.Get();
+        }
+        #endregion
+
+        #region Method
         /// <summary> Combine DCL Shipment MetaData(JSON) </summary>
         /// Shipping Carrier and Server Rule : soOrder.OrderWeight >= 150 -> UPS FREIGHT ;other -> UPS(Default or ShipVia)
         public void CombineDLCShipmentEntity(DCLShipment model, SOOrder soOrder)
@@ -255,9 +293,7 @@ namespace ExternalLogisticsAPI.Graph_Extensions
                 .View.SelectSingleBound(Base, null, baccountId)
                 .RowCast<PX.Objects.CR.BAccount>().FirstOrDefault()?.AcctCD;
         }
-
         #endregion
-
     }
 
     internal class LumShipmentDocView : PXView
