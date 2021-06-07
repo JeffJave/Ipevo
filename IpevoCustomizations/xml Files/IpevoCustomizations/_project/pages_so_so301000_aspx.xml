@@ -19,6 +19,7 @@
                     <Prop Key="Virtual:ApplyStylesheetSkin" />
                     <Prop Key="ID" Value="CstPXNumberEdit1" />
                     <Prop Key="DataField" Value="CuryFreightTot" />
+                    <Prop Key="Enabled" Value="False" />
                 </PXNumberEdit>
             </AddItem>
             <PXNumberEdit DataField="CuryTaxTotal" OriginalIndex="5" />
