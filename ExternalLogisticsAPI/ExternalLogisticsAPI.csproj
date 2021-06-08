@@ -43,6 +43,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Bin\PX.CarrierService.dll</HintPath>
     </Reference>
+    <Reference Include="PX.CarrierService, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
     <Reference Include="PX.Common">
       <HintPath>..\..\..\Bin\PX.Common.dll</HintPath>
     </Reference>
