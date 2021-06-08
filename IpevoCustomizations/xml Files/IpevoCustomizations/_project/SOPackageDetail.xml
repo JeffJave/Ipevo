@@ -1,0 +1,8 @@
+﻿<Table TableName="SOPackageDetail">
+    <Column TableName="SOPackageDetail" ColumnName="UsrCartonQty" ColumnType="int" AllowNull="True" DecimalPrecision="0" DecimalLength="0" IsNewColumn="True" IsUnicode="True" />
+    <Column TableName="SOPackageDetail" ColumnName="UsrLength" ColumnType="decimal" AllowNull="True" DecimalPrecision="6" DecimalLength="19" IsNewColumn="True" IsUnicode="True" />
+    <Column TableName="SOPackageDetail" ColumnName="UsrWidth" ColumnType="decimal" AllowNull="True" DecimalPrecision="6" DecimalLength="19" IsNewColumn="True" IsUnicode="True" />
+    <Column TableName="SOPackageDetail" ColumnName="UsrHeight" ColumnType="decimal" AllowNull="True" DecimalPrecision="6" DecimalLength="19" IsNewColumn="True" IsUnicode="True" />
+    <Column TableName="SOPackageDetail" ColumnName="UsrMeasurement" ColumnType="decimal" AllowNull="True" DecimalPrecision="6" DecimalLength="19" IsNewColumn="True" IsUnicode="True" />
+    <Column TableName="SOPackageDetail" ColumnName="UsrShipmentSplitLineNbr" ColumnType="int" AllowNull="True" DecimalPrecision="0" DecimalLength="0" IsNewColumn="True" IsUnicode="True" />
+</Table>

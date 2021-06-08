@@ -1,4 +1,4 @@
-﻿<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -43,6 +43,10 @@
     <Reference Include="PX.Data">
       <HintPath>..\..\..\..\Bin\PX.Data.dll</HintPath>
     </Reference>
+    <Reference Include="PX.Data.BQL.Fluent, Version=1.0.0.0, Culture=neutral, PublicKeyToken=3b136cac2f602b8e, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Bin\PX.Data.BQL.Fluent.dll</HintPath>
+    </Reference>
     <Reference Include="PX.Objects">
       <HintPath>..\..\..\..\Bin\PX.Objects.DLL</HintPath>
     </Reference>
@@ -56,7 +60,10 @@
     <Compile Include="DAC_Extensions\ARInvoiceExtension.cs" />
     <Compile Include="DAC_Extensions\SOOrderExtensions.cs" />
     <Compile Include="Graph_Extensions\SOInvoiceEntry_Extension.cs" />
+    <Compile Include="DAC_Extensions\SOShipLineExt.cs" />
+    <Compile Include="Graph_Extensions\SOShipmentEntry_Extension.cs" />
     <Compile Include="Graph_Extensions\ARPaymentEntry.cs" />
+    <Compile Include="DAC_Extensions\SOPackageDetailExt.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />
