@@ -4304,7 +4304,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                 </Items>
             </PageHeader>
             <Detail Name="detailSection1">
-                <Height>2.1164cm</Height>
+                <Height>2.32804cm</Height>
                 <Variables>
                     <ReportVariable>
                         <Name>TotalQty</Name>
@@ -4314,7 +4314,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                 <Items>
                     <Panel Name="panel4">
                         <Location>0px, 0px</Location>
-                        <Size>312px, 80px</Size>
+                        <Size>312px, 88px</Size>
                         <Style>
                             <BorderStyle>
                                 <Bottom>Solid</Bottom>
@@ -4329,9 +4329,12 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                         </Style>
                         <Items>
                             <TextBox Name="textBox30">
-                                <Location>0px, 0px</Location>
+                                <Location>0px, 4px</Location>
                                 <Size>312px, 16px</Size>
                                 <Style>
+                                    <Font>
+                                        <Name>Microsoft JhengHei</Name>
+                                    </Font>
                                     <Padding>
                                         <Left>4px</Left>
                                     </Padding>
@@ -4340,9 +4343,12 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                                 <Value>=[ARTran.TranDesc]</Value>
                             </TextBox>
                             <TextBox Name="textBox31">
-                                <Location>0px, 16px</Location>
+                                <Location>0px, 20px</Location>
                                 <Size>56px, 16px</Size>
                                 <Style>
+                                    <Font>
+                                        <Name>Microsoft JhengHei</Name>
+                                    </Font>
                                     <Padding>
                                         <Left>4px</Left>
                                     </Padding>
@@ -4351,9 +4357,12 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                                 <Value>Part No.:</Value>
                             </TextBox>
                             <TextBox Name="textBox32">
-                                <Location>0px, 32px</Location>
+                                <Location>0px, 36px</Location>
                                 <Size>72px, 16px</Size>
                                 <Style>
+                                    <Font>
+                                        <Name>Microsoft JhengHei</Name>
+                                    </Font>
                                     <Padding>
                                         <Left>4px</Left>
                                     </Padding>
@@ -4362,9 +4371,12 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                                 <Value>Model No.:</Value>
                             </TextBox>
                             <TextBox Name="textBox33">
-                                <Location>0px, 48px</Location>
+                                <Location>0px, 52px</Location>
                                 <Size>112px, 16px</Size>
                                 <Style>
+                                    <Font>
+                                        <Name>Microsoft JhengHei</Name>
+                                    </Font>
                                     <Padding>
                                         <Left>4px</Left>
                                     </Padding>
@@ -4373,9 +4385,12 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                                 <Value>Country Of Origin: </Value>
                             </TextBox>
                             <TextBox Name="textBox34">
-                                <Location>0px, 64px</Location>
+                                <Location>0px, 68px</Location>
                                 <Size>80px, 16px</Size>
                                 <Style>
+                                    <Font>
+                                        <Name>Microsoft JhengHei</Name>
+                                    </Font>
                                     <Padding>
                                         <Left>4px</Left>
                                     </Padding>
@@ -4384,36 +4399,45 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                                 <Value>=IsNull([SOShipment.FOBPoint] + ' ', '') + 'HS Code:'</Value>
                             </TextBox>
                             <TextBox Name="textBox35">
-                                <Location>80px, 64px</Location>
+                                <Location>80px, 68px</Location>
                                 <Size>232px, 16px</Size>
                                 <Style>
+                                    <Font>
+                                        <Name>Microsoft JhengHei</Name>
+                                    </Font>
                                     <VerticalAlign>Middle</VerticalAlign>
                                 </Style>
                                 <Value>=IIF([SOShipment.FOBPoint] = 'CA', [AttrHSCODECA.Value], #010;	IIF([SOShipment.FOBPoint] = 'EU', [AttrHSCODEEU.Value], #010;	IIF([SOShipment.FOBPoint] = 'JP', [AttrHSCODEJP.Value], #010;	IIF([SOShipment.FOBPoint] = 'NL', [AttrHSCODENL.Value], #010;	IIF([SOShipment.FOBPoint] = 'UK', [AttrHSCODEUK.Value], #010;	IIF([SOShipment.FOBPoint] = 'US', [AttrHSCODEUS.Value], #010;[AttrHSCODE.Value]))))))</Value>
                             </TextBox>
                             <TextBox Name="textBox36">
-                                <Location>112px, 48px</Location>
+                                <Location>112px, 52px</Location>
                                 <Size>200px, 16px</Size>
                                 <Style>
+                                    <Font>
+                                        <Name>Microsoft JhengHei</Name>
+                                    </Font>
                                     <VerticalAlign>Middle</VerticalAlign>
                                 </Style>
                                 <Value>=[InventoryItem.CountryOfOrigin]</Value>
                             </TextBox>
                             <TextBox Name="textBox37">
-                                <Location>72px, 32px</Location>
+                                <Location>72px, 36px</Location>
                                 <Size>240px, 16px</Size>
                                 <Style>
                                     <Font>
-                                        <Name>Microsoft YaHei UI</Name>
+                                        <Name>Microsoft JhengHei</Name>
                                     </Font>
                                     <VerticalAlign>Middle</VerticalAlign>
                                 </Style>
                                 <Value>=[AttrMODELNO.Value]</Value>
                             </TextBox>
                             <TextBox Name="textBox38">
-                                <Location>56px, 16px</Location>
+                                <Location>56px, 20px</Location>
                                 <Size>256px, 16px</Size>
                                 <Style>
+                                    <Font>
+                                        <Name>Microsoft JhengHei</Name>
+                                    </Font>
                                     <VerticalAlign>Middle</VerticalAlign>
                                 </Style>
                                 <Value>=[ARTran.InventoryID]</Value>
@@ -4423,7 +4447,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                     <TextBox Name="textBox39">
                         <Format>='N2'</Format>
                         <Location>312px, 0px</Location>
-                        <Size>80px, 80px</Size>
+                        <Size>80px, 88px</Size>
                         <Style>
                             <BorderStyle>
                                 <Bottom>Solid</Bottom>
@@ -4433,6 +4457,9 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                                 <Bottom>1px</Bottom>
                                 <Right>1px</Right>
                             </BorderWidth>
+                            <Font>
+                                <Name>Microsoft JhengHei</Name>
+                            </Font>
                             <TextAlign>Center</TextAlign>
                             <VerticalAlign>Middle</VerticalAlign>
                         </Style>
@@ -4441,7 +4468,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                     <TextBox Name="textBox40">
                         <Format>='N0'</Format>
                         <Location>392px, 0px</Location>
-                        <Size>72px, 80px</Size>
+                        <Size>72px, 88px</Size>
                         <Style>
                             <BorderStyle>
                                 <Bottom>Solid</Bottom>
@@ -4451,6 +4478,9 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                                 <Bottom>1px</Bottom>
                                 <Right>1px</Right>
                             </BorderWidth>
+                            <Font>
+                                <Name>Microsoft JhengHei</Name>
+                            </Font>
                             <TextAlign>Center</TextAlign>
                             <VerticalAlign>Middle</VerticalAlign>
                         </Style>
@@ -4459,7 +4489,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                     <TextBox Name="textBox41">
                         <Format>='N2'</Format>
                         <Location>464px, 0px</Location>
-                        <Size>80px, 80px</Size>
+                        <Size>80px, 88px</Size>
                         <Style>
                             <BorderStyle>
                                 <Bottom>Solid</Bottom>
@@ -4469,6 +4499,9 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                                 <Bottom>1px</Bottom>
                                 <Right>1px</Right>
                             </BorderWidth>
+                            <Font>
+                                <Name>Microsoft JhengHei</Name>
+                            </Font>
                             <TextAlign>Center</TextAlign>
                             <VerticalAlign>Middle</VerticalAlign>
                         </Style>
@@ -4476,7 +4509,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                     </TextBox>
                     <TextBox Name="textBox42">
                         <Location>544px, 0px</Location>
-                        <Size>152px, 80px</Size>
+                        <Size>152px, 88px</Size>
                         <Style>
                             <BorderStyle>
                                 <Bottom>Solid</Bottom>
@@ -4486,6 +4519,9 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                                 <Bottom>1px</Bottom>
                                 <Right>1px</Right>
                             </BorderWidth>
+                            <Font>
+                                <Name>Microsoft JhengHei</Name>
+                            </Font>
                             <Padding>
                                 <Left>4px</Left>
                                 <Top>4px</Top>
@@ -4496,7 +4532,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                 </Items>
             </Detail>
             <PageFooter Name="pageFooterSection1">
-                <Height>3.38624cm</Height>
+                <Height>3.80952cm</Height>
                 <PrintAtBottom>False</PrintAtBottom>
                 <Items>
                     <TextBox Name="textBox43">
@@ -4611,19 +4647,19 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                     </TextBox>
                     <TextBox Name="textBox49">
                         <Location>0px, 32px</Location>
-                        <Size>696px, 16px</Size>
+                        <Size>696px, 32px</Size>
                         <Style>
                             <VerticalAlign>Middle</VerticalAlign>
                         </Style>
                         <Value>='SAY TOTAL U.S.D.' + [ARInvoice.UsrSwitchFromNumToEN]</Value>
                     </TextBox>
                     <TextBox Name="textBox50">
-                        <Location>512px, 64px</Location>
+                        <Location>512px, 80px</Location>
                         <Size>160px, 16px</Size>
                         <Value>Representative of IPEVO:</Value>
                     </TextBox>
                     <TextBox Name="textBox51">
-                        <Location>512px, 80px</Location>
+                        <Location>512px, 96px</Location>
                         <Size>184px, 48px</Size>
                         <Style>
                             <Font>
