@@ -2,6 +2,7 @@
     <CDATA name="TableSchemaXml"><![CDATA[<table name="LUMVendCntrlSetup">
   <col name="CompanyID" type="Int" default="Zero" />
   <col name="SecureURL" type="NVarChar(255)" />
+  <col name="SecureURLbatches" type="NVarChar(255)" nullable="true" />
   <col name="ClientID" type="NVarChar(50)" />
   <col name="ClientSecret" type="NVarChar(50)" />
   <col name="AuthType" type="NVarChar(20)" />

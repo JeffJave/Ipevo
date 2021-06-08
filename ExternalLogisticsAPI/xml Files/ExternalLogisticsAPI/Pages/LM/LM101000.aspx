@@ -31,14 +31,14 @@
             <Template>
               <px:PXLayoutRule runat="server" ID="CstPXLayoutRule9" StartGroup="True" GroupCaption="API Settings" ></px:PXLayoutRule>
               <px:PXTextEdit runat="server" ID="CstPXTextEdit10" DataField="SecureURL" ></px:PXTextEdit>
+	<px:PXTextEdit runat="server" ID="CstPXTextEdit5" DataField="SecureURLbatches" />
               <px:PXTextEdit runat="server" ID="CstPXTextEdit11" DataField="ClientID" ></px:PXTextEdit>
               <px:PXTextEdit runat="server" ID="CstPXTextEdit12" DataField="ClientSecret" ></px:PXTextEdit>
                             <px:PXTextEdit runat="server" ID="edAuthType" DataField="AuthType" ></px:PXTextEdit>
               <px:PXTextEdit runat="server" ID="CstPXTextEdit13" DataField="AuthToken" ></px:PXTextEdit>
               <px:PXLayoutRule StartColumn="False" ColumnSpan="1" ControlSize="S" GroupCaption="Integration Settings" runat="server" ID="CstPXLayoutRule14" StartGroup="True" ></px:PXLayoutRule>
               <px:PXSelector runat="server" ID="CstPXSelector15" DataField="OrderType" ></px:PXSelector>
-              <px:PXSegmentMask runat="server" ID="CstPXSegmentMask16" DataField="CustomerID" ></px:PXSegmentMask>
-            </Template>
+              <px:PXSegmentMask runat="server" ID="CstPXSegmentMask16" DataField="CustomerID" ></px:PXSegmentMask></Template>
           </px:PXFormView></Template>
       </px:PXTabItem>
     </Items>

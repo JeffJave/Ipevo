@@ -54,5 +54,18 @@ namespace ExternalLogisticsAPI.Descripter
             return caller.CallApi();
         }
 
+        /// <summary> Call DCL To Create Shipment </summary>
+        public static LumAPIResultModel CallDCLToCreateShipment(LUMVendCntrlSetup setup, DCLShipmentRequestEntity metadataShipemt)
+        {
+            var config = new DCL_Config()
+            {
+                RequestMethod = HttpMethod.Post,
+                RequestUrl = setup.SecureURLbatches,
+                AuthType = setup.AuthType,
+                Token = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{setup.ClientID}:{setup.ClientSecret}"))
+            };
+            var caller = new APICaller(config);
+            return caller.CallApi(metadataShipemt);
+        }
     }
 }

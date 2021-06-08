@@ -45,15 +45,22 @@ namespace ExternalLogisticsAPI.Graph_Extensions
                 if (adapterSlice.MassProcess)
                     PXProcessing<SOOrder>.SetCurrentItem(order);
 
-                DCLShipment model = new DCLShipment();
+                DCLShipmentRequestEntity model = new DCLShipmentRequestEntity();
                 CombineDLCShipmentEntity(model, order);
                 PXNoteAttribute.SetNote(Base.Document.Cache, order, APIHelper.GetJsonString(model));
                 order.GetExtension<SOOrderExt>().UsrDCLShipmentCreated = true;
-                /*
-                 *
-                 * Send Data to DCL for Create Shipment(Implement)
-                 *
-                 */
+
+
+                #region  Send Data to DCL for Create Shipment(Implement)
+
+                //var dclResult = DCLHelper.CallDCLToCreateShipment(this.DCLSetup.Select().RowCast<LUMVendCntrlSetup>().FirstOrDefault(), model);
+                //var response = APIHelper.GetObjectFromString<DCLShipmentResponseEntity>(dclResult.ContentResult);
+                //if (dclResult.StatusCode == System.Net.HttpStatusCode.OK)
+                //    order.GetExtension<SOOrderExt>().UsrDCLShipmentCreated = true;
+                //else
+                //    throw new PXException(response.error_message); 
+
+                #endregion
                 Base.Document.Cache.Update(order);
             }
 
@@ -176,7 +183,7 @@ namespace ExternalLogisticsAPI.Graph_Extensions
         #region Method
         /// <summary> Combine DCL Shipment MetaData(JSON) </summary>
         /// Shipping Carrier and Server Rule : soOrder.OrderWeight >= 150 -> UPS FREIGHT ;other -> UPS(Default or ShipVia)
-        public void CombineDLCShipmentEntity(DCLShipment model, SOOrder soOrder)
+        public void CombineDLCShipmentEntity(DCLShipmentRequestEntity model, SOOrder soOrder)
         {
             if (model == null)
                 return;

@@ -11,7 +11,7 @@ namespace ExternalLogisticsAPI.DAC
     {
         #region SecureURL
         [PXDBString(255, IsUnicode = true, InputMask = "")]
-        [PXUIField(DisplayName = "Secure URL")]
+        [PXUIField(DisplayName = "Secure URL-orders")]
         public virtual string SecureURL { get; set; }
         public abstract class secureURL : PX.Data.BQL.BqlString.Field<secureURL> { }
         #endregion
@@ -50,6 +50,14 @@ namespace ExternalLogisticsAPI.DAC
         [PXSelector(typeof(Search<SOOrderType.orderType>), CacheGlobal = true)]
         public virtual string OrderType { get; set; }
         public abstract class orderType : PX.Data.BQL.BqlString.Field<orderType> { }
+        #endregion
+
+        #region SecureURLbatches
+        [PXDBString(255, IsUnicode = true, InputMask = "")]
+        [PXUIField(DisplayName = "Secure URL-batches")]
+        public virtual string SecureURLbatches { get; set; }
+        public abstract class secureURLbatches : PX.Data.BQL.BqlString.Field<secureURLbatches> { }
+
         #endregion
 
         #region CustomerID

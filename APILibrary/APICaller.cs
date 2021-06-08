@@ -71,5 +71,10 @@ namespace APILibrary
         { 
             return JsonConvert.SerializeObject(_obj);
         }
+
+        public static T GetObjectFromString<T>(string json)
+        {
+            return JsonConvert.DeserializeObject<T>(json);
+        }
     }
 }

@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace APILibrary.Model
 {
-    // Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse); 
-    public class DCLShipment
+    #region DCL Shipment Request Entity
+    public class DCLShipmentRequestEntity
     {
         public bool allow_partial { get; set; }
         public string location { get; set; }
@@ -90,5 +90,24 @@ namespace APILibrary.Model
         public string shipping_instructions { get; set; }
         public string custom_field1 { get; set; }
     }
+    #endregion
+
+    #region DCL Response Entity
+
+    public class DCLShipmentResponseEntity
+    {
+        public int error_code { get; set; }
+        public string error_message { get; set; }
+        public List<OrderStatus> order_statuses { get; set; }
+    }
+
+    public class OrderStatus
+    {
+        public int error_code { get; set; }
+        public string error_message { get; set; }
+        public string order_number { get; set; }
+    }
+
+    #endregion
 
 }
