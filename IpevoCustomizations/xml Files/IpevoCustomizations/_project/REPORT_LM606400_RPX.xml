@@ -4622,17 +4622,16 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                     </TextBox>
                     <TextBox Name="textBox48">
                         <Location>0px, 16px</Location>
-                        <Size>696px, 16px</Size>
+                        <Size>584px, 16px</Size>
                         <Style>
                             <BorderStyle>
                                 <Bottom>Solid</Bottom>
                                 <Left>Solid</Left>
-                                <Right>Solid</Right>
+                                <Right>None</Right>
                             </BorderStyle>
                             <BorderWidth>
                                 <Bottom>1px</Bottom>
                                 <Left>1px</Left>
-                                <Right>1px</Right>
                             </BorderWidth>
                             <Font>
                                 <Style>Bold</Style>
@@ -4643,7 +4642,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                             <TextAlign>Right</TextAlign>
                             <VerticalAlign>Middle</VerticalAlign>
                         </Style>
-                        <Value>='TOTAL: US$' + IsNull(Round([ARInvoice.CuryLineTotal], 2), '')</Value>
+                        <Value>TOTAL: US$</Value>
                     </TextBox>
                     <TextBox Name="textBox49">
                         <Location>0px, 32px</Location>
@@ -4668,6 +4667,24 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                             </Font>
                         </Style>
                         <Value>Alice Chiu</Value>
+                    </TextBox>
+                    <TextBox Name="textBox62">
+                        <Format>='N2'</Format>
+                        <Location>584px, 16px</Location>
+                        <Size>112px, 0.16667in</Size>
+                        <Style>
+                            <BorderStyle>
+                                <Bottom>Solid</Bottom>
+                                <Right>Solid</Right>
+                            </BorderStyle>
+                            <BorderWidth>
+                                <Bottom>1px</Bottom>
+                                <Right>1px</Right>
+                            </BorderWidth>
+                            <TextAlign>Right</TextAlign>
+                            <VerticalAlign>Middle</VerticalAlign>
+                        </Style>
+                        <Value>=IsNull(Round([ARInvoice.CuryLineTotal], 2), '')</Value>
                     </TextBox>
                 </Items>
             </PageFooter>
