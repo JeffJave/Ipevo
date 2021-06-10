@@ -155,6 +155,12 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                 <Name>Attribute_VENDENGAD</Name>
                 <Visible>False</Visible>
             </ReportParameter>
+            <ReportParameter>
+                <ColumnSpan>2</ColumnSpan>
+                <DefaultValue>ITEMDESEN</DefaultValue>
+                <Name>Attribute_ITEMDESEN</Name>
+                <Visible>False</Visible>
+            </ReportParameter>
         </Parameters>
         <Relations>
             <ReportRelation>
@@ -406,6 +412,21 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                     </RelationRow>
                 </Links>
                 <ParentName>ARInvoice</ParentName>
+            </ReportRelation>
+            <ReportRelation>
+                <ChildAlias>AttrITEMDESEN</ChildAlias>
+                <ChildName>CSAnswers</ChildName>
+                <Links>
+                    <RelationRow>
+                        <ChildField>RefNoteID</ChildField>
+                        <ParentField>NoteID</ParentField>
+                    </RelationRow>
+                    <RelationRow>
+                        <ChildField>@Attribute_ITEMDESEN</ChildField>
+                        <ParentField>AttrITEMDESEN.AttributeID</ParentField>
+                    </RelationRow>
+                </Links>
+                <ParentName>InventoryItem</ParentName>
             </ReportRelation>
         </Relations>
         <SchemaUrl>http://localhost/AcumaticaIPEVO/</SchemaUrl>
@@ -4338,9 +4359,8 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                                     <Padding>
                                         <Left>4px</Left>
                                     </Padding>
-                                    <VerticalAlign>Middle</VerticalAlign>
                                 </Style>
-                                <Value>=[ARTran.TranDesc]</Value>
+                                <Value>=[AttrITEMDESEN.Value]</Value>
                             </TextBox>
                             <TextBox Name="textBox31">
                                 <Location>0px, 20px</Location>
