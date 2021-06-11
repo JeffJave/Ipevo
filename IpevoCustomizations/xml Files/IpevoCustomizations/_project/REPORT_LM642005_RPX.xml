@@ -3459,16 +3459,16 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                         <Value>='PALLET NO. ' + [SOPackageDetailEx.CustomRefNbr2]</Value>
                     </TextBox>
                     <TextBox Name="textBox19">
-                        <Format>='N2'</Format>
+                        <Format>='N0'</Format>
                         <Location>360px, 64px</Location>
-                        <Size>80px, 24px</Size>
+                        <Size>56px, 24px</Size>
                         <Style>
                             <Font>
                                 <Name>Microsoft JhengHei</Name>
                             </Font>
                             <TextAlign>Center</TextAlign>
                         </Style>
-                        <Value>=Round([SOPackageDetailEx.Qty], 2) + ' ' + [SOShipLine.UOM]</Value>
+                        <Value>=[SOPackageDetailEx.Qty]</Value>
                     </TextBox>
                     <TextBox Name="textBox20">
                         <Location>440px, 64px</Location>
@@ -3535,15 +3535,16 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                         <Value>='Model No.: ' + [AttrMODELNO.Value]</Value>
                     </TextBox>
                     <TextBox Name="textBox28">
+                        <Format>='N2'</Format>
                         <Location>600px, 24px</Location>
-                        <Size>96px, 40px</Size>
+                        <Size>64px, 40px</Size>
                         <Style>
                             <Font>
                                 <Name>Microsoft JhengHei</Name>
                             </Font>
                             <TextAlign>Center</TextAlign>
                         </Style>
-                        <Value>=Round([SOPackageDetailEx.UsrMeasurement], 2) + ' CBM'</Value>
+                        <Value>=[SOPackageDetailEx.UsrMeasurement]</Value>
                     </TextBox>
                     <TextBox Name="textBox29">
                         <Location>360px, 24px</Location>
@@ -3577,6 +3578,28 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                             <TextAlign>Center</TextAlign>
                         </Style>
                         <Value>='@' + [AttrGROSPERCTN.Value]</Value>
+                    </TextBox>
+                    <TextBox Name="textBox43">
+                        <Location>416px, 64px</Location>
+                        <Size>24px, 24px</Size>
+                        <Style>
+                            <Font>
+                                <Name>Microsoft JhengHei</Name>
+                            </Font>
+                            <TextAlign>Center</TextAlign>
+                        </Style>
+                        <Value>=[SOShipLine.UOM]</Value>
+                    </TextBox>
+                    <TextBox Name="textBox44">
+                        <Location>664px, 24px</Location>
+                        <Size>32px, 40px</Size>
+                        <Style>
+                            <Font>
+                                <Name>Microsoft JhengHei</Name>
+                            </Font>
+                            <TextAlign>Center</TextAlign>
+                        </Style>
+                        <Value> CBM</Value>
                     </TextBox>
                 </Items>
             </Detail>
@@ -3704,7 +3727,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                                 <Value>=[@PackageCountEn] + ' PALLETS ' +#010;'(=' + Round($TotalPalletQty, 2) + ' CARTONS)'</Value>
                             </TextBox>
                             <TextBox Name="textBox34">
-                                <Format>='N2'</Format>
+                                <Format>='N0'</Format>
                                 <Location>360px, 24px</Location>
                                 <Size>56px, 32px</Size>
                                 <Style>
@@ -3714,7 +3737,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                                     <TextAlign>Right</TextAlign>
                                     <VerticalAlign>Middle</VerticalAlign>
                                 </Style>
-                                <Value>=Round($TotalQty, 2)</Value>
+                                <Value>=$TotalQty</Value>
                             </TextBox>
                             <TextBox Name="textBox35">
                                 <Format>='N2'</Format>
@@ -3801,7 +3824,6 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                                 <Value>=[SOShipLine.UOM]</Value>
                             </TextBox>
                             <TextBox Name="textBox42">
-                                <Format>='N2'</Format>
                                 <Location>664px, 24px</Location>
                                 <Size>32px, 32px</Size>
                                 <Style>
