@@ -175,14 +175,13 @@ namespace ExternalLogisticsAPI.Graph
                                     var newTranc = (SOLine)graph.Transactions.Cache.CreateInstance();
                                     newTranc.InventoryID = inventoryitems
                                         .FirstOrDefault(x => x.InventoryCD.Trim() == line.item_number)?.InventoryID;
-                                    //newTranc.ManualPrice = true;
+                                    newTranc.ManualPrice = true;
                                     newTranc.OrderQty = (decimal)line.quantity;
                                     newTranc.OpenQty = (decimal)line.quantity;
-                                    newTranc.UnitPrice = (decimal)line.price;
-                                    graph.Transactions.Cache.Insert(newTranc);
+                                    newTranc.CuryUnitPrice = (decimal)line.price;
+                                    graph.Transactions.Insert(newTranc);
                                 }
-
-                                graph.Persist();
+                                graph.Save.Press();
                                 item.Processed = true;
                                 // Update Process Order
                                 this.ImportOrderList.Cache.Update(item);
@@ -192,7 +191,6 @@ namespace ExternalLogisticsAPI.Graph
 
                                 var newAdapter = new PXAdapter(graph.Document)
                                 { Searches = new Object[] { newOrder.OrderType, newOrder.OrderNbr } };
-                                var cc = newAdapter.Get<SOOrder>().Count();
                                 graph.PrepareInvoice(newAdapter);
 
                                 #endregion

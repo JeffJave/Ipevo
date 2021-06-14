@@ -1,0 +1,70 @@
+﻿<Actions ScreenID="SO302000">
+    <Action IsActive="True" IsSystem="True" IsCustomized="False" IsCustomizedRecursive="False" ActionName="initializeState" ActionType="G" After="Last" BatchMode="False" WindowMode="S" HideCondition="True" ExposedToMobile="False">
+        <StateActionFields />
+        <StateActionParams />
+    </Action>
+    <Action IsActive="True" IsSystem="True" IsCustomized="False" IsCustomizedRecursive="False" ActionName="confirmShipmentAction" ActionType="G" After="initializeState" MassProcessingScreen="SO503000" BatchMode="True" MenuFolderType="19" WindowMode="S" ExposedToMobile="False">
+        <StateActionFields />
+        <StateActionParams />
+    </Action>
+    <Action IsActive="True" IsSystem="True" IsCustomized="False" IsCustomizedRecursive="False" ActionName="createInvoice" ActionType="G" After="confirmShipmentAction" DisableCondition="2a1678f0-0540-ff87-6702-940dab033736" MassProcessingScreen="SO503000" BatchMode="True" MenuFolderType="19" WindowMode="S" ExposedToMobile="False">
+        <StateActionFields />
+        <StateActionParams />
+    </Action>
+    <Action IsActive="True" IsSystem="True" IsCustomized="False" IsCustomizedRecursive="False" ActionName="createDropshipInvoice" ActionType="G" After="createInvoice" MassProcessingScreen="SO503000" BatchMode="True" MenuFolderType="19" WindowMode="S" ExposedToMobile="False">
+        <StateActionFields />
+        <StateActionParams />
+    </Action>
+    <Action IsActive="True" IsSystem="True" IsCustomized="False" IsCustomizedRecursive="False" ActionName="UpdateIN" ActionType="G" After="createDropshipInvoice" MassProcessingScreen="SO503000" BatchMode="True" MenuFolderType="19" WindowMode="S" ExposedToMobile="False">
+        <StateActionFields />
+        <StateActionParams />
+    </Action>
+    <Action IsActive="True" IsSystem="True" IsCustomized="False" IsCustomizedRecursive="False" ActionName="correctShipmentAction" ActionType="G" After="UpdateIN" DisableCondition="bb5fe564-b749-0c41-9c03-834a15d85317" BatchMode="False" MenuFolderType="19" WindowMode="S" ExposedToMobile="False">
+        <StateActionFields />
+        <StateActionParams />
+    </Action>
+    <Action IsActive="True" IsSystem="True" IsCustomized="False" IsCustomizedRecursive="False" ActionName="printLabels" ActionType="G" After="correctShipmentAction" MassProcessingScreen="SO503000" BatchMode="True" MenuFolderType="19" WindowMode="S" ExposedToMobile="False">
+        <StateActionFields />
+        <StateActionParams />
+    </Action>
+    <Action IsActive="True" IsSystem="True" IsCustomized="False" IsCustomizedRecursive="False" ActionName="getReturnLabelsAction" ActionType="G" After="printLabels" BatchMode="False" MenuFolderType="19" WindowMode="S" ExposedToMobile="False">
+        <StateActionFields />
+        <StateActionParams />
+    </Action>
+    <Action IsActive="True" IsSystem="True" IsCustomized="False" IsCustomizedRecursive="False" ActionName="cancelReturn" ActionType="G" After="getReturnLabelsAction" BatchMode="False" MenuFolderType="19" WindowMode="S" ExposedToMobile="False">
+        <StateActionFields />
+        <StateActionParams />
+    </Action>
+    <Action IsActive="True" IsSystem="True" IsCustomized="False" IsCustomizedRecursive="False" ActionName="validateAddresses" ActionType="G" After="cancelReturn" BatchMode="False" MenuFolderType="19" WindowMode="S" ExposedToMobile="False">
+        <StateActionFields />
+        <StateActionParams />
+    </Action>
+    <Action IsActive="True" IsSystem="True" IsCustomized="False" IsCustomizedRecursive="False" ActionName="emailShipment" ActionType="G" After="validateAddresses" MassProcessingScreen="SO503000" BatchMode="False" MenuFolderType="19" WindowMode="S" ExposedToMobile="False">
+        <StateActionFields />
+        <StateActionParams />
+    </Action>
+    <Action IsActive="True" IsSystem="True" IsCustomized="False" IsCustomizedRecursive="False" ActionName="printPickListAction" ActionType="G" After="emailShipment" MassProcessingScreen="SO503000" BatchMode="True" MenuFolderType="19" WindowMode="S" ExposedToMobile="False">
+        <StateActionFields />
+        <StateActionParams />
+    </Action>
+    <Action IsActive="True" IsSystem="True" IsCustomized="False" IsCustomizedRecursive="False" ActionName="putOnHold" ActionType="G" After="printPickListAction" BatchMode="False" MenuFolderType="19" WindowMode="S" DisablePersist="False" ExposedToMobile="False">
+        <StateActionFields />
+        <StateActionParams />
+    </Action>
+    <Action IsActive="True" IsSystem="True" IsCustomized="False" IsCustomizedRecursive="False" ActionName="releaseFromHold" ActionType="G" After="putOnHold" BatchMode="False" MenuFolderType="19" WindowMode="S" ExposedToMobile="False">
+        <StateActionFields />
+        <StateActionParams />
+    </Action>
+    <Action IsActive="True" IsSystem="True" IsCustomized="False" IsCustomizedRecursive="False" ActionName="printShipmentConfirmation" ActionType="G" After="releaseFromHold" MassProcessingScreen="SO503000" BatchMode="True" MenuFolderType="21" WindowMode="S" ExposedToMobile="False">
+        <StateActionFields />
+        <StateActionParams />
+    </Action>
+    <Action IsActive="True" IsSystem="True" IsCustomized="False" IsCustomizedRecursive="False" ActionName="generatePOReceipt" ActionType="G" After="printShipmentConfirmation" DisableCondition="bb5fe564-b749-0c41-9c03-834a15d85317" BatchMode="False" MenuFolderType="19" WindowMode="S" HideCondition="b1910c9e-6d1d-2573-13f7-ec5ddb636f24" ExposedToMobile="False">
+        <StateActionFields />
+        <StateActionParams />
+    </Action>
+    <Action IsActive="True" ActionName="lumGererateYUSENFile" ActionType="G" MassProcessingScreen="SO503000" WindowMode="S">
+        <StateActionFields />
+        <StateActionParams />
+    </Action>
+</Actions>

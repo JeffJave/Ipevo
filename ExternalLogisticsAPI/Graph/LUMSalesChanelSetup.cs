@@ -13,6 +13,8 @@ namespace ExternalLogisticsAPI
 
         public SelectFrom<LUM3DCartSetup>.View ThreeDCart;
         public SelectFrom<LUMVendCntrlSetup>.View VendorCentral;
+        public SelectFrom<LUMYusenCASetup>.View CAYusen;
+        public SelectFrom<LUM3PLUKSetup>.View UKP3PL;
 
         /// <summary> Events.RowPersisting LUMVendCntrlSetup (Generate Access Token) </summary>
         public virtual void _(Events.RowPersisting<LUMVendCntrlSetup> e)

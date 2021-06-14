@@ -80,19 +80,25 @@ namespace ExternalLogisticsAPI.Graph_Extensions
                     var processResult = PXProcessing<SOOrder>.GetItemMessage();
                     if (processResult.ErrorLevel != PXErrorLevel.RowInfo)
                         return adapter.Get();
-                    var _order = adapter.Get<SOOrder>().ToList()[0];
+                    var soOrder = adapter.Get<SOOrder>().ToList()[0];
 
                     // Get DCL SO. Data(理論上資料一定存在)
                     var dclOrders = JsonConvert.DeserializeObject<OrderResponse>(
                         DCLHelper.CallDCLToGetSOByOrderNumbers(
-                            this.DCLSetup.Select().RowCast<LUMVendCntrlSetup>().FirstOrDefault(), _order.CustomerRefNbr).ContentResult);
+                            this.DCLSetup.Select().RowCast<LUMVendCntrlSetup>().FirstOrDefault(), soOrder.CustomerRefNbr).ContentResult);
+
+                    if (dclOrders.orders == null)
+                        throw new Exception("Can not Mapping DCL Data");
+
+                    if (!dclOrders.orders.Any(x => x.order_stage == 60))
+                        throw new Exception("DCL Order stage is not Fully Shipped");
 
                     // Create SOShipment Graph
                     var graph = PXGraph.CreateInstance<SOShipmentEntry>();
 
                     // Find SOShipment
                     var _soOrderShipments =
-                        FbqlSelect<SelectFromBase<SOOrderShipment, TypeArrayOf<IFbqlJoin>.Empty>.Where<BqlChainableConditionBase<TypeArrayOf<IBqlBinary>.FilledWith<And<Compare<SOOrderShipment.orderType, Equal<P.AsString>>>>>.And<BqlOperand<SOOrderShipment.orderNbr, IBqlString>.IsEqual<P.AsString>>>, SOOrderShipment>.View.Select(Base, _order.OrderType, _order.OrderNbr)
+                        FbqlSelect<SelectFromBase<SOOrderShipment, TypeArrayOf<IFbqlJoin>.Empty>.Where<BqlChainableConditionBase<TypeArrayOf<IBqlBinary>.FilledWith<And<Compare<SOOrderShipment.orderType, Equal<P.AsString>>>>>.And<BqlOperand<SOOrderShipment.orderNbr, IBqlString>.IsEqual<P.AsString>>>, SOOrderShipment>.View.Select(Base, soOrder.OrderType, soOrder.OrderNbr)
                             .RowCast<SOOrderShipment>();
                     foreach (var refItem in _soOrderShipments)
                     {
@@ -103,18 +109,13 @@ namespace ExternalLogisticsAPI.Graph_Extensions
 
                         try
                         {
-                            if (dclOrders.orders == null)
-                                _soShipment.ShipmentDesc = "Can not Mapping DCL Data";
-                            else
-                            {
-                                // Get Carrier and TrackingNbr
-                                var shippingCarrier = dclOrders.orders.FirstOrDefault().shipping_carrier;
-                                var packagesInfo = dclOrders.orders.FirstOrDefault().shipments.SelectMany(x => x.packages);
-                                _soShipment.ShipmentDesc = $"Carrier: {shippingCarrier}|" +
-                                                           $"TrackingNbr: {string.Join("|", packagesInfo.Select(x => x.tracking_number))}";
-                                if (_soShipment.ShipmentDesc.Length > 256)
-                                    _soShipment.ShipmentDesc = _soShipment.ShipmentDesc.Substring(0, 255);
-                            }
+                            // Get Carrier and TrackingNbr
+                            var shippingCarrier = dclOrders.orders.FirstOrDefault().shipping_carrier;
+                            var packagesInfo = dclOrders.orders.FirstOrDefault().shipments.SelectMany(x => x.packages);
+                            _soShipment.ShipmentDesc = $"Carrier: {shippingCarrier}|" +
+                                                       $"TrackingNbr: {string.Join("|", packagesInfo.Select(x => x.tracking_number))}";
+                            if (_soShipment.ShipmentDesc.Length > 256)
+                                _soShipment.ShipmentDesc = _soShipment.ShipmentDesc.Substring(0, 255);
                         }
                         catch (Exception e)
                         {
@@ -129,6 +130,49 @@ namespace ExternalLogisticsAPI.Graph_Extensions
 
                         // Confirm Shipment
                         graph.confirmShipmentAction.PressButton(newAdapter);
+
+                        // Prepare Invoice For 3D Orders
+                        try
+                        {
+                            if (soOrder.OrderType == "3D")
+                            {
+                                newAdapter.AllowRedirect = true;
+                                graph.createInvoice.PressButton(newAdapter);
+                            }
+                        }
+                        catch (PXRedirectRequiredException ex)
+                        {
+                            SOInvoiceEntry invoiceEntry = ex.Graph as SOInvoiceEntry;
+                            var soTax = SelectFrom<SOTaxTran>
+                                     .Where<SOTaxTran.orderNbr.IsEqual<P.AsString>
+                                          .And<SOTaxTran.orderType.IsEqual<P.AsString>>>
+                                     .View.Select(Base, soOrder.OrderNbr, soOrder.OrderType)
+                                     .RowCast<SOTaxTran>().FirstOrDefault();
+                            var balance = invoiceEntry.Document.Current.CuryDocBal;
+                            var refNbr = invoiceEntry.Document.Current.RefNbr;
+                            var invTax = SelectFrom<ARTaxTran>.Where<ARTaxTran.refNbr.IsEqual<P.AsString>>
+                                         .View.Select(Base, refNbr).RowCast<ARTaxTran>().FirstOrDefault();
+                            var adjd = SelectFrom<ARAdjust2>.Where<ARAdjust2.adjdRefNbr.IsEqual<P.AsString>>
+                                         .View.Select(Base, refNbr).RowCast<ARAdjust2>().FirstOrDefault();
+                            if (soTax != null)
+                            {
+                                // setting Tax
+                                invoiceEntry.Taxes.SetValueExt<ARTaxTran.curyTaxAmt>(invTax, soTax.CuryTaxAmt);
+                                invoiceEntry.Taxes.Update(invTax);
+                                // setting Document
+                                invoiceEntry.Document.SetValueExt<ARInvoice.curyTaxTotal>(invoiceEntry.Document.Current, soTax.CuryTaxAmt);
+                                invoiceEntry.Document.SetValueExt<ARInvoice.curyDocBal>(invoiceEntry.Document.Current, balance + (soTax.CuryTaxAmt ?? 0));
+                                invoiceEntry.Document.Update(invoiceEntry.Document.Current);
+                                invoiceEntry.Adjustments.SetValueExt<ARAdjust2.curyAdjdAmt>(adjd, adjd.CuryAdjdAmt + (soTax.CuryTaxAmt ?? 0));
+                                invoiceEntry.Adjustments.Update(adjd);
+                                invoiceEntry.releaseFromCreditHold.Press();
+                                invoiceEntry.Save.Press();
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            throw new Exception(ex.Message);
+                        }
                     }
                     sc.Complete();
                 }
@@ -146,28 +190,28 @@ namespace ExternalLogisticsAPI.Graph_Extensions
         [PXUIField(DisplayName = "Create Contact", MapEnableRights = PXCacheRights.Select, Visible = true)]
         protected virtual IEnumerable CreateSOContact(PXAdapter adapter)
         {
-            SOOrder   order   = adapter.Get().RowCast<SOOrder>().First();
+            SOOrder order = adapter.Get().RowCast<SOOrder>().First();
             SOContact contact = Base.Billing_Contact.Current;
             SOAddress address = Base.Billing_Address.Current;
 
             if (contact != null && address != null)
             {
-                if (string.IsNullOrEmpty(contact.Email) )
+                if (string.IsNullOrEmpty(contact.Email))
                 {
-                    throw new ArgumentNullException(string.Format("{0} {1}", PX.Objects.AR.Messages.ARBillingContact.Substring(3), nameof(SOContact.Email)) );
+                    throw new ArgumentNullException(string.Format("{0} {1}", PX.Objects.AR.Messages.ARBillingContact.Substring(3), nameof(SOContact.Email)));
                 }
 
                 MyArray myArray = new MyArray()
                 {
-                    BillingEmail       = contact.Email,
-                    BillingLastName    = contact.Attention,
+                    BillingEmail = contact.Email,
+                    BillingLastName = contact.Attention,
                     BillingPhoneNumber = contact.Phone1,
-                    BillingAddress     = address.AddressLine1,
-                    BillingAddress2    = address.AddressLine2,
-                    BillingCity        = address.City,
-                    BillingCountry     = address.CountryID,
-                    BillingZipCode     = address.PostalCode,
-                    BillingState       = address.State
+                    BillingAddress = address.AddressLine1,
+                    BillingAddress2 = address.AddressLine2,
+                    BillingCity = address.City,
+                    BillingCountry = address.CountryID,
+                    BillingZipCode = address.PostalCode,
+                    BillingState = address.State
                 };
 
                 order.ContactID = ThreeDCartHelper.CreateSOContact(order.CustomerID, myArray);
@@ -226,7 +270,7 @@ namespace ExternalLogisticsAPI.Graph_Extensions
                 shippingCarrier = "UPS FREIGHT";
                 shippingService = "STANDARD";
             }
-            else if(soOrder.ShipVia == "UPSGROUND")
+            else if (soOrder.ShipVia == "UPSGROUND")
             {
                 shippingCarrier = "UPS";
                 shippingService = "GROUND";

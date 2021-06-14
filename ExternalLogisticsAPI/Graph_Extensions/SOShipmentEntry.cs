@@ -21,7 +21,10 @@ namespace PX.Objects.SO
             Base.report.AddMenuAction(printFedexLabel);
         }
 
+        #region Action
+
         public PXAction<SOShipment> printFedexLabel;
+        public PXAction<SOShipment> lumGererateYUSENFile;
 
         [PXButton]
         [PXUIField(DisplayName = "Print Fedex Label", MapEnableRights = PXCacheRights.Select, MapViewRights = PXCacheRights.Select)]
@@ -108,7 +111,22 @@ namespace PX.Objects.SO
             }
 
             return adapter.Get();
+        } 
+       
+        [PXButton]
+        [PXUIField(DisplayName = "Generate YUSEN Shipping File", MapEnableRights = PXCacheRights.Select, MapViewRights = PXCacheRights.Select, Visible = false)]
+        protected virtual IEnumerable LumGererateYUSENFile(PXAdapter adapter)
+        {
+            UploadFileMaintenance upload = PXGraph.CreateInstance<UploadFileMaintenance>();
+            FileInfo fi = new FileInfo("ABCD.csv",null,new UTF8Encoding(true).GetBytes("ABCDE"));
+            upload.SaveFile(fi);
+            PXNoteAttribute.SetFileNotes(Base.Document.Cache, Base.Document.Current, fi.UID.Value);
+            Base.Document.UpdateCurrent();
+            Base.Save.Press();
+            return adapter.Get();
         }
+
+        #endregion
 
         #region Method
 
