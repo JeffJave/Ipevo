@@ -13,6 +13,7 @@ namespace PX.Objects.SO
 {
     public class SOShipmentEntry_Extension : PXGraphExtension<SOShipmentEntry>
     {
+        protected bool _LastIsAutoPacking = false;
         private const string _QTYINCARTON = "QTYPERCTN";
         public class QtyPerCartonAttr : BqlString.Constant<QtyPerCartonAttr>
         {
@@ -97,6 +98,13 @@ namespace PX.Objects.SO
             decimal parseResult = 0;
             var _maxCartno = GetMaxPalletNbr();
 
+            // Recalculate Max PalletNbr
+            if (this._LastIsAutoPacking)
+            {
+                _maxCartno++;
+                this._LastIsAutoPacking = false;
+            }
+
             SOShipLine _line = (SOShipLine)Base.Transactions.Cache.Current;
             var _CartonsPerPallet = decimal.TryParse(_line.GetExtension<SOShipLineExt>().UsrCartonsPerPallet, out parseResult) ? parseResult : 0;
             var _QtyPerCarton = decimal.TryParse(SelectFrom<CSAnswers>.
@@ -125,7 +133,7 @@ namespace PX.Objects.SO
                 }
                 Base.Save.Press();
             });
-
+            this._LastIsAutoPacking = true;
             return adapter.Get();
         }
         #endregion
@@ -162,7 +170,7 @@ namespace PX.Objects.SO
                 }
                 Base.Save.Press();
             });
-
+            this._LastIsAutoPacking = false;
             return adapter.Get();
         }
         #endregion
@@ -204,21 +212,21 @@ namespace PX.Objects.SO
         {
             if ((SOPackageDetailEx)e.Row == null) return;
             SOPackageDetailExt _line = ((SOPackageDetail)Base.Packages.Cache.Current).GetExtension<SOPackageDetailExt>();
-            e.Cache.SetValueExt<SOPackageDetailExt.usrMeasurement>(e.Row, _line.UsrLength * _line.UsrWidth * _line.UsrHeight / 1000);
+            e.Cache.SetValueExt<SOPackageDetailExt.usrMeasurement>(e.Row, _line.UsrLength * _line.UsrWidth * _line.UsrHeight / 1000000);
         }
 
         protected virtual void _(Events.FieldUpdated<SOPackageDetailExt.usrWidth> e)
         {
             if ((SOPackageDetailEx)e.Row == null) return;
             SOPackageDetailExt _line = ((SOPackageDetail)Base.Packages.Cache.Current).GetExtension<SOPackageDetailExt>();
-            e.Cache.SetValueExt<SOPackageDetailExt.usrMeasurement>(e.Row, _line.UsrLength * _line.UsrWidth * _line.UsrHeight / 1000);
+            e.Cache.SetValueExt<SOPackageDetailExt.usrMeasurement>(e.Row, _line.UsrLength * _line.UsrWidth * _line.UsrHeight / 1000000);
         }
 
         protected virtual void _(Events.FieldUpdated<SOPackageDetailExt.usrHeight> e)
         {
             if ((SOPackageDetailEx)e.Row == null) return;
             SOPackageDetailExt _line = ((SOPackageDetail)Base.Packages.Cache.Current).GetExtension<SOPackageDetailExt>();
-            e.Cache.SetValueExt<SOPackageDetailExt.usrMeasurement>(e.Row, _line.UsrLength * _line.UsrWidth * _line.UsrHeight / 1000);
+            e.Cache.SetValueExt<SOPackageDetailExt.usrMeasurement>(e.Row, _line.UsrLength * _line.UsrWidth * _line.UsrHeight / 1000000);
         }
         #endregion
         
