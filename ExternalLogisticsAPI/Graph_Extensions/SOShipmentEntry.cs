@@ -1,6 +1,10 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Linq;
 using System.Text;
+using APILibrary;
+using APILibrary.Model;
+using ExternalLogisticsAPI.DAC;
 using PX.CarrierService;
 using PX.Data;
 using PX.Data.BQL;
@@ -111,18 +115,173 @@ namespace PX.Objects.SO
             }
 
             return adapter.Get();
-        } 
-       
+        }
+
         [PXButton]
         [PXUIField(DisplayName = "Generate YUSEN Shipping File", MapEnableRights = PXCacheRights.Select, MapViewRights = PXCacheRights.Select, Visible = false)]
         protected virtual IEnumerable LumGererateYUSENFile(PXAdapter adapter)
         {
-            UploadFileMaintenance upload = PXGraph.CreateInstance<UploadFileMaintenance>();
-            FileInfo fi = new FileInfo("ABCD.csv",null,new UTF8Encoding(true).GetBytes("ABCDE"));
-            upload.SaveFile(fi);
-            PXNoteAttribute.SetFileNotes(Base.Document.Cache, Base.Document.Current, fi.UID.Value);
-            Base.Document.UpdateCurrent();
-            Base.Save.Press();
+            int totalLine = 1;
+            try
+            {
+                var inventoryItems = SelectFrom<InventoryItem>.View.Select(Base).RowCast<InventoryItem>().ToList();
+                SOShipment soShip = adapter.Get<SOShipment>().FirstOrDefault();
+                var shipLines = SelectFrom<SOShipLine>.Where<SOShipLine.shipmentNbr.IsEqual<P.AsString>>
+                                .OrderBy<SOShipLine.lineNbr.Asc>
+                                .View.Select(Base, soShip?.ShipmentNbr).RowCast<SOShipLine>();
+                SOShipmentContact shipContact = SOShipmentContact.PK.Find(Base, soShip.ShipContactID);
+                SOShipmentAddress shipAddress = SOShipmentAddress.PK.Find(Base, soShip.ShipAddressID);
+
+                if(!shipLines.Any())
+                    throw new Exception("Can not find ShipLine");
+
+                UploadFileMaintenance upload = PXGraph.CreateInstance<UploadFileMaintenance>();
+
+                StringBuilder sb = new StringBuilder();
+                string line = string.Empty;
+
+                Func<int, string, string> FillUpLen = (len, str) =>
+                 {
+                     str = str ?? string.Empty;
+                     return str.PadRight(len, ' ');
+                 };
+
+                #region FileHeader - HDR
+
+                line = $"{FillUpLen(10, "YS_OR_V01")}{FillUpLen(3, "HDR")}{FillUpLen(15, "IPEVO")}{FillUpLen(15, "Yusen")}{DateTime.Now.ToString("yyyyMMdd")}{DateTime.Now.ToString("HH:mm")}\r\n";
+                sb.Append(line);
+
+                #endregion
+
+                #region OrderHeader - ORH
+                line = string.Empty;
+                line += $"{FillUpLen(10, "YS_OR_V01")}";
+                line += $"{FillUpLen(3, "ORH")}";
+                line += $"{FillUpLen(8, soShip?.ShipDate?.ToString("yyyyMMdd"))}";
+                line += $"{FillUpLen(8, shipLines.FirstOrDefault()?.ExpireDate?.ToString("yyyyMMdd"))}";
+                line += $"L";
+                line += $"{FillUpLen(15, shipLines.FirstOrDefault()?.OrigOrderNbr)}";
+                line += $"{FillUpLen(20, soShip?.CustomerOrderNbr)}";
+                line += $"{FillUpLen(11, " ")}";
+                line += $"{FillUpLen(40, soShip?.ShipmentDesc)}";
+                line += $"{FillUpLen(40, " ")}";
+                line += $"{FillUpLen(5, "DPD")}";
+                line += "\r\n";
+                sb.Append(line);
+                totalLine++;
+
+                #endregion
+
+                #region Physical delivery address – ORL
+                line = string.Empty;
+                line += $"{FillUpLen(10, "YS_OR_V01")}";
+                line += $"{FillUpLen(3, "ORL")}";
+                line += $"{FillUpLen(10, " ")}";
+                line += $"{FillUpLen(40, shipContact?.FullName)}";
+                line += $"{FillUpLen(40, " ")}";
+                line += (shipAddress?.AddressLine1 + shipAddress?.AddressLine2).Length > 30 ? $"{(shipAddress?.AddressLine1 + shipAddress?.AddressLine2).Substring(0, 30)}" : $"{FillUpLen(30, (shipAddress?.AddressLine1 + shipAddress?.AddressLine2))}";
+                line += $"{FillUpLen(10, shipAddress?.PostalCode)}";
+                line += $"{FillUpLen(30, shipAddress?.City)}";
+                line += $"{FillUpLen(3, shipAddress?.CountryID)}";
+                line += $"{FillUpLen(30, shipContact?.Attention)}";
+                line += $"{FillUpLen(20, shipContact?.Phone1)}";
+                line += $"{FillUpLen(40, shipContact?.Email)}";
+                line += $"{FillUpLen(3, "DE")}";
+                line += "\r\n";
+                sb.Append(line);
+                totalLine++;
+
+                #endregion
+
+                #region Articleline - ORA
+
+                foreach (var item in shipLines)
+                {
+                    line = string.Empty;
+                    line += $"{FillUpLen(10, "YS_OR_V01")}";
+                    line += $"{FillUpLen(3, "ORA")}";
+                    line += $"{FillUpLen(10, item?.LineNbr.ToString())}";
+                    line += $"{FillUpLen(20, inventoryItems?.FirstOrDefault(x => x.InventoryID == item?.InventoryID).InventoryCD)}";
+                    line += $"{FillUpLen(11, item?.ShippedQty?.ToString())}";
+                    line += $"{FillUpLen(25, " ")}";
+                    line += $"{FillUpLen(25, " ")}";
+                    line += "\r\n";
+                    sb.Append(line);
+                    totalLine++;
+                }
+
+                #endregion
+
+                #region  Free Text Orderpick - FTO
+
+                line = string.Empty;
+                line += $"{FillUpLen(10, "YS_OR_V01")}";
+                line += $"{FillUpLen(3, "FTO")}";
+                line += $"{FillUpLen(40, "")}";
+                line += "\r\n";
+                sb.Append(line);
+                totalLine++;
+
+                #endregion
+
+                #region Free Text Delivery - FTD
+
+                line = string.Empty;
+                line += $"{FillUpLen(10, "YS_OR_V01")}";
+                line += $"{FillUpLen(3, "FTD")}";
+                line += $"{FillUpLen(40, " ")}";
+                line += "\r\n";
+                sb.Append(line);
+                totalLine++;
+
+                #endregion
+
+                #region Filetrailer – TRL
+
+                line = string.Empty;
+                line += $"{FillUpLen(10, "YS_OR_V01")}";
+                line += $"{FillUpLen(3, "TRL")}";
+                line += $"{FillUpLen(5, totalLine.ToString())}";
+                line += "\r\n";
+                sb.Append(line);
+
+                #endregion
+
+                // Create SM.FileInfo
+                var fileName = $"Yusen-{DateTime.Now.ToString("yyyyMMddHHmmss")}.csv";
+                var data = new UTF8Encoding(true).GetBytes(sb.ToString());
+                FileInfo fi = new FileInfo(fileName, null, data);
+                // upload file to Attachment
+                upload.SaveFile(fi);
+                PXNoteAttribute.SetFileNotes(Base.Document.Cache, Base.Document.Current, fi.UID.Value);
+                Base.Document.UpdateCurrent();
+                Base.Save.Press();
+
+                #region Yusen FTP
+                var configYusen = SelectFrom<LUMYusenCASetup>.View.Select(Base).RowCast< LUMYusenCASetup >().FirstOrDefault();
+                //FTP_Config config = new FTP_Config()
+                //{
+                //    FtpHost = configYusen.FtpHost,
+                //    FtpUser = configYusen.FtpUser,
+                //    FtpPass = configYusen.FtpPass,
+                //    FtpPort = configYusen.FtpPort,
+                //    FtpPath = configYusen.FtpPath
+                //};
+
+                //FTPHelper helper = new FTPHelper(config);
+                //var ftpResult = helper.UploadFileToFTP(data,fileName);
+                var ftpResult = true;
+                if (!ftpResult)
+                    throw new Exception("Ftp Upload Fail!!");
+                #endregion
+
+                // Confirm shipment
+                Base.confirmShipmentAction.PressButton(adapter);
+            }
+            catch (Exception ex)
+            {
+                PXProcessing.SetError<SOShipment>(ex.Message);
+            }
             return adapter.Get();
         }
 
@@ -131,7 +290,7 @@ namespace PX.Objects.SO
         #region Method
 
         protected virtual bool UseCarrierService(SOShipment row, Carrier carrier)
-           => carrier != null && carrier.IsExternal == true ;
+           => carrier != null && carrier.IsExternal == true;
 
         #endregion
     }
