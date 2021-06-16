@@ -74,9 +74,11 @@
     <Compile Include="DAC\LUM3DCartProcessLog.cs" />
     <Compile Include="DAC\LUM3DCartProcessOrder.cs" />
     <Compile Include="DAC\LUM3DCartSetup.cs" />
+    <Compile Include="DAC\Lum3PLUKSetup.cs" />
     <Compile Include="DAC\LUMVendCntrlProcessLog.cs" />
     <Compile Include="DAC\LUMVendCntrlProcessOrder.cs" />
     <Compile Include="DAC\LUMVendCntrlSetup.cs" />
+    <Compile Include="DAC\LumYusenCASetup.cs" />
     <Compile Include="DAC_Extensions\SOLineExtensions.cs" />
     <Compile Include="DAC_Extensions\SOOrderExtensions.cs" />
     <Compile Include="Descripter\DCLHelper.cs" />
