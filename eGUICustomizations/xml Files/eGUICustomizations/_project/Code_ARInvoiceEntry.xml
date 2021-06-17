@@ -1,0 +1,18 @@
+﻿<Graph ClassName="ARInvoiceEntry" Source="#CDATA" IsNew="True" FileType="ExistingGraph">
+    <CDATA name="Source"><![CDATA[using PX.Data;
+
+namespace PX.Objects.AR
+{
+    public class ARInvoiceEntry_Extension2 : PXGraphExtension<ARInvoiceEntry_Extension, ARInvoiceEntry>
+    {
+        #region Override Data view
+        [PXCopyPasteHiddenView]
+        [PXViewName("Tax Details")]
+        public PXSelectJoin<ARTaxTran, LeftJoin<PX.Objects.TX.Tax, On<PX.Objects.TX.Tax.taxID, Equal<ARTaxTran.taxID>>>,
+            Where<ARTaxTran.module, Equal<PX.Objects.GL.BatchModule.moduleAR>,
+                And<ARTaxTran.tranType, Equal<Current<ARInvoice.docType>>,
+                And<ARTaxTran.refNbr, Equal<Current<ARInvoice.refNbr>>>>>> Taxes;
+        #endregion
+    }
+}]]></CDATA>
+</Graph>
