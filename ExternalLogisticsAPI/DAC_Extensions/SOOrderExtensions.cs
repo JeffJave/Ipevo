@@ -15,7 +15,8 @@ namespace PX.Objects.SO
         [PXDefault(false,PersistingCheck = PXPersistingCheck.Nothing)]
         [PXUIField(DisplayName = "Shipment in DCL")]
         public bool? UsrDCLShipmentCreated { get;set; }
-        public abstract class usrDCLShipmentCreated : PX.Data.BQL.BqlBool.Field<usrDCLShipmentCreated>{}
+        public abstract class usrDCLShipmentCreated : 
+            PX.Data.BQL.BqlBool.Field<usrDCLShipmentCreated>{}
 
         #endregion
     }

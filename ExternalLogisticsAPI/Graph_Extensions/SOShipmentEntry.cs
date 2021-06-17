@@ -118,7 +118,7 @@ namespace PX.Objects.SO
         }
 
         [PXButton]
-        [PXUIField(DisplayName = "Generate YUSEN Shipping File", MapEnableRights = PXCacheRights.Select, MapViewRights = PXCacheRights.Select, Visible = false)]
+        [PXUIField(DisplayName = "Generate YUSEN NL Shipping File", MapEnableRights = PXCacheRights.Select, MapViewRights = PXCacheRights.Select, Visible = false)]
         protected virtual IEnumerable LumGererateYUSENFile(PXAdapter adapter)
         {
             int totalLine = 1;
@@ -132,7 +132,7 @@ namespace PX.Objects.SO
                 SOShipmentContact shipContact = SOShipmentContact.PK.Find(Base, soShip.ShipContactID);
                 SOShipmentAddress shipAddress = SOShipmentAddress.PK.Find(Base, soShip.ShipAddressID);
 
-                if(!shipLines.Any())
+                if (!shipLines.Any())
                     throw new Exception("Can not find ShipLine");
 
                 UploadFileMaintenance upload = PXGraph.CreateInstance<UploadFileMaintenance>();
@@ -258,7 +258,7 @@ namespace PX.Objects.SO
                 Base.Save.Press();
 
                 #region Yusen FTP
-                var configYusen = SelectFrom<LUMYusenCASetup>.View.Select(Base).RowCast< LUMYusenCASetup >().FirstOrDefault();
+                var configYusen = SelectFrom<LUMYusenCASetup>.View.Select(Base).RowCast<LUMYusenNLSetup>().FirstOrDefault();
                 //FTP_Config config = new FTP_Config()
                 //{
                 //    FtpHost = configYusen.FtpHost,

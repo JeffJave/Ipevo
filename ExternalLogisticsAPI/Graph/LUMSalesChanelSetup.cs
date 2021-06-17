@@ -13,6 +13,7 @@ namespace ExternalLogisticsAPI
 
         public SelectFrom<LUM3DCartSetup>.View ThreeDCart;
         public SelectFrom<LUMVendCntrlSetup>.View VendorCentral;
+        public SelectFrom<LUMYusenNLSetup>.View NLYusen;
         public SelectFrom<LUMYusenCASetup>.View CAYusen;
         public SelectFrom<LUM3PLUKSetup>.View UKP3PL;
 

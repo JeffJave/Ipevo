@@ -79,6 +79,7 @@
     <Compile Include="DAC\LUMVendCntrlProcessOrder.cs" />
     <Compile Include="DAC\LUMVendCntrlSetup.cs" />
     <Compile Include="DAC\LumYusenCASetup.cs" />
+    <Compile Include="DAC\LUMYusenNLSetup.cs" />
     <Compile Include="DAC_Extensions\SOLineExtensions.cs" />
     <Compile Include="DAC_Extensions\SOOrderExtensions.cs" />
     <Compile Include="Descripter\DCLHelper.cs" />
@@ -88,6 +89,7 @@
     <Compile Include="Graph\LUMDCLImportProc.cs" />
     <Compile Include="Graph\LUMSalesChanelSetup.cs" />
     <Compile Include="Graph_Extensions\SOCreateShipment.cs" />
+    <Compile Include="Graph_Extensions\SOInvoiceShipment.cs" />
     <Compile Include="Graph_Extensions\SOOrderEntry.cs" />
     <Compile Include="Graph_Extensions\SOShipmentEntry.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
