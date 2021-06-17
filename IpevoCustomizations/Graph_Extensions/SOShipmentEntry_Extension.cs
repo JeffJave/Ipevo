@@ -49,7 +49,8 @@ namespace PX.Objects.SO
         [PXOverride]
         public void Persist(PersistDelegate baseMethod)
         {
-            var needUpdatePackedQty = Base.Packages.Cache.Dirty.RowCast<SOPackageDetailEx>().Count() > 0;
+            var needUpdatePackedQty = Base.Packages.Cache.Dirty.RowCast<SOPackageDetailEx>().Count() > 0 &&
+                Base.Packages.Cache.Dirty.RowCast<SOPackageDetailEx>().Any(x => x.Qty > 0);
 
             if (needUpdatePackedQty)
             {

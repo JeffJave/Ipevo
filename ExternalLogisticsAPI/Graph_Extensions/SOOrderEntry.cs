@@ -127,10 +127,8 @@ namespace ExternalLogisticsAPI.Graph_Extensions
 
                         // Remove Hold
                         graph.releaseFromHold.PressButton(newAdapter);
-
                         // Confirm Shipment
                         graph.confirmShipmentAction.PressButton(newAdapter);
-
                         // Prepare Invoice For 3D Orders
                         try
                         {
