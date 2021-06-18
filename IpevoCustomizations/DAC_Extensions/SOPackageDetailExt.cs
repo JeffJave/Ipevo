@@ -32,7 +32,7 @@ namespace PX.Objects.SO
         [PXUIField(DisplayName = "Qty", Enabled = true)]
         public virtual decimal? Qty { get; set; }
         public abstract class qty : BqlDecimal.Field<qty> { }
-
+        
         [PXDBString(15, IsUnicode = true)]
         [PXDefault]
         [PXSelector(typeof(Search<CSBox.boxID>))]
@@ -44,6 +44,7 @@ namespace PX.Objects.SO
         #region UsrCartonQty
         [PXDBInt]
         [PXUIField(DisplayName = "Carton Qty")]
+        [PXDefault(PersistingCheck = PXPersistingCheck.Nothing)]
         public virtual int? UsrCartonQty { get; set; }
         public abstract class usrCartonQty : BqlInt.Field<usrCartonQty> { }
         #endregion
