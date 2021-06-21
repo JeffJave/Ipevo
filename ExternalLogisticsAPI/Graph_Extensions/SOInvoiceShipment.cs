@@ -19,8 +19,12 @@ namespace PX.Objects.SO
             baseMthod?.Invoke(shCmd, filter);
             switch (filter.Action)
             {
-                case "SO302000$lumGererateYUSENFile":
+                case "SO302000$lumGenerateYUSENCAFile":
                     shCmd.WhereAnd<Where<INSite.siteCD.IsEqual<YusenAttr>>>();
+                    shCmd.WhereAnd<Where<SOShipment.status.IsEqual<SOShipmentStatus.open>>>();
+                    break;
+                case "SO302000$lumGenerate3PLUKFile":
+                    shCmd.WhereAnd<Where<INSite.siteCD.IsEqual<P3PLAttr>>>();
                     shCmd.WhereAnd<Where<SOShipment.status.IsEqual<SOShipmentStatus.open>>>();
                     break;
             }
@@ -30,5 +34,10 @@ namespace PX.Objects.SO
     public class YusenAttr : PX.Data.BQL.BqlString.Constant<YusenAttr>
     {
         public YusenAttr() : base("YUSEN") { }
+    }
+
+    public class P3PLAttr : PX.Data.BQL.BqlString.Constant<P3PLAttr>
+    {
+        public P3PLAttr() : base("P3PL") { }
     }
 }

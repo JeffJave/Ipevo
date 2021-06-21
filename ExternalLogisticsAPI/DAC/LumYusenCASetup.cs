@@ -23,7 +23,7 @@ namespace ExternalLogisticsAPI.DAC
 
         #region FtpPass
         [PXRSACryptString(IsUnicode = true)]
-        [PXUIField(DisplayName = "Pass")]
+        [PXUIField(DisplayName = "Password")]
         public virtual string FtpPass { get; set; }
         public abstract class ftpPass : PX.Data.BQL.BqlString.Field<ftpPass> { }
         #endregion
