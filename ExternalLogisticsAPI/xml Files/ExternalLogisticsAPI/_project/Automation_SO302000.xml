@@ -64,7 +64,11 @@
             <StateActionFields />
             <StateActionParams />
         </Action>
-        <Action IsActive="True" ActionName="lumGererateYUSENFile" ActionType="G" MassProcessingScreen="SO503000" WindowMode="S">
+        <Action IsActive="True" ActionName="lumGenerateYUSENCAFile" ActionType="G" MassProcessingScreen="SO503000" WindowMode="S">
+            <StateActionFields />
+            <StateActionParams />
+        </Action>
+        <Action IsActive="True" ActionName="lumGenerate3PLUKFile" ActionType="G" MassProcessingScreen="SO503000" WindowMode="S">
             <StateActionFields />
             <StateActionParams />
         </Action>

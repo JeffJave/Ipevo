@@ -29,6 +29,8 @@ namespace PX.Objects.SO
 
         public PXAction<SOShipment> printFedexLabel;
         public PXAction<SOShipment> lumGererateYUSENFile;
+        public PXAction<SOShipment> lumGenerateYUSENCAFile;
+        public PXAction<SOShipment> lumGenerate3PLUKFile;
 
         [PXButton]
         [PXUIField(DisplayName = "Print Fedex Label", MapEnableRights = PXCacheRights.Select, MapViewRights = PXCacheRights.Select)]
@@ -285,12 +287,182 @@ namespace PX.Objects.SO
             return adapter.Get();
         }
 
+        [PXButton]
+        [PXUIField(DisplayName = "Generate YUSEN CA Shipping File", MapEnableRights = PXCacheRights.Select, MapViewRights = PXCacheRights.Select, Visible = false)]
+        protected virtual IEnumerable LumGenerateYUSENCAFile(PXAdapter adapter)
+        {
+            try
+            {
+                SOShipment soShipment = adapter.Get<SOShipment>()?.FirstOrDefault();
+                // Get Csv String Builder
+                var sb = CombineCSV(soShipment);
+                // Upload Graph
+                UploadFileMaintenance upload = PXGraph.CreateInstance<UploadFileMaintenance>();
+                // Create SM.FileInfo
+                var fileName = $"{soShipment.ShipmentNbr}.csv";
+                var data = new UTF8Encoding(true).GetBytes(sb.ToString());
+                FileInfo fi = new FileInfo(fileName, null, data);
+                // upload file to Attachment
+                upload.SaveFile(fi);
+                PXNoteAttribute.SetFileNotes(Base.Document.Cache, Base.Document.Current, fi.UID.Value);
+                Base.Document.UpdateCurrent();
+                Base.Save.Press();
+
+                #region Yusen CA FTP
+                var configYusen = SelectFrom<LUMYusenCASetup>.View.Select(Base).RowCast<LUMYusenCASetup>().FirstOrDefault();
+                //FTP_Config config = new FTP_Config()
+                //{
+                //    FtpHost = configYusen.FtpHost,
+                //    FtpUser = configYusen.FtpUser,
+                //    FtpPass = configYusen.FtpPass,
+                //    FtpPort = configYusen.FtpPort,
+                //    FtpPath = configYusen.FtpPath
+                //};
+
+                //FTPHelper helper = new FTPHelper(config);
+                //var ftpResult = helper.UploadFileToFTP(data,fileName);
+                var ftpResult = true;
+                if (!ftpResult)
+                    throw new Exception("Ftp Upload Fail!!");
+                #endregion
+
+                // Confirm shipment
+                Base.confirmShipmentAction.PressButton(adapter);
+            }
+            catch (Exception ex)
+            {
+                PXProcessing.SetError<SOShipment>(ex.Message);
+            }
+            return adapter.Get();
+        }
+
+        [PXButton]
+        [PXUIField(DisplayName = "Generate 3PL UK Shipping File", MapEnableRights = PXCacheRights.Select, MapViewRights = PXCacheRights.Select, Visible = false)]
+        protected virtual IEnumerable LumGenerate3PLUKFile(PXAdapter adapter)
+        {
+            try
+            {
+                SOShipment soShipment = adapter.Get<SOShipment>()?.FirstOrDefault();
+                // Get Csv String Builder
+                var sb = CombineCSV(soShipment);
+                // Upload Graph
+                UploadFileMaintenance upload = PXGraph.CreateInstance<UploadFileMaintenance>();
+                // Create SM.FileInfo
+                var fileName = $"{soShipment.ShipmentNbr}.csv";
+                var data = new UTF8Encoding(true).GetBytes(sb.ToString());
+                FileInfo fi = new FileInfo(fileName, null, data);
+                // upload file to Attachment
+                upload.SaveFile(fi);
+                PXNoteAttribute.SetFileNotes(Base.Document.Cache, Base.Document.Current, fi.UID.Value);
+                Base.Document.UpdateCurrent();
+                Base.Save.Press();
+
+                #region 3PL UK FTP
+                var configYusen = SelectFrom<LUM3PLUKSetup>.View.Select(Base).RowCast<LUM3PLUKSetup>().FirstOrDefault();
+                //FTP_Config config = new FTP_Config()
+                //{
+                //    FtpHost = configYusen.FtpHost,
+                //    FtpUser = configYusen.FtpUser,
+                //    FtpPass = configYusen.FtpPass,
+                //    FtpPort = configYusen.FtpPort,
+                //    FtpPath = configYusen.FtpPath
+                //};
+
+                //FTPHelper helper = new FTPHelper(config);
+                //var ftpResult = helper.UploadFileToFTP(data,fileName);
+                var ftpResult = true;
+                if (!ftpResult)
+                    throw new Exception("Ftp Upload Fail!!");
+                #endregion
+
+                // Confirm shipment
+                Base.confirmShipmentAction.PressButton(adapter);
+            }
+            catch (Exception ex)
+            {
+                PXProcessing.SetError<SOShipment>(ex.Message);
+            }
+            return adapter.Get();
+        }
+
         #endregion
 
         #region Method
 
         protected virtual bool UseCarrierService(SOShipment row, Carrier carrier)
            => carrier != null && carrier.IsExternal == true;
+
+        public virtual StringBuilder CombineCSV(SOShipment soShipment)
+        {
+            StringBuilder sb = new StringBuilder();
+            string line = string.Empty;
+
+            var inventoryItems = SelectFrom<InventoryItem>.View.Select(Base).RowCast<InventoryItem>().ToList();
+            var shipLines = SelectFrom<SOShipLine>.Where<SOShipLine.shipmentNbr.IsEqual<P.AsString>>
+                               .OrderBy<SOShipLine.lineNbr.Asc>
+                               .View.Select(Base, soShipment?.ShipmentNbr).RowCast<SOShipLine>();
+            SOShipmentContact shipContact = SOShipmentContact.PK.Find(Base, soShipment.ShipContactID);
+            SOShipmentAddress shipAddress = SOShipmentAddress.PK.Find(Base, soShipment.ShipAddressID);
+            SOOrderShipment soOrderShipment = SelectFrom<SOOrderShipment>
+                                              .Where<SOOrderShipment.shipmentNbr.IsEqual<P.AsString>>
+                                              .View.Select(Base, soShipment.ShipmentNbr).RowCast<SOOrderShipment>().FirstOrDefault();
+            SOOrder soOrder = SelectFrom<SOOrder>
+                              .Where<SOOrder.orderType.IsEqual<P.AsString>.And<SOOrder.orderNbr.IsEqual<P.AsString>>>
+                              .View.Select(Base, soOrderShipment.OrderType, soOrderShipment.OrderNbr)
+                              .RowCast<SOOrder>().FirstOrDefault();
+
+            if (!shipLines.Any())
+                throw new Exception("Can not find ShipLine");
+
+            #region Header
+            line += "\"CustomerCode\";\"OrderRefNo\";\"SKUCode\";\"Qty\";\"DeliveryReqDate\";\"ReceiverName\";\"ReceiverCountry\";\"ReceiverCity\";\"ReceiverPostCode\";\"ReceiverAddress\";\"ReceiverPhone\";\"BatchNumber\";\"Notes\"";
+            sb.AppendLine(line);
+            #endregion
+
+            #region Row
+
+            foreach (var item in shipLines)
+            {
+                var _cd = inventoryItems.Where(x => x.InventoryID == item.InventoryID).FirstOrDefault()?.InventoryCD;
+                line = string.Empty;
+                // CustomerCode
+                line += $"\"IPEVOMAN\";";
+                // OrderRefNo
+                line += $"\"{soShipment.CustomerOrderNbr}\";";
+                // SKUCode
+                line += $"\"{_cd}\";";
+                // Qty
+                line += $"\"{item?.ShippedQty}\";";
+                // DeliveryReqDate
+                line += $"\"{DateTime.Now.ToString("yyyyMMdd")}\";";
+                // ReceiverName
+                line += $"\"{shipContact.Attention}\";";
+                // ReceiverCountry
+                line += $"\"{shipAddress.CountryID}\";";
+                // ReceiverCity
+                line += $"\"{shipAddress.City}\";";
+                // ReceiverPostCode
+                line += $"\"{shipAddress.PostalCode}\";";
+                // ReceiverAddress
+                line += $"\"{(shipAddress?.AddressLine1 + shipAddress?.AddressLine2)}\";";
+                // ReceiverPhone
+                line += $"\"{shipContact.Phone1}\";";
+                // BatchNumber
+                line += $"\'{soShipment.ShipmentNbr}\";";
+                // Notes
+                var note = string.Empty;
+                if (_cd == "5-883-4-01-00" || _cd == "5-884-4-01-00")
+                    note = "VZ-R(sku#5-883-4-01-00) or VZ-X(sku#5-884-4-01-00) please scan the serial number for us.";
+                if (soOrderShipment?.OrderType == "FM" && !string.IsNullOrEmpty(soOrder?.OrderDesc))
+                    note = soOrder?.OrderDesc;
+                line += $"\"{note}\";";
+                sb.AppendLine(line);
+            }
+
+            #endregion
+
+            return sb;
+        }
 
         #endregion
     }

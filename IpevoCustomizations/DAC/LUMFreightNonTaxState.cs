@@ -1,45 +1,33 @@
 ﻿using System;
 using PX.Data;
+using PX.Objects.CS;
+using PX.Objects.GL;
+using IpevoCustomizations.Graph;
+using PX.Data.ReferentialIntegrity.Attributes;
 
-namespace ExternalLogisticsAPI.DAC
+namespace IpevoCustomizations.DAC
 {
     [Serializable]
-    [PXCacheName("LUMYusenNLSetup")]
-    public class LUMYusenNLSetup : IBqlTable
+    [PXCacheName("Freight Non-Tax State")]
+    [PXPrimaryGraph(typeof(LUMFrtNonTaxStateMaint))]
+    public class LUMFreightNonTaxState : IBqlTable
     {
-        #region FtpHost
-        [PXDBString(255, IsUnicode = true, InputMask = "")]
-        [PXUIField(DisplayName = "Host")]
-        public virtual string FtpHost { get; set; }
-        public abstract class ftpHost : PX.Data.BQL.BqlString.Field<ftpHost> { }
+        #region Keys
+        public class PK : PrimaryKeyOf<LUMFreightNonTaxState>.By<stateID>
+        {
+            public static LUMFreightNonTaxState Find(PXGraph graph, string stateID) => FindBy(graph, stateID);
+        }
         #endregion
 
-        #region FtpUser
-        [PXDBString(255, IsUnicode = true, InputMask = "")]
-        [PXUIField(DisplayName = "User")]
-        public virtual string FtpUser { get; set; }
-        public abstract class ftpUser : PX.Data.BQL.BqlString.Field<ftpUser> { }
-        #endregion
-
-        #region FtpPass
-        [PXRSACryptString(IsUnicode = true)]
-        [PXUIField(DisplayName = "Password")]
-        public virtual string FtpPass { get; set; }
-        public abstract class ftpPass : PX.Data.BQL.BqlString.Field<ftpPass> { }
-        #endregion
-
-        #region FtpPath
-        [PXDBString(255, IsUnicode = true, InputMask = "")]
-        [PXUIField(DisplayName = "Path")]
-        public virtual string FtpPath { get; set; }
-        public abstract class ftpPath : PX.Data.BQL.BqlString.Field<ftpPath> { }
-        #endregion
-
-        #region FtpPort
-        [PXDBString(3, IsUnicode = true, InputMask = "")]
-        [PXUIField(DisplayName = "Port")]
-        public virtual string FtpPort { get; set; }
-        public abstract class ftpPort : PX.Data.BQL.BqlString.Field<ftpPort> { }
+        #region StateID
+        [PXDBString(50, IsKey = true, IsUnicode = true, InputMask = "")]
+        [PXUIField(DisplayName = "State ID")]
+        [PXDefault()]
+        [PXSelector(typeof(Search2<State.stateID, InnerJoin<Branch, On<Branch.countryID, Equal<State.countryID>>>,
+                                                  Where<Branch.branchID, Equal<Current<AccessInfo.branchID>>>>), 
+                    DescriptionField = typeof(State.name), Filterable = true)]
+        public virtual string StateID { get; set; }
+        public abstract class stateID : PX.Data.BQL.BqlString.Field<stateID> { }
         #endregion
 
         #region CreatedByID
@@ -80,9 +68,14 @@ namespace ExternalLogisticsAPI.DAC
 
         #region Tstamp
         [PXDBTimestamp()]
-        [PXUIField(DisplayName = "Tstamp")]
         public virtual byte[] Tstamp { get; set; }
         public abstract class tstamp : PX.Data.BQL.BqlByteArray.Field<tstamp> { }
+        #endregion
+
+        #region NoteID
+        [PXNote()]
+        public virtual Guid? NoteID { get; set; }
+        public abstract class noteID : PX.Data.BQL.BqlGuid.Field<noteID> { }
         #endregion
     }
 }
