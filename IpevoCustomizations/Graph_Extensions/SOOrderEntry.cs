@@ -5,11 +5,12 @@ namespace PX.Objects.SO
 {
     public class SOOrderEntry_Extensions : PXGraphExtension<PX.Objects.SO.SOOrderEntry>
     {
-        protected void _(Events.FieldUpdated<SOOrder.shipVia> e, PXFieldUpdated baseHandler)
+        protected void _(Events.FieldUpdated<SOOrder.customerLocationID> e, PXFieldUpdated baseHandler)
         {
             baseHandler?.Invoke(e.Cache, e.Args);
 
-            if (e.Row != null && CheckNonTaxableState(Base, Base.Shipping_Address.Current.State) == false )
+            // Becasue SO shipping address complete information comes after updating customer location record.
+            if (e.Row != null && CheckNonTaxableState(Base, Base.Shipping_Address.Select().TopFirst?.State) == false)
             {
                 e.Cache.SetValue<SOOrder.freightTaxCategoryID>(e.Row, null);
             }
@@ -24,14 +25,7 @@ namespace PX.Objects.SO
         /// <returns></returns>
         public static bool CheckNonTaxableState(PXGraph graph, string stateID)
         {
-            if (string.IsNullOrEmpty(stateID))
-            {
-                return false;
-            }
-            else
-            {
-                return LUMFreightNonTaxState.PK.Find(graph, stateID) == null;
-            }
+            return string.IsNullOrEmpty(stateID) || LUMFreightNonTaxState.PK.Find(graph, stateID) == null;
         }
         #endregion
     }
