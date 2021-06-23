@@ -45,22 +45,6 @@
                     </px:PXFormView>
                 </Template>
             </px:PXTabItem>
-            <px:PXTabItem Text="YUSEN NL">
-                <Template>
-                    <px:PXLayoutRule runat="server" ID="CstPXLayoutRuleG1" StartColumn="True" />
-                    <px:PXLayoutRule runat="server" ID="CstPXLayoutRule1" StartColumn="True"></px:PXLayoutRule>
-                    <px:PXFormView ID="CstformSetup" runat="server" DataSourceID="ds" Width="100%" DataMember="NLYusen" RenderStyle="Simple">
-                        <Template>
-                            <px:PXLayoutRule runat="server" ID="CstPXLayoutRule9" StartGroup="True" GroupCaption="FTP Settings"></px:PXLayoutRule>
-                            <px:PXTextEdit runat="server" ID="edFtpHost" DataField="FtpHost" />
-                            <px:PXTextEdit runat="server" ID="CstPXTextEdit5" DataField="FtpUser" />
-                            <px:PXTextEdit runat="server" ID="PXTextEdit1" DataField="FtpPass" />
-                            <px:PXTextEdit runat="server" ID="PXTextEdit2" DataField="FtpPath" />
-                            <px:PXTextEdit runat="server" ID="PXTextEdit3" DataField="FtpPort" />
-                        </Template>
-                    </px:PXFormView>
-                </Template>
-            </px:PXTabItem>
             <px:PXTabItem Text="YUSEN CA">
                 <Template>
                     <px:PXLayoutRule runat="server" ID="CstPXLayoutRuleG1" StartColumn="True" />

@@ -72,5 +72,9 @@
             <StateActionFields />
             <StateActionParams />
         </Action>
+        <Action IsActive="True" ActionName="lumGererateYUSENNLFile" ActionType="G" MassProcessingScreen="SO503000" BatchMode="True" WindowMode="S">
+            <StateActionFields />
+            <StateActionParams />
+        </Action>
     </Actions>
 </Automation>

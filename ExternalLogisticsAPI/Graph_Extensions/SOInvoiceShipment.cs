@@ -19,10 +19,17 @@ namespace PX.Objects.SO
             baseMthod?.Invoke(shCmd, filter);
             switch (filter.Action)
             {
+                // Yusen NL
+                case "SO302000$lumGererateYUSENNLFile":
+                    shCmd.WhereAnd<Where<INSite.siteCD.IsEqual<YusenAttr>>>();
+                    shCmd.WhereAnd<Where<SOShipment.status.IsEqual<SOShipmentStatus.open>>>();
+                    break;
+                // Yusen CA
                 case "SO302000$lumGenerateYUSENCAFile":
                     shCmd.WhereAnd<Where<INSite.siteCD.IsEqual<YusenAttr>>>();
                     shCmd.WhereAnd<Where<SOShipment.status.IsEqual<SOShipmentStatus.open>>>();
                     break;
+                // P3PL UK
                 case "SO302000$lumGenerate3PLUKFile":
                     shCmd.WhereAnd<Where<INSite.siteCD.IsEqual<P3PLAttr>>>();
                     shCmd.WhereAnd<Where<SOShipment.status.IsEqual<SOShipmentStatus.open>>>();
