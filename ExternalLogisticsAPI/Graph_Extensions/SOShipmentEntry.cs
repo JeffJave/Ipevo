@@ -282,49 +282,43 @@ namespace PX.Objects.SO
         {
             try
             {
-                using (PXTransactionScope sc = new PXTransactionScope())
+                SOShipment soShipment = adapter.Get<SOShipment>()?.FirstOrDefault();
+                // Get Csv String Builder
+                var sb = CombineCSV(soShipment, "YUSEN");
+                // Upload Graph
+                UploadFileMaintenance upload = PXGraph.CreateInstance<UploadFileMaintenance>();
+                // Create SM.FileInfo
+                var fileName = $"{soShipment.ShipmentNbr}.csv";
+                var data = new UTF8Encoding(true).GetBytes(sb.ToString());
+                FileInfo fi = new FileInfo(fileName, null, data);
+                // Confirm shipment
+                Base.confirmShipmentAction.PressButton(adapter);
+                if (PXProcessing<SOShipment>.GetItemMessage().ErrorLevel == PXErrorLevel.RowInfo)
                 {
-                    SOShipment soShipment = adapter.Get<SOShipment>()?.FirstOrDefault();
-                    // Get Csv String Builder
-                    var sb = CombineCSV(soShipment, "YUSEN");
-                    // Upload Graph
-                    UploadFileMaintenance upload = PXGraph.CreateInstance<UploadFileMaintenance>();
-                    // Create SM.FileInfo
-                    var fileName = $"{soShipment.ShipmentNbr}.csv";
-                    var data = new UTF8Encoding(true).GetBytes(sb.ToString());
-                    FileInfo fi = new FileInfo(fileName, null, data);
+                    // upload file to FTP
+                    #region Yusen CA FTP
+                    var configYusen = SelectFrom<LUMYusenCASetup>.View.Select(Base).RowCast<LUMYusenCASetup>().FirstOrDefault();
+                    //FTP_Config config = new FTP_Config()
+                    //{
+                    //    FtpHost = configYusen.FtpHost,
+                    //    FtpUser = configYusen.FtpUser,
+                    //    FtpPass = configYusen.FtpPass,
+                    //    FtpPort = configYusen.FtpPort,
+                    //    FtpPath = configYusen.FtpPath
+                    //};
+
+                    //FTPHelper helper = new FTPHelper(config);
+                    //var ftpResult = helper.UploadFileToFTP(data,fileName);
+                    var ftpResult = true;
+                    if (!ftpResult)
+                        throw new Exception("Ftp Upload Fail!!");
+                    #endregion
+
                     // upload file to Attachment
                     upload.SaveFile(fi);
                     PXNoteAttribute.SetFileNotes(Base.Document.Cache, Base.Document.Current, fi.UID.Value);
-                    Base.Document.UpdateCurrent();
-                    Base.Save.Press();
-
-                    // Confirm shipment
-                    Base.confirmShipmentAction.PressButton(adapter);
-
-                    if (PXProcessing<SOShipment>.GetItemMessage().ErrorLevel == PXErrorLevel.RowInfo)
-                    {
-                        #region Yusen CA FTP
-                        var configYusen = SelectFrom<LUMYusenCASetup>.View.Select(Base).RowCast<LUMYusenCASetup>().FirstOrDefault();
-                        //FTP_Config config = new FTP_Config()
-                        //{
-                        //    FtpHost = configYusen.FtpHost,
-                        //    FtpUser = configYusen.FtpUser,
-                        //    FtpPass = configYusen.FtpPass,
-                        //    FtpPort = configYusen.FtpPort,
-                        //    FtpPath = configYusen.FtpPath
-                        //};
-
-                        //FTPHelper helper = new FTPHelper(config);
-                        //var ftpResult = helper.UploadFileToFTP(data,fileName);
-                        var ftpResult = true;
-                        if (!ftpResult)
-                            throw new Exception("Ftp Upload Fail!!");
-                        #endregion
-                    }
-
-                    sc.Complete();
                 }
+                Base.Save.Press();
             }
             catch (Exception ex)
             {
@@ -339,48 +333,43 @@ namespace PX.Objects.SO
         {
             try
             {
-                using (PXTransactionScope sc = new PXTransactionScope())
+                SOShipment soShipment = adapter.Get<SOShipment>()?.FirstOrDefault();
+                // Get Csv String Builder
+                var sb = CombineCSV(soShipment, "P3PL");
+                // Upload Graph
+                UploadFileMaintenance upload = PXGraph.CreateInstance<UploadFileMaintenance>();
+                // Create SM.FileInfo
+                var fileName = $"{soShipment.ShipmentNbr}.csv";
+                var data = new UTF8Encoding(true).GetBytes(sb.ToString());
+                FileInfo fi = new FileInfo(fileName, null, data);
+                // Confirm shipment
+                Base.confirmShipmentAction.PressButton(adapter);
+                if (PXProcessing<SOShipment>.GetItemMessage().ErrorLevel == PXErrorLevel.RowInfo)
                 {
-                    SOShipment soShipment = adapter.Get<SOShipment>()?.FirstOrDefault();
-                    // Get Csv String Builder
-                    var sb = CombineCSV(soShipment, "P3PL");
-                    // Upload Graph
-                    UploadFileMaintenance upload = PXGraph.CreateInstance<UploadFileMaintenance>();
-                    // Create SM.FileInfo
-                    var fileName = $"{soShipment.ShipmentNbr}.csv";
-                    var data = new UTF8Encoding(true).GetBytes(sb.ToString());
-                    FileInfo fi = new FileInfo(fileName, null, data);
-                    // upload file to Attachment
+                    // Upload file to FTP
+                    #region 3PL UK FTP
+                    var configYusen = SelectFrom<LUM3PLUKSetup>.View.Select(Base).RowCast<LUM3PLUKSetup>().FirstOrDefault();
+                    //FTP_Config config = new FTP_Config()
+                    //{
+                    //    FtpHost = configYusen.FtpHost,
+                    //    FtpUser = configYusen.FtpUser,
+                    //    FtpPass = configYusen.FtpPass,
+                    //    FtpPort = configYusen.FtpPort,
+                    //    FtpPath = configYusen.FtpPath
+                    //};
+
+                    //FTPHelper helper = new FTPHelper(config);
+                    //var ftpResult = helper.UploadFileToFTP(data,fileName);
+                    var ftpResult = true;
+                    if (!ftpResult)
+                        throw new Exception("Ftp Upload Fail!!");
+                    #endregion
+
+                    // Upload file to Attachment
                     upload.SaveFile(fi);
                     PXNoteAttribute.SetFileNotes(Base.Document.Cache, Base.Document.Current, fi.UID.Value);
-                    Base.Document.UpdateCurrent();
-                    Base.Save.Press();
-
-                    // Confirm shipment
-                    Base.confirmShipmentAction.PressButton(adapter);
-                    if (PXProcessing<SOShipment>.GetItemMessage().ErrorLevel == PXErrorLevel.RowInfo)
-                    {
-                        #region 3PL UK FTP
-                        var configYusen = SelectFrom<LUM3PLUKSetup>.View.Select(Base).RowCast<LUM3PLUKSetup>().FirstOrDefault();
-                        //FTP_Config config = new FTP_Config()
-                        //{
-                        //    FtpHost = configYusen.FtpHost,
-                        //    FtpUser = configYusen.FtpUser,
-                        //    FtpPass = configYusen.FtpPass,
-                        //    FtpPort = configYusen.FtpPort,
-                        //    FtpPath = configYusen.FtpPath
-                        //};
-
-                        //FTPHelper helper = new FTPHelper(config);
-                        //var ftpResult = helper.UploadFileToFTP(data,fileName);
-                        var ftpResult = true;
-                        if (!ftpResult)
-                            throw new Exception("Ftp Upload Fail!!");
-                        #endregion
-                    }
-
-                    sc.Complete();
                 }
+                Base.Save.Press();
             }
             catch (Exception ex)
             {
@@ -462,7 +451,7 @@ namespace PX.Objects.SO
                     note = "VZ-R(sku#5-883-4-01-00) or VZ-X(sku#5-884-4-01-00) please scan the serial number for us.";
                 if (soOrderShipment?.OrderType == "FM" && !string.IsNullOrEmpty(soOrder?.OrderDesc))
                     note = soOrder?.OrderDesc;
-                line += $"\"{note}\";";
+                line += $"\"{note}\"";
                 if (csvType == "P3PL")
                     line += $";\"{string.Empty}\";\"{string.Empty}\"";
                 sb.AppendLine(line);
