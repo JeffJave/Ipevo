@@ -51,6 +51,10 @@
     <Reference Include="PX.Objects">
       <HintPath>..\..\..\..\Bin\PX.Objects.DLL</HintPath>
     </Reference>
+    <Reference Include="PX.TaxProvider, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Bin\PX.TaxProvider.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -58,10 +62,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DAC\LUMFreightNonTaxState.cs" />
     <Compile Include="DAC_Extensions\ARInvoiceExtension.cs" />
     <Compile Include="DAC_Extensions\SOOrderExtensions.cs" />
+    <Compile Include="Graph\LUMFrtNonTaxStateMaint.cs" />
     <Compile Include="Graph_Extensions\SOInvoiceEntry_Extension.cs" />
     <Compile Include="DAC_Extensions\SOShipLineExt.cs" />
+    <Compile Include="Graph_Extensions\SOOrderEntry.cs" />
+    <Compile Include="Graph_Extensions\SOOrderEntryExternalTax.cs" />
     <Compile Include="Graph_Extensions\SOShipmentEntry_Extension.cs" />
     <Compile Include="Graph_Extensions\ARPaymentEntry.cs" />
     <Compile Include="DAC_Extensions\SOPackageDetailExt.cs" />
