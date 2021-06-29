@@ -1,7 +1,6 @@
 using PX.Data;
 using PX.Data.BQL;
 using PX.Data.BQL.Fluent;
-using PX.Objects.AR;
 using PX.Objects.CS;
 using eGUICustomizations.DAC;
 using eGUICustomizations.Descriptor;
@@ -13,7 +12,6 @@ namespace PX.Objects.AP
         #region Event Handlers
         public bool activateGUI = TWNGUIValidation.ActivateTWGUI(new PXGraph());
 
-        //protected void APInvoice_RowPersisting(PXCache cache, PXRowPersistingEventArgs e, PXRowPersisting InvokeBaseHandler)
         protected void _(Events.RowPersisting<APInvoice> e, PXRowPersisting InvokeBaseHandler)
         {
             InvokeBaseHandler?.Invoke(e.Cache, e.Args);
@@ -56,7 +54,8 @@ namespace PX.Objects.AP
                 vATIncode = (e.Row.IsRetainageDocument == true || cSAnswers == null) ? null : cSAnswers.Value;
             }
 
-            regisExt.UsrVATInCode = e.Row.DocType.Equals(APDocType.DebitAdj, System.StringComparison.CurrentCulture) && !string.IsNullOrEmpty(vATIncode) ? (int.Parse(vATIncode) + 2).ToString() : vATIncode;
+            regisExt.UsrVATInCode = e.Row.DocType.Equals(APDocType.DebitAdj, System.StringComparison.CurrentCulture) && 
+                                    !string.IsNullOrEmpty(vATIncode) ? TWGUIFormatCode.vATInCode23 /*(int.Parse(vATIncode) + 2).ToString()*/ : vATIncode;
         }
 
         protected void _(Events.RowSelected<APRegister> e)
@@ -71,9 +70,10 @@ namespace PX.Objects.AP
 
         protected void _(Events.FieldUpdated<APInvoice.vendorID> e)
         {
-            var row = e.Row as APInvoice;
+            var row    = e.Row as APInvoice;
+            var vendor = Base.vendor.Current;
 
-            if (row == null || activateGUI.Equals(false)) { return; }
+            if (vendor == null || activateGUI == false) { return; }
 
             switch (row.DocType)
             {
@@ -82,7 +82,7 @@ namespace PX.Objects.AP
                     break;
 
                 case APDocType.Invoice:
-                    CSAnswers cSAnswers = SelectCSAnswers(Base, row.NoteID);
+                    CSAnswers cSAnswers = SelectCSAnswers(Base, vendor.NoteID);
 
                     PXCache<APRegister>.GetExtension<APRegisterExt>(row).UsrVATInCode = cSAnswers?.Value;
                     break;
