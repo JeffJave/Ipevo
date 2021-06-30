@@ -3105,14 +3105,13 @@
                         <Size>7.25in, 0.08333in</Size>
                     </Line>
                     <TextBox Name="textBox1">
-                        <Location>0px, 0px</Location>
-                        <Size>216px, 32px</Size>
+                        <Location>16px, 0px</Location>
+                        <Size>184px, 32px</Size>
                         <Style>
                             <Font>
                                 <Size>26px</Size>
                                 <Style>Bold</Style>
                             </Font>
-                            <TextAlign>Center</TextAlign>
                             <VerticalAlign>Middle</VerticalAlign>
                         </Style>
                         <Value>IPEVO INC</Value>
