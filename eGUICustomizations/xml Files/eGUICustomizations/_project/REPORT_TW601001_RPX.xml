@@ -3422,7 +3422,7 @@ F3ORVxDI/lqUX6HdJRFAAAEEEDhDIBeNM1NNQWAPgeyvRXkPV6cggAACCCCAwL8J5KIBCgI3Ecj+WpRv
                         <Value>=[TWNInvTranHist.Qty]</Value>
                     </TextBox>
                     <TextBox Name="textBox34">
-                        <Format>N3</Format>
+                        <Format>=[ARTran.CuryTranAmt.Format]#010;/*N3*/</Format>
                         <Location>7.83069cm, 0cm</Location>
                         <Size>2.53968cm, 1.25cm</Size>
                         <Style>
@@ -3437,7 +3437,7 @@ F3ORVxDI/lqUX6HdJRFAAAEEEDhDIBeNM1NNQWAPgeyvRXkPV6cggAACCCCAwL8J5KIBCgI3Ecj+WpRv
                         <VisibleExpr>=IIf([ARTran.CuryUnitPrice] &lt;&gt; 0, true, false)</VisibleExpr>
                     </TextBox>
                     <TextBox Name="textBox35">
-                        <Format>N2</Format>
+                        <Format>=[ARTran.CuryTranAmt.Format]#010;/*N2*/</Format>
                         <Location>10.58201cm, 0cm</Location>
                         <Size>3.38624cm, 1.25cm</Size>
                         <Style>
@@ -3583,7 +3583,7 @@ F3ORVxDI/lqUX6HdJRFAAAEEEDhDIBeNM1NNQWAPgeyvRXkPV6cggAACCCCAwL8J5KIBCgI3Ecj+WpRv
                     </TextBox>
                     <TextBox Name="textBox25">
                         <Format>N0</Format>
-                        <Location>10.37037cm, 2.32804cm</Location>
+                        <Location>10.37037cm, 2.1164cm</Location>
                         <Size>3.59788cm, 24px</Size>
                         <Style>
                             <Font>
@@ -3676,7 +3676,7 @@ F3ORVxDI/lqUX6HdJRFAAAEEEDhDIBeNM1NNQWAPgeyvRXkPV6cggAACCCCAwL8J5KIBCgI3Ecj+WpRv
                         <Value>銷售額合計</Value>
                     </TextBox>
                     <TextBox Name="textBox38">
-                        <Location>0.21164cm, 2.32804cm</Location>
+                        <Location>0.21164cm, 2.1164cm</Location>
                         <Size>10.15873cm, 0.63492cm</Size>
                         <Style>
                             <Font>
