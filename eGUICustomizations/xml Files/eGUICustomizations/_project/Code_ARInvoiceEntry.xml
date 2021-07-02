@@ -9,9 +9,18 @@ namespace PX.Objects.AR
         [PXCopyPasteHiddenView]
         [PXViewName("Tax Details")]
         public PXSelectJoin<ARTaxTran, LeftJoin<PX.Objects.TX.Tax, On<PX.Objects.TX.Tax.taxID, Equal<ARTaxTran.taxID>>>,
-            Where<ARTaxTran.module, Equal<PX.Objects.GL.BatchModule.moduleAR>,
-                And<ARTaxTran.tranType, Equal<Current<ARInvoice.docType>>,
-                And<ARTaxTran.refNbr, Equal<Current<ARInvoice.refNbr>>>>>> Taxes;
+                                       Where<ARTaxTran.module, Equal<PX.Objects.GL.BatchModule.moduleAR>,
+                                             And<ARTaxTran.tranType, Equal<Current<ARInvoice.docType>>,
+                                                 And<ARTaxTran.refNbr, Equal<Current<ARInvoice.refNbr>>>>>> Taxes;
+
+        /// <summary>
+        /// Applications for the current document, except
+        /// when it is a credit memo.
+        /// </summary>
+        [PXCopyPasteHiddenView]
+        public PXSelectJoin<ARAdjust2, InnerJoin<ARPayment, On<ARPayment.docType, Equal<ARAdjust2.adjgDocType>,
+                                                 And<ARPayment.refNbr, Equal<ARAdjust2.adjgRefNbr>>>,
+                                       LeftJoin<ExternalTransaction, On<ExternalTransaction.transactionID, Equal<ARPayment.cCActualExternalTransactionID>>>>> Adjustments;
         #endregion
     }
 }]]></CDATA>
