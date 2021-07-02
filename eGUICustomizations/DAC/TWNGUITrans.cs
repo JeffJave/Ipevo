@@ -1,8 +1,8 @@
 using System;
 using PX.Data;
 using PX.Objects.AR;
+using PX.Objects.CS;
 using PX.Objects.GL;
-using PX.Objects.SM;
 using PX.Objects.TX;
 using eGUICustomizations.Graph;
 using eGUICustomizations.Descriptor;
@@ -200,6 +200,10 @@ namespace eGUICustomizations.DAC
         #region DeductionCode
         [PXDBString(1, IsUnicode = true)]
         [PXUIField(DisplayName = "Deduction Code")]
+        [PXSelector(typeof(Search<CSAttributeDetail.valueID,
+                                  Where<CSAttributeDetail.attributeID, Equal<PX.Objects.AP.APRegisterExt.DeductionNameAtt>>>),
+                    typeof(CSAttributeDetail.description),
+                    DescriptionField = typeof(CSAttributeDetail.description))]
         public virtual string DeductionCode { get; set; }
         public abstract class deductionCode : PX.Data.BQL.BqlString.Field<deductionCode> { }
         #endregion
@@ -215,8 +219,11 @@ namespace eGUICustomizations.DAC
         #endregion
 
         #region BatchNbr
-        [PXDBString(12, IsUnicode = true)]
-        [PXUIField(DisplayName = "Batch Nbr")]
+        [PXDBString(15, IsUnicode = true)]
+        [PXUIField(DisplayName = "Batch Nbr.")]
+        [PXSelector(typeof(Search<Batch.batchNbr, Where<Batch.module, Equal<BatchModule.moduleAP>,
+                                                        Or<Batch.module, Equal<BatchModule.moduleAR>>>>),
+                    DescriptionField = typeof(Batch.description))]
         public virtual string BatchNbr { get; set; }
         public abstract class batchNbr : PX.Data.BQL.BqlString.Field<batchNbr> { }
         #endregion
@@ -338,14 +345,14 @@ namespace eGUICustomizations.DAC
 
         #region B2CPrinted
         [PXDBBool()]
-        [PXUIField(DisplayName = "B2C Printed")]
+        [PXUIField(DisplayName = "B2C Printed", Visible = false)]
         public virtual bool? B2CPrinted { get; set; }
         public abstract class b2CPrinted : PX.Data.BQL.BqlBool.Field<b2CPrinted> { }
         #endregion
 
         #region PrintCount
         [PXDBInt()]
-        [PXUIField(DisplayName = "Print Count")]
+        [PXUIField(DisplayName = "Print Count", Visible = false)]
         public virtual int? PrintCount { get; set; }
         public abstract class printCount : PX.Data.BQL.BqlInt.Field<printCount> { }
         #endregion
