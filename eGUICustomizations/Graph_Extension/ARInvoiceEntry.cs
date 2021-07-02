@@ -17,14 +17,7 @@ using static eGUICustomizations.Descriptor.TWNStringList;
 namespace PX.Objects.AR
 {
     public class ARInvoiceEntry_Extension : PXGraphExtension<ARInvoiceEntry>
-    {
-        //[PXCopyPasteHiddenView]
-        //[PXViewName("Tax Details")]
-        //public PXSelectJoin<ARTaxTran, LeftJoin<PX.Objects.TX.Tax, On<PX.Objects.TX.Tax.taxID, Equal<ARTaxTran.taxID>>>,
-        //    Where<ARTaxTran.module, Equal<PX.Objects.GL.BatchModule.moduleAR>,
-        //        And<ARTaxTran.tranType, Equal<Current<ARInvoice.docType>>,
-        //        And<ARTaxTran.refNbr, Equal<Current<ARInvoice.refNbr>>>>>> Taxes;
-
+    { 
         #region Delegate Action Menu
         //public delegate IEnumerable ReportDelegate(PXAdapter adapter, string reportID);
         //[PXOverride]
@@ -192,8 +185,6 @@ namespace PX.Objects.AR
         {
             ARRegisterExt aRRegisterExt = PXCache<ARRegister>.GetExtension<ARRegisterExt>(e.Row);
 
-            if (string.IsNullOrEmpty(aRRegisterExt.UsrGUINbr) || !activateGUI) { return; }
-
             string taxID = string.Empty;
 
             /// When deleted, ARTax does not keep the current record, but can fetches the record from the cache.
@@ -210,6 +201,9 @@ namespace PX.Objects.AR
                 throw new PXException(TWMessages.NoInvTaxDtls);
             }
 
+            if (string.IsNullOrEmpty(aRRegisterExt.UsrGUINbr) || !activateGUI || string.IsNullOrEmpty(TX.Tax.PK.Find(Base, taxID).GetExtension<TX.TaxExt>().UsrGUIType) ) { return; }
+
+            // Acuminator disable once PX1043 SavingChangesInEventHandlers [Justification]
             rp.CreateGUITrans(new STWNGUITran()
             {
                 VATCode = aRRegisterExt.UsrVATOutCode,
