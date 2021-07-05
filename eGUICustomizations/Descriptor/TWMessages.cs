@@ -35,5 +35,6 @@ namespace eGUICustomizations.Descriptor
         public const string RemindHeader   = "Reminder Header";
         public const string ReminderMesg   = "The Invoice Amount Isn't Zero But The VAT Out Code Is Empty.";
         public const string SeltCorrGUI    = "Please Select The Correct GUI Number To Print.";
+        public const string NoGUIWithTax   = "There Are Tax Details, But No TW GUI Records.";
     }
 }

@@ -36,7 +36,7 @@
 				<px:PXGridColumn DataField="SequenceNo" Width="70" ></px:PXGridColumn>
 				<px:PXGridColumn DataField="CustVend" Width="80" ></px:PXGridColumn>
 				<px:PXGridColumn DataField="CustVendName" Width="280" ></px:PXGridColumn>
-				<px:PXGridColumn DataField="DeductionCode" Width="70" ></px:PXGridColumn>
+				<px:PXGridColumn DisplayMode="Hint" DataField="DeductionCode" Width="70" ></px:PXGridColumn>
 				<px:PXGridColumn DataField="BatchNbr" Width="70" ></px:PXGridColumn>
 				<px:PXGridColumn DataField="OrderNbr" Width="80" ></px:PXGridColumn>
 				<px:PXGridColumn DataField="TransDate" Width="90" ></px:PXGridColumn>
@@ -66,7 +66,10 @@
 					<px:PXSelector runat="server" ID="CstPXSelector4" DataField="OrderNbr" AllowEdit="True" ></px:PXSelector>
 								<px:PXSelector AllowEdit="True" runat="server" ID="CstPXSelector5" DataField="TaxCategoryID" ></px:PXSelector>
 								<px:PXSelector AllowEdit="True" runat="server" ID="CstPXSelector6" DataField="TaxID" ></px:PXSelector>
-								<px:PXSelector AllowEdit="True" runat="server" ID="CstPXSelector7" DataField="TaxZoneID" ></px:PXSelector></RowTemplate></px:PXGridLevel>
+								<px:PXSelector AllowEdit="True" runat="server" ID="CstPXSelector7" DataField="TaxZoneID" ></px:PXSelector>
+								<px:PXSelector AllowEdit="True" runat="server" ID="CstPXSelector8" DataField="Branch" ></px:PXSelector>
+								<px:PXSelector runat="server" ID="CstPXSelector9" DataField="CustVend" AllowEdit="True" ></px:PXSelector>
+								<px:PXSelector runat="server" ID="CstPXSelector10" DataField="BatchNbr" AllowEdit="True" /></RowTemplate></px:PXGridLevel>
 		</Levels>
 		<AutoSize Container="Window" Enabled="True"></AutoSize>
 		<ActionBar >

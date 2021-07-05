@@ -64,7 +64,9 @@
   <ItemGroup>
     <Compile Include="DAC\LUMFreightNonTaxState.cs" />
     <Compile Include="DAC_Extensions\ARInvoiceExtension.cs" />
+    <Compile Include="DAC_Extensions\PaymentInfo.cs" />
     <Compile Include="DAC_Extensions\SOOrderExtensions.cs" />
+    <Compile Include="DAC_Extensions\Tax.cs" />
     <Compile Include="Graph\LUMFrtNonTaxStateMaint.cs" />
     <Compile Include="Graph_Extensions\SOInvoiceEntry_Extension.cs" />
     <Compile Include="DAC_Extensions\SOShipLineExt.cs" />
