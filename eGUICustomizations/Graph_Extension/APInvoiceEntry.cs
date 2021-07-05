@@ -2,9 +2,9 @@ using PX.Data;
 using PX.Data.BQL;
 using PX.Data.BQL.Fluent;
 using PX.Objects.CS;
+using PX.Objects.TX;
 using eGUICustomizations.DAC;
 using eGUICustomizations.Descriptor;
-using PX.Objects.TX;
 
 namespace PX.Objects.AP
 {
@@ -57,6 +57,13 @@ namespace PX.Objects.AP
                 ManualAPBill.Cache.AllowSelect = TWNGUIValidation.ActivateTWGUI(Base);
                 ManualAPBill.Cache.AllowDelete = ManualAPBill.Cache.AllowInsert = ManualAPBill.Cache.AllowUpdate = row.Status == APDocStatus.Hold;
             }
+
+            //PXUIFieldAttribute.SetVisible<APRegisterExt.usrDeduction>(e.Cache, null, activateGUI);
+            //PXUIFieldAttribute.SetVisible<APRegisterExt.usrGUIDate>(e.Cache, null, activateGUI);
+            //PXUIFieldAttribute.SetVisible<APRegisterExt.usrGUINbr>(e.Cache, null, activateGUI);
+            //PXUIFieldAttribute.SetVisible<APRegisterExt.usrOurTaxNbr>(e.Cache, null, activateGUI);
+            //PXUIFieldAttribute.SetVisible<APRegisterExt.usrTaxNbr>(e.Cache, null, activateGUI);
+            //PXUIFieldAttribute.SetVisible<APRegisterExt.usrVATInCode>(e.Cache, null, activateGUI);
         }
 
         protected void _(Events.RowInserting<APInvoice> e)
@@ -77,16 +84,6 @@ namespace PX.Objects.AP
             regisExt.UsrVATInCode = e.Row.DocType.Equals(APDocType.DebitAdj, System.StringComparison.CurrentCulture) && 
                                     !string.IsNullOrEmpty(vATIncode) ? TWGUIFormatCode.vATInCode23 /*(int.Parse(vATIncode) + 2).ToString()*/ : vATIncode;
         }
-
-        //protected void _(Events.RowSelected<APRegister> e)
-        //{
-        //    PXUIFieldAttribute.SetVisible<APRegisterExt.usrDeduction>(e.Cache, null, activateGUI);
-        //    PXUIFieldAttribute.SetVisible<APRegisterExt.usrGUIDate>  (e.Cache, null, activateGUI);
-        //    PXUIFieldAttribute.SetVisible<APRegisterExt.usrGUINbr>    (e.Cache, null, activateGUI);
-        //    PXUIFieldAttribute.SetVisible<APRegisterExt.usrOurTaxNbr> (e.Cache, null, activateGUI);
-        //    PXUIFieldAttribute.SetVisible<APRegisterExt.usrTaxNbr>    (e.Cache, null, activateGUI);
-        //    PXUIFieldAttribute.SetVisible<APRegisterExt.usrVATInCode>(e.Cache, null, activateGUI);
-        //}
 
         protected void _(Events.FieldUpdated<APInvoice.vendorID> e)
         {
