@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using APILibrary;
 using APILibrary.Model;
+using APILibrary.Model.Interface;
 using ExternalLogisticsAPI.DAC;
 using ExternalLogisticsAPI.Descripter;
 using Newtonsoft.Json;
@@ -20,6 +21,7 @@ using PX.Objects.Common;
 using PX.Objects.CS;
 using PX.Objects.IN;
 using PX.Objects.SO;
+using PX.SM;
 
 namespace ExternalLogisticsAPI.Graph_Extensions
 {
@@ -28,10 +30,17 @@ namespace ExternalLogisticsAPI.Graph_Extensions
         [PXHidden]
         public SelectFrom<LUMVendCntrlSetup>.View DCLSetup;
 
+        [PXHidden]
+        public SelectFrom<LUMMiddleWareSetup>.View MiddlewareSetup;
+
         #region  Actions
         public PXAction<SOOrder> createDCLShipment;
         public PXAction<SOOrder> lumCallDCLShipemnt;
+        public PXAction<SOOrder> lumGererateYUSENNLFile;
+        public PXAction<SOOrder> lumGenerateYUSENCAFile;
+        public PXAction<SOOrder> lumGenerate3PLUKFile;
 
+        /// <summary> 在DCL 產生Shipment(Call API) </summary>
         [PXButton]
         [PXUIField(DisplayName = "Create Shipment in DCL", Enabled = true, MapEnableRights = PXCacheRights.Select, Visible = false)]
         protected virtual IEnumerable CreateDCLShipment(PXAdapter adapter)
@@ -68,111 +77,153 @@ namespace ExternalLogisticsAPI.Graph_Extensions
             return adapter.Get();
         }
 
+        /// <summary> 根據DCL的Shipment資料來產生系統Shipment(逐筆執行) </summary>
         [PXButton]
         [PXUIField(DisplayName = "Call DCL for Shipment", Enabled = true, MapEnableRights = PXCacheRights.Select, Visible = false)]
         protected virtual IEnumerable LumCallDCLShipemnt(PXAdapter adapter, [PXDate] DateTime? shipDate, [PXInt] int? siteID, [SOOperation.List] string operation)
         {
             try
             {
-                using (PXTransactionScope sc = new PXTransactionScope())
+                var _soOrder = adapter.Get<SOOrder>().ToList()[0];
+
+                // Get DCL SO. Data(正式:order_number = SO.OrderNbr)
+                //var dclOrders = JsonConvert.DeserializeObject<OrderResponse>(
+                //    DCLHelper.CallDCLToGetSOByOrderNumbers(
+                //        this.DCLSetup.Select().RowCast<LUMVendCntrlSetup>().FirstOrDefault(), soOrder.OrderNbr).ContentResult);
+
+                // Get DCL SO. Data(理論上資料一定存在，因為Process Order已經先篩選了)
+                var dclOrders = JsonConvert.DeserializeObject<OrderResponse>(
+                    DCLHelper.CallDCLToGetSOByOrderNumbers(
+                        this.DCLSetup.Select().RowCast<LUMVendCntrlSetup>().FirstOrDefault(), _soOrder.CustomerRefNbr).ContentResult);
+
+                if (dclOrders.orders == null)
+                    throw new Exception("Can not Mapping DCL Data");
+
+                if (!dclOrders.orders.Any(x => x.order_stage == 60))
+                    throw new Exception("DCL Order stage is not Fully Shipped");
+
+                if (_soOrder.OrderType == "FM")
                 {
-                    Base.CreateShipmentIssue(adapter, shipDate, siteID);
-                    var processResult = PXProcessing<SOOrder>.GetItemMessage();
-                    if (processResult.ErrorLevel != PXErrorLevel.RowInfo)
-                        return adapter.Get();
-                    var soOrder = adapter.Get<SOOrder>().ToList()[0];
-
-                    // Get DCL SO. Data(理論上資料一定存在)
-                    var dclOrders = JsonConvert.DeserializeObject<OrderResponse>(
-                        DCLHelper.CallDCLToGetSOByOrderNumbers(
-                            this.DCLSetup.Select().RowCast<LUMVendCntrlSetup>().FirstOrDefault(), soOrder.CustomerRefNbr).ContentResult);
-
-                    if (dclOrders.orders == null)
-                        throw new Exception("Can not Mapping DCL Data");
-
-                    if (!dclOrders.orders.Any(x => x.order_stage == 60))
-                        throw new Exception("DCL Order stage is not Fully Shipped");
-
-                    // Create SOShipment Graph
-                    var graph = PXGraph.CreateInstance<SOShipmentEntry>();
-
-                    // Find SOShipment
-                    var _soOrderShipments =
-                        FbqlSelect<SelectFromBase<SOOrderShipment, TypeArrayOf<IFbqlJoin>.Empty>.Where<BqlChainableConditionBase<TypeArrayOf<IBqlBinary>.FilledWith<And<Compare<SOOrderShipment.orderType, Equal<P.AsString>>>>>.And<BqlOperand<SOOrderShipment.orderNbr, IBqlString>.IsEqual<P.AsString>>>, SOOrderShipment>.View.Select(Base, soOrder.OrderType, soOrder.OrderNbr)
-                            .RowCast<SOOrderShipment>();
-                    foreach (var refItem in _soOrderShipments)
+                    var setup = this.MiddlewareSetup.Select().RowCast<LUMMiddleWareSetup>().FirstOrDefault();
+                    var shippingCarrier = dclOrders.orders.FirstOrDefault()?.shipping_carrier;
+                    var packagesInfo = dclOrders.orders.FirstOrDefault().shipments.SelectMany(x => x.packages);
+                    var _merchant = string.IsNullOrEmpty(PXAccess.GetCompanyName()?.Split(' ')[1]) ? "us" :
+                                    PXAccess.GetCompanyName()?.Split(' ')[1].ToLower() == "uk" ? "gb" : PXAccess.GetCompanyName()?.Split(' ')[1].ToLower();
+                    MiddleWare_Shipment metaData = new MiddleWare_Shipment()
                     {
-                        // Create new Adapter
-                        var newAdapter = new PXAdapter(graph.Document) { Searches = new Object[] { refItem.ShipmentNbr } };
-                        // Select Current Shipment
-                        var _soShipment = newAdapter.Get<SOShipment>().ToList()[0];
+                        merchant = _merchant,
+                        amazon_order_id = dclOrders.orders.FirstOrDefault().po_number,
+                        shipment_date = dclOrders.orders.FirstOrDefault()?.shipments?.FirstOrDefault()?.ship_date + " 00:00:00",
+                        shipping_method = "Standard",
+                        carrier = shippingCarrier,
+                        tracking_number = string.Join("|", packagesInfo.Select(x => x.tracking_number))
+                    };
+                    // Update FBM
+                    var updateResult = MiddleWareHelper.CallMiddleWareToUpdateFBM(setup,metaData);
+                    // Check HttpStatusCode
+                    if(updateResult.StatusCode != System.Net.HttpStatusCode.OK)
+                        throw new PXException($"Update MiddleWare FBM fail , Code = {updateResult.StatusCode}");
+                    // Check Response status
+                    var updateModel = JsonConvert.DeserializeObject<MiddleWare_Response>(updateResult.ContentResult);
+                    if(!updateModel.Status)
+                        throw new PXException($"Update Middleware FBM fail, Msg = {updateModel.Message}");
+                    _soOrder.GetExtension<SOOrderExt>().UsrSendToMiddleware = true;
+                    Base.Document.Update(_soOrder);
+                    Base.Save.Press();
+                }
+                else
+                {
+                    using (PXTransactionScope sc = new PXTransactionScope())
+                    {
+                        Base.CreateShipmentIssue(adapter, shipDate, siteID);
+                        var processResult = PXProcessing<SOOrder>.GetItemMessage();
+                        if (processResult.ErrorLevel != PXErrorLevel.RowInfo)
+                            return adapter.Get();
 
-                        try
-                        {
-                            // Get Carrier and TrackingNbr
-                            var shippingCarrier = dclOrders.orders.FirstOrDefault().shipping_carrier;
-                            var packagesInfo = dclOrders.orders.FirstOrDefault().shipments.SelectMany(x => x.packages);
-                            _soShipment.ShipmentDesc = $"Carrier: {shippingCarrier}|" +
-                                                       $"TrackingNbr: {string.Join("|", packagesInfo.Select(x => x.tracking_number))}";
-                            if (_soShipment.ShipmentDesc.Length > 256)
-                                _soShipment.ShipmentDesc = _soShipment.ShipmentDesc.Substring(0, 255);
-                        }
-                        catch (Exception e)
-                        {
-                            _soShipment.ShipmentDesc = e.Message;
-                        }
+                        // Create SOShipment Graph
+                        var graph = PXGraph.CreateInstance<SOShipmentEntry>();
 
-                        // Update Data
-                        graph.Document.Update(_soShipment);
-
-                        // Remove Hold
-                        graph.releaseFromHold.PressButton(newAdapter);
-                        // Confirm Shipment
-                        graph.confirmShipmentAction.PressButton(newAdapter);
-                        // Prepare Invoice For 3D Orders
-                        try
+                        // Find SOShipment
+                        var _soOrderShipments =
+                            FbqlSelect<SelectFromBase<SOOrderShipment, TypeArrayOf<IFbqlJoin>.Empty>.Where<BqlChainableConditionBase<TypeArrayOf<IBqlBinary>.FilledWith<And<Compare<SOOrderShipment.orderType, Equal<P.AsString>>>>>.And<BqlOperand<SOOrderShipment.orderNbr, IBqlString>.IsEqual<P.AsString>>>, SOOrderShipment>.View.Select(Base, _soOrder.OrderType, _soOrder.OrderNbr)
+                                .RowCast<SOOrderShipment>();
+                        foreach (var refItem in _soOrderShipments)
                         {
-                            if (soOrder.OrderType == "3D")
+                            // Create new Adapter
+                            var newAdapter = new PXAdapter(graph.Document) { Searches = new Object[] { refItem.ShipmentNbr } };
+                            // Select Current Shipment
+                            var _soShipment = newAdapter.Get<SOShipment>().ToList()[0];
+
+                            try
                             {
-                                newAdapter.AllowRedirect = true;
-                                graph.createInvoice.PressButton(newAdapter);
+                                // Get Carrier and TrackingNbr
+                                var shippingCarrier = dclOrders.orders.FirstOrDefault().shipping_carrier;
+                                var packagesInfo = dclOrders.orders.FirstOrDefault().shipments.SelectMany(x => x.packages);
+                                _soShipment.GetExtension<SOShipmentExt>().UsrCarrier = shippingCarrier;
+                                _soShipment.GetExtension<SOShipmentExt>().UsrTrackingNbr = string.Join("|", packagesInfo.Select(x => x.tracking_number));
+                                _soShipment.ShipmentDesc = $"Carrier: {shippingCarrier}|" +
+                                                           $"TrackingNbr: {string.Join("|", packagesInfo.Select(x => x.tracking_number))}";
+                                if (_soShipment.ShipmentDesc.Length > 256)
+                                    _soShipment.ShipmentDesc = _soShipment.ShipmentDesc.Substring(0, 255);
+                            }
+                            catch (Exception e)
+                            {
+                                _soShipment.ShipmentDesc = e.Message;
+                            }
+
+                            // Update Data
+                            graph.Document.Update(_soShipment);
+
+                            // Remove Hold
+                            graph.releaseFromHold.PressButton(newAdapter);
+                            // Confirm Shipment
+                            graph.confirmShipmentAction.PressButton(newAdapter);
+                            // Prepare Invoice For 3D Orders
+                            try
+                            {
+                                if (_soOrder.OrderType == "3D")
+                                {
+                                    newAdapter.AllowRedirect = true;
+                                    graph.createInvoice.PressButton(newAdapter);
+                                }
+                            }
+                            catch (PXRedirectRequiredException ex)
+                            {
+                                SOInvoiceEntry invoiceEntry = ex.Graph as SOInvoiceEntry;
+                                var soTax = SelectFrom<SOTaxTran>
+                                         .Where<SOTaxTran.orderNbr.IsEqual<P.AsString>
+                                              .And<SOTaxTran.orderType.IsEqual<P.AsString>>>
+                                         .View.Select(Base, _soOrder.OrderNbr, _soOrder.OrderType)
+                                         .RowCast<SOTaxTran>().FirstOrDefault();
+                                var balance = invoiceEntry.Document.Current.CuryDocBal;
+                                var refNbr = invoiceEntry.Document.Current.RefNbr;
+                                var invTax = SelectFrom<ARTaxTran>.Where<ARTaxTran.refNbr.IsEqual<P.AsString>>
+                                             .View.Select(Base, refNbr).RowCast<ARTaxTran>().FirstOrDefault();
+                                var adjd = SelectFrom<ARAdjust2>.Where<ARAdjust2.adjdRefNbr.IsEqual<P.AsString>>
+                                             .View.Select(Base, refNbr).RowCast<ARAdjust2>().FirstOrDefault();
+                                if (soTax != null)
+                                {
+                                    // setting Tax
+                                    invoiceEntry.Taxes.SetValueExt<ARTaxTran.curyTaxAmt>(invTax, soTax.CuryTaxAmt);
+                                    invoiceEntry.Taxes.Update(invTax);
+                                    // setting Document
+                                    invoiceEntry.Document.SetValueExt<ARInvoice.curyTaxTotal>(invoiceEntry.Document.Current, soTax.CuryTaxAmt);
+                                    invoiceEntry.Document.SetValueExt<ARInvoice.curyDocBal>(invoiceEntry.Document.Current, balance + (soTax.CuryTaxAmt ?? 0));
+                                    invoiceEntry.Document.Update(invoiceEntry.Document.Current);
+                                    invoiceEntry.Adjustments.SetValueExt<ARAdjust2.curyAdjdAmt>(adjd, adjd.CuryAdjdAmt + (soTax.CuryTaxAmt ?? 0));
+                                    invoiceEntry.Adjustments.Update(adjd);
+                                    invoiceEntry.releaseFromCreditHold.Press();
+                                    invoiceEntry.Save.Press();
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                throw new Exception(ex.Message);
                             }
                         }
-                        catch (PXRedirectRequiredException ex)
-                        {
-                            SOInvoiceEntry invoiceEntry = ex.Graph as SOInvoiceEntry;
-                            var soTax = SelectFrom<SOTaxTran>
-                                     .Where<SOTaxTran.orderNbr.IsEqual<P.AsString>
-                                          .And<SOTaxTran.orderType.IsEqual<P.AsString>>>
-                                     .View.Select(Base, soOrder.OrderNbr, soOrder.OrderType)
-                                     .RowCast<SOTaxTran>().FirstOrDefault();
-                            var balance = invoiceEntry.Document.Current.CuryDocBal;
-                            var refNbr = invoiceEntry.Document.Current.RefNbr;
-                            var invTax = SelectFrom<ARTaxTran>.Where<ARTaxTran.refNbr.IsEqual<P.AsString>>
-                                         .View.Select(Base, refNbr).RowCast<ARTaxTran>().FirstOrDefault();
-                            var adjd = SelectFrom<ARAdjust2>.Where<ARAdjust2.adjdRefNbr.IsEqual<P.AsString>>
-                                         .View.Select(Base, refNbr).RowCast<ARAdjust2>().FirstOrDefault();
-                            if (soTax != null)
-                            {
-                                // setting Tax
-                                invoiceEntry.Taxes.SetValueExt<ARTaxTran.curyTaxAmt>(invTax, soTax.CuryTaxAmt);
-                                invoiceEntry.Taxes.Update(invTax);
-                                // setting Document
-                                invoiceEntry.Document.SetValueExt<ARInvoice.curyTaxTotal>(invoiceEntry.Document.Current, soTax.CuryTaxAmt);
-                                invoiceEntry.Document.SetValueExt<ARInvoice.curyDocBal>(invoiceEntry.Document.Current, balance + (soTax.CuryTaxAmt ?? 0));
-                                invoiceEntry.Document.Update(invoiceEntry.Document.Current);
-                                invoiceEntry.Adjustments.SetValueExt<ARAdjust2.curyAdjdAmt>(adjd, adjd.CuryAdjdAmt + (soTax.CuryTaxAmt ?? 0));
-                                invoiceEntry.Adjustments.Update(adjd);
-                                invoiceEntry.releaseFromCreditHold.Press();
-                                invoiceEntry.Save.Press();
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            throw new Exception(ex.Message);
-                        }
+
+                        sc.Complete();
                     }
-                    sc.Complete();
                 }
             }
             catch (Exception e)
@@ -180,6 +231,258 @@ namespace ExternalLogisticsAPI.Graph_Extensions
                 PXProcessing.SetError<SOOrder>(e.Message);
             }
 
+            return adapter.Get();
+        }
+
+        /// <summary> 產生NL Shipping File(批次執行) </summary>
+        [PXButton]
+        [PXUIField(DisplayName = "Generate YUSEN NL Shipping File", MapEnableRights = PXCacheRights.Select, MapViewRights = PXCacheRights.Select, Visible = false)]
+        protected virtual IEnumerable LumGererateYUSENNLFile(PXAdapter adapter, [PXDate] DateTime? shipDate, [PXInt] int? siteID, [SOOperation.List] string operation)
+        {
+            using (PXTransactionScope sc = new PXTransactionScope())
+            {
+                try
+                {
+                    // variable
+                    var shipmentList = new List<SOShipment>();
+                    var soList = adapter.Get<SOOrder>().ToList();
+                    var soListwithoutFM = new List<object>();
+                    soListwithoutFM.AddRange(soList.Where(x => x.OrderType != "FM"));
+                    var graph = PXGraph.CreateInstance<SOShipmentEntry>();
+
+                    // Find soOrder type != FM
+                    var newAdapter = new PXAdapter(new LumShipmentDocView(Base, adapter.View.BqlSelect, soListwithoutFM));
+                    newAdapter.MassProcess = true;
+                    newAdapter.Arguments = adapter.Arguments;
+                    // Create SOShipment Graph
+                    Base.CreateShipmentIssue(newAdapter, shipDate, siteID);
+                    if ((PXLongOperation.GetCustomInfoForCurrentThread("PXProcessingState") as PXProcessingInfo).Errors != 0)
+                        return adapter.Get();
+
+                    // Get Shipments
+                    foreach (var order in soList.Where(x => x.OrderType != "FM"))
+                    {
+                        var soOrderShipment = SelectFrom<SOOrderShipment>.Where<SOOrderShipment.orderNbr.IsEqual<P.AsString>
+                                                                               .And<SOOrderShipment.orderType.IsEqual<P.AsString>>>
+                                               .View.Select(Base, order.OrderNbr, order.OrderType).RowCast<SOOrderShipment>().FirstOrDefault();
+                        var shipment = SelectFrom<SOShipment>.Where<SOShipment.shipmentNbr.IsEqual<P.AsString>>
+                                .View.Select(Base, soOrderShipment.ShipmentNbr).RowCast<SOShipment>().FirstOrDefault();
+
+                        // update field
+                        shipment.GetExtension<SOShipmentExt>().UsrSendToWareHouse = true;
+                        graph.Document.Update(shipment);
+
+                        // Remove Hold (Shipments)
+                        var shipAdapter = new PXAdapter(graph.Document) { Searches = new Object[] { shipment.ShipmentNbr } };
+                        graph.releaseFromHold.PressButton(shipAdapter);
+                        if ((PXLongOperation.GetCustomInfoForCurrentThread("PXProcessingState") as PXProcessingInfo).Errors != 0)
+                            return adapter.Get();
+
+                        shipmentList.Add(shipment);
+                    }
+                    // Generate NL File, Success will throw PXRedirectToFileException 
+                    int totalLine = 1;
+                    StringBuilder sb = new StringBuilder();
+                    string line = string.Empty;
+
+                    #region FileHeader - HDR
+
+                    sb = graph.GetExtension<SOShipmentEntryExt>().CombineYusenHedaer(sb);
+
+                    #endregion
+
+                    // General Detail
+                    var result = graph.GetExtension<SOShipmentEntryExt>().CombineYusenDetail(sb, shipmentList, totalLine);
+                    sb = result.sb;
+
+                    // FBM Yuesn Detail
+                    result = graph.GetExtension<SOShipmentEntryExt>().CombineYusenDetailForFBM(sb, soList.Where(x => x.OrderType == "FM").ToList(), result.totalLine);
+                    sb = result.sb;
+
+                    #region Filetrailer – TRL
+
+                    sb = graph.GetExtension<SOShipmentEntryExt>().CombineYusenFooter(sb, result.totalLine);
+
+                    #endregion
+
+                    // Create SM.FileInfo
+                    var fileName = $"Yusen-{DateTime.Now.ToString("yyyyMMddHHmmss")}.csv";
+                    var data = new UTF8Encoding(true).GetBytes(sb.ToString());
+                    FileInfo fi = new FileInfo(fileName, null, data);
+
+                    // DownLoad File
+                    if ((PXLongOperation.GetCustomInfoForCurrentThread("PXProcessingState") as PXProcessingInfo).Errors == 0)
+                        throw new PXRedirectToFileException(fi, true);
+                }
+                // Success
+                catch (PXRedirectToFileException)
+                {
+                    sc.Complete();
+                    throw;
+                }
+                catch (Exception ex)
+                {
+                    PXProcessing.SetError(ex.Message);
+                }
+            }
+
+            return adapter.Get();
+        }
+
+        /// <summary> 產生CA Shipping File(逐筆執行) </summary>
+        [PXButton]
+        [PXUIField(DisplayName = "Generate YUSEN CA Shipping File", MapEnableRights = PXCacheRights.Select, MapViewRights = PXCacheRights.Select, Visible = false)]
+        protected virtual IEnumerable LumGenerateYUSENCAFile(PXAdapter adapter, [PXDate] DateTime? shipDate, [PXInt] int? siteID, [SOOperation.List] string operation)
+        {
+            try
+            {
+                // Create SOShipment Graph
+                var graph = PXGraph.CreateInstance<SOShipmentEntry>();
+                var soOrder = adapter.Get<SOOrder>().FirstOrDefault();
+                using (PXTransactionScope sc = new PXTransactionScope())
+                {
+                    // FBM wont create Shipment, only upload file to FTP
+                    if (soOrder.OrderType == "FM")
+                    {
+                        // Combine csv data
+                        var result = graph.GetExtension<SOShipmentEntryExt>().CombineCSVForFBM(soOrder, "YUSEN");
+                        // Upload Graph
+                        UploadFileMaintenance upload = PXGraph.CreateInstance<UploadFileMaintenance>();
+                        // Create SM.FileInfo
+                        var fileName = $"{soOrder.OrderNbr}.csv";
+                        var data = new UTF8Encoding(true).GetBytes(result.csvText.ToString());
+                        FileInfo fi = new FileInfo(fileName, null, data);
+
+                        // upload file to FTP
+                        #region Yusen CA FTP
+                        var configYusen = SelectFrom<LUMYusenCASetup>.View.Select(Base).RowCast<LUMYusenCASetup>().FirstOrDefault();
+                        //FTP_Config config = new FTP_Config()
+                        //{
+                        //    FtpHost = configYusen.FtpHost,
+                        //    FtpUser = configYusen.FtpUser,
+                        //    FtpPass = configYusen.FtpPass,
+                        //    FtpPort = configYusen.FtpPort,
+                        //    FtpPath = configYusen.FtpPath
+                        //};
+                        //var ftpResult = UploadFileByFTP(config, fileName, data);
+                        var ftpResult = true;
+                        if (!ftpResult)
+                            throw new Exception("Ftp Upload Fail!!");
+                        #endregion
+
+                        // upload file to Attachment
+                        upload.SaveFile(fi);
+                        PXNoteAttribute.SetFileNotes(Base.Document.Cache, Base.Document.Current, fi.UID.Value);
+                        Base.Save.Press();
+                        PXProcessing.SetProcessed();
+                    }
+                    else
+                    {
+                        // Create Shipment
+                        Base.CreateShipmentIssue(adapter, shipDate, siteID);
+                        if (PXProcessing<SOOrder>.GetItemMessage().ErrorLevel != PXErrorLevel.RowInfo)
+                            return null;
+
+                        // Find SOShipment
+                        var _soOrderShipment =
+                            FbqlSelect<SelectFromBase<SOOrderShipment, TypeArrayOf<IFbqlJoin>.Empty>.Where<BqlChainableConditionBase<TypeArrayOf<IBqlBinary>.FilledWith<And<Compare<SOOrderShipment.orderType, Equal<P.AsString>>>>>.And<BqlOperand<SOOrderShipment.orderNbr, IBqlString>.IsEqual<P.AsString>>>, SOOrderShipment>.View.Select(Base, soOrder.OrderType, soOrder.OrderNbr)
+                                .RowCast<SOOrderShipment>().FirstOrDefault();
+
+                        // Create new Adapter
+                        var newAdapter = new PXAdapter(graph.Document) { Searches = new Object[] { _soOrderShipment.ShipmentNbr } };
+                        // Generate CA csv file and upload to FTP
+                        graph.GetExtension<SOShipmentEntryExt>().lumGenerateYUSENCAFile.PressButton(newAdapter);
+                        // Remove Hold
+                        graph.releaseFromHold.PressButton(newAdapter);
+
+                    }
+                    if (PXProcessing<SOOrder>.GetItemMessage().ErrorLevel == PXErrorLevel.RowInfo)
+                        sc.Complete();
+                }
+            }
+            catch (Exception ex)
+            {
+                PXProcessing.SetError<SOOrder>(ex.Message);
+            }
+            return adapter.Get();
+        }
+
+        /// <summary> 產生 3PL UK Shipping File(逐筆執行) </summary>
+        [PXButton]
+        [PXUIField(DisplayName = "Generate 3PL UK Shipping File", MapEnableRights = PXCacheRights.Select, MapViewRights = PXCacheRights.Select, Visible = false)]
+        protected virtual IEnumerable LumGenerate3PLUKFile(PXAdapter adapter, [PXDate] DateTime? shipDate, [PXInt] int? siteID, [SOOperation.List] string operation)
+        {
+            try
+            {
+                // Create SOShipment Graph
+                var graph = PXGraph.CreateInstance<SOShipmentEntry>();
+                var soOrder = adapter.Get<SOOrder>().FirstOrDefault();
+                using (PXTransactionScope sc = new PXTransactionScope())
+                {
+                    // FBM wont create Shipment, only upload file to FTP
+                    if (soOrder.OrderType == "FM")
+                    {
+                        // Combine csv data
+                        var result = graph.GetExtension<SOShipmentEntryExt>().CombineCSVForFBM(soOrder, "P3PL");
+                        // Upload Graph
+                        UploadFileMaintenance upload = PXGraph.CreateInstance<UploadFileMaintenance>();
+                        // Create SM.FileInfo
+                        var fileName = $"{soOrder.OrderNbr}.csv";
+                        var data = new UTF8Encoding(true).GetBytes(result.csvText.ToString());
+                        FileInfo fi = new FileInfo(fileName, null, data);
+
+                        // upload file to FTP
+                        #region 3PL UK FTP
+                        var configYusen = SelectFrom<LUM3PLUKSetup>.View.Select(Base).RowCast<LUM3PLUKSetup>().FirstOrDefault();
+                        //FTP_Config config = new FTP_Config()
+                        //{
+                        //    FtpHost = configYusen.FtpHost,
+                        //    FtpUser = configYusen.FtpUser,
+                        //    FtpPass = configYusen.FtpPass,
+                        //    FtpPort = configYusen.FtpPort,
+                        //    FtpPath = configYusen.FtpPath
+                        //};
+
+                        //var ftpResult = UploadFileByFTP(config, fileName, data);
+                        var ftpResult = true;
+                        if (!ftpResult)
+                            throw new Exception("Ftp Upload Fail!!");
+                        #endregion
+
+                        // upload file to Attachment
+                        upload.SaveFile(fi);
+                        PXNoteAttribute.SetFileNotes(Base.Document.Cache, Base.Document.Current, fi.UID.Value);
+                        Base.Save.Press();
+                        PXProcessing.SetProcessed();
+                    }
+                    else
+                    {
+                        // Create Shipment
+                        Base.CreateShipmentIssue(adapter, shipDate, siteID);
+                        if (PXProcessing<SOOrder>.GetItemMessage().ErrorLevel != PXErrorLevel.RowInfo)
+                            return null;
+
+                        // Find SOShipment
+                        var _soOrderShipment =
+                            FbqlSelect<SelectFromBase<SOOrderShipment, TypeArrayOf<IFbqlJoin>.Empty>.Where<BqlChainableConditionBase<TypeArrayOf<IBqlBinary>.FilledWith<And<Compare<SOOrderShipment.orderType, Equal<P.AsString>>>>>.And<BqlOperand<SOOrderShipment.orderNbr, IBqlString>.IsEqual<P.AsString>>>, SOOrderShipment>.View.Select(Base, soOrder.OrderType, soOrder.OrderNbr)
+                                .RowCast<SOOrderShipment>().FirstOrDefault();
+
+                        // Create new Adapter
+                        var newAdapter = new PXAdapter(graph.Document) { Searches = new Object[] { _soOrderShipment.ShipmentNbr } };
+                        // Generate UK csv file and upload to FTP
+                        graph.GetExtension<SOShipmentEntryExt>().lumGenerate3PLUKFile.PressButton(newAdapter);
+                        // Remove Hold
+                        graph.releaseFromHold.PressButton(newAdapter);
+
+                    }
+                    if (PXProcessing<SOOrder>.GetItemMessage().ErrorLevel == PXErrorLevel.RowInfo)
+                        sc.Complete();
+                }
+            }
+            catch (Exception ex)
+            {
+                PXProcessing.SetError<SOOrder>(ex.Message);
+            }
             return adapter.Get();
         }
 
@@ -342,6 +645,7 @@ namespace ExternalLogisticsAPI.Graph_Extensions
                 .View.SelectSingleBound(Base, null, baccountId)
                 .RowCast<PX.Objects.CR.BAccount>().FirstOrDefault()?.AcctCD;
         }
+
         #endregion
     }
 

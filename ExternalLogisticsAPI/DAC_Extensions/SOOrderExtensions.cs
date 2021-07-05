@@ -19,5 +19,16 @@ namespace PX.Objects.SO
             PX.Data.BQL.BqlBool.Field<usrDCLShipmentCreated>{}
 
         #endregion
+
+        #region UsrSendToMiddleware
+
+        [PXDBBool]
+        [PXDefault(false, PersistingCheck = PXPersistingCheck.Nothing)]
+        [PXUIField(DisplayName = "Send to Middle Ware",Enabled = false)]
+        public bool? UsrSendToMiddleware { get; set; }
+        public abstract class usrSendToMiddleware :
+            PX.Data.BQL.BqlBool.Field<usrSendToMiddleware>{ }
+
+        #endregion
     }
 }

@@ -1,0 +1,28 @@
+﻿<Sql TableName="LUMP3PLImportProcessLog" TableSchemaXml="#CDATA">
+    <CDATA name="TableSchemaXml"><![CDATA[<table name="LUMP3PLImportProcessLog">
+  <col name="CompanyID" type="Int" default="Zero" />
+  <col name="WarehouseOrder" type="NVarChar(50)" />
+  <col name="CustomerOrderRef" type="NVarChar(50)" />
+  <col name="OrderStatus" type="NVarChar(50)" />
+  <col name="UnitsSent" type="Int" />
+  <col name="Carrier" type="NVarChar(50)" />
+  <col name="TrackingNumber" type="NVarChar(100)" />
+  <col name="FreightCost" type="Decimal(18,6)" />
+  <col name="FreightCurrency" type="NVarChar(50)" />
+  <col name="FtpFileName" type="NVarChar(100)" />
+  <col name="IsProcess" type="Bit" nullable="true" default="Zero" />
+  <col name="ProcessMessage" type="NVarChar(100)" nullable="true" />
+  <col name="NoteID" type="UniqueIdentifier" nullable="true" />
+  <col name="CreatedByID" type="UniqueIdentifier" />
+  <col name="CreatedByScreenID" type="Char(8)" />
+  <col name="CreatedDateTime" type="DateTime" />
+  <col name="LastModifiedByID" type="UniqueIdentifier" />
+  <col name="LastModifiedByScreenID" type="Char(8)" />
+  <col name="LastModifiedDateTime" type="DateTime" />
+  <col name="tstamp" type="Timestamp" />
+  <index name="PK_LUMP3PLImportProcessLog" clustered="true" primary="true" unique="true">
+    <col name="CompanyID" />
+    <col name="WarehouseOrder" />
+  </index>
+</table>]]></CDATA>
+</Sql>

@@ -14,17 +14,17 @@
     <px:PXFormView ID="form" runat="server" DataSourceID="ds" DataMember="DocFilter" Width="100%" Height="100px" AllowAutoHide="false">
         <Template>
             <px:PXDateTimeEdit runat="server" ID="edRevFrom" DataField="Received_from" CommitChanges="True" />
-            <px:PXDateTimeEdit runat="server" ID="edRevTo" DataField="Received_to" CommitChanges="True"/>
-            <px:PXDropDown runat="server" ID="edCustomer_number" DataField="Customer_number" CommitChanges="True" Size="S"/>
+            <px:PXDateTimeEdit runat="server" ID="edRevTo" DataField="Received_to" CommitChanges="True" />
+            <px:PXDropDown runat="server" ID="edCustomer_number" DataField="Customer_number" CommitChanges="True" Size="S" />
         </Template>
     </px:PXFormView>
 </asp:Content>
-<asp:Content ID="cont3" ContentPlaceHolderID="phG" Runat="Server">
+<asp:Content ID="cont3" ContentPlaceHolderID="phG" runat="Server">
     <px:PXGrid SyncPosition="True" ID="grid" runat="server" DataSourceID="ds" Width="100%" Height="150px" SkinID="PrimaryInquire" AllowAutoHide="false">
         <Levels>
             <px:PXGridLevel DataMember="ImportOrderList">
                 <Columns>
-                    <px:PXGridColumn DataField="Selected" Width="40" Type="CheckBox" TextAlign="Center" CommitChanges="True" AllowCheckAll="True" ></px:PXGridColumn>
+                    <px:PXGridColumn DataField="Selected" Width="40" Type="CheckBox" TextAlign="Center" CommitChanges="True" AllowCheckAll="True"></px:PXGridColumn>
                     <px:PXGridColumn DataField="LineNumber"></px:PXGridColumn>
                     <px:PXGridColumn DataField="OrderID"></px:PXGridColumn>
                     <px:PXGridColumn DataField="CustomerID"></px:PXGridColumn>
@@ -35,7 +35,7 @@
                     <px:PXGridColumn DataField="OrderAmount"></px:PXGridColumn>
                     <px:PXGridColumn DataField="Processed"></px:PXGridColumn>
                     <%--<px:PXGridColumn DataField="LUMVendCntrlProcessLog__AcumaticaOrderID"/>--%>
-                    <px:PXGridColumn DataField="LUMVendCntrlProcessLog__ErrorDesc"/>
+                    <px:PXGridColumn DataField="LUMVendCntrlProcessLog__ErrorDesc" />
                 </Columns>
             </px:PXGridLevel>
         </Levels>
@@ -43,7 +43,7 @@
         <ActionBar>
         </ActionBar>
     </px:PXGrid>
-    
+
     <script type="text/javascript">
         window.onload = function () {
             window.setTimeout(function () {

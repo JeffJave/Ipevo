@@ -1,52 +1,48 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using PX.Data;
 
-namespace ExternalLogisticsAPI.DAC
+namespace ExternalLogisticsAPI
 {
     [Serializable]
-    [PXCacheName("LUM3PLUKSetup")]
-    public class LUM3PLUKSetup : IBqlTable
+    [PXCacheName("LUMMiddleWareSetup")]
+    public class LUMMiddleWareSetup : IBqlTable
     {
-        #region FtpHost
+        #region SecureURL_login
         [PXDBString(255, IsUnicode = true, InputMask = "")]
-        [PXUIField(DisplayName = "Host")]
-        public virtual string FtpHost { get; set; }
-        public abstract class ftpHost : PX.Data.BQL.BqlString.Field<ftpHost> { }
+        [PXUIField(DisplayName = "Secure URL_login")]
+        public virtual string SecureURL_login { get; set; }
+        public abstract class secureURL_login : PX.Data.BQL.BqlString.Field<secureURL_login> { }
         #endregion
 
-        #region FtpUser
+        #region SecureURL_fbm
         [PXDBString(255, IsUnicode = true, InputMask = "")]
-        [PXUIField(DisplayName = "User")]
-        public virtual string FtpUser { get; set; }
-        public abstract class ftpUser : PX.Data.BQL.BqlString.Field<ftpUser> { }
+        [PXUIField(DisplayName = "Secure URL_fbm")]
+        public virtual string SecureURL_fbm { get; set; }
+        public abstract class secureURL_fbm : PX.Data.BQL.BqlString.Field<secureURL_fbm> { }
         #endregion
 
-        #region FtpPass
+        #region ClientID
+        [PXDBString(50, IsUnicode = true, InputMask = "")]
+        [PXUIField(DisplayName = "Client ID")]
+        public virtual string ClientID { get; set; }
+        public abstract class clientID : PX.Data.BQL.BqlString.Field<clientID> { }
+        #endregion
+
+        #region ClientSecret
         [PXRSACryptString(IsUnicode = true)]
-        [PXUIField(DisplayName = "Password")]
-        public virtual string FtpPass { get; set; }
-        public abstract class ftpPass : PX.Data.BQL.BqlString.Field<ftpPass> { }
+        [PXUIField(DisplayName = "Client Secret")]
+        public virtual string ClientSecret { get; set; }
+        public abstract class clientSecret : PX.Data.BQL.BqlString.Field<clientSecret> { }
         #endregion
 
-        #region FtpPath
-        [PXDBString(255, IsUnicode = true, InputMask = "")]
-        [PXUIField(DisplayName = "Path")]
-        public virtual string FtpPath { get; set; }
-        public abstract class ftpPath : PX.Data.BQL.BqlString.Field<ftpPath> { }
-        #endregion
-
-        #region Ftp Out Path
-        [PXDBString(255, IsUnicode = true, InputMask = "")]
-        [PXUIField(DisplayName = "Out Path")]
-        public virtual string FtpOutPath { get; set; }
-        public abstract class ftpOutPath : PX.Data.BQL.BqlString.Field<ftpOutPath> { }
-        #endregion
-
-        #region FtpPort
-        [PXDBString(3, IsUnicode = true, InputMask = "")]
-        [PXUIField(DisplayName = "Port")]
-        public virtual string FtpPort { get; set; }
-        public abstract class ftpPort : PX.Data.BQL.BqlString.Field<ftpPort> { }
+        #region Noteid
+        [PXNote()]
+        public virtual Guid? Noteid { get; set; }
+        public abstract class noteid : PX.Data.BQL.BqlGuid.Field<noteid> { }
         #endregion
 
         #region CreatedByID
@@ -91,5 +87,13 @@ namespace ExternalLogisticsAPI.DAC
         public virtual byte[] Tstamp { get; set; }
         public abstract class tstamp : PX.Data.BQL.BqlByteArray.Field<tstamp> { }
         #endregion
+
+        #region AuthToken
+        [PXString(100)]
+        [PXUIField(DisplayName = "Auth Token")]
+        public virtual string AuthToken { get; set; }
+        public abstract class authToken : PX.Data.BQL.BqlString.Field<authToken> { }
+        #endregion
+
     }
 }

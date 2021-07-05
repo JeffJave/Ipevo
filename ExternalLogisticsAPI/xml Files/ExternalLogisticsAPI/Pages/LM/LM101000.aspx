@@ -71,8 +71,25 @@
                             <px:PXTextEdit runat="server" ID="edFtpHost" DataField="FtpHost" />
                             <px:PXTextEdit runat="server" ID="CstPXTextEdit5" DataField="FtpUser" />
                             <px:PXTextEdit runat="server" ID="PXTextEdit1" DataField="FtpPass" />
-                            <px:PXTextEdit runat="server" ID="PXTextEdit2" DataField="FtpPath" />
+                            <px:PXTextEdit runat="server" ID="PXTextEdit99" DataField="FtpPath" />
+                            <px:PXTextEdit runat="server" ID="PXTextEdit4" DataField="FtpOutPath" />
                             <px:PXTextEdit runat="server" ID="PXTextEdit3" DataField="FtpPort" />
+                        </Template>
+                    </px:PXFormView>
+                </Template>
+            </px:PXTabItem>
+            <px:PXTabItem Text="MIDDLE WARE">
+                <Template>
+                    <px:PXLayoutRule runat="server" ID="CstPXLayoutRuleG1" StartColumn="True" />
+                    <px:PXLayoutRule runat="server" ID="CstPXLayoutRule1" StartColumn="True"></px:PXLayoutRule>
+                    <px:PXFormView ID="CstformSetup" runat="server" DataSourceID="ds" Width="100%" DataMember="Middleware" RenderStyle="Simple">
+                        <Template>
+                            <px:PXLayoutRule runat="server" ID="CstPXLayoutRule9" StartGroup="True" GroupCaption="API Settings"></px:PXLayoutRule>
+                            <px:PXTextEdit runat="server" ID="CstPXTextEdit10" DataField="SecureURL_login"></px:PXTextEdit>
+                            <px:PXTextEdit runat="server" ID="CstPXTextEdit5" DataField="SecureURL_fbm" />
+                            <px:PXTextEdit runat="server" ID="CstPXTextEdit11" DataField="ClientID"></px:PXTextEdit>
+                            <px:PXTextEdit runat="server" ID="CstPXTextEdit12" DataField="ClientSecret"></px:PXTextEdit>
+                            <px:PXLayoutRule StartColumn="False" ColumnSpan="1" ControlSize="S" GroupCaption="Integration Settings" runat="server" ID="CstPXLayoutRule14" StartGroup="True"></px:PXLayoutRule>
                         </Template>
                     </px:PXFormView>
                 </Template>

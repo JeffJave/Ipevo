@@ -157,5 +157,17 @@
             <StateActionFields />
             <StateActionParams />
         </Action>
+        <Action IsActive="True" ActionName="lumGenerateYUSENCAFile" ActionType="G" MassProcessingScreen="SO501000" WindowMode="S">
+            <StateActionFields />
+            <StateActionParams />
+        </Action>
+        <Action IsActive="True" ActionName="lumGenerate3PLUKFile" ActionType="G" MassProcessingScreen="SO501000" WindowMode="S">
+            <StateActionFields />
+            <StateActionParams />
+        </Action>
+        <Action IsActive="True" ActionName="lumGererateYUSENNLFile" ActionType="G" MassProcessingScreen="SO501000" BatchMode="True" WindowMode="S">
+            <StateActionFields />
+            <StateActionParams />
+        </Action>
     </Actions>
 </Automation>

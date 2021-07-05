@@ -24,6 +24,29 @@ namespace APILibrary
             return this.CallApi<object>(null);
         }
 
+        public LumAPIResultModel GetAuthToken(string _id, string pwd)
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                // Setting Request
+                HttpRequestMessage _request =
+                new HttpRequestMessage(this.config.RequestMethod, this.config.RequestUrl);
+                _request.Content = new StringContent(JsonConvert.SerializeObject(new { email = _id, password = pwd }), Encoding.UTF8,
+                           "application/json");
+
+                // Get Result
+                HttpResponseMessage _response = client.SendAsync(_request).GetAwaiter().GetResult();
+                
+                // Return Result
+                return new LumAPIResultModel()
+                {
+                    StatusCode = _response.StatusCode,
+                    Content = _response.Content,
+                    ContentResult = _response.Content.ReadAsStringAsync().Result
+                };
+            }
+        }
+
         public LumAPIResultModel CallApi<T>(T parameterObj) where T : class
         {
             if (this.config == null)
@@ -59,16 +82,16 @@ namespace APILibrary
 
     public static class APIHelper
     {
-        public static string CombineQueryString<T>(string _url ,T param)
+        public static string CombineQueryString<T>(string _url, T param)
         {
             var properties = from p in param.GetType().GetProperties()
-                where p.GetValue(param, null) != null
-                select p.Name + "=" + HttpUtility.UrlEncode(p.GetValue(param, null).ToString());
+                             where p.GetValue(param, null) != null
+                             select p.Name + "=" + HttpUtility.UrlEncode(p.GetValue(param, null).ToString());
             return $"{_url}?{string.Join("&", properties.ToArray())}";
         }
 
-        public static string GetJsonString<T>(T _obj) where  T: class
-        { 
+        public static string GetJsonString<T>(T _obj) where T : class
+        {
             return JsonConvert.SerializeObject(_obj);
         }
 
