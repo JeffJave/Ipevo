@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using PX.Data;
-using PX.Objects.AR;
+﻿using PX.Data;
+using PX.Data.BQL;
+using PX.Data.BQL.Fluent;
 using PX.Objects.CS;
 using PX.Objects.SO;
 
@@ -12,6 +8,7 @@ namespace PX.Objects.AR
 {
     public class ARPaymentEntryExt : PXGraphExtension<ARPaymentEntry>
     {
+        #region Cache Attached Events
         [PXMergeAttributes(Method = MergeMethod.Replace)]
 		[PXDBString(15, IsUnicode = true, IsKey = true, InputMask = ">CCCCCCCCCCCCCCC")]
 		[PXDefault()]
@@ -44,6 +41,23 @@ namespace PX.Objects.AR
 				typeof(SOOrder.invoiceNbr),
 				typeof(SOOrder.orderDesc),
 				Filterable = true)]
-		public virtual void _ (Events.CacheAttached<SOAdjust.adjdOrderNbr> e){}
+		public virtual void _ (Events.CacheAttached<SOAdjust.adjdOrderNbr> e) {}
+        #endregion
+
+        #region Staic Methods
+		/// <summary>
+		/// Get the first record of invoice nbr. from bank diposit.
+		/// </summary>
+		/// <param name="adjgDocType"></param>
+		/// <param name="adjgRefNbr"></param>
+		/// <returns></returns>
+		public static string GetSOInvoiceNbr(string adjgDocType, string adjgRefNbr)
+        {
+			return SelectFrom<ARInvoice>.InnerJoin<ARAdjust>.On<ARAdjust.adjdDocType.IsEqual<ARInvoice.docType>
+																.And<ARAdjust.adjdRefNbr.IsEqual<ARInvoice.refNbr>>>
+										.Where<ARAdjust.adjgDocType.IsEqual<@P.AsString>
+												.And<ARAdjust.adjgRefNbr.IsEqual<@P.AsString>>>.View.Select(new PXGraph(), adjgDocType, adjgRefNbr).TopFirst?.InvoiceNbr;
+        }
+        #endregion
     }
 }
