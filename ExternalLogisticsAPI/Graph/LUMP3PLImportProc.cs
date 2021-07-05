@@ -7,8 +7,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using PX.Objects.SO;
 using PX.Data.BQL;
 using ExternalLogisticsAPI.Descripter;
@@ -18,9 +16,9 @@ namespace ExternalLogisticsAPI.Graph
 {
     public class LUMP3PLImportProc : PXGraph<LUMP3PLImportProc>
     {
-        public PXProcessingJoin<LUMP3PLImportProcess,
-                    LeftJoin<LUMP3PLImportProcessLog, On<LUMP3PLImportProcess.warehouseOrder, Equal<LUMP3PLImportProcessLog.warehouseOrder>>>,
-                    Where<LUMP3PLImportProcess.createdByID, Equal<Current<AccessInfo.userID>>>> ImportDataList;
+        public PXCancel<LUMP3PLImportProcess> Cancel;
+        public PXProcessingJoin<LUMP3PLImportProcess, LeftJoin<LUMP3PLImportProcessLog, On<LUMP3PLImportProcess.warehouseOrder, Equal<LUMP3PLImportProcessLog.warehouseOrder>>>,
+                                Where<LUMP3PLImportProcess.createdByID, Equal<Current<AccessInfo.userID>>>> ImportDataList;
 
         [PXHidden]
         [PXCacheName("ImportLog")]
@@ -35,13 +33,12 @@ namespace ExternalLogisticsAPI.Graph
         public LUMP3PLImportProc()
         {
             //LUMP3PLImportProc graph = null;
-            ImportDataList.SetProcessDelegate(
-              delegate (List<LUMP3PLImportProcess> list)
-              {
-                  //graph = PXGraph.CreateInstance<LUMP3PLImportProc>();
-                  //graph.UpdateTrackingInfo(list);
-                  GoUpdate(list);
-              });
+            ImportDataList.SetProcessDelegate(delegate (List<LUMP3PLImportProcess> list)
+                                              {
+                                                  //graph = PXGraph.CreateInstance<LUMP3PLImportProc>();
+                                                  //graph.UpdateTrackingInfo(list);
+                                                  GoUpdate(list);
+                                              });
         }
 
         public PXAction<LUMP3PLImportProcess> prepareImport;
@@ -90,14 +87,14 @@ namespace ExternalLogisticsAPI.Graph
         {
             LUMP3PLImportProc graph = PXGraph.CreateInstance<LUMP3PLImportProc>();
             graph.UpdateTrackingInfo(graph, list);
-            graph.ImportDataList.View.RequestRefresh();
+            //graph.ImportDataList.View.RequestRefresh();
         }
 
         /// <summary> Update Shipment Tracking Info For P3PL </summary>
         public virtual void UpdateTrackingInfo(LUMP3PLImportProc graph, List<LUMP3PLImportProcess> list)
         {
-            PXLongOperation.StartOperation(graph, delegate ()
-            {
+            PXLongOperation.StartOperation(this, delegate ()
+            { 
                 var logData = SelectFrom<LUMP3PLImportProcessLog>.View.Select(graph).RowCast<LUMP3PLImportProcessLog>();
                 foreach (var row in list)
                 {
@@ -192,6 +189,8 @@ namespace ExternalLogisticsAPI.Graph
 
                             InsertLogAndDeleteFile(graph, row, true, string.Empty);
                         }
+
+                        graph.Actions.PressSave();
                     }
                     catch (Exception ex)
                     {
@@ -199,7 +198,6 @@ namespace ExternalLogisticsAPI.Graph
                         InsertLogAndDeleteFile(graph, row, false, ex.Message);
                     }
                 }
-                graph.Actions.PressSave();
             });
         }
 
