@@ -70,14 +70,13 @@ namespace eGUICustomizations.DAC
 
         #region VATInCode
         [PXDBString(2, IsUnicode = true)]
-        [PXUIField(DisplayName = "VAT In Code")]
+        [PXUIField(DisplayName = "VAT In Code", Required = true)]
         [PXSelector(typeof(Search<CSAttributeDetail.valueID,
                                   Where<CSAttributeDetail.attributeID, Equal<APRegisterExt.VATINFRMTNameAtt>>>),
                     typeof(CSAttributeDetail.description))]
         [PXDefault(typeof(Search<CSAnswers.value,
                                  Where<CSAnswers.refNoteID, Equal<Current<Vendor.noteID>>,
-                                       And<CSAnswers.attributeID, Equal<APRegisterExt.VATINFRMTNameAtt>>>>),
-                   PersistingCheck = PXPersistingCheck.Nothing)]
+                                       And<CSAnswers.attributeID, Equal<APRegisterExt.VATINFRMTNameAtt>>>>))]
         [PXFormula(typeof(Default<vendorID>))]
         public virtual string VATInCode { get; set; }
         public abstract class vATInCode : PX.Data.BQL.BqlString.Field<vATInCode> { }
@@ -104,7 +103,7 @@ namespace eGUICustomizations.DAC
         #region TaxCategoryID
         [PXDBString(10, IsUnicode = true, InputMask = "")]
         [PXUIField(DisplayName = "Tax Category ID")]
-        [PXDefault(typeof(ARTran.taxCategoryID), PersistingCheck = PXPersistingCheck.Nothing)]
+        [PXDefault(typeof(APTran.taxCategoryID), PersistingCheck = PXPersistingCheck.Nothing)]
         [PXSelector(typeof(TaxCategory.taxCategoryID), DescriptionField = typeof(TaxCategory.descr))]
         [PXRestrictor(typeof(Where<TaxCategory.active, Equal<True>>),
                       PX.Objects.TX.Messages.InactiveTaxCategory,
@@ -118,7 +117,7 @@ namespace eGUICustomizations.DAC
         [PXUIField(DisplayName = "Tax ID")]
         [PXSelector(typeof(Tax.taxID), DescriptionField = typeof(Tax.descr),  DirtyRead = true)]
         [PXDefault(typeof(Search<TaxZoneDet.taxID,
-                                 Where<TaxZoneDet.taxZoneID, Equal<Current<TWNManualGUIExpense.taxZoneID>>>>))]
+                                 Where<TaxZoneDet.taxZoneID, Equal<Current<TWNManualGUIAPBill.taxZoneID>>>>))]
         public virtual string TaxID { get; set; }
         public abstract class taxID : PX.Data.BQL.BqlString.Field<taxID> { }
         #endregion
@@ -163,15 +162,17 @@ namespace eGUICustomizations.DAC
         #endregion
 
         #region NetAmt
-        [PXDBDecimal()]
+        [PXDBDecimal(0)]
         [PXUIField(DisplayName = "Net Amt")]
+        [PXDefault(TypeCode.Decimal, "0.0")]
         public virtual Decimal? NetAmt { get; set; }
         public abstract class netAmt : PX.Data.BQL.BqlDecimal.Field<netAmt> { }
         #endregion
 
         #region TaxAmt
-        [PXDBDecimal()]
+        [PXDBDecimal(0)]
         [PXUIField(DisplayName = "Tax Amt")]
+        [PXDefault(TypeCode.Decimal, "0.0")]
         public virtual Decimal? TaxAmt { get; set; }
         public abstract class taxAmt : PX.Data.BQL.BqlDecimal.Field<taxAmt> { }
         #endregion
