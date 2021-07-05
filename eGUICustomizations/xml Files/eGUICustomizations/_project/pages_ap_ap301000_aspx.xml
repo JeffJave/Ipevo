@@ -48,6 +48,7 @@
                                                     <PXGridColumn TypeFullName="PX.Web.UI.PXGridColumn">
                                                         <Prop Key="DataField" Value="GUINbr" />
                                                         <Prop Key="Width" Value="140" />
+                                                        <Prop Key="CommitChanges" Value="True" />
                                                     </PXGridColumn>
                                                 </AddItem>
                                                 <AddItem>
@@ -169,6 +170,7 @@
                                 <Prop Key="DataSourceID" Value="ds" />
                                 <Prop Key="SyncPosition" Value="True" />
                                 <Prop Key="AutoSize.Enabled" Value="True" />
+                                <Prop Key="Mode.InitNewRow" Value="True" />
                             </PXGrid>
                         </AddItem>
                     </Children>
