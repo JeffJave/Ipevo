@@ -29,6 +29,16 @@ namespace eGUICustomizations.DAC
         [PXDBDefault(typeof(APInvoice.refNbr))]
         [PXParent(typeof(Select<ARInvoice, Where<ARInvoice.docType, Equal<Current<TWNManualGUIAPBill.docType>>,
                                                  And<ARInvoice.refNbr, Equal<Current<TWNManualGUIAPBill.refNbr>>>>>))]
+        [ARInvoiceType.RefNbr(typeof(Search2<PX.Objects.AR.Standalone.ARRegisterAlias.refNbr, InnerJoinSingleTable<ARInvoice, On<ARInvoice.docType, Equal<PX.Objects.AR.Standalone.ARRegisterAlias.docType>,
+                                                                                                                                 And<ARInvoice.refNbr, Equal<PX.Objects.AR.Standalone.ARRegisterAlias.refNbr>>>,
+                                                                                              InnerJoinSingleTable<Customer, On<PX.Objects.AR.Standalone.ARRegisterAlias.customerID, Equal<Customer.bAccountID>>>>,
+                                                                                              Where<PX.Objects.AR.Standalone.ARRegisterAlias.docType, Equal<Optional<ARInvoice.docType>>,
+                                                                                                    And2<Where<PX.Objects.AR.Standalone.ARRegisterAlias.origModule, Equal<BatchModule.moduleAR>,
+                                                                                                               Or<PX.Objects.AR.Standalone.ARRegisterAlias.origModule, Equal<BatchModule.moduleEP>,
+                                                                                                                  Or<PX.Objects.AR.Standalone.ARRegisterAlias.released, Equal<True>>>>,
+                                                                                                         And<Match<Customer, Current<AccessInfo.userName>>>>>,
+                                                                                              OrderBy<Desc<PX.Objects.AR.Standalone.ARRegisterAlias.refNbr>>>), 
+                               ValidateValue = false)]
         public virtual string RefNbr { get; set; }
         public abstract class refNbr : PX.Data.BQL.BqlString.Field<refNbr> { }
         #endregion
@@ -36,6 +46,7 @@ namespace eGUICustomizations.DAC
         #region GUINbr
         [GUINumber(15, IsKey = true, IsUnicode = true, InputMask = ">aaaaaaaaaaaaaa")]
         [PXUIField(DisplayName = "GUI Nbr")]
+        [PXDefault()]
         public virtual string GUINbr { get; set; }
         public abstract class gUINbr : PX.Data.BQL.BqlString.Field<gUINbr> { }
         #endregion
