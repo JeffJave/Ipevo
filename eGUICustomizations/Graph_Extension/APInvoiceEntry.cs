@@ -10,41 +10,48 @@ namespace PX.Objects.AP
 {
     public class APInvoiceEntry_Extension : PXGraphExtension<APInvoiceEntry>
     {
+        #region Selects        
         [PXCopyPasteHiddenFields(typeof(TWNManualGUIAPBill.docType),
                                  typeof(TWNManualGUIAPBill.refNbr),
                                  typeof(TWNManualGUIAPBill.gUINbr))]
         public SelectFrom<TWNManualGUIAPBill>.Where<TWNManualGUIAPBill.docType.IsEqual<APInvoice.docType.FromCurrent>
                                                     .And<TWNManualGUIAPBill.refNbr.IsEqual<APInvoice.refNbr.FromCurrent>>>.View ManualAPBill;
+        #endregion
 
         #region Event Handlers
         public bool activateGUI = TWNGUIValidation.ActivateTWGUI(new PXGraph());
 
-        //protected void _(Events.RowPersisting<APInvoice> e, PXRowPersisting baseHandler)
-        //{
-        //    baseHandler?.Invoke(e.Cache, e.Args);
+        protected void _(Events.RowPersisting<APInvoice> e, PXRowPersisting baseHandler)
+        {
+            baseHandler?.Invoke(e.Cache, e.Args);
 
-        //    if (activateGUI.Equals(false) || e.Row.Status.Equals(APDocStatus.Open)) { return; }
+            if (ManualAPBill.Select().Count == 0 && Base.Taxes.Select().Count > 0)
+            {
+                throw new PXException(TWMessages.NoGUIWithTax);
+            }
 
-        //    APRegisterExt regisExt = PXCache<APRegister>.GetExtension<APRegisterExt>(e.Row);
+            //if (activateGUI.Equals(false) || e.Row.Status.Equals(APDocStatus.Open)) { return; }
 
-        //    TWNGUIValidation tWNGUIValidation = new TWNGUIValidation();
+            //APRegisterExt regisExt = PXCache<APRegister>.GetExtension<APRegisterExt>(e.Row);
 
-        //    if (regisExt.UsrVATInCode == TWGUIFormatCode.vATInCode21 ||
-        //        regisExt.UsrVATInCode == TWGUIFormatCode.vATInCode22 ||
-        //        regisExt.UsrVATInCode == TWGUIFormatCode.vATInCode25)
-        //    {
-        //        tWNGUIValidation.CheckGUINbrExisted(Base, regisExt.UsrGUINbr, regisExt.UsrVATInCode);
-        //    }
-        //    else
-        //    {
-        //        tWNGUIValidation.CheckCorrespondingInv(Base, regisExt.UsrGUINbr, regisExt.UsrVATInCode);
+            //TWNGUIValidation tWNGUIValidation = new TWNGUIValidation();
 
-        //        if (tWNGUIValidation.errorOccurred.Equals(true))
-        //        {
-        //            e.Cache.RaiseExceptionHandling<APRegisterExt.usrGUINbr>(e.Row, regisExt.UsrGUINbr, new PXSetPropertyException(tWNGUIValidation.errorMessage, PXErrorLevel.Error));
-        //        }
-        //    }
-        //}
+            //if (regisExt.UsrVATInCode == TWGUIFormatCode.vATInCode21 ||
+            //    regisExt.UsrVATInCode == TWGUIFormatCode.vATInCode22 ||
+            //    regisExt.UsrVATInCode == TWGUIFormatCode.vATInCode25)
+            //{
+            //    tWNGUIValidation.CheckGUINbrExisted(Base, regisExt.UsrGUINbr, regisExt.UsrVATInCode);
+            //}
+            //else
+            //{
+            //    tWNGUIValidation.CheckCorrespondingInv(Base, regisExt.UsrGUINbr, regisExt.UsrVATInCode);
+
+            //    if (tWNGUIValidation.errorOccurred.Equals(true))
+            //    {
+            //        e.Cache.RaiseExceptionHandling<APRegisterExt.usrGUINbr>(e.Row, regisExt.UsrGUINbr, new PXSetPropertyException(tWNGUIValidation.errorMessage, PXErrorLevel.Error));
+            //    }
+            //}
+        }
 
         protected void _(Events.RowSelected<APInvoice> e, PXRowSelected baseHandler)
         {
