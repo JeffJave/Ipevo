@@ -47,21 +47,21 @@ namespace PX.Objects.SO
                 case "SO301000$lumGenerate3PLUKFile":
                     cmd.Join<InnerJoin<INSite, On<SOOrder.defaultSiteID, Equal<INSite.siteID>>>>();
                     cmd.WhereAnd<Where<SOOrder.status, Equal<SOOrderStatus.open>>>();
-                    //cmd.WhereAnd<Where<INSite.siteCD.IsEqual<P3PLAttr>>>();
+                    cmd.WhereAnd<Where<INSite.siteCD.IsEqual<P3PLAttr>>>();
                     cmd.WhereAnd<Where<SOOrderExt.usrSendToMiddleware, Equal<False>,
                         Or<SOOrderExt.usrSendToMiddleware, IsNull>>>();
                     break;
                 case "SO301000$lumGenerateYUSENCAFile":
                     cmd.Join<InnerJoin<INSite, On<SOOrder.defaultSiteID, Equal<INSite.siteID>>>>();
                     cmd.WhereAnd<Where<SOOrder.status, Equal<SOOrderStatus.open>>>();
-                    //cmd.WhereAnd<Where<INSite.siteCD.IsEqual<YusenAttr>>>();
+                    cmd.WhereAnd<Where<INSite.siteCD.IsEqual<YusenAttr>>>();
                     cmd.WhereAnd<Where<SOOrderExt.usrSendToMiddleware, Equal<False>,
                         Or<SOOrderExt.usrSendToMiddleware, IsNull>>>();
                     break;
                 case "SO301000$lumGererateYUSENNLFile":
                     cmd.Join<InnerJoin<INSite,On<SOOrder.defaultSiteID, Equal<INSite.siteID>>>>();
                     cmd.WhereAnd<Where<SOOrder.status, Equal<SOOrderStatus.open>>>();
-                    //cmd.WhereAnd<Where<INSite.siteCD.IsEqual<YusenAttr>>>();
+                    cmd.WhereAnd<Where<INSite.siteCD.IsEqual<YusenAttr>>>();
                     cmd.WhereAnd<Where<SOOrderExt.usrSendToMiddleware, Equal<False>, 
                         Or<SOOrderExt.usrSendToMiddleware, IsNull>>>();
                     break;
