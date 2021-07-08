@@ -1,0 +1,16 @@
+﻿<Sql TableName="CreatevSOSiteMapping" CustomScript="#CDATA">
+    <CDATA name="CustomScript"><![CDATA[  IF EXISTS
+(
+	SELECT *
+	FROM SYS.views
+	WHERE name = 'vSOSiteMapping' AND SCHEMA_ID = SCHEMA_ID('dbo')
+)
+DROP VIEW [dbo].[vSOSiteMapping]	
+GO
+CREATE VIEW vSOSiteMapping AS
+select distinct t.companyid, t.OrderNbr,t.OrderType ,s.SiteID
+from SOOrder t
+inner join SOLine s on t.CompanyID = s.CompanyID
+  and t.OrderType = s.OrderType
+  and t.OrderNbr = s.OrderNbr]]></CDATA>
+</Sql>
