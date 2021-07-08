@@ -357,16 +357,16 @@ namespace ExternalLogisticsAPI.Graph_Extensions
                         // upload file to FTP
                         #region Yusen CA FTP
                         var configYusen = SelectFrom<LUMYusenCASetup>.View.Select(Base).RowCast<LUMYusenCASetup>().FirstOrDefault();
-                        //FTP_Config config = new FTP_Config()
-                        //{
-                        //    FtpHost = configYusen.FtpHost,
-                        //    FtpUser = configYusen.FtpUser,
-                        //    FtpPass = configYusen.FtpPass,
-                        //    FtpPort = configYusen.FtpPort,
-                        //    FtpPath = configYusen.FtpPath
-                        //};
-                        //var ftpResult = UploadFileByFTP(config, fileName, data);
-                        var ftpResult = true;
+                        FTP_Config config = new FTP_Config()
+                        {
+                            FtpHost = configYusen.FtpHost,
+                            FtpUser = configYusen.FtpUser,
+                            FtpPass = configYusen.FtpPass,
+                            FtpPort = configYusen.FtpPort,
+                            FtpPath = configYusen.FtpPath
+                        };
+                        var ftpResult = graph.GetExtension<SOShipmentEntryExt>().UploadFileByFTP(config, fileName, data);
+                        //var ftpResult = true;
                         if (!ftpResult)
                             throw new Exception("Ftp Upload Fail!!");
                         #endregion
@@ -435,17 +435,17 @@ namespace ExternalLogisticsAPI.Graph_Extensions
                         // upload file to FTP
                         #region 3PL UK FTP
                         var configYusen = SelectFrom<LUM3PLUKSetup>.View.Select(Base).RowCast<LUM3PLUKSetup>().FirstOrDefault();
-                        //FTP_Config config = new FTP_Config()
-                        //{
-                        //    FtpHost = configYusen.FtpHost,
-                        //    FtpUser = configYusen.FtpUser,
-                        //    FtpPass = configYusen.FtpPass,
-                        //    FtpPort = configYusen.FtpPort,
-                        //    FtpPath = configYusen.FtpPath
-                        //};
+                        FTP_Config config = new FTP_Config()
+                        {
+                            FtpHost = configYusen.FtpHost,
+                            FtpUser = configYusen.FtpUser,
+                            FtpPass = configYusen.FtpPass,
+                            FtpPort = configYusen.FtpPort,
+                            FtpPath = configYusen.FtpPath
+                        };
 
-                        //var ftpResult = UploadFileByFTP(config, fileName, data);
-                        var ftpResult = true;
+                        var ftpResult = graph.GetExtension<SOShipmentEntryExt>().UploadFileByFTP(config, fileName, data);
+                        //var ftpResult = true;
                         if (!ftpResult)
                             throw new Exception("Ftp Upload Fail!!");
                         #endregion

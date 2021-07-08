@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using APILibrary;
 using APILibrary.Model;
+using ExternalLogisticsAPI;
 using ExternalLogisticsAPI.DAC;
 using ExternalLogisticsAPI.Descripter;
 using Newtonsoft.Json;
@@ -45,21 +46,24 @@ namespace PX.Objects.SO
                     cmd.WhereAnd<Where<SOOrderExt.usrDCLShipmentCreated, Equal<True>>>();
                     break;
                 case "SO301000$lumGenerate3PLUKFile":
-                    cmd.Join<InnerJoin<INSite, On<SOOrder.defaultSiteID, Equal<INSite.siteID>>>>();
+                    cmd.Join<InnerJoin<vSOSiteMapping, On<SOOrder.orderType, Equal<vSOSiteMapping.orderType>, And<SOOrder.orderNbr, Equal<vSOSiteMapping.orderNbr>>>>>();
+                    cmd.Join<InnerJoin<INSite, On<vSOSiteMapping.siteid, Equal<INSite.siteID>>>>();
                     cmd.WhereAnd<Where<SOOrder.status, Equal<SOOrderStatus.open>>>();
                     cmd.WhereAnd<Where<INSite.siteCD.IsEqual<P3PLAttr>>>();
                     cmd.WhereAnd<Where<SOOrderExt.usrSendToMiddleware, Equal<False>,
                         Or<SOOrderExt.usrSendToMiddleware, IsNull>>>();
                     break;
                 case "SO301000$lumGenerateYUSENCAFile":
-                    cmd.Join<InnerJoin<INSite, On<SOOrder.defaultSiteID, Equal<INSite.siteID>>>>();
+                    cmd.Join<InnerJoin<vSOSiteMapping, On<SOOrder.orderType, Equal<vSOSiteMapping.orderType>,And<SOOrder.orderNbr,Equal<vSOSiteMapping.orderNbr>>>>>();
+                    cmd.Join<InnerJoin<INSite, On<vSOSiteMapping.siteid, Equal<INSite.siteID>>>>();
                     cmd.WhereAnd<Where<SOOrder.status, Equal<SOOrderStatus.open>>>();
                     cmd.WhereAnd<Where<INSite.siteCD.IsEqual<YusenAttr>>>();
                     cmd.WhereAnd<Where<SOOrderExt.usrSendToMiddleware, Equal<False>,
                         Or<SOOrderExt.usrSendToMiddleware, IsNull>>>();
                     break;
                 case "SO301000$lumGererateYUSENNLFile":
-                    cmd.Join<InnerJoin<INSite,On<SOOrder.defaultSiteID, Equal<INSite.siteID>>>>();
+                    cmd.Join<InnerJoin<vSOSiteMapping, On<SOOrder.orderType, Equal<vSOSiteMapping.orderType>, And<SOOrder.orderNbr, Equal<vSOSiteMapping.orderNbr>>>>>();
+                    cmd.Join<InnerJoin<INSite,On<vSOSiteMapping.siteid, Equal<INSite.siteID>>>>();
                     cmd.WhereAnd<Where<SOOrder.status, Equal<SOOrderStatus.open>>>();
                     cmd.WhereAnd<Where<INSite.siteCD.IsEqual<YusenAttr>>>();
                     cmd.WhereAnd<Where<SOOrderExt.usrSendToMiddleware, Equal<False>, 

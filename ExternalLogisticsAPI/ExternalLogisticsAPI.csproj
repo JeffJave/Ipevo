@@ -19,7 +19,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\..\Bin\</OutputPath>
+    <OutputPath>..\..\..\Bin\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
@@ -80,6 +80,7 @@
     <Compile Include="DAC\LUMWarehouseImportProcessLog.cs" />
     <Compile Include="DAC\LumYusenCASetup.cs" />
     <Compile Include="DAC\LUMYusenNLSetup.cs" />
+    <Compile Include="DAC\vSOSiteMapping.cs" />
     <Compile Include="DAC_Extensions\SOLineExtensions.cs" />
     <Compile Include="DAC_Extensions\SOOrderExtensions.cs" />
     <Compile Include="DAC_Extensions\SOShipmentExtensions.cs" />
