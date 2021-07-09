@@ -1,4 +1,4 @@
-﻿<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -68,6 +68,8 @@
     <Compile Include="DAC_Extensions\SOOrderExtensions.cs" />
     <Compile Include="DAC_Extensions\Tax.cs" />
     <Compile Include="Graph\LUMFrtNonTaxStateMaint.cs" />
+    <Compile Include="Graph_Extensions\APPaymentEntryExt.cs" />
+    <Compile Include="Graph_Extensions\APPayBills_Extension.cs" />
     <Compile Include="Graph_Extensions\SOInvoiceEntry_Extension.cs" />
     <Compile Include="DAC_Extensions\SOShipLineExt.cs" />
     <Compile Include="Graph_Extensions\SOOrderEntry.cs" />
