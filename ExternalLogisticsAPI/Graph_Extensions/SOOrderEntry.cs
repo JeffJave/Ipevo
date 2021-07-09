@@ -545,7 +545,6 @@ namespace ExternalLogisticsAPI.Graph_Extensions
                         if (root.description == null) { goto Item; }
                         
                         order.OrderDesc = root.description;
-
                         Base.CurrentDocument.Cache.MarkUpdated(order);
 
                         PXUpdateJoin<Set<ARInvoice.docDesc, Required<SOOrder.orderDesc>>,
@@ -575,15 +574,20 @@ namespace ExternalLogisticsAPI.Graph_Extensions
                     Invoice:
                         if (root.taxAmount != 0)
                         {
-                            PXUpdateJoin<Set<TaxTran.curyTaxAmt, Required<TaxTran.curyTaxAmt>,
-                                             Set<ARInvoice.curyTaxTotal, Required<ARInvoice.curyTaxTotal>>>,
+                            PXUpdateJoin<Set<TaxTran.curyTaxAmt, Required<TaxTran.curyTaxAmt>>,
                                          TaxTran,
                                          LeftJoin<ARInvoice, On<TaxTran.module, Equal<PX.Objects.GL.BatchModule.moduleAR>,
                                                                 And<ARInvoice.docType, Equal<TaxTran.tranType>,
                                                                     And<ARInvoice.refNbr, Equal<TaxTran.refNbr>>>>,
                                                   InnerJoin<SOOrderShipment, On<SOOrderShipment.invoiceType, Equal<ARInvoice.docType>,
                                                                                 And<SOOrderShipment.invoiceNbr, Equal<ARInvoice.refNbr>>>>>,
-                                         Where<SOOrderShipment.orderNoteID, Equal<Required<SOOrder.noteID>>>>.Update(Base, (decimal)root.taxAmount, (decimal)root.taxAmount, order.NoteID);
+                                         Where<SOOrderShipment.orderNoteID, Equal<Required<SOOrder.noteID>>>>.Update(Base, (decimal)root.taxAmount, order.NoteID);
+
+                            PXUpdateJoin<Set<ARInvoice.curyTaxTotal, Required<ARInvoice.curyTaxTotal>>,
+                                         ARInvoice,
+                                         InnerJoin<SOOrderShipment, On<SOOrderShipment.invoiceType, Equal<ARInvoice.docType>,
+                                                                       And<SOOrderShipment.invoiceNbr, Equal<ARInvoice.refNbr>>>>,
+                                         Where<SOOrderShipment.orderNoteID, Equal<Required<SOOrder.noteID>>>>.Update(Base, (decimal)root.taxAmount, order.NoteID);
                         }
 
                         PXNoteAttribute.SetNote(Base.CurrentDocument.Cache, order, null);
