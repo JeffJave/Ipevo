@@ -21,6 +21,7 @@ using PX.Objects.Common;
 using PX.Objects.CS;
 using PX.Objects.IN;
 using PX.Objects.SO;
+using PX.Objects.TX;
 using PX.SM;
 
 namespace ExternalLogisticsAPI.Graph_Extensions
@@ -523,6 +524,81 @@ namespace ExternalLogisticsAPI.Graph_Extensions
 
             return adapter.Get();
         }
+
+        public PXAction<SOOrder> updateOpenInvoice;
+        [PXButton(CommitChanges = true)]
+        [PXUIField(DisplayName = "Update Open Invoice", MapEnableRights = PXCacheRights.Select, Visible = false)]
+        protected virtual IEnumerable UpdateOpenInvoice(PXAdapter adapter)
+        {
+            var order = Base.CurrentDocument.Current;
+
+            if (order != null)
+            {
+                string noteInfo = PXNoteAttribute.GetNote(Base.CurrentDocument.Cache, order);
+
+                APILibrary.Model.Root root = JsonConvert.DeserializeObject<APILibrary.Model.Root>(noteInfo);
+
+                if (root != null)
+                {
+                    using (PXTransactionScope ts = new PXTransactionScope())
+                    {
+                        if (root.description == null) { goto Item; }
+                        
+                        order.OrderDesc = root.description;
+                        Base.CurrentDocument.Cache.MarkUpdated(order);
+
+                        PXUpdateJoin<Set<ARInvoice.docDesc, Required<SOOrder.orderDesc>>,
+                                     ARInvoice,
+                                     InnerJoin<SOOrderShipment, On<SOOrderShipment.invoiceType, Equal<ARInvoice.docType>,
+                                                                   And<SOOrderShipment.invoiceNbr, Equal<ARInvoice.refNbr>>>>,
+                                     Where<SOOrderShipment.orderNoteID, Equal<Required<SOOrder.noteID>>>>.Update(Base, root.description, order.NoteID);
+
+                    Item :
+                        for (int i = 0; i < root.item.Count; i++)
+                        {
+                            if (root.item[i].sku == null) { goto Invoice; }
+
+                            foreach (SOLine row in Base.Transactions.Select())
+                            {
+                                if (string.Format("{0}-{1}", (int)row.OrderQty, InventoryItem.PK.Find(Base, row.InventoryID).InventoryCD.TrimEnd()).CompareTo(root.item[i].qty + "-" + root.item[i].sku) == 0)
+                                {
+                                    row.GetExtension<SOLineExt>().UsrAmazWHTaxAmt = (decimal)root.item[i].whTax;
+
+                                    Base.Transactions.Cache.MarkUpdated(row);
+                                }
+                            }
+                        }
+
+                        Base.Save.Press();
+
+                    Invoice:
+                        if (root.taxAmount != 0)
+                        {
+                            PXUpdateJoin<Set<TaxTran.curyTaxAmt, Required<TaxTran.curyTaxAmt>>,
+                                         TaxTran,
+                                         LeftJoin<ARInvoice, On<TaxTran.module, Equal<PX.Objects.GL.BatchModule.moduleAR>,
+                                                                And<ARInvoice.docType, Equal<TaxTran.tranType>,
+                                                                    And<ARInvoice.refNbr, Equal<TaxTran.refNbr>>>>,
+                                                  InnerJoin<SOOrderShipment, On<SOOrderShipment.invoiceType, Equal<ARInvoice.docType>,
+                                                                                And<SOOrderShipment.invoiceNbr, Equal<ARInvoice.refNbr>>>>>,
+                                         Where<SOOrderShipment.orderNoteID, Equal<Required<SOOrder.noteID>>>>.Update(Base, (decimal)root.taxAmount, order.NoteID);
+
+                            PXUpdateJoin<Set<ARInvoice.curyTaxTotal, Required<ARInvoice.curyTaxTotal>>,
+                                         ARInvoice,
+                                         InnerJoin<SOOrderShipment, On<SOOrderShipment.invoiceType, Equal<ARInvoice.docType>,
+                                                                       And<SOOrderShipment.invoiceNbr, Equal<ARInvoice.refNbr>>>>,
+                                         Where<SOOrderShipment.orderNoteID, Equal<Required<SOOrder.noteID>>>>.Update(Base, (decimal)root.taxAmount, order.NoteID);
+                        }
+
+                        PXNoteAttribute.SetNote(Base.CurrentDocument.Cache, order, null);
+
+                        ts.Complete();
+                    }  
+                }
+            }
+
+            return adapter.Get();
+        }
         #endregion
 
         #region Method
@@ -661,5 +737,5 @@ namespace ExternalLogisticsAPI.Graph_Extensions
         {
             return _Records;
         }
-    }
+    } 
 }

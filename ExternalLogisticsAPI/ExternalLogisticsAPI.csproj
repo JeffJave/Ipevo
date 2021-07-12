@@ -19,7 +19,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\Bin\</OutputPath>
+    <OutputPath>..\..\..\..\Bin\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
@@ -93,6 +93,7 @@
     <Compile Include="Graph\LUMP3PLImportProc.cs" />
     <Compile Include="Graph\LUMSalesChanelSetup.cs" />
     <Compile Include="Graph\LUMWarehouseImportProc.cs" />
+    <Compile Include="Graph_Extensions\QuoteMaint.cs" />
     <Compile Include="Graph_Extensions\SOCreateShipment.cs" />
     <Compile Include="Graph_Extensions\SOInvoiceShipment.cs" />
     <Compile Include="Graph_Extensions\SOOrderEntry.cs" />

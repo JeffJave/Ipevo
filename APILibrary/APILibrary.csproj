@@ -53,6 +53,7 @@
     <Compile Include="Model\FTP_Config.cs" />
     <Compile Include="Model\Interface\IAPIConfig.cs" />
     <Compile Include="Model\Interface\IFTPConfig.cs" />
+    <Compile Include="Model\Middleware_OpenInvoice.cs" />
     <Compile Include="Model\MiddleWare_Response.cs" />
     <Compile Include="Model\MiddleWare_SingIn.cs" />
     <Compile Include="Model\LumAPIResultModel.cs" />
