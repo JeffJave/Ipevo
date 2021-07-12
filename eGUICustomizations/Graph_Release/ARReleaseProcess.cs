@@ -3,16 +3,13 @@ using PX.Data;
 using PX.Data.BQL;
 using PX.Data.BQL.Fluent;
 using PX.Objects.AP;
-using PX.Objects.CS;
 using PX.Objects.GL;
 using PX.Objects.FS;
 using PX.Objects.TX;
 using eGUICustomizations.DAC;
-using eGUICustomizations.Graph;
 using eGUICustomizations.Graph_Release;
 using eGUICustomizations.Descriptor;
 using static eGUICustomizations.Descriptor.TWNStringList;
-using System;
 
 namespace PX.Objects.AR
 {
@@ -37,7 +34,7 @@ namespace PX.Objects.AR
         {
             baseMethod();
 
-            if (skipPersist.Equals(false))
+            if (skipPersist == false)
             {
                 ARRegister    doc    = Base.ARDocument.Current;
                 ARRegisterExt docExt = PXCache<ARRegister>.GetExtension<ARRegisterExt>(doc);
@@ -45,15 +42,18 @@ namespace PX.Objects.AR
                 // Check for document and released flag
                 if (doc != null && 
                     doc.Released == true &&
-                    (doc.DocType == ARDocType.Invoice || doc.DocType == ARDocType.CreditMemo || doc.DocType == ARDocType.CashSale) &&
-                    //TWNGUIValidation.ActivateTWGUI(Base) == true &&
-                    ( (string.IsNullOrEmpty(docExt.UsrGUINbr) && docExt.UsrVATOutCode == TWGUIFormatCode.vATOutCode36) ||
-                    !string.IsNullOrEmpty(docExt.UsrVATOutCode) ) )
+                    doc.DocType.IsIn(ARDocType.Invoice, ARDocType.CreditMemo, ARDocType.CashSale) &&
+                    ((string.IsNullOrEmpty(docExt.UsrGUINbr) && docExt.UsrVATOutCode == TWGUIFormatCode.vATOutCode36) || !string.IsNullOrEmpty(docExt.UsrVATOutCode)) 
+                   )
                 {
                     if (docExt.UsrVATOutCode.IsIn(TWGUIFormatCode.vATOutCode33, TWGUIFormatCode.vATOutCode34) &&
                         docExt.UsrCreditAction == TWNCreditAction.NO )
                     {
                         throw new PXException(TWMessages.CRACIsNone);
+                    }
+                    else if (docExt.UsrVATOutCode == TWGUIFormatCode.vATOutCode37)
+                    {
+                        throw new PXException (TWMessages.VATOutCodeIs37);
                     }
 
                     TaxTran xTran = APReleaseProcess_Extension.SelectTaxTran(Base, doc.DocType, doc.RefNbr, BatchModule.AR);

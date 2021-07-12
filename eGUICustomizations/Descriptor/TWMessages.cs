@@ -6,7 +6,7 @@ namespace eGUICustomizations.Descriptor
     public static class TWMessages
     {
         public const string eGUI           = "e-GUI Printing";
-        public const string GUICacheName   = "GUI Transsactions";
+        public const string GUICacheName   = "GUI Transactions";
         public const string ExportAll      = "Export All";
         public const string UploadAll      = "Upload All";
         public const string PatchPrint     = "Patch Print";
@@ -23,7 +23,7 @@ namespace eGUICustomizations.Descriptor
         public const string NoInvTaxDtls   = "No Tax Details, Please Double Check.";
         public const string DeleteInfo     = "Deleted By {0}";
         public const string TaxNbrLenNot8  = "Tax ID Number Must Be 8 Characters.";
-        public const string TaxNbrWarning  = "Tax ID Number May Be Wrong, Please Check Again.";
+        public const string TaxNbrWarning  = "Tax ID Number Might Be Wrong, Please Check Again.";
         public const string NoPlasticBag   = "No Plastic Bag Pecified On GUI Preferences.";
         public const string StatusNotUsed  = "The GUI <{0}> Status Isn't [Used].";
         public const string FmtCodeIncort  = "The GUI <{0}> Format Code Isn't [31] Or [35].";
@@ -36,5 +36,6 @@ namespace eGUICustomizations.Descriptor
         public const string ReminderMesg   = "The Invoice Amount Isn't Zero But The VAT Out Code Is Empty.";
         public const string SeltCorrGUI    = "Please Select The Correct GUI Number To Print.";
         public const string NoGUIWithTax   = "There Are Tax Details, But No TW GUI Records.";
+        public const string VATOutCodeIs37 = "請匯入統一發票後再過帳!";
     }
 }
