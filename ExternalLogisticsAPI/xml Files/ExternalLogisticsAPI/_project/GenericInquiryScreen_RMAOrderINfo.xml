@@ -189,7 +189,7 @@
                     <GIWhere LineNbr="2" IsActive="1" DataFieldName="soShip.shipmentNbr" Condition="E " IsExpression="0" Value1="[Test]" Operation="O" />
                     <GIWhere LineNbr="1" IsActive="1" DataFieldName="so.orderNbr" Condition="E " IsExpression="0" Value1="[Test]" Operation="O" />
                     <SiteMap linkname="toDesignById">
-                        <row Title="RMAOrderINfo" Url="~/GenericInquiry/GenericInquiry.aspx?id=f411ae33-d23d-4e14-825f-0ca5c7d20d60" ScreenID="GI000058" NodeID="9fb19975-afa5-4ce1-b81f-ddc2e31ec6df" ParentID="00000000-0000-0000-0000-000000000000">
+                        <row Title="RMAOrderINfo" Url="~/GenericInquiry/GenericInquiry.aspx?id=f411ae33-d23d-4e14-825f-0ca5c7d20d60" ScreenID="GI000958" NodeID="9fb19975-afa5-4ce1-b81f-ddc2e31ec6df" ParentID="00000000-0000-0000-0000-000000000000">
                             <MUIScreen IsPortal="0" WorkspaceID="bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb" Order="640192" SubcategoryID="98e86774-69e3-41ea-b94f-eb2c7a8426d4">
                                 <MUIPinnedScreen IsPortal="0" Username="" IsPinned="1" />
                             </MUIScreen>

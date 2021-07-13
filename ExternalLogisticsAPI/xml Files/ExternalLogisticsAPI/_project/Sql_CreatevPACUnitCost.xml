@@ -1,0 +1,36 @@
+﻿<Sql TableName="CreatevPACUnitCost" CustomScript="#CDATA">
+    <CDATA name="CustomScript"><![CDATA[  IF EXISTS
+(
+	SELECT *
+	FROM SYS.views
+	WHERE name = 'vPACUnitCost' AND SCHEMA_ID = SCHEMA_ID('dbo')
+)
+DROP VIEW [dbo].[vPACUnitCost]	
+GO
+CREATE VIEW vPACUnitCost AS
+select t.CompanyID,
+	   t.InventoryID,
+	   t.SiteID,
+	   t.FinPeriodID,
+	   MAX(CASE 
+			WHEN (t.[FinBegQty] + t.[FinPtdQtyReceived]) = 0
+				THEN 0
+			ELSE (t.[FinBegCost] + t.[FinPtdCostReceived] + t.[FinPtdCostAssemblyIn] - t.[FinPtdCostAssemblyOut]) / (t.[FinBegQty] + t.[FinPtdQtyReceived])
+			END) AS PACUnitCost
+from INItemCostHist t
+inner join InventoryItem i on t.CompanyID = i.CompanyID
+						  and t.InventoryID = i.InventoryID
+left join INSite s on t.CompanyID = s.CompanyID
+				  and t.SiteID = s.SiteID
+				  and (s.BranchID = 2 or s.BranchID is null)
+group by  t.Companyid,t.InventoryID,t.SiteID,t.FinPeriodID
+having (
+SUM(t.[FinPtdQtySales]) <> .0
+		AND MAX(CASE 
+				WHEN (t.[FinBegQty] + t.[FinPtdQtyReceived]) = 0
+					THEN 0
+				ELSE (t.[FinBegCost] + t.[FinPtdCostReceived] + t.[FinPtdCostAssemblyIn] - t.[FinPtdCostAssemblyOut]) / (t.[FinBegQty] + t.[FinPtdQtyReceived])
+				END) <> .0
+
+)]]></CDATA>
+</Sql>
