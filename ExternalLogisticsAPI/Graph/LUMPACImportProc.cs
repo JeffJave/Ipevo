@@ -58,49 +58,48 @@ namespace ExternalLogisticsAPI.Graph
         [PXUIField(DisplayName = "Generate COGS Adjustment", Enabled = true, MapEnableRights = PXCacheRights.Select)]
         protected virtual IEnumerable GenerateAdjustment(PXAdapter adapter)
         {
-            PXLongOperation.StartOperation(this, () =>
+            var graph = PXGraph.CreateInstance<INAdjustmentEntry>();
+            try
             {
-                try
+                var filter = this.Filter.Current;
+                var impDatas = this.ImportPACList.Select().RowCast<LUMPacAdjCost>().ToList();
+
+                if (string.IsNullOrEmpty(filter.FinPeriod))
+                    throw new PXException("Period can not be empty!!");
+
+                if (!impDatas.Any())
+                    throw new PXException("No Data Found!!");
+
+                // Create Adjustment
+                decimal sum = 0;
+
+                var doc = graph.adjustment.Insert((INRegister)graph.adjustment.Cache.CreateInstance());
+                doc.FinPeriodID = filter.FinPeriod;
+                doc.TranDesc = "PAC COGS Adujstment";
+
+                foreach (var row in impDatas)
                 {
-                    var filter = this.Filter.Current;
-                    var impDatas = this.ImportPACList.Select().RowCast<LUMPacAdjCost>().ToList();
-
-                    if (string.IsNullOrEmpty(filter.FinPeriod))
-                        throw new PXException("Period can not be empty!!");
-
-                    if (!impDatas.Any())
-                        throw new PXException("No Data Found!!");
-
-                    // Create Adjustment
-                    decimal sum = 0;
-                    var graph = PXGraph.CreateInstance<INAdjustmentEntry>();
-                    var doc = graph.adjustment.Insert((INRegister)graph.adjustment.Cache.CreateInstance());
-                    doc.FinPeriodID = filter.FinPeriod;
-                    doc.TranDesc = "PAC COGS Adujstment";
-
-                    foreach (var row in impDatas)
-                    {
-                        if ((row.Cogsadj ?? 0) == 0)
-                            continue;
-                        var line = graph.transactions.Insert((INTran)graph.transactions.Cache.CreateInstance());
-                        graph.transactions.SetValueExt<INTran.inventoryID>(line, row.InventoryID);
-                        graph.transactions.SetValueExt<INTran.siteID>(line, row.Siteid);
-                        graph.transactions.SetValueExt<INTran.tranCost>(line, row.Cogsadj);
-                        graph.transactions.SetValueExt<INTran.reasonCode>(line, "PACADJ");
-                        graph.transactions.SetValueExt<INTran.lotSerialNbr>(line, string.Empty);
-                        sum += (row.Cogsadj ?? 0);
-                    }
-                    doc.TotalCost = sum;
-                    graph.Save.Press();
-                    // Delete temp table data
-                    PXDatabase.Delete<LUMPacAdjCost>();
-                    this.ImportPACList.Cache.Clear();
+                    if (Math.Round((row.Cogsadj ?? 0), 0) == 0)
+                        continue;
+                    var line = graph.transactions.Insert((INTran)graph.transactions.Cache.CreateInstance());
+                    graph.transactions.SetValueExt<INTran.inventoryID>(line, row.InventoryID);
+                    graph.transactions.SetValueExt<INTran.siteID>(line, row.Siteid);
+                    graph.transactions.SetValueExt<INTran.tranCost>(line, row.Cogsadj);
+                    graph.transactions.SetValueExt<INTran.reasonCode>(line, "PACADJ");
+                    graph.transactions.SetValueExt<INTran.lotSerialNbr>(line, string.Empty);
+                    sum += (row.Cogsadj ?? 0);
                 }
-                catch (Exception ex)
-                {
-                    throw new PXOperationCompletedWithErrorException(ex.Message);
-                }
-            });
+                doc.TotalCost = sum;
+                graph.Save.Press();
+                // Delete temp table data
+                PXDatabase.Delete<LUMPacAdjCost>();
+                this.ImportPACList.Cache.Clear();
+            }
+            catch (Exception ex)
+            {
+                throw new PXException(ex.Message);
+            }
+            throw new PXRedirectRequiredException(graph, "");
             return adapter.Get();
         }
 

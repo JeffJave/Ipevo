@@ -298,9 +298,9 @@ namespace PX.Objects.SO
                 throw new Exception("Can not find ShipLine");
 
             #region Header
-            line += "\"CustomerCode\";\"OrderRefNo\";\"SKUCode\";\"Qty\";\"DeliveryReqDate\";\"ReceiverName\";\"ReceiverCountry\";\"ReceiverCity\";\"ReceiverPostCode\";\"ReceiverAddress\";\"ReceiverPhone\";\"BatchNumber\";\"Notes\"";
+            line += "\"CustomerCode\"/\"OrderRefNo\"/\"SKUCode\"/\"Qty\"/\"DeliveryReqDate\"/\"ReceiverName\"/\"ReceiverCountry\"/\"ReceiverCity\"/\"ReceiverPostCode\"/\"ReceiverAddress\"/\"ReceiverPhone\"/\"BatchNumber\"/\"Notes\"";
             if (csvType == "P3PL")
-                line += ";\"CarrierCode\";\"CarrierServiceCode\"";
+                line += "/\"CarrierCode\"/\"CarrierServiceCode\"";
             sb.AppendLine(line);
             #endregion
 
@@ -311,29 +311,29 @@ namespace PX.Objects.SO
                 var _cd = inventoryItems.Where(x => x.InventoryID == item.InventoryID).FirstOrDefault()?.InventoryCD;
                 line = string.Empty;
                 // CustomerCode
-                line += $"\"IPEVOMAN\";";
+                line += $"\"IPEVOMAN\"/";
                 // OrderRefNo
-                line += $"\"{soShipment.CustomerOrderNbr}\";";
+                line += $"\"{soShipment.CustomerOrderNbr}\"/";
                 // SKUCode
-                line += $"\"{_cd}\";";
+                line += $"\"{_cd}\"/";
                 // Qty
-                line += $"\"{item?.ShippedQty}\";";
+                line += $"\"{item?.ShippedQty}\"/";
                 // DeliveryReqDate
-                line += $"\"{DateTime.Now.ToString("yyyyMMdd")}\";";
+                line += $"\"{DateTime.Now.ToString("yyyyMMdd")}\"/";
                 // ReceiverName
-                line += $"\"{shipContact.Attention}/{shipContact.FullName}\";";
+                line += $"\"{shipContact.Attention}/{shipContact.FullName}\"/";
                 // ReceiverCountry
-                line += $"\"{shipAddress.CountryID}\";";
+                line += $"\"{shipAddress.CountryID}\"/";
                 // ReceiverCity
-                line += $"\"{shipAddress.City}\";";
+                line += $"\"{shipAddress.City}\"/";
                 // ReceiverPostCode
-                line += $"\"{shipAddress.PostalCode}\";";
+                line += $"\"{shipAddress.PostalCode}\"/";
                 // ReceiverAddress
-                line += $"\"{(shipAddress?.AddressLine1 + shipAddress?.AddressLine2)}\";";
+                line += $"\"{(shipAddress?.AddressLine1 + shipAddress?.AddressLine2)}\"/";
                 // ReceiverPhone
-                line += $"\"{shipContact.Phone1}\";";
+                line += $"\"{shipContact.Phone1}\"/";
                 // BatchNumber
-                line += $"\"{soOrder.OrderNbr}\";";
+                line += $"\"{soOrder.OrderNbr}\"/";
                 // Notes
                 var note = string.Empty;
                 if (_cd == "5-883-4-01-00" || _cd == "5-884-4-01-00")
@@ -342,7 +342,7 @@ namespace PX.Objects.SO
                     note = soOrder?.OrderDesc;
                 line += $"\"{note}\"";
                 if (csvType == "P3PL")
-                    line += $";\"{string.Empty}\";\"{string.Empty}\"";
+                    line += $"/\"{string.Empty}\"/\"{string.Empty}\"";
                 sb.AppendLine(line);
             }
 
@@ -369,9 +369,9 @@ namespace PX.Objects.SO
                 throw new Exception("Can not find SOLine");
 
             #region Header
-            line += "\"CustomerCode\";\"OrderRefNo\";\"SKUCode\";\"Qty\";\"DeliveryReqDate\";\"ReceiverName\";\"ReceiverCountry\";\"ReceiverCity\";\"ReceiverPostCode\";\"ReceiverAddress\";\"ReceiverPhone\";\"BatchNumber\";\"Notes\"";
+            line += "\"CustomerCode\"/\"OrderRefNo\"/\"SKUCode\"/\"Qty\"/\"DeliveryReqDate\"/\"ReceiverName\"/\"ReceiverCountry\"/\"ReceiverCity\"/\"ReceiverPostCode\"/\"ReceiverAddress\"/\"ReceiverPhone\"/\"BatchNumber\"/\"Notes\"";
             if (csvType == "P3PL")
-                line += ";\"CarrierCode\";\"CarrierServiceCode\"";
+                line += "/\"CarrierCode\"/\"CarrierServiceCode\"";
             sb.AppendLine(line);
             #endregion
 
@@ -382,29 +382,29 @@ namespace PX.Objects.SO
                 var _cd = inventoryItems.Where(x => x.InventoryID == item.InventoryID).FirstOrDefault()?.InventoryCD;
                 line = string.Empty;
                 // CustomerCode
-                line += $"\"IPEVOMAN\";";
+                line += $"\"IPEVOMAN\"/";
                 // OrderRefNo
-                line += $"\"{_soOrder.CustomerOrderNbr}\";";
+                line += $"\"{_soOrder.CustomerOrderNbr}\"/";
                 // SKUCode
-                line += $"\"{_cd}\";";
+                line += $"\"{_cd}\"/";
                 // Qty
-                line += $"\"{item?.ShippedQty}\";";
+                line += $"\"{item?.ShippedQty}\"/";
                 // DeliveryReqDate
-                line += $"\"{DateTime.Now.ToString("yyyyMMdd")}\";";
+                line += $"\"{DateTime.Now.ToString("yyyyMMdd")}\"/";
                 // ReceiverName
-                line += $"\"{shipContact.Attention}/{shipContact.FullName}\";";
+                line += $"\"{shipContact.Attention}/{shipContact.FullName}\"/";
                 // ReceiverCountry
-                line += $"\"{shipAddress.CountryID}\";";
+                line += $"\"{shipAddress.CountryID}\"/";
                 // ReceiverCity
-                line += $"\"{shipAddress.City}\";";
+                line += $"\"{shipAddress.City}\"/";
                 // ReceiverPostCode
-                line += $"\"{shipAddress.PostalCode}\";";
+                line += $"\"{shipAddress.PostalCode}\"/";
                 // ReceiverAddress
-                line += $"\"{(shipAddress?.AddressLine1 + shipAddress?.AddressLine2)}\";";
+                line += $"\"{(shipAddress?.AddressLine1 + shipAddress?.AddressLine2)}\"/";
                 // ReceiverPhone
-                line += $"\"{shipContact.Phone1}\";";
+                line += $"\"{shipContact.Phone1}\"/";
                 // BatchNumber
-                line += $"\"{_soOrder.OrderNbr}\";";
+                line += $"\"{_soOrder.OrderNbr}\"/";
                 // Notes
                 var note = string.Empty;
                 if (_cd == "5-883-4-01-00" || _cd == "5-884-4-01-00")
@@ -413,7 +413,7 @@ namespace PX.Objects.SO
                     note = _soOrder?.OrderDesc;
                 line += $"\"{note}\"";
                 if (csvType == "P3PL")
-                    line += $";\"{string.Empty}\";\"{string.Empty}\"";
+                    line += $"/\"{string.Empty}\"/\"{string.Empty}\"";
                 sb.AppendLine(line);
             }
 

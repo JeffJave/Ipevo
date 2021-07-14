@@ -1,5 +1,5 @@
 ﻿<Sql TableName="CreatevPACAdjCost" SqlScriptPriority="1" CustomScript="#CDATA">
-    <CDATA name="CustomScript"><![CDATA[  IF EXISTS
+    <CDATA name="CustomScript"><![CDATA[ IF EXISTS
 (
 	SELECT *
 	FROM SYS.views
@@ -10,13 +10,13 @@ GO
 CREATE VIEW vPACAdjCost AS
 select cost.CompanyID,
 	　 cost.FinPeriodID,
-	 　isnull(cost.FinPtdCOGS,0) - isnull(Cost.FinPtdCostAdjusted,0) as FinPtdCOGS,
-	   cost.FinPtdQtySales,
-	   p.PACUnitCost,
-	   cost.InventoryID,
-	   cost.FinPtdQtySales * p.PACUnitCost as PACCOGS,
-	   s.SiteID,
-	   (isnull(cost.FinPtdCOGS,0) - isnull(Cost.FinPtdCostAdjusted,0)) - (cost.FinPtdQtySales * p.PACUnitCost) as COGSADJ
+	 　MAX(isnull(cost.FinPtdCOGS,0) - isnull(Cost.FinPtdCostAdjusted,0)) as FinPtdCOGS,
+	   MAX(cost.FinPtdQtySales) as FinPtdQtySales,
+	   MAX(p.PACUnitCost) as PACUnitCost,
+	   MAX(cost.InventoryID) as InventoryID,
+	   MAX(cost.FinPtdQtySales * p.PACUnitCost) as PACCOGS,
+	   MAX(s.SiteID) as SiteID,
+	   MAX((isnull(cost.FinPtdCOGS,0) - isnull(Cost.FinPtdCostAdjusted,0)) - (cost.FinPtdQtySales * p.PACUnitCost)) as COGSADJ
 from INItemCostHist cost
 left join INSite s on cost.CompanyID = s.CompanyID
 				  and cost.SiteID = s.SiteID
@@ -25,5 +25,5 @@ inner join InventoryItem i on cost.CompanyID = i.CompanyID
 left join vPACUnitCost p on cost.CompanyID = p.companyid
 						 and cost.InventoryID = p.InventoryID
 						 and cost.FinPeriodID = p.FinPeriodID
-where cost.FinPtdCOGS != 0]]></CDATA>
+group by cost.FinPeriodID,cost.SiteID,cost.InventoryID,cost.CompanyID having SUM(cost.FinPtdCOGS) != 0]]></CDATA>
 </Sql>
