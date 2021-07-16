@@ -1,3 +1,4 @@
+using PX.Common;
 using PX.Data;
 using PX.Data.BQL;
 using PX.Data.BQL.Fluent;
@@ -62,7 +63,7 @@ namespace PX.Objects.AP
             if (row != null)
             {
                 ManualAPBill.Cache.AllowSelect = TWNGUIValidation.ActivateTWGUI(Base);
-                ManualAPBill.Cache.AllowDelete = ManualAPBill.Cache.AllowInsert = ManualAPBill.Cache.AllowUpdate = row.Status == APDocStatus.Hold;
+                ManualAPBill.Cache.AllowDelete = ManualAPBill.Cache.AllowInsert = ManualAPBill.Cache.AllowUpdate = row.Status.IsIn(APDocStatus.Hold, APDocStatus.Balanced);
             }
 
             //PXUIFieldAttribute.SetVisible<APRegisterExt.usrDeduction>(e.Cache, null, activateGUI);
