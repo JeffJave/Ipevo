@@ -25,7 +25,7 @@
         </layout>
         <data>
             <SiteMap>
-                <row Title="Import PAC Adjustment Process" Url="~/Pages/LM/LM505000.aspx" ScreenID="LM505000" NodeID="84ab83a9-c083-44e3-8110-ad6282e615db" ParentID="00000000-0000-0000-0000-000000000000">
+                <row Title="Process PAC Adjustment" Url="~/Pages/LM/LM505000.aspx" ScreenID="LM505000" NodeID="84ab83a9-c083-44e3-8110-ad6282e615db" ParentID="00000000-0000-0000-0000-000000000000">
                     <MUIScreen IsPortal="0" WorkspaceID="6557c1c6-747e-45bb-9072-54f096598d61" Order="70" SubcategoryID="32130442-2305-4394-9389-cf915b191d2a" />
                 </row>
             </SiteMap>
