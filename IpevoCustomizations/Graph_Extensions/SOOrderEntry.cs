@@ -8,6 +8,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using IpevoCustomizations.DAC;
+using System.Linq;
 
 namespace PX.Objects.SO
 {
@@ -89,6 +90,24 @@ namespace PX.Objects.SO
             {
                 e.Cache.SetValue<SOOrder.freightTaxCategoryID>(e.Row, null);
             }
+        }
+
+        protected void _(Events.FieldUpdated<SOLine.inventoryID> e, PXFieldUpdated baeHandler)
+        {
+            baeHandler?.Invoke(e.Cache,e.Args);
+
+            var item = SelectFrom<InventoryItem>
+                                .Where<InventoryItem.inventoryID.IsEqual<P.AsInt>>
+                                .View.Select(Base,e.NewValue)
+                                .RowCast<InventoryItem>().FirstOrDefault();
+
+            if(item != null && (item.InventoryCD ?? string.Empty).Trim() == "RESTOCKING")
+            {
+                Base.Document.Cache.SetValueExt<SOOrder.overrideTaxZone>(Base.Document.Current,true);
+                Base.Document.Cache.SetValueExt<SOOrder.taxZoneID>(Base.Document.Current, "TAXEXEMPT");
+                Base.Document.Cache.MarkUpdated(Base.Document.Current);
+            }
+
         }
         #endregion
 

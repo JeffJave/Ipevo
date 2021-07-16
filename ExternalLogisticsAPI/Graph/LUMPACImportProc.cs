@@ -100,7 +100,6 @@ namespace ExternalLogisticsAPI.Graph
                 throw new PXException(ex.Message);
             }
             throw new PXRedirectRequiredException(graph, "");
-            return adapter.Get();
         }
 
     }
