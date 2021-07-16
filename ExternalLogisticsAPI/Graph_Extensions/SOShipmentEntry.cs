@@ -24,11 +24,13 @@ namespace PX.Objects.SO
         {
             base.Initialize();
             Base.report.AddMenuAction(printFedexLabel);
+            Base.action.AddMenuAction(lumTrackingURL);
         }
 
         #region Action
 
         public PXAction<SOShipment> printFedexLabel;
+        public PXAction<SOShipment> lumTrackingURL;
         public PXAction<SOShipment> lumGererateYUSENNLFile;
         public PXAction<SOShipment> lumGenerateYUSENCAFile;
         public PXAction<SOShipment> lumGenerate3PLUKFile;
@@ -120,6 +122,7 @@ namespace PX.Objects.SO
             return adapter.Get();
         }
 
+        /// <summary> Resend YUSEN NL Shipping File </summary>
         [PXButton]
         [PXUIField(DisplayName = "Resend YUSEN NL Shipping File", MapEnableRights = PXCacheRights.Select, MapViewRights = PXCacheRights.Select, Visible = false)]
         protected virtual IEnumerable LumGererateYUSENNLFile(PXAdapter adapter)
@@ -265,6 +268,31 @@ namespace PX.Objects.SO
             return adapter.Get();
         }
 
+        /// <summary> Resend 3PL UK Shipping File </summary>
+        [PXButton]
+        [PXUIField(DisplayName = "Tracking URL", MapEnableRights = PXCacheRights.Select, MapViewRights = PXCacheRights.Select)]
+        protected virtual IEnumerable LumTrackingURL(PXAdapter adapter)
+        {
+            var row = Base.Document.Current;
+            string url = string.Empty;
+            if (row == null)
+                return adapter.Get();
+
+            var carrier = row.GetExtension<SOShipmentExt>()?.UsrCarrier;
+            var trackingNbr = row.GetExtension<SOShipmentExt>()?.UsrTrackingNbr;
+            if (string.IsNullOrEmpty(carrier))
+                throw new PXException("Carrier can not be empty!");
+            if (string.IsNullOrEmpty(trackingNbr))
+                throw new PXException("Tracking Nbr can not be Empty");
+            
+            // Get Tracking URL
+            url = GetTrackingURL(carrier, trackingNbr);
+
+            if (string.IsNullOrEmpty(url))
+                throw new PXException("Can not find Tracking URL");
+            throw new PXRedirectToUrlException(url, PXBaseRedirectException.WindowMode.NewWindow, "Tracking URL");
+        }
+
         #endregion
 
         #region Method
@@ -298,9 +326,9 @@ namespace PX.Objects.SO
                 throw new Exception("Can not find ShipLine");
 
             #region Header
-            line += "\"CustomerCode\"/\"OrderRefNo\"/\"SKUCode\"/\"Qty\"/\"DeliveryReqDate\"/\"ReceiverName\"/\"ReceiverCountry\"/\"ReceiverCity\"/\"ReceiverPostCode\"/\"ReceiverAddress\"/\"ReceiverPhone\"/\"BatchNumber\"/\"Notes\"";
+            line += "\"CustomerCode\";\"OrderRefNo\";\"SKUCode\";\"Qty\";\"DeliveryReqDate\";\"ReceiverName\";\"ReceiverCountry\";\"ReceiverCity\";\"ReceiverPostCode\";\"ReceiverAddress\";\"ReceiverPhone\";\"BatchNumber\";\"Notes\"";
             if (csvType == "P3PL")
-                line += "/\"CarrierCode\"/\"CarrierServiceCode\"";
+                line += ";\"CarrierCode\";\"CarrierServiceCode\"";
             sb.AppendLine(line);
             #endregion
 
@@ -311,29 +339,29 @@ namespace PX.Objects.SO
                 var _cd = inventoryItems.Where(x => x.InventoryID == item.InventoryID).FirstOrDefault()?.InventoryCD;
                 line = string.Empty;
                 // CustomerCode
-                line += $"\"IPEVOMAN\"/";
+                line += $"\"IPEVOMAN\";";
                 // OrderRefNo
-                line += $"\"{soShipment.CustomerOrderNbr}\"/";
+                line += $"\"{soShipment.CustomerOrderNbr}\";";
                 // SKUCode
-                line += $"\"{_cd}\"/";
+                line += $"\"{_cd}\";";
                 // Qty
-                line += $"\"{item?.ShippedQty}\"/";
+                line += $"\"{item?.ShippedQty}\";";
                 // DeliveryReqDate
-                line += $"\"{DateTime.Now.ToString("yyyyMMdd")}\"/";
+                line += $"\"{DateTime.Now.ToString("yyyyMMdd")}\";";
                 // ReceiverName
-                line += $"\"{shipContact.Attention}/{shipContact.FullName}\"/";
+                line += $"\"{shipContact.Attention}/{shipContact.FullName}\";";
                 // ReceiverCountry
-                line += $"\"{shipAddress.CountryID}\"/";
+                line += $"\"{shipAddress.CountryID}\";";
                 // ReceiverCity
-                line += $"\"{shipAddress.City}\"/";
+                line += $"\"{shipAddress.City}\";";
                 // ReceiverPostCode
-                line += $"\"{shipAddress.PostalCode}\"/";
+                line += $"\"{shipAddress.PostalCode}\";";
                 // ReceiverAddress
-                line += $"\"{(shipAddress?.AddressLine1 + shipAddress?.AddressLine2)}\"/";
+                line += $"\"{(shipAddress?.AddressLine1 + shipAddress?.AddressLine2).Replace(',','/')}\";";
                 // ReceiverPhone
-                line += $"\"{shipContact.Phone1}\"/";
+                line += $"\"{shipContact.Phone1}\";";
                 // BatchNumber
-                line += $"\"{soOrder.OrderNbr}\"/";
+                line += $"\"{soOrder.OrderNbr}\";";
                 // Notes
                 var note = string.Empty;
                 if (_cd == "5-883-4-01-00" || _cd == "5-884-4-01-00")
@@ -342,7 +370,7 @@ namespace PX.Objects.SO
                     note = soOrder?.OrderDesc;
                 line += $"\"{note}\"";
                 if (csvType == "P3PL")
-                    line += $"/\"{string.Empty}\"/\"{string.Empty}\"";
+                    line += $";\"{string.Empty}\";\"{string.Empty}\"";
                 sb.AppendLine(line);
             }
 
@@ -369,9 +397,9 @@ namespace PX.Objects.SO
                 throw new Exception("Can not find SOLine");
 
             #region Header
-            line += "\"CustomerCode\"/\"OrderRefNo\"/\"SKUCode\"/\"Qty\"/\"DeliveryReqDate\"/\"ReceiverName\"/\"ReceiverCountry\"/\"ReceiverCity\"/\"ReceiverPostCode\"/\"ReceiverAddress\"/\"ReceiverPhone\"/\"BatchNumber\"/\"Notes\"";
+            line += "\"CustomerCode\";\"OrderRefNo\";\"SKUCode\";\"Qty\";\"DeliveryReqDate\";\"ReceiverName\";\"ReceiverCountry\";\"ReceiverCity\";\"ReceiverPostCode\";\"ReceiverAddress\";\"ReceiverPhone\";\"BatchNumber\";\"Notes\"";
             if (csvType == "P3PL")
-                line += "/\"CarrierCode\"/\"CarrierServiceCode\"";
+                line += ";\"CarrierCode\";\"CarrierServiceCode\"";
             sb.AppendLine(line);
             #endregion
 
@@ -382,29 +410,29 @@ namespace PX.Objects.SO
                 var _cd = inventoryItems.Where(x => x.InventoryID == item.InventoryID).FirstOrDefault()?.InventoryCD;
                 line = string.Empty;
                 // CustomerCode
-                line += $"\"IPEVOMAN\"/";
+                line += $"\"IPEVOMAN\";";
                 // OrderRefNo
-                line += $"\"{_soOrder.CustomerOrderNbr}\"/";
+                line += $"\"{_soOrder.CustomerOrderNbr}\";";
                 // SKUCode
-                line += $"\"{_cd}\"/";
+                line += $"\"{_cd}\";";
                 // Qty
-                line += $"\"{item?.ShippedQty}\"/";
+                line += $"\"{item?.ShippedQty}\";";
                 // DeliveryReqDate
-                line += $"\"{DateTime.Now.ToString("yyyyMMdd")}\"/";
+                line += $"\"{DateTime.Now.ToString("yyyyMMdd")}\";";
                 // ReceiverName
-                line += $"\"{shipContact.Attention}/{shipContact.FullName}\"/";
+                line += $"\"{shipContact.Attention}/{shipContact.FullName}\";";
                 // ReceiverCountry
-                line += $"\"{shipAddress.CountryID}\"/";
+                line += $"\"{shipAddress.CountryID}\";";
                 // ReceiverCity
-                line += $"\"{shipAddress.City}\"/";
+                line += $"\"{shipAddress.City}\";";
                 // ReceiverPostCode
-                line += $"\"{shipAddress.PostalCode}\"/";
+                line += $"\"{shipAddress.PostalCode}\";";
                 // ReceiverAddress
-                line += $"\"{(shipAddress?.AddressLine1 + shipAddress?.AddressLine2)}\"/";
+                line += $"\"{(shipAddress?.AddressLine1 + shipAddress?.AddressLine2).Replace(',','/')}\";";
                 // ReceiverPhone
-                line += $"\"{shipContact.Phone1}\"/";
+                line += $"\"{shipContact.Phone1}\";";
                 // BatchNumber
-                line += $"\"{_soOrder.OrderNbr}\"/";
+                line += $"\"{_soOrder.OrderNbr}\";";
                 // Notes
                 var note = string.Empty;
                 if (_cd == "5-883-4-01-00" || _cd == "5-884-4-01-00")
@@ -413,7 +441,7 @@ namespace PX.Objects.SO
                     note = _soOrder?.OrderDesc;
                 line += $"\"{note}\"";
                 if (csvType == "P3PL")
-                    line += $"/\"{string.Empty}\"/\"{string.Empty}\"";
+                    line += $";\"{string.Empty}\";\"{string.Empty}\"";
                 sb.AppendLine(line);
             }
 
@@ -682,6 +710,25 @@ namespace PX.Objects.SO
             if (str.Length > len)
                 return str.Substring(0, len);
             return str.PadRight(len, ' ');
+        }
+
+        /// <summary> Get Tracking URL </summary>
+        public virtual string GetTrackingURL(string carrier, string trackingNbr)
+        {
+            string url = string.Empty;
+            switch (carrier.ToUpper())
+            {
+                case "UPS":
+                    url = $"https://www.ups.com/track?loc=en_tw&tracknum={trackingNbr}&requester=WT/trackdetails";
+                    break;
+                case "DHL":
+                    url = $"http://www.dhl.com.tw/en/express/tracking.html?AWB={trackingNbr}&brand=DHL";
+                    break;
+                case "FEDEX":
+                    url = $"https://www.fedex.com/fedextrack/?trknbr={trackingNbr}";
+                    break;
+            }
+            return url;
         }
 
         #endregion

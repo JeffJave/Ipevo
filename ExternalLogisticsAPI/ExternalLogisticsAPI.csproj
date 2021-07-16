@@ -19,7 +19,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\..\Bin\</OutputPath>
+    <OutputPath>..\..\..\Bin\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
@@ -73,6 +73,7 @@
     <Compile Include="DAC\LUMMiddleWareSetup.cs" />
     <Compile Include="DAC\LUMP3PLImportProcess.cs" />
     <Compile Include="DAC\LUMP3PLImportProcessLog.cs" />
+    <Compile Include="DAC\LUMPacAdjCost.cs" />
     <Compile Include="DAC\LUMVendCntrlProcessLog.cs" />
     <Compile Include="DAC\LUMVendCntrlProcessOrder.cs" />
     <Compile Include="DAC\LUMVendCntrlSetup.cs" />
@@ -80,6 +81,8 @@
     <Compile Include="DAC\LUMWarehouseImportProcessLog.cs" />
     <Compile Include="DAC\LumYusenCASetup.cs" />
     <Compile Include="DAC\LUMYusenNLSetup.cs" />
+    <Compile Include="DAC\vPACAdjCost.cs" />
+    <Compile Include="DAC\vPACUnitCost.cs" />
     <Compile Include="DAC\vSOSiteMapping.cs" />
     <Compile Include="DAC_Extensions\SOLineExtensions.cs" />
     <Compile Include="DAC_Extensions\SOOrderExtensions.cs" />
@@ -91,6 +94,7 @@
     <Compile Include="Graph\LUM3DCartImportProc.cs" />
     <Compile Include="Graph\LUMDCLImportProc.cs" />
     <Compile Include="Graph\LUMP3PLImportProc.cs" />
+    <Compile Include="Graph\LUMPACImportProc.cs" />
     <Compile Include="Graph\LUMSalesChanelSetup.cs" />
     <Compile Include="Graph\LUMWarehouseImportProc.cs" />
     <Compile Include="Graph_Extensions\QuoteMaint.cs" />
