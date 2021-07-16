@@ -196,7 +196,7 @@ namespace PX.Objects.AR
             }
 
         CreateGUI:
-            if (string.IsNullOrEmpty(taxID))
+            if (activateGUI && string.IsNullOrEmpty(taxID))
             {
                 throw new PXException(TWMessages.NoInvTaxDtls);
             }
