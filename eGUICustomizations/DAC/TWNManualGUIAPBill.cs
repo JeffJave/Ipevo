@@ -61,9 +61,8 @@ namespace eGUICustomizations.DAC
         #endregion
 
         #region VendorID
-        //[PXDBInt()]
-        //[PXUIField(DisplayName = "Vendor ID")]
         [Vendor]
+        [PXDefault(typeof(APInvoice.vendorID), PersistingCheck = PXPersistingCheck.Nothing)]
         public virtual int? VendorID { get; set; }
         public abstract class vendorID : PX.Data.BQL.BqlInt.Field<vendorID> { }
         #endregion
