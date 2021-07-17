@@ -62,8 +62,8 @@ namespace PX.Objects.SO
             if (inventoryID != null)
             {
                 line.InventoryID = inventoryID;
-                line.OrderQty    = 1;
-                line.UnitPrice   = 0;
+                line.OrderQty = 1;
+                line.UnitPrice = 0;
 
                 Base.Transactions.Cache.Insert(line);
             }
@@ -94,16 +94,20 @@ namespace PX.Objects.SO
 
         protected void _(Events.FieldUpdated<SOLine.inventoryID> e, PXFieldUpdated baeHandler)
         {
-            baeHandler?.Invoke(e.Cache,e.Args);
+            baeHandler?.Invoke(e.Cache, e.Args);
 
+            var shipAddrState = Base.Shipping_Address?.Current?.State;
             var item = SelectFrom<InventoryItem>
                                 .Where<InventoryItem.inventoryID.IsEqual<P.AsInt>>
-                                .View.Select(Base,e.NewValue)
+                                .View.Select(Base, e.NewValue)
                                 .RowCast<InventoryItem>().FirstOrDefault();
+            var IsnonTaxable = SelectFrom<LUMRestockNonTaxState>
+                            .Where<LUMRestockNonTaxState.stateID.IsEqual<P.AsString>>
+                            .View.Select(Base, shipAddrState).RowCast<LUMRestockNonTaxState>().Any();
 
-            if(item != null && (item.InventoryCD ?? string.Empty).Trim() == "RESTOCKING")
+            if (item != null && (item.InventoryCD ?? string.Empty).Trim() == "RESTOCKING" && IsnonTaxable)
             {
-                Base.Document.Cache.SetValueExt<SOOrder.overrideTaxZone>(Base.Document.Current,true);
+                Base.Document.Cache.SetValueExt<SOOrder.overrideTaxZone>(Base.Document.Current, true);
                 Base.Document.Cache.SetValueExt<SOOrder.taxZoneID>(Base.Document.Current, "TAXEXEMPT");
                 Base.Document.Cache.MarkUpdated(Base.Document.Current);
             }
