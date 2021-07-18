@@ -38,18 +38,18 @@ namespace PX.Objects.AP
                 doc.Released == true &&
                 doc.DocType.IsIn(APDocType.Invoice, APDocType.DebitAdj) )
             {
-                if (Base.APTaxTran_TranType_RefNbr == null)
-                {
-                    throw new PXException(TWMessages.NoInvTaxDtls);
-                }
-
-                if (Tax.PK.Find(Base, SelectTaxTran(Base, doc.DocType, doc.RefNbr, BatchModule.AP).TaxID).GetExtension<TaxExt>().UsrTWNGUI != true) { return; }
+                //if (Base.APTaxTran_TranType_RefNbr.Current == null)
+                //{
+                //    throw new PXException(TWMessages.NoInvTaxDtls);
+                //}
 
                 foreach (TWNManualGUIAPBill row in SelectFrom<TWNManualGUIAPBill>.Where<TWNManualGUIAPBill.docType.IsEqual<@P.AsString>
                                                                                         .And<TWNManualGUIAPBill.refNbr.IsEqual<@P.AsString>>>.View.Select(Base, doc.DocType, doc.RefNbr))
                 {
                     // Avoid standard logic calling this method twice and inserting duplicate records into TWNGUITrans.
                     if (CountExistedRec(Base, row.GUINbr, row.VATInCode, doc.RefNbr) >= 1) { return; }
+
+                    if (Tax.PK.Find(Base, row.TaxID).GetExtension<TaxExt>().UsrTWNGUI != true) { continue; }
 
                     Vendor vendor = Vendor.PK.Find(Base, row.VendorID);
 
