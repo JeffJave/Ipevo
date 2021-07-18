@@ -137,7 +137,7 @@ namespace PX.Objects.AP
                     taxSum += row.TaxAmt.Value;
                 }
 
-                if (taxSum != Base.Document.Current.CuryTaxTotal)
+                if (taxSum != Base.Document.Current.TaxTotal)
                 {
                     throw new PXException(TWMessages.ChkTotalGUIAmt);
                 }
