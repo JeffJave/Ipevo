@@ -72,6 +72,7 @@
     <Compile Include="Graph\LUMRestockNonTaxStateMaint.cs" />
     <Compile Include="Graph_Extensions\APPaymentEntryExt.cs" />
     <Compile Include="Graph_Extensions\APPayBills_Extension.cs" />
+    <Compile Include="Graph_Extensions\ARInvoiceEntryExternalTax.cs" />
     <Compile Include="Graph_Extensions\SOInvoiceEntry_Extension.cs" />
     <Compile Include="DAC_Extensions\SOShipLineExt.cs" />
     <Compile Include="Graph_Extensions\SOOrderEntry.cs" />
