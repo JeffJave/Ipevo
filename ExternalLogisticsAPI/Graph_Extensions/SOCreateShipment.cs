@@ -44,6 +44,7 @@ namespace PX.Objects.SO
                 case "SO301000$lumCallDCLShipemnt":
                     cmd.WhereAnd<Where<SOOrder.status, Equal<SOOrderStatus.open>>>();
                     cmd.WhereAnd<Where<SOOrderExt.usrDCLShipmentCreated, Equal<True>>>();
+                    cmd.WhereAnd<Where<SOOrder.orderType, NotEqual<SotypeVCAttr>>>();
                     break;
                 case "SO301000$lumGenerate3PLUKFile":
                     cmd.Join<InnerJoin<vSOSiteMapping, On<SOOrder.orderType, Equal<vSOSiteMapping.orderType>, And<SOOrder.orderNbr, Equal<vSOSiteMapping.orderNbr>>>>>();
@@ -54,7 +55,7 @@ namespace PX.Objects.SO
                         Or<SOOrderExt.usrSendToMiddleware, IsNull>>>();
                     break;
                 case "SO301000$lumGenerateYUSENCAFile":
-                    cmd.Join<InnerJoin<vSOSiteMapping, On<SOOrder.orderType, Equal<vSOSiteMapping.orderType>,And<SOOrder.orderNbr,Equal<vSOSiteMapping.orderNbr>>>>>();
+                    cmd.Join<InnerJoin<vSOSiteMapping, On<SOOrder.orderType, Equal<vSOSiteMapping.orderType>, And<SOOrder.orderNbr, Equal<vSOSiteMapping.orderNbr>>>>>();
                     cmd.Join<InnerJoin<INSite, On<vSOSiteMapping.siteid, Equal<INSite.siteID>>>>();
                     cmd.WhereAnd<Where<SOOrder.status, Equal<SOOrderStatus.open>>>();
                     cmd.WhereAnd<Where<INSite.siteCD.IsEqual<YusenAttr>>>();
@@ -63,10 +64,10 @@ namespace PX.Objects.SO
                     break;
                 case "SO301000$lumGererateYUSENNLFile":
                     cmd.Join<InnerJoin<vSOSiteMapping, On<SOOrder.orderType, Equal<vSOSiteMapping.orderType>, And<SOOrder.orderNbr, Equal<vSOSiteMapping.orderNbr>>>>>();
-                    cmd.Join<InnerJoin<INSite,On<vSOSiteMapping.siteid, Equal<INSite.siteID>>>>();
+                    cmd.Join<InnerJoin<INSite, On<vSOSiteMapping.siteid, Equal<INSite.siteID>>>>();
                     cmd.WhereAnd<Where<SOOrder.status, Equal<SOOrderStatus.open>>>();
                     cmd.WhereAnd<Where<INSite.siteCD.IsEqual<YusenAttr>>>();
-                    cmd.WhereAnd<Where<SOOrderExt.usrSendToMiddleware, Equal<False>, 
+                    cmd.WhereAnd<Where<SOOrderExt.usrSendToMiddleware, Equal<False>,
                         Or<SOOrderExt.usrSendToMiddleware, IsNull>>>();
                     break;
             }
@@ -125,9 +126,9 @@ namespace PX.Objects.SO
 
         #endregion
 
-
-        #region Method
-
-        #endregion
+        public class SotypeVCAttr : PX.Data.BQL.BqlString.Constant<SotypeVCAttr>
+        {
+            public SotypeVCAttr() : base("VC") { }
+        }
     }
 }
