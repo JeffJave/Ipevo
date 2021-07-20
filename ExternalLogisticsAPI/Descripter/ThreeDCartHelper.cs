@@ -41,7 +41,8 @@ namespace ExternalLogisticsAPI.Descripter
                 {
                     if (!response.IsSuccessStatusCode)
                     {
-                        throw new JsonReaderException(response.ReasonPhrase);
+                        return null;
+                        //throw new JsonReaderException(response.ReasonPhrase);
                     }
 
                     responseData = await response.Content.ReadAsStringAsync();
@@ -62,8 +63,10 @@ namespace ExternalLogisticsAPI.Descripter
                 try
                 {
                     DeleteWrkTableRecs();
-                    CreateProcessOrders(GetResponse(curSetup, 
-                                                    string.Format("3dCartWebAPI/v2/Orders?datestart={0}&limit={1}&orderstatus={2}", endDate.Value.AddDays(-7), 1000, ThreeDCartOrderStatus.New)).Result);
+
+                    var taskArr = GetResponse(curSetup, string.Format("3dCartWebAPI/v2/Orders?datestart={0}&limit={1}&orderstatus={2}", endDate.Value.AddDays(-7), 1000, ThreeDCartOrderStatus.New)).Result;
+
+                    if (taskArr != null) { CreateProcessOrders(taskArr); }
                 }
                 catch (Exception ex)
                 {

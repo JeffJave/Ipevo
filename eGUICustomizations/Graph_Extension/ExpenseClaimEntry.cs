@@ -38,12 +38,12 @@ namespace PX.Objects.EP
 
             decimal taxSum = 0;
 
-            foreach (TWNManualGUIExpense row in manGUIExpense.Cache.Cached)
+            foreach (TWNManualGUIExpense row in manGUIExpense.Select())
             {
                 taxSum += row.TaxAmt.Value;
             }
 
-            if (!taxSum.Equals(Base.ExpenseClaimCurrent.Current.CuryTaxTotal))
+            if (!taxSum.Equals(Base.ExpenseClaimCurrent.Current.TaxTotal))
             {
                 throw new PXException(TWMessages.ChkTotalGUIAmt);
             }
