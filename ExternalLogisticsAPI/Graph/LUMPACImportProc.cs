@@ -31,7 +31,7 @@ namespace ExternalLogisticsAPI.Graph
         protected virtual IEnumerable LoadData(PXAdapter adapter)
         {
             var filter = this.Filter.Current;
-            var sourceData = SelectFrom<vPACAdjCost>.Where<vPACAdjCost.finPeriodID.IsEqual<P.AsString>>.View.Select(this, filter.FinPeriod).RowCast<vPACAdjCost>().ToList().Where(x => x.FinPeriodID == filter.FinPeriod);
+            var sourceData = SelectFrom<vPACAdjCost>.Where<vPACAdjCost.finPeriodID.IsEqual<P.AsString>.And<vPACAdjCost.itemClassID.IsEqual<P.AsInt>>>.View.Select(this, filter.FinPeriod,filter.ItemClassID).RowCast<vPACAdjCost>().ToList().Where(x => x.FinPeriodID == filter.FinPeriod);
 
             // Delete temp table data
             PXDatabase.Delete<LUMPacAdjCost>();
@@ -45,6 +45,7 @@ namespace ExternalLogisticsAPI.Graph
                 data.FinPtdQtySales = item.FinPtdQtySales;
                 data.PACUnitCost = item.PACUnitCost;
                 data.InventoryID = item.InventoryID;
+                data.ItemClassID = item.ItemClassID;
                 data.Paccogs = item.Paccogs;
                 data.Siteid = item.Siteid;
                 data.Cogsadj = item.Cogsadj;
@@ -66,6 +67,8 @@ namespace ExternalLogisticsAPI.Graph
 
                 if (string.IsNullOrEmpty(filter.FinPeriod))
                     throw new PXException("Period can not be empty!!");
+                if(!filter.ItemClassID.HasValue)
+                    throw new PXException("ItemClass can not be empty!!");
 
                 if (!impDatas.Any())
                     throw new PXException("No Data Found!!");
@@ -111,5 +114,12 @@ namespace ExternalLogisticsAPI.Graph
         [PXUIField(DisplayName = "Period", Required = true)]
         public virtual string FinPeriod { get; set; }
         public abstract class finPeriod : PX.Data.BQL.BqlString.Field<finPeriod> { }
+
+        [PXDBInt]
+        [PXUIField(DisplayName = "Item Class")]
+        [PXDimensionSelector(INItemClass.Dimension, typeof(Search<INItemClass.itemClassID>), typeof(INItemClass.itemClassCD), DescriptionField = typeof(INItemClass.descr), CacheGlobal = true)]
+        public virtual int? ItemClassID { get;set;}
+        public abstract class itemClassID : PX.Data.BQL.BqlInt.Field<itemClassID> { }
+
     }
 }

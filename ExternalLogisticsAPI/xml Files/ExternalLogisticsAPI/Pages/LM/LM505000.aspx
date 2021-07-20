@@ -13,7 +13,8 @@
 <asp:Content ID="cont2" ContentPlaceHolderID="phF" runat="Server">
     <px:PXFormView ID="form" runat="server" DataSourceID="ds" DataMember="Filter" Width="100%" Height="100px" AllowAutoHide="false">
         <Template>
-            <px:PXTextEdit runat="server" ID="edFinPeriod" DataField="FinPeriod"></px:PXTextEdit>
+            <px:PXTextEdit runat="server" ID="edFinPeriod" DataField="FinPeriod" Width="200px"></px:PXTextEdit>
+            <px:PXSelector runat="server" ID="edItemClassID" DataField="ItemClassID" Width="200px"></px:PXSelector>
         </Template>
     </px:PXFormView>
 </asp:Content>
@@ -25,6 +26,7 @@
                     <px:PXGridColumn DataField="FinPeriodID"></px:PXGridColumn>
                     <px:PXGridColumn DataField="Siteid"></px:PXGridColumn>
                     <px:PXGridColumn DataField="InventoryID"></px:PXGridColumn>
+                    <px:PXGridColumn DataField="ItemClassID"></px:PXGridColumn>
                     <px:PXGridColumn DataField="FinPtdQtySales"></px:PXGridColumn>
                     <px:PXGridColumn DataField="Finptdcogs"></px:PXGridColumn>
                     <px:PXGridColumn DataField="PACUnitCost"></px:PXGridColumn>

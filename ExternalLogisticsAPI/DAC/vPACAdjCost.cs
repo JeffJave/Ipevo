@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using PX.Data;
+using PX.Objects.IN;
 
 namespace ExternalLogisticsAPI
 {
@@ -44,6 +45,14 @@ namespace ExternalLogisticsAPI
         [PXUIField(DisplayName = "Inventory ID")]
         public virtual int? InventoryID { get; set; }
         public abstract class inventoryID : PX.Data.BQL.BqlInt.Field<inventoryID> { }
+        #endregion
+
+        #region ItemClassID
+        [PXDBInt()]
+        [PXUIField(DisplayName = "Item Class")]
+        [PXDimensionSelector(INItemClass.Dimension, typeof(Search<INItemClass.itemClassID>), typeof(INItemClass.itemClassCD), DescriptionField = typeof(INItemClass.descr), CacheGlobal = true)]
+        public virtual int? ItemClassID { get; set; }
+        public abstract class itemClassID : PX.Data.BQL.BqlInt.Field<itemClassID> { }
         #endregion
 
         #region Paccogs

@@ -57,6 +57,14 @@ namespace ExternalLogisticsAPI
         public abstract class inventoryID : PX.Data.BQL.BqlInt.Field<inventoryID> { }
         #endregion
 
+        #region ItemClassID
+        [PXInt()]
+        [PXUIField(DisplayName = "Item Class")]
+        [PXDimensionSelector(INItemClass.Dimension, typeof(Search<INItemClass.itemClassID>), typeof(INItemClass.itemClassCD), DescriptionField = typeof(INItemClass.descr), CacheGlobal = true)]
+        public virtual int? ItemClassID { get; set; }
+        public abstract class itemClassID : PX.Data.BQL.BqlInt.Field<itemClassID> { }
+        #endregion
+
         #region Paccogs
         [PXDBDecimal()]
         [PXUIField(DisplayName = "PAC COGS (Q=PxE)")]

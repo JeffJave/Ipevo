@@ -18,13 +18,6 @@ namespace ExternalLogisticsAPI
         public abstract class inventoryID : PX.Data.BQL.BqlInt.Field<inventoryID> { }
         #endregion
 
-        #region Siteid
-        [PXDBInt(IsKey = true)]
-        [PXUIField(DisplayName = "Siteid")]
-        public virtual int? Siteid { get; set; }
-        public abstract class siteid : PX.Data.BQL.BqlInt.Field<siteid> { }
-        #endregion
-
         #region FinPeriodID
         [PXDBString(6, IsFixed = true, InputMask = "", IsKey = true)]
         [PXUIField(DisplayName = "Fin Period ID")]
