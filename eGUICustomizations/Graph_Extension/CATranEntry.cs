@@ -43,12 +43,12 @@ namespace PX.Objects.CA
 
             decimal taxSum = 0;
 
-            foreach (TWNManualGUIBank row in ManGUIBank.Cache.Cached)
+            foreach (TWNManualGUIBank row in ManGUIBank.Select())
             {
                 taxSum += row.TaxAmt.Value;
             }
 
-            if (!taxSum.Equals(Base.CurrentDocument.Current.CuryTaxTotal))
+            if (!taxSum.Equals(Base.CurrentDocument.Current.TaxTotal))
             {
                 throw new PXException(TWMessages.ChkTotalGUIAmt);
             }
