@@ -5,6 +5,7 @@
   <col name="ProcessID" type="BigInt" identity="true" />
   <col name="OrderID" type="NVarChar(50)" />
   <col name="CustomerID" type="NVarChar(50)" />
+  <col name="InvoiceNbr" type="NVarChar(50)" nullable="true" />
   <col name="OrderDate" type="DateTime" nullable="true" />
   <col name="PoNumber" type="NVarChar(100)" nullable="true" />
   <col name="OrderStatusID" type="NVarChar(30)" nullable="true" />

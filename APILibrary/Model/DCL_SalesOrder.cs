@@ -149,7 +149,7 @@ namespace APILibrary.Model
 
     public class ResShipments
     {
-        public int ship_id { get; set; }
+        public string ship_id { get; set; }
         public string ship_date { get; set; }
         public string shipping_carrier { get; set; }
         public string shipping_service { get; set; }

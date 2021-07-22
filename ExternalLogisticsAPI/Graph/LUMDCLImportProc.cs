@@ -77,26 +77,28 @@ namespace ExternalLogisticsAPI.Graph
 
                         int count = 1;
                         var _dclOrders = JsonConvert.DeserializeObject<OrderResponse>(result.ContentResult);
-                        if(_dclOrders.orders == null)
-                            return ;
+                        if (_dclOrders.orders == null)
+                            return;
                         // insert data to temp table
                         foreach (var orders in _dclOrders.orders)
                         {
 
                             if (this.ImportLog.Select().RowCast<LUMVendCntrlProcessLog>().Any(x => x.OrderID == orders.order_number && !string.IsNullOrEmpty(x.AcumaticaOrderID) && x.ImportStatus == true))
                                 continue;
-                            var _soOrder = this.ImportOrderList.Insert(
+                            var impRow = this.ImportOrderList.Insert(
                                 (LUMVendCntrlProcessOrder)this.ImportOrderList.Cache.CreateInstance());
-                            _soOrder.LineNumber = count++;
-                            _soOrder.OrderID = orders.order_number;
-                            _soOrder.CustomerID = orders.customer_number;
-                            _soOrder.OrderDate = DateTime.Parse(orders.ordered_date);
-                            _soOrder.OrderStatusID = orders.order_stage.ToString();
-                            _soOrder.OrderQty = orders.order_lines.Sum(x => x.quantity);
-                            _soOrder.OrderAmount = orders.order_subtotal;
-                            _soOrder.PoNumber = orders.po_number;
-                            _soOrder.LastUpdated = DateTime.Parse(orders.modified_at);
-                            _soOrder.Processed = false;
+                            impRow.LineNumber = count++;
+                            impRow.OrderID = orders.order_number;
+                            impRow.CustomerID = orders.customer_number;
+                            if (orders.shipments != null)
+                                impRow.InvoiceNbr = string.IsNullOrEmpty(orders?.shipments.FirstOrDefault().ship_id) ? null : "8" + orders.shipments.FirstOrDefault()?.ship_id;
+                            impRow.OrderDate = DateTime.Parse(orders.ordered_date);
+                            impRow.OrderStatusID = orders.order_stage.ToString();
+                            impRow.OrderQty = orders.order_lines.Sum(x => x.quantity);
+                            impRow.OrderAmount = orders.order_subtotal;
+                            impRow.PoNumber = orders.po_number;
+                            impRow.LastUpdated = DateTime.Parse(orders.modified_at);
+                            impRow.Processed = false;
                         }
 
                         this.Actions.PressSave();
@@ -138,7 +140,7 @@ namespace ExternalLogisticsAPI.Graph
                             .RowCast<LUMVendCntrlProcessLog>().ToList();
 
                         // Import Data 
-                        
+
                         int count = 0;
                         foreach (var item in list.Where(x => !x.Processed.Value))
                         {
@@ -168,7 +170,7 @@ namespace ExternalLogisticsAPI.Graph
                                     newOrder.OrderDesc = impRow.stage_description == "Fully Shipped"
                                         ? $"Create SO BY Import Process |Tacking Number: {impRow.shipments.FirstOrDefault().packages.FirstOrDefault()?.tracking_number}"
                                         : $"DCL Stage is {impRow.stage_description}";
-                                
+
                                 newOrder = (SOOrder)graph.Document.Cache.Insert(newOrder);
 
                                 foreach (var line in impRow.order_lines)
@@ -191,9 +193,9 @@ namespace ExternalLogisticsAPI.Graph
 
                                 #region Prepare Invoice
 
-                                //var newAdapter = new PXAdapter(graph.Document)
-                                //{ Searches = new Object[] { newOrder.OrderType, newOrder.OrderNbr } };
-                                //graph.PrepareInvoice(newAdapter);
+                                var newAdapter = new PXAdapter(graph.Document)
+                                { Searches = new Object[] { newOrder.OrderType, newOrder.OrderNbr } };
+                                graph.PrepareInvoice(newAdapter);
 
                                 #endregion
                             }
@@ -244,6 +246,7 @@ namespace ExternalLogisticsAPI.Graph
             model.ProcessID = prcData.ProcessID;
             model.OrderID = prcData.OrderID;
             model.CustomerID = prcData.CustomerID;
+            model.InvoiceNbr = prcData.InvoiceNbr;
             if (success)
             {
                 model.AcumaticaOrderID = acumaticaOrderID;

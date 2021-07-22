@@ -5,6 +5,7 @@
   <col name="ProcessID" type="BigInt" />
   <col name="CustomerID" type="NVarChar(200)" />
   <col name="OrderID" type="NVarChar(50)" nullable="true" />
+  <col name="InvoiceNbr" type="NVarChar(50)" nullable="true" />
   <col name="AcumaticaOrderID" type="NVarChar(15)" nullable="true" />
   <col name="AcumaticaOrderType" type="Char(2)" nullable="true" />
   <col name="ImportStatus" type="Bit" nullable="true" />

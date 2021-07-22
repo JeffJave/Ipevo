@@ -13,6 +13,7 @@
   <col name="LastModifiedByScreenID" type="Char(8)" />
   <col name="LastModifiedDateTime" type="DateTime" />
   <col name="tstamp" type="Timestamp" />
+  <col name="FtpOutPath" type="NVarChar(100)" nullable="true" />
   <index name="PK_LUM3PLUKSetup" clustered="true" primary="true" unique="true">
     <col name="CompanyID" />
   </index>

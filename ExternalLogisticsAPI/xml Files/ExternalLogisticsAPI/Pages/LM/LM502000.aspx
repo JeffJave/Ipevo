@@ -28,6 +28,7 @@
                     <px:PXGridColumn DataField="LineNumber"></px:PXGridColumn>
                     <px:PXGridColumn DataField="OrderID"></px:PXGridColumn>
                     <px:PXGridColumn DataField="CustomerID"></px:PXGridColumn>
+                    <px:PXGridColumn DataField="InvoiceNbr"></px:PXGridColumn>
                     <px:PXGridColumn DataField="OrderDate"></px:PXGridColumn>
                     <px:PXGridColumn DataField="PoNumber"></px:PXGridColumn>
                     <px:PXGridColumn DataField="OrderStatusID"></px:PXGridColumn>
