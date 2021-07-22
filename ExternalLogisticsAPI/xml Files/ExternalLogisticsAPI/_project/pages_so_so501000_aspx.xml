@@ -10,4 +10,7 @@
             <PXGridColumn DataField="CuryPaymentTotal" OriginalIndex="6" />
         </Children>
     </PXGridLevel>
+    <PXGrid ID="grid" ParentId="phG_grid" TypeFullName="PX.Web.UI.PXGrid">
+        <Prop Key="PageSize" Value="15" />
+    </PXGrid>
 </Page>

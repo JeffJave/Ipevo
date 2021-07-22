@@ -77,6 +77,8 @@ namespace ExternalLogisticsAPI.Graph
 
                         int count = 1;
                         var _dclOrders = JsonConvert.DeserializeObject<OrderResponse>(result.ContentResult);
+                        if(_dclOrders.orders == null)
+                            return ;
                         // insert data to temp table
                         foreach (var orders in _dclOrders.orders)
                         {
@@ -189,9 +191,9 @@ namespace ExternalLogisticsAPI.Graph
 
                                 #region Prepare Invoice
 
-                                var newAdapter = new PXAdapter(graph.Document)
-                                { Searches = new Object[] { newOrder.OrderType, newOrder.OrderNbr } };
-                                graph.PrepareInvoice(newAdapter);
+                                //var newAdapter = new PXAdapter(graph.Document)
+                                //{ Searches = new Object[] { newOrder.OrderType, newOrder.OrderNbr } };
+                                //graph.PrepareInvoice(newAdapter);
 
                                 #endregion
                             }
