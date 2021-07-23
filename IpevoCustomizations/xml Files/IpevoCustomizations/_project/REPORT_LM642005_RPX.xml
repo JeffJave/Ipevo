@@ -3305,8 +3305,12 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
         </Tables>
         <Sections>
             <PageHeader Name="pageHeaderSection1">
-                <Height>4.65608cm</Height>
+                <Height>5.07937cm</Height>
                 <Items>
+                    <Line Name="line1">
+                        <Location>0px, 184px</Location>
+                        <Size>7.25in, 0.08333in</Size>
+                    </Line>
                     <PictureBox Name="pictureBox1">
                         <Location>0px, 0px</Location>
                         <MimeType>image/jpeg</MimeType>
@@ -3429,7 +3433,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                     </ReportVariable>
                     <ReportVariable>
                         <Name>TotalGWQty</Name>
-                        <ValueExpr>=$TotalGWQty + CDec([AttrGROSPERCTN.Value]) * CDec([SOPackageDetailEx.UsrCartonQty])</ValueExpr>
+                        <ValueExpr>=$TotalGWQty + CDec([AttrGROSPERCTN.Value]) * CDec([SOPackageDetailEx.UsrCartonQty]) + CDec([@PackageCountNo]) * 15</ValueExpr>
                     </ReportVariable>
                     <ReportVariable>
                         <Name>TotalMeasurement</Name>
@@ -3613,18 +3617,87 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
             <Group Name="PackagesGroup">
                 <Headers>
                     <Header Name="groupHeaderSection1">
+                        <Height>0cm</Height>
+                        <Visible>False</Visible>
+                    </Header>
+                </Headers>
+                <Footers>
+                    <Footer Name="groupFooterSection1">
                         <Height>1.69312cm</Height>
+                        <Visible>False</Visible>
+                        <VisibleExpr>=IIF([SOShipment.NoteFiles] = null, True, False)</VisibleExpr>
                         <Items>
-                            <Line Name="line1">
+                            <TextBox Name="textBox45">
+                                <Location>520px, 24px</Location>
+                                <Size>176px, 40px</Size>
+                                <Style>
+                                    <Font>
+                                        <Size>29px</Size>
+                                        <Style>Bold, Italic, Underline</Style>
+                                    </Font>
+                                </Style>
+                                <Value>Sunny Guan</Value>
+                            </TextBox>
+                            <TextBox Name="textBox46">
+                                <Location>536px, 8px</Location>
+                                <Size>160px, 16px</Size>
+                                <Value>Representative of IPEVO:</Value>
+                            </TextBox>
+                        </Items>
+                    </Footer>
+                </Footers>
+            </Group>
+            <Group Name="PackageFileImg">
+                <Headers>
+                    <Header Name="groupHeaderSection2">
+                        <Height>0cm</Height>
+                        <Visible>False</Visible>
+                    </Header>
+                </Headers>
+                <Footers>
+                    <Footer Name="groupFooterSection2">
+                        <Height>13.33333cm</Height>
+                        <VisibleExpr>=IIF([SOShipment.NoteFiles] &lt;&gt; null, True, False)</VisibleExpr>
+                        <Items>
+                            <PictureBox Name="pictureBox2">
                                 <Location>0px, 0px</Location>
-                                <Size>7.25in, 0.08333in</Size>
-                            </Line>
+                                <MimeType>image/jpeg</MimeType>
+                                <QRCodeSettings />
+                                <Size>696px, 440px</Size>
+                                <Source>Database</Source>
+                                <Value>=[SOShipment.NoteFiles]</Value>
+                            </PictureBox>
+                            <TextBox Name="textBox50">
+                                <Location>536px, 448px</Location>
+                                <Size>160px, 16px</Size>
+                                <Value>Representative of IPEVO:</Value>
+                            </TextBox>
+                            <TextBox Name="textBox51">
+                                <Location>520px, 464px</Location>
+                                <Size>176px, 40px</Size>
+                                <Style>
+                                    <Font>
+                                        <Size>29px</Size>
+                                        <Style>Bold, Italic, Underline</Style>
+                                    </Font>
+                                </Style>
+                                <Value>Sunny Guan</Value>
+                            </TextBox>
+                        </Items>
+                    </Footer>
+                </Footers>
+            </Group>
+            <Group Name="signtureFooter">
+                <Headers>
+                    <Header Name="groupHeaderSection3">
+                        <Height>1.48148cm</Height>
+                        <Items>
                             <Line Name="line2">
-                                <Location>0px, 56px</Location>
-                                <Size>7.25in, 0.08333in</Size>
+                                <Location>0px, 48px</Location>
+                                <Size>7.25in, 8px</Size>
                             </Line>
                             <TextBox Name="textBox11">
-                                <Location>0px, 8px</Location>
+                                <Location>0px, 0px</Location>
                                 <Size>80px, 48px</Size>
                                 <Style>
                                     <TextAlign>Center</TextAlign>
@@ -3632,7 +3705,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                                 <Value>Carton</Value>
                             </TextBox>
                             <TextBox Name="textBox12">
-                                <Location>80px, 8px</Location>
+                                <Location>80px, 0px</Location>
                                 <Size>280px, 48px</Size>
                                 <Style>
                                     <TextAlign>Center</TextAlign>
@@ -3640,7 +3713,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                                 <Value>Cust_Item/Description</Value>
                             </TextBox>
                             <TextBox Name="textBox13">
-                                <Location>360px, 8px</Location>
+                                <Location>360px, 0px</Location>
                                 <Size>80px, 48px</Size>
                                 <Style>
                                     <TextAlign>Center</TextAlign>
@@ -3648,7 +3721,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                                 <Value>Quantity</Value>
                             </TextBox>
                             <TextBox Name="textBox14">
-                                <Location>440px, 8px</Location>
+                                <Location>440px, 0px</Location>
                                 <Size>80px, 48px</Size>
                                 <Style>
                                     <TextAlign>Center</TextAlign>
@@ -3656,7 +3729,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                                 <Value>='N.W.{br}(KGS)'</Value>
                             </TextBox>
                             <TextBox Name="textBox15">
-                                <Location>520px, 8px</Location>
+                                <Location>520px, 0px</Location>
                                 <Size>80px, 48px</Size>
                                 <Style>
                                     <TextAlign>Center</TextAlign>
@@ -3664,7 +3737,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                                 <Value>='G.W.{br}(KGS)'</Value>
                             </TextBox>
                             <TextBox Name="textBox16">
-                                <Location>600px, 8px</Location>
+                                <Location>600px, 0px</Location>
                                 <Size>96px, 48px</Size>
                                 <Style>
                                     <TextAlign>Center</TextAlign>
@@ -3675,11 +3748,11 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                     </Header>
                 </Headers>
                 <Footers>
-                    <Footer Name="groupFooterSection1">
-                        <Height>17.14286cm</Height>
+                    <Footer Name="groupFooterSection3">
+                        <Height>3.59788cm</Height>
                         <Items>
                             <Line Name="line3">
-                                <Location>0px, 16px</Location>
+                                <Location>0px, 24px</Location>
                                 <Size>7.25in, 0.08333in</Size>
                                 <Style>
                                     <Font>
@@ -3688,7 +3761,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                                 </Style>
                             </Line>
                             <Line Name="line4">
-                                <Location>0px, 56px</Location>
+                                <Location>0px, 64px</Location>
                                 <Size>7.25in, 0.08333in</Size>
                                 <Style>
                                     <Font>
@@ -3696,16 +3769,8 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                                     </Font>
                                 </Style>
                             </Line>
-                            <PictureBox Name="pictureBox2">
-                                <Location>0px, 128px</Location>
-                                <MimeType>image/jpeg</MimeType>
-                                <QRCodeSettings />
-                                <Size>696px, 440px</Size>
-                                <Source>Database</Source>
-                                <Value>=[SOShipment.NoteFiles]</Value>
-                            </PictureBox>
                             <TextBox Name="textBox32">
-                                <Location>0px, 24px</Location>
+                                <Location>0px, 32px</Location>
                                 <Size>80px, 32px</Size>
                                 <Style>
                                     <Font>
@@ -3716,7 +3781,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                                 <Value>Total: </Value>
                             </TextBox>
                             <TextBox Name="textBox33">
-                                <Location>80px, 24px</Location>
+                                <Location>80px, 32px</Location>
                                 <Size>280px, 32px</Size>
                                 <Style>
                                     <Font>
@@ -3724,11 +3789,11 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                                     </Font>
                                     <VerticalAlign>Middle</VerticalAlign>
                                 </Style>
-                                <Value>=[@PackageCountEn] + ' PALLETS ' +#010;'(=' + Round($TotalPalletQty, 2) + ' CARTONS)'</Value>
+                                <Value>=[@PackageCountEn] + ' PALLET(S) ' +#010;'(=' + Round($TotalPalletQty, 2) + ' CARTONS)'</Value>
                             </TextBox>
                             <TextBox Name="textBox34">
                                 <Format>='N0'</Format>
-                                <Location>360px, 24px</Location>
+                                <Location>360px, 32px</Location>
                                 <Size>56px, 32px</Size>
                                 <Style>
                                     <Font>
@@ -3741,7 +3806,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                             </TextBox>
                             <TextBox Name="textBox35">
                                 <Format>='N2'</Format>
-                                <Location>440px, 24px</Location>
+                                <Location>440px, 32px</Location>
                                 <Size>80px, 32px</Size>
                                 <Style>
                                     <Font>
@@ -3754,7 +3819,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                             </TextBox>
                             <TextBox Name="textBox36">
                                 <Format>='N2'</Format>
-                                <Location>520px, 24px</Location>
+                                <Location>520px, 32px</Location>
                                 <Size>80px, 32px</Size>
                                 <Style>
                                     <Font>
@@ -3763,11 +3828,11 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                                     <TextAlign>Center</TextAlign>
                                     <VerticalAlign>Middle</VerticalAlign>
                                 </Style>
-                                <Value>=Round($TotalGWQty, 2)</Value>
+                                <Value>=Round($TotalGWQty, 2) + (CDec([@PackageCountNo]) * 15)</Value>
                             </TextBox>
                             <TextBox Name="textBox37">
                                 <Format>='N2'</Format>
-                                <Location>600px, 24px</Location>
+                                <Location>600px, 32px</Location>
                                 <Size>64px, 32px</Size>
                                 <Style>
                                     <Font>
@@ -3779,7 +3844,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                                 <Value>=Round($TotalMeasurement, 2)</Value>
                             </TextBox>
                             <TextBox Name="textBox38">
-                                <Location>0px, 64px</Location>
+                                <Location>0px, 72px</Location>
                                 <Size>696px, 32px</Size>
                                 <Style>
                                     <Font>
@@ -3791,7 +3856,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                                 <Value>=[SOShipment.ShipmentDesc]</Value>
                             </TextBox>
                             <TextBox Name="textBox39">
-                                <Location>0px, 104px</Location>
+                                <Location>0px, 112px</Location>
                                 <Size>696px, 16px</Size>
                                 <Style>
                                     <Font>
@@ -3809,10 +3874,10 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                                         <Name>Microsoft Tai Le</Name>
                                     </Font>
                                 </Style>
-                                <Value>=[@PackageCountNo] + ' PALLETS'</Value>
+                                <Value>=[@PackageCountNo] + ' PALLET(S)'</Value>
                             </TextBox>
                             <TextBox Name="textBox41">
-                                <Location>416px, 24px</Location>
+                                <Location>416px, 32px</Location>
                                 <Size>24px, 32px</Size>
                                 <Style>
                                     <Font>
@@ -3824,7 +3889,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                                 <Value>=[SOShipLine.UOM]</Value>
                             </TextBox>
                             <TextBox Name="textBox42">
-                                <Location>664px, 24px</Location>
+                                <Location>664px, 32px</Location>
                                 <Size>32px, 32px</Size>
                                 <Style>
                                     <Font>
@@ -3835,21 +3900,16 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                                 </Style>
                                 <Value> CBM</Value>
                             </TextBox>
-                            <TextBox Name="textBox50">
-                                <Location>536px, 576px</Location>
-                                <Size>160px, 16px</Size>
-                                <Value>Representative of IPEVO:</Value>
-                            </TextBox>
-                            <TextBox Name="textBox51">
-                                <Location>520px, 592px</Location>
-                                <Size>176px, 40px</Size>
+                            <TextBox Name="textBox47">
+                                <Location>520px, 0px</Location>
+                                <Size>80px, 16px</Size>
                                 <Style>
                                     <Font>
-                                        <Size>29px</Size>
-                                        <Style>Bold, Italic, Underline</Style>
+                                        <Name>Microsoft JhengHei</Name>
                                     </Font>
+                                    <TextAlign>Center</TextAlign>
                                 </Style>
-                                <Value>Sunny Guan</Value>
+                                <Value>=CDec([@PackageCountNo]) * 15</Value>
                             </TextBox>
                         </Items>
                     </Footer>
