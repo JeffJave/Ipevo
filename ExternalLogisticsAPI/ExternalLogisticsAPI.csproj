@@ -19,7 +19,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\Bin\</OutputPath>
+    <OutputPath>..\..\..\..\Bin\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
@@ -38,24 +38,26 @@
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="PX.CarrierService, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
+    <Reference Include="PX.CarrierService">
+      <HintPath>..\..\..\..\Bin\PX.CarrierService.dll</HintPath>
+    </Reference>
     <Reference Include="PX.Common">
-      <HintPath>..\..\..\Bin\PX.Common.dll</HintPath>
+      <HintPath>..\..\..\..\Bin\PX.Common.dll</HintPath>
     </Reference>
     <Reference Include="PX.Common.Std">
-      <HintPath>..\..\..\Bin\PX.Common.Std.dll</HintPath>
+      <HintPath>..\..\..\..\Bin\PX.Common.Std.dll</HintPath>
     </Reference>
     <Reference Include="PX.CS.Contracts">
-      <HintPath>..\..\..\Bin\PX.CS.Contracts.dll</HintPath>
+      <HintPath>..\..\..\..\Bin\PX.CS.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="PX.Data">
-      <HintPath>..\..\..\Bin\PX.Data.dll</HintPath>
+      <HintPath>..\..\..\..\Bin\PX.Data.dll</HintPath>
     </Reference>
     <Reference Include="PX.Data.BQL.Fluent">
-      <HintPath>..\..\..\Bin\PX.Data.BQL.Fluent.dll</HintPath>
+      <HintPath>..\..\..\..\Bin\PX.Data.BQL.Fluent.dll</HintPath>
     </Reference>
     <Reference Include="PX.Objects">
-      <HintPath>..\..\..\Bin\PX.Objects.dll</HintPath>
+      <HintPath>..\..\..\..\Bin\PX.Objects.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">

@@ -19,7 +19,7 @@ namespace ExternalLogisticsAPI.Descripter
     {
         public const string StockItemNonExists = "[{0}] Doesn't Exist In The System.";
 
-        public static async Task<List<MyArray>> GetResponse(LUM3DCartSetup setup, string specifyLocation)
+        public static async Task<List<MyArray>> GetResponse(LUM3DCartSetup setup, string specifyLocation, bool updateStatus = false)
         {
             string responseData = null;
 
@@ -37,17 +37,33 @@ namespace ExternalLogisticsAPI.Descripter
 
                 httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", setup.AuthToken);
 
-                using (var response = await httpClient.GetAsync(specifyLocation))
+                if (updateStatus == false)
                 {
-                    if (!response.IsSuccessStatusCode)
+                    using (var response = await httpClient.GetAsync(specifyLocation))
                     {
-                        throw new JsonReaderException(response.ReasonPhrase);
+                        if (!response.IsSuccessStatusCode)
+                        {
+                            return null;
+                            //throw new JsonReaderException(response.ReasonPhrase);
+                        }
+
+                        responseData = await response.Content.ReadAsStringAsync();
+
+                        return JsonConvert.DeserializeObject<List<MyArray>>(responseData);
                     }
-
-                    responseData = await response.Content.ReadAsStringAsync();
-
-                    return JsonConvert.DeserializeObject<List<MyArray>>(responseData);
                 }
+                else
+                {
+                    using (var content = new StringContent("\"OrderStatusID\":5", System.Text.Encoding.Default, "application/json"))
+                    {
+                        using (var response = await httpClient.PutAsync(specifyLocation, content))
+                        {
+                            responseData = await response.Content.ReadAsStringAsync();
+
+                            return JsonConvert.DeserializeObject<List<MyArray>>(responseData);
+                        }
+                    }
+                }    
             }
         }
 
@@ -62,8 +78,10 @@ namespace ExternalLogisticsAPI.Descripter
                 try
                 {
                     DeleteWrkTableRecs();
-                    CreateProcessOrders(GetResponse(curSetup, 
-                                                    string.Format("3dCartWebAPI/v2/Orders?datestart={0}&limit={1}&orderstatus={2}", endDate.Value.AddDays(-7), 1000, ThreeDCartOrderStatus.New)).Result);
+
+                    var taskArr = GetResponse(curSetup, string.Format("3dCartWebAPI/v2/Orders?datestart={0}&limit={1}&orderstatus={2}", endDate.Value.AddDays(-7), 1000, ThreeDCartOrderStatus.New)).Result;
+
+                    if (taskArr != null) { CreateProcessOrders(taskArr); }
                 }
                 catch (Exception ex)
                 {
@@ -86,8 +104,9 @@ namespace ExternalLogisticsAPI.Descripter
                 {
                     LineNumber     = i + 1,
                     ProcessID      = GetProcessID(graph),
-                    InvoiceNumber  = arrays[i].InvoiceNumber,
                     OrderID        = arrays[i].OrderID.ToString(),
+                    InvoiceNumber  = arrays[i].InvoiceNumber,
+                    OrderNbr       = string.Format("{0}{1}", arrays[i].InvoiceNumberPrefix, arrays[i].InvoiceNumber),
                     CustomerID     = arrays[i].CustomerID == 0 ? null : arrays[i].CustomerID.ToString(),
                     OrderDate      = arrays[i].OrderDate,
                     OrderStatusID  = arrays[i].OrderStatusID.ToString(),
@@ -121,6 +140,7 @@ namespace ExternalLogisticsAPI.Descripter
                 order.OrderType        = curSetup.OrderType;
                 order.CustomerID       = curSetup.CustomerID;
                 order.CustomerOrderNbr = processOrder.OrderID;
+                order.CustomerRefNbr   = processOrder.OrderNbr;
                 order.DocDate          = processOrder.OrderDate;
 
                 order = orderEntry.Document.Insert(order);
@@ -371,9 +391,14 @@ namespace ExternalLogisticsAPI.Descripter
             PXDatabase.Delete<LUM3DCartProcessOrder>(new PXDataFieldRestrict<LUM3DCartProcessOrder.processed>(PXDbType.Bit, false));
         }
 
-        protected static void Update3DCartOrderStatus()
+        /// <summary>
+        /// Update 3D Cart specify order status to cancelled.
+        /// </summary>
+        /// <param name="curSetup"></param>
+        /// <param name="orderID"></param>
+        public static void Update3DCartOrderStatus(LUM3DCartSetup curSetup, int orderID)
         {
-
+            GetResponse(curSetup, string.Format("3dCartWebAPI/v2/Orders/{0}", orderID), true);
         }
     }
 
