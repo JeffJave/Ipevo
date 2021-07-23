@@ -55,6 +55,13 @@ namespace ExternalLogisticsAPI.DAC
         public abstract class invoiceNumber : PX.Data.BQL.BqlInt.Field<invoiceNumber> { }
         #endregion
 
+        #region OrderNbr
+        [PXDBString(15, IsUnicode = true)]
+        [PXUIField(DisplayName = "Order Nbr.")]
+        public virtual string OrderNbr { get; set; }
+        public abstract class orderNbr : PX.Data.BQL.BqlString.Field<orderNbr> { }
+        #endregion
+
         #region CustomerID
         [PXDBString(50, IsUnicode = true, InputMask = "")]
         [PXUIField(DisplayName = "Customer ID")]
