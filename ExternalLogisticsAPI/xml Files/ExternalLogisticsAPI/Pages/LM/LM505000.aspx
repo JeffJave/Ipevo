@@ -40,13 +40,11 @@
         </ActionBar>
     </px:PXGrid>
 
-    <%--    <script type="text/javascript">
+    <script type="text/javascript">
         window.onload = function () {
             window.setTimeout(function () {
-                var Prepare = document.querySelectorAll('div[data-cmd="PrepareImport"]')[0].parentNode;
-                var Import = document.querySelectorAll('div[data-cmd="Process"]')[0].parentNode;
-                Import.parentNode.insertBefore(Prepare, Import);
-            }, 100);
+                document.getElementById("ctl00_phF_form_edFinPeriod").placeholder = "yyyyMM";
+            }, 1000);
         };
-    </script>--%>
+    </script>
 </asp:Content>

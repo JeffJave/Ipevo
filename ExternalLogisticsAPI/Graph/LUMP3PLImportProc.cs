@@ -51,8 +51,7 @@ namespace ExternalLogisticsAPI.Graph
                 try
                 {
                     // Clear Data
-                    PXDatabase.Delete<LUMP3PLImportProcess>(
-                           new PXDataFieldRestrict<LUMP3PLImportProcess.createdByID>(Accessinfo.UserID));
+                    PXDatabase.Delete<LUMP3PLImportProcess>();
                     this.ImportDataList.Cache.Clear();
 
                     // Load FTP File

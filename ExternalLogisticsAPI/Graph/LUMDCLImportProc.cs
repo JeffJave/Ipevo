@@ -152,6 +152,8 @@ namespace ExternalLogisticsAPI.Graph
                             {
                                 if (impRow == null)
                                     throw new Exception("Cant not mapping API Data");
+                                if(impRow.order_stage != 60)
+                                    throw new Exception("Order stage is not equal Fully Shipped");
                                 // Check Data is Exists
                                 var existsLog = LogDatas.Where(x =>
                                     x.OrderID == item.OrderID && x.CustomerID == item.CustomerID).ToList();
@@ -164,12 +166,9 @@ namespace ExternalLogisticsAPI.Graph
                                 newOrder.OrderType = setup.OrderType;
                                 newOrder.OrderDate = DateTime.Parse(impRow.ordered_date);
                                 newOrder.CustomerID = setup.CustomerID;
-                                newOrder.CustomerOrderNbr = impRow.po_number;
+                                newOrder.CustomerOrderNbr = string.IsNullOrEmpty(impRow?.shipments.FirstOrDefault().ship_id) ? null : "8" + impRow.shipments.FirstOrDefault()?.ship_id;
                                 newOrder.CustomerRefNbr = impRow.order_number;
-                                if (impRow.stage_description == "Fully Shipped")
-                                    newOrder.OrderDesc = impRow.stage_description == "Fully Shipped"
-                                        ? $"Create SO BY Import Process |Tacking Number: {impRow.shipments.FirstOrDefault().packages.FirstOrDefault()?.tracking_number}"
-                                        : $"DCL Stage is {impRow.stage_description}";
+                                newOrder.OrderDesc = $"Order : {impRow.order_number} | Carrier: {impRow.shipping_carrier} | Tacking Number: {impRow.shipments.FirstOrDefault().packages.FirstOrDefault()?.tracking_number}";
 
                                 newOrder = (SOOrder)graph.Document.Cache.Insert(newOrder);
 

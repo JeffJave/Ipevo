@@ -161,9 +161,9 @@ namespace ExternalLogisticsAPI.Graph_Extensions
                                 var shippingCarrier = dclOrders.orders.FirstOrDefault().shipping_carrier;
                                 var packagesInfo = dclOrders.orders.FirstOrDefault().shipments.SelectMany(x => x.packages);
                                 _soShipment.GetExtension<SOShipmentExt>().UsrCarrier = shippingCarrier;
-                                _soShipment.GetExtension<SOShipmentExt>().UsrTrackingNbr = string.Join("|", packagesInfo.Select(x => x.tracking_number));
+                                _soShipment.GetExtension<SOShipmentExt>().UsrTrackingNbr = packagesInfo.Select(x => x.tracking_number).FirstOrDefault();
                                 _soShipment.ShipmentDesc = $"Carrier: {shippingCarrier}|" +
-                                                           $"TrackingNbr: {string.Join("|", packagesInfo.Select(x => x.tracking_number))}";
+                                                           $"TrackingNbr: {packagesInfo.Select(x => x.tracking_number).FirstOrDefault()}";
                                 if (_soShipment.ShipmentDesc.Length > 256)
                                     _soShipment.ShipmentDesc = _soShipment.ShipmentDesc.Substring(0, 255);
                             }
@@ -214,6 +214,7 @@ namespace ExternalLogisticsAPI.Graph_Extensions
                                     invoiceEntry.Adjustments.SetValueExt<ARAdjust2.curyAdjdAmt>(adjd, adjd.CuryAdjdAmt + (soTax.CuryTaxAmt ?? 0));
                                     invoiceEntry.Adjustments.Update(adjd);
                                     invoiceEntry.releaseFromCreditHold.Press();
+                                    invoiceEntry.release.Press();
                                     invoiceEntry.Save.Press();
                                 }
                             }

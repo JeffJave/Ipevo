@@ -284,7 +284,7 @@ namespace PX.Objects.SO
                 throw new PXException("Carrier can not be empty!");
             if (string.IsNullOrEmpty(trackingNbr))
                 throw new PXException("Tracking Nbr can not be Empty");
-            
+
             // Get Tracking URL
             url = GetTrackingURL(carrier, trackingNbr);
 
@@ -357,7 +357,7 @@ namespace PX.Objects.SO
                 // ReceiverPostCode
                 line += $"\"{shipAddress.PostalCode}\";";
                 // ReceiverAddress
-                line += $"\"{(shipAddress?.AddressLine1 + shipAddress?.AddressLine2).Replace(',','/')}\";";
+                line += $"\"{(shipAddress?.AddressLine1 + shipAddress?.AddressLine2).Replace(',', '/')}\";";
                 // ReceiverPhone
                 line += $"\"{shipContact.Phone1}\";";
                 // BatchNumber
@@ -428,7 +428,7 @@ namespace PX.Objects.SO
                 // ReceiverPostCode
                 line += $"\"{shipAddress.PostalCode}\";";
                 // ReceiverAddress
-                line += $"\"{(shipAddress?.AddressLine1 + shipAddress?.AddressLine2).Replace(',','/')}\";";
+                line += $"\"{(shipAddress?.AddressLine1 + shipAddress?.AddressLine2).Replace(',', '/')}\";";
                 // ReceiverPhone
                 line += $"\"{shipContact.Phone1}\";";
                 // BatchNumber
@@ -716,17 +716,77 @@ namespace PX.Objects.SO
         public virtual string GetTrackingURL(string carrier, string trackingNbr)
         {
             string url = string.Empty;
+            var companyName = PXAccess.GetCompanyName()?.Split(' ');
+
             switch (carrier.ToUpper())
             {
                 case "UPS":
                     url = $"https://www.ups.com/track?loc=en_tw&tracknum={trackingNbr}&requester=WT/trackdetails";
                     break;
                 case "DHL":
-                    url = $"http://www.dhl.com.tw/en/express/tracking.html?AWB={trackingNbr}&brand=DHL";
+                    if (companyName.Contains("TW"))
+                        url = $"https://www.dhl.com/tw-en/home/tracking.html";
+                    else
+                        url = $"http://www.dhl.com.tw/en/express/tracking.html?AWB={trackingNbr}&brand=DHL";
                     break;
                 case "FEDEX":
                     url = $"https://www.fedex.com/fedextrack/?trknbr={trackingNbr}";
                     break;
+                case "大榮":
+                    url = $"https://www.kerrytj.com/ZH/search/search_track.aspx";
+                    break;
+                case "黑貓宅急便":
+                    url = "https://www.t-cat.com.tw/inquire/trace.aspx";
+                    break;
+                case "全球快遞":
+                    url = "https://login.global-business.com.tw/Ec_Web/Op_Delivery_Status.aspx";
+                    break;
+                case "EMS":
+                    url = "https://postserv.post.gov.tw/pstmail/main_mail.html?targetTxn={trackingNbr}";
+                    break;
+                case "USPS":
+                    url = "https://tools.usps.com/go/TrackConfirmAction_input";
+                    break;
+                case "CH ROBINSON":
+                    url = "https://online.chrobinson.com/tracking/{trackingNbr}/";
+                    break;
+                case "ESTES EXPRESS LINE":
+                    url = "https://www.estes-express.com/myestes/shipment-tracking/";
+                    break;
+                case "HUB GROUP":
+                    url = "https://www.tracking-status.com/hub-group-tracking/";
+                    break;
+                case "ONTRAC":
+                    url = "https://www.packagetrackr.com/track/ontrac/{trackingNbr}";
+                    break;
+                case "ROADRUNNER":
+                    url = "http://tools.rrts.com/LTLTrack/?searchValues={trackingNbr}";
+                    break;
+                case "JB HUNT CENTRAL TRANSPORT":
+                    url = "https://www.jbhunt.com/shipment-solutions/final-mile-track-shipment.html";
+                    break;
+                case "PUROLATOR":
+                    url = "https://www.purolator.com/en/shipping/tracker?pins={trackingNbr}";
+                    break;
+                case "DAY＆ROSS":
+                    url = "https://dayross.com/track-shipments";
+                    break;
+                case "KINDERSLEY":
+                    url = "https://tnt.kindersleytransport.com/tnt.php?SEARCH_CRITERIA={trackingNbr}";
+                    break;
+                case "DPD":
+                    if (companyName.Contains("NL"))
+                        url = "https://tracking.dpd.de/status/en_US/parcel/{trackingNbr}";
+                    else
+                        url = "https://track.dpd.co.uk/parcels/{trackingNbr}";
+                    break;
+                case "NATIONAL EXPRESS PALLETS":
+                    url = "http://www.tpnconnect.com/tracking?consignment={trackingNbr}";
+                    break;
+                case "TNT":
+                    url = "https://www.tnt.com/express/zh_tw/site/home.html";
+                    break;
+
             }
             return url;
         }
