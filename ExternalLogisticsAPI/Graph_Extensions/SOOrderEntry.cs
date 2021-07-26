@@ -120,13 +120,13 @@ namespace ExternalLogisticsAPI.Graph_Extensions
                         tracking_number = string.Join("|", packagesInfo.Select(x => x.tracking_number))
                     };
                     // Update FBM
-                    var updateResult = MiddleWareHelper.CallMiddleWareToUpdateFBM(setup,metaData);
+                    var updateResult = MiddleWareHelper.CallMiddleWareToUpdateFBM(setup, metaData);
                     // Check HttpStatusCode
-                    if(updateResult.StatusCode != System.Net.HttpStatusCode.OK)
+                    if (updateResult.StatusCode != System.Net.HttpStatusCode.OK)
                         throw new PXException($"Update MiddleWare FBM fail , Code = {updateResult.StatusCode}");
                     // Check Response status
                     var updateModel = JsonConvert.DeserializeObject<MiddleWare_Response>(updateResult.ContentResult);
-                    if(!updateModel.Status)
+                    if (!updateModel.Status)
                         throw new PXException($"Update Middleware FBM fail, Msg = {updateModel.Message}");
                     _soOrder.GetExtension<SOOrderExt>().UsrSendToMiddleware = true;
                     Base.Document.Update(_soOrder);
@@ -182,7 +182,7 @@ namespace ExternalLogisticsAPI.Graph_Extensions
                             // Prepare Invoice For 3D Orders
                             try
                             {
-                                if (_soOrder.OrderType == "3D")
+                                if (_soOrder.OrderType == "3D" || _soOrder.OrderType == "SO")
                                 {
                                     newAdapter.AllowRedirect = true;
                                     graph.createInvoice.PressButton(newAdapter);
@@ -213,8 +213,12 @@ namespace ExternalLogisticsAPI.Graph_Extensions
                                     invoiceEntry.Document.Update(invoiceEntry.Document.Current);
                                     invoiceEntry.Adjustments.SetValueExt<ARAdjust2.curyAdjdAmt>(adjd, adjd.CuryAdjdAmt + (soTax.CuryTaxAmt ?? 0));
                                     invoiceEntry.Adjustments.Update(adjd);
-                                    invoiceEntry.releaseFromCreditHold.Press();
-                                    invoiceEntry.release.Press();
+                                    // only 3DCart order need to release invoice
+                                    if (_soOrder.OrderType == "3D")
+                                    {
+                                        invoiceEntry.releaseFromCreditHold.Press();
+                                        invoiceEntry.release.Press();
+                                    }
                                     invoiceEntry.Save.Press();
                                 }
                             }
@@ -544,7 +548,7 @@ namespace ExternalLogisticsAPI.Graph_Extensions
                     using (PXTransactionScope ts = new PXTransactionScope())
                     {
                         if (root.description == null) { goto Item; }
-                        
+
                         order.OrderDesc = root.description;
                         Base.CurrentDocument.Cache.MarkUpdated(order);
 
@@ -554,7 +558,7 @@ namespace ExternalLogisticsAPI.Graph_Extensions
                                                                    And<SOOrderShipment.invoiceNbr, Equal<ARInvoice.refNbr>>>>,
                                      Where<SOOrderShipment.orderNoteID, Equal<Required<SOOrder.noteID>>>>.Update(Base, root.description, order.NoteID);
 
-                    Item :
+                        Item:
                         for (int i = 0; i < root.item.Count; i++)
                         {
                             if (root.item[i].sku == null) { goto Invoice; }
@@ -572,7 +576,7 @@ namespace ExternalLogisticsAPI.Graph_Extensions
 
                         Base.Save.Press();
 
-                    Invoice:
+                        Invoice:
                         if (root.taxAmount != 0)
                         {
                             PXUpdateJoin<Set<TaxTran.curyTaxAmt, Required<TaxTran.curyTaxAmt>>,
@@ -594,7 +598,7 @@ namespace ExternalLogisticsAPI.Graph_Extensions
                         PXNoteAttribute.SetNote(Base.CurrentDocument.Cache, order, null);
 
                         ts.Complete();
-                    }  
+                    }
                 }
             }
 
@@ -738,5 +742,5 @@ namespace ExternalLogisticsAPI.Graph_Extensions
         {
             return _Records;
         }
-    } 
+    }
 }
