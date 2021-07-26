@@ -136,6 +136,16 @@ namespace ExternalLogisticsAPI.Graph_Extensions
                 {
                     using (PXTransactionScope sc = new PXTransactionScope())
                     {
+                        // Get Carrier and TrackingNbr
+                        var shippingCarrier = dclOrders.orders.FirstOrDefault().shipping_carrier;
+                        var packagesInfo = dclOrders.orders.FirstOrDefault().shipments.SelectMany(x => x.packages);
+
+                        // update SOorder Descr
+                        _soOrder.OrderDesc += $"|Carrier: {shippingCarrier}|" +
+                                              $" TrackingNbr: {packagesInfo.Select(x => x.tracking_number).FirstOrDefault()}";
+
+                        var tempDesc = _soOrder.OrderDesc;
+
                         Base.CreateShipmentIssue(adapter, shipDate, siteID);
                         var processResult = PXProcessing<SOOrder>.GetItemMessage();
                         if (processResult.ErrorLevel != PXErrorLevel.RowInfo)
@@ -158,12 +168,9 @@ namespace ExternalLogisticsAPI.Graph_Extensions
                             try
                             {
                                 // Get Carrier and TrackingNbr
-                                var shippingCarrier = dclOrders.orders.FirstOrDefault().shipping_carrier;
-                                var packagesInfo = dclOrders.orders.FirstOrDefault().shipments.SelectMany(x => x.packages);
                                 _soShipment.GetExtension<SOShipmentExt>().UsrCarrier = shippingCarrier;
                                 _soShipment.GetExtension<SOShipmentExt>().UsrTrackingNbr = packagesInfo.Select(x => x.tracking_number).FirstOrDefault();
-                                _soShipment.ShipmentDesc = $"Carrier: {shippingCarrier}|" +
-                                                           $"TrackingNbr: {packagesInfo.Select(x => x.tracking_number).FirstOrDefault()}";
+                                _soShipment.ShipmentDesc = tempDesc;
                                 if (_soShipment.ShipmentDesc.Length > 256)
                                     _soShipment.ShipmentDesc = _soShipment.ShipmentDesc.Substring(0, 255);
                             }
@@ -211,8 +218,11 @@ namespace ExternalLogisticsAPI.Graph_Extensions
                                     invoiceEntry.Document.SetValueExt<ARInvoice.curyTaxTotal>(invoiceEntry.Document.Current, soTax.CuryTaxAmt);
                                     invoiceEntry.Document.SetValueExt<ARInvoice.curyDocBal>(invoiceEntry.Document.Current, balance + (soTax.CuryTaxAmt ?? 0));
                                     invoiceEntry.Document.Update(invoiceEntry.Document.Current);
-                                    invoiceEntry.Adjustments.SetValueExt<ARAdjust2.curyAdjdAmt>(adjd, adjd.CuryAdjdAmt + (soTax.CuryTaxAmt ?? 0));
-                                    invoiceEntry.Adjustments.Update(adjd);
+                                    if (adjd != null)
+                                    {
+                                        invoiceEntry.Adjustments.SetValueExt<ARAdjust2.curyAdjdAmt>(adjd, adjd.CuryAdjdAmt + (soTax.CuryTaxAmt ?? 0));
+                                        invoiceEntry.Adjustments.Update(adjd);
+                                    }
                                     // only 3DCart order need to release invoice
                                     if (_soOrder.OrderType == "3D")
                                     {
