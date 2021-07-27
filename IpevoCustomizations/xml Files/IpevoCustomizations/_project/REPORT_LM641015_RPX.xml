@@ -44,6 +44,12 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                 <Value>TRX</Value>
             </FilterExp>
         </Filters>
+        <LayoutUnit>Inch</LayoutUnit>
+        <PageSettings>
+            <Margins>
+            </Margins>
+            <PaperKind>Letter</PaperKind>
+        </PageSettings>
         <Parameters>
             <ReportParameter>
                 <ColumnSpan>2</ColumnSpan>
@@ -3145,12 +3151,12 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
         </Tables>
         <Sections>
             <PageHeader Name="pageHeaderSection1">
-                <Height>13.75661cm</Height>
+                <Height>5.25in</Height>
                 <Items>
                     <Line Name="line1">
                         <LineStyle>Dotted</LineStyle>
-                        <Location>0px, 440px</Location>
-                        <Size>7.25in, 0.08333in</Size>
+                        <Location>0px, 424px</Location>
+                        <Size>712px, 0.08333in</Size>
                     </Line>
                     <TextBox Name="textBox1">
                         <Location>16px, 0px</Location>
@@ -3165,7 +3171,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                         <Value>IPEVO INC</Value>
                     </TextBox>
                     <TextBox Name="textBox10">
-                        <Location>576px, 96px</Location>
+                        <Location>592px, 96px</Location>
                         <Size>120px, 24px</Size>
                         <Style>
                             <BorderStyle>
@@ -3181,7 +3187,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                         </Style>
                     </TextBox>
                     <TextBox Name="textBox11">
-                        <Location>80px, 224px</Location>
+                        <Location>96px, 216px</Location>
                         <Size>264px, 24px</Size>
                         <Style>
                             <BackColor>Silver</BackColor>
@@ -3206,7 +3212,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                         <Value>Billing To</Value>
                     </TextBox>
                     <TextBox Name="textBox12">
-                        <Location>80px, 248px</Location>
+                        <Location>96px, 240px</Location>
                         <Size>264px, 104px</Size>
                         <Style>
                             <BorderStyle>
@@ -3230,7 +3236,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                         <Value>=IIf([BillingContact.Attention] &lt;&gt; null, [BillingContact.Attention] + '{br}', '') #010;+IIf([BillingContact.FullName] &lt;&gt; null, [BillingContact.FullName] + '{br}', '')#010;+ '{br}'#010;+IIf([BillingContact.Phone1] &lt;&gt; null,[BillingContact.Phone1] + '{br}', '')#010;+IIf([BillingAddress.AddressLine1] &lt;&gt; null,[BillingAddress.AddressLine1] + '{br}', '')#010;+IIf([BillingAddress.AddressLine2] &lt;&gt; null,[BillingAddress.AddressLine2] + '{br}', '')#010;+IIf([BillingAddress.City] &lt;&gt; null, [BillingAddress.City] + ' ', '')#010;+IIf([BillingAddress.State] &lt;&gt; null, [BillingAddress.State] + ' ', '')#010;+IIf([BillingAddress.PostalCode] &lt;&gt; null, [BillingAddress.PostalCode], '')</Value>
                     </TextBox>
                     <TextBox Name="textBox13">
-                        <Location>344px, 224px</Location>
+                        <Location>360px, 216px</Location>
                         <Size>264px, 24px</Size>
                         <Style>
                             <BackColor>Silver</BackColor>
@@ -3253,7 +3259,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                         <Value>Shipping To</Value>
                     </TextBox>
                     <TextBox Name="textBox14">
-                        <Location>344px, 248px</Location>
+                        <Location>360px, 240px</Location>
                         <Size>264px, 104px</Size>
                         <Style>
                             <BorderStyle>
@@ -3275,7 +3281,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                         <Value>=IIf([ShippingContact.Attention] &lt;&gt; null, [ShippingContact.Attention], '') #010;+IIf([SOOrder.CustomerOrderNbr] &lt;&gt; null, '/PO# ' + [SOOrder.CustomerOrderNbr] + '{br}', '')#010;+IIf([ShippingContact.FullName] &lt;&gt; null, [ShippingContact.FullName] + '{br}', '')#010;+ '{br}'#010;+IIf([ShippingContact.Phone1] &lt;&gt; null,[ShippingContact.Phone1] + '{br}', '')#010;+IIf([ShippingAddress.AddressLine1] &lt;&gt; null,[ShippingAddress.AddressLine1] + '{br}', '')#010;+IIf([ShippingAddress.AddressLine2] &lt;&gt; null,[ShippingAddress.AddressLine2] + '{br}', '')#010;+IIf([ShippingAddress.City] &lt;&gt; null, [ShippingAddress.City] + ' ', '')#010;+IIf([ShippingAddress.State] &lt;&gt; null, [ShippingAddress.State] + ' ', '')#010;+IIf([ShippingAddress.PostalCode] &lt;&gt; null, [ShippingAddress.PostalCode], '')</Value>
                     </TextBox>
                     <TextBox Name="textBox15">
-                        <Location>352px, 368px</Location>
+                        <Location>368px, 360px</Location>
                         <Size>104px, 24px</Size>
                         <Style>
                             <BackColor>Silver</BackColor>
@@ -3300,7 +3306,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                         <Value>Due Date</Value>
                     </TextBox>
                     <TextBox Name="textBox16">
-                        <Location>456px, 368px</Location>
+                        <Location>472px, 360px</Location>
                         <Size>128px, 24px</Size>
                         <Style>
                             <BackColor>Silver</BackColor>
@@ -3323,7 +3329,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                         <Value>Amount Due</Value>
                     </TextBox>
                     <TextBox Name="textBox17">
-                        <Location>584px, 368px</Location>
+                        <Location>600px, 360px</Location>
                         <Size>112px, 24px</Size>
                         <Style>
                             <BackColor>Silver</BackColor>
@@ -3346,7 +3352,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                         <Value>Enclosed</Value>
                     </TextBox>
                     <TextBox Name="textBox18">
-                        <Location>352px, 392px</Location>
+                        <Location>368px, 384px</Location>
                         <Size>104px, 24px</Size>
                         <Style>
                             <BorderStyle>
@@ -3366,7 +3372,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                     </TextBox>
                     <TextBox Name="textBox19">
                         <Format>='N2'</Format>
-                        <Location>456px, 392px</Location>
+                        <Location>472px, 384px</Location>
                         <Size>128px, 24px</Size>
                         <Style>
                             <BorderStyle>
@@ -3394,7 +3400,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
 </Value>
                     </TextBox>
                     <TextBox Name="textBox20">
-                        <Location>584px, 392px</Location>
+                        <Location>600px, 384px</Location>
                         <Size>112px, 24px</Size>
                         <Style>
                             <BorderStyle>
@@ -3410,7 +3416,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                         </Style>
                     </TextBox>
                     <TextBox Name="textBox21">
-                        <Location>0px, 424px</Location>
+                        <Location>0px, 408px</Location>
                         <Size>344px, 0.16667in</Size>
                         <Style>
                             <Color>Silver</Color>
@@ -3418,7 +3424,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                         <Value>Please detach top portion and return with your payment</Value>
                     </TextBox>
                     <TextBox Name="textBox22">
-                        <Location>384px, 448px</Location>
+                        <Location>400px, 432px</Location>
                         <Size>120px, 24px</Size>
                         <Style>
                             <BackColor>Silver</BackColor>
@@ -3443,7 +3449,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                         <Value>Account Manager</Value>
                     </TextBox>
                     <TextBox Name="textBox23">
-                        <Location>504px, 448px</Location>
+                        <Location>520px, 432px</Location>
                         <Size>88px, 24px</Size>
                         <Style>
                             <BackColor>Silver</BackColor>
@@ -3466,7 +3472,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                         <Value>Ship Due</Value>
                     </TextBox>
                     <TextBox Name="textBox24">
-                        <Location>592px, 448px</Location>
+                        <Location>608px, 432px</Location>
                         <Size>104px, 24px</Size>
                         <Style>
                             <BackColor>Silver</BackColor>
@@ -3489,7 +3495,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                         <Value>P.O. Number</Value>
                     </TextBox>
                     <TextBox Name="textBox25">
-                        <Location>384px, 472px</Location>
+                        <Location>400px, 456px</Location>
                         <Size>120px, 24px</Size>
                         <Style>
                             <BorderStyle>
@@ -3507,7 +3513,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                     </TextBox>
                     <TextBox Name="textBox26">
                         <Format>='N2'</Format>
-                        <Location>504px, 472px</Location>
+                        <Location>520px, 456px</Location>
                         <Size>88px, 24px</Size>
                         <Style>
                             <BorderStyle>
@@ -3521,7 +3527,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                         </Style>
                     </TextBox>
                     <TextBox Name="textBox27">
-                        <Location>592px, 472px</Location>
+                        <Location>608px, 456px</Location>
                         <Size>104px, 24px</Size>
                         <Style>
                             <BorderStyle>
@@ -3536,7 +3542,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                         <Value>=[SOOrder.CustomerOrderNbr]</Value>
                     </TextBox>
                     <TextBox Name="textBox28">
-                        <Location>0px, 496px</Location>
+                        <Location>0px, 480px</Location>
                         <Size>64px, 24px</Size>
                         <Style>
                             <BackColor>Silver</BackColor>
@@ -3561,7 +3567,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                         <Value>Date</Value>
                     </TextBox>
                     <TextBox Name="textBox29">
-                        <Location>64px, 496px</Location>
+                        <Location>64px, 480px</Location>
                         <Size>88px, 24px</Size>
                         <Style>
                             <BackColor>Silver</BackColor>
@@ -3584,7 +3590,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                         <Value>Product</Value>
                     </TextBox>
                     <TextBox Name="textBox3">
-                        <Location>488px, 24px</Location>
+                        <Location>504px, 24px</Location>
                         <Size>88px, 24px</Size>
                         <Style>
                             <BackColor>Silver</BackColor>
@@ -3609,8 +3615,8 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                         <Value>Date</Value>
                     </TextBox>
                     <TextBox Name="textBox30">
-                        <Location>152px, 496px</Location>
-                        <Size>136px, 24px</Size>
+                        <Location>152px, 480px</Location>
+                        <Size>152px, 24px</Size>
                         <Style>
                             <BackColor>Silver</BackColor>
                             <BorderStyle>
@@ -3632,7 +3638,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                         <Value>Description</Value>
                     </TextBox>
                     <TextBox Name="textBox31">
-                        <Location>288px, 496px</Location>
+                        <Location>304px, 480px</Location>
                         <Size>64px, 24px</Size>
                         <Style>
                             <BackColor>Silver</BackColor>
@@ -3655,7 +3661,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                         <Value>Qty</Value>
                     </TextBox>
                     <TextBox Name="textBox32">
-                        <Location>352px, 496px</Location>
+                        <Location>368px, 480px</Location>
                         <Size>88px, 24px</Size>
                         <Style>
                             <BackColor>Silver</BackColor>
@@ -3678,7 +3684,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                         <Value>Ship Via</Value>
                     </TextBox>
                     <TextBox Name="textBox33">
-                        <Location>440px, 496px</Location>
+                        <Location>456px, 480px</Location>
                         <Size>88px, 24px</Size>
                         <Style>
                             <BackColor>Silver</BackColor>
@@ -3701,7 +3707,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                         <Value>Tracking #</Value>
                     </TextBox>
                     <TextBox Name="textBox34">
-                        <Location>528px, 496px</Location>
+                        <Location>544px, 480px</Location>
                         <Size>80px, 24px</Size>
                         <Style>
                             <BackColor>Silver</BackColor>
@@ -3724,7 +3730,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                         <Value>Rate</Value>
                     </TextBox>
                     <TextBox Name="textBox35">
-                        <Location>608px, 496px</Location>
+                        <Location>624px, 480px</Location>
                         <Size>88px, 24px</Size>
                         <Style>
                             <BackColor>Silver</BackColor>
@@ -3747,7 +3753,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                         <Value>Amount</Value>
                     </TextBox>
                     <TextBox Name="textBox4">
-                        <Location>576px, 24px</Location>
+                        <Location>592px, 24px</Location>
                         <Size>1.25in, 24px</Size>
                         <Style>
                             <BackColor>Silver</BackColor>
@@ -3771,7 +3777,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                     </TextBox>
                     <TextBox Name="textBox5">
                         <Format>='MM/dd/yyyy'</Format>
-                        <Location>488px, 48px</Location>
+                        <Location>504px, 48px</Location>
                         <Size>88px, 24px</Size>
                         <Style>
                             <BorderStyle>
@@ -3788,7 +3794,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                         <Value>=[SOOrder.OrderDate]</Value>
                     </TextBox>
                     <TextBox Name="textBox6">
-                        <Location>576px, 48px</Location>
+                        <Location>592px, 48px</Location>
                         <Size>120px, 24px</Size>
                         <Style>
                             <BorderStyle>
@@ -3803,7 +3809,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                         <Value>=[SOOrder.OrderNbr]</Value>
                     </TextBox>
                     <TextBox Name="textBox7">
-                        <Location>488px, 72px</Location>
+                        <Location>504px, 72px</Location>
                         <Size>88px, 24px</Size>
                         <Style>
                             <BackColor>Silver</BackColor>
@@ -3828,7 +3834,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                         <Value>Terms</Value>
                     </TextBox>
                     <TextBox Name="textBox8">
-                        <Location>576px, 72px</Location>
+                        <Location>592px, 72px</Location>
                         <Size>120px, 24px</Size>
                         <Style>
                             <BackColor>Silver</BackColor>
@@ -3851,7 +3857,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                         <Value>Due Date</Value>
                     </TextBox>
                     <TextBox Name="textBox9">
-                        <Location>488px, 96px</Location>
+                        <Location>504px, 96px</Location>
                         <Size>88px, 24px</Size>
                         <Style>
                             <BorderStyle>
@@ -3872,7 +3878,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                 </Items>
             </PageHeader>
             <Detail Name="detailSection1">
-                <Height>1.69312cm</Height>
+                <Height>0.58333in</Height>
                 <Variables>
                     <ReportVariable>
                         <Name>TotalLine</Name>
@@ -3882,7 +3888,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                 <Items>
                     <TextBox Name="textBox42">
                         <Location>0px, 0px</Location>
-                        <Size>64px, 64px</Size>
+                        <Size>64px, 56px</Size>
                         <Style>
                             <BorderStyle>
                                 <Left>Solid</Left>
@@ -3901,7 +3907,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                     </TextBox>
                     <TextBox Name="textBox43">
                         <Location>64px, 0px</Location>
-                        <Size>88px, 64px</Size>
+                        <Size>88px, 56px</Size>
                         <Style>
                             <BorderStyle>
                                 <Right>Solid</Right>
@@ -3919,7 +3925,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                     </TextBox>
                     <TextBox Name="textBox44">
                         <Location>152px, 0px</Location>
-                        <Size>136px, 64px</Size>
+                        <Size>152px, 56px</Size>
                         <Style>
                             <BorderStyle>
                                 <Right>Solid</Right>
@@ -3938,8 +3944,8 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                         <Value>=[SOLine.TranDesc]</Value>
                     </TextBox>
                     <TextBox Name="textBox45">
-                        <Location>288px, 0px</Location>
-                        <Size>64px, 64px</Size>
+                        <Location>304px, 0px</Location>
+                        <Size>64px, 56px</Size>
                         <Style>
                             <BorderStyle>
                                 <Right>Solid</Right>
@@ -3956,8 +3962,8 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                         <Value>=[SOLine.OrderQty]</Value>
                     </TextBox>
                     <TextBox Name="textBox46">
-                        <Location>352px, 0px</Location>
-                        <Size>88px, 64px</Size>
+                        <Location>368px, 0px</Location>
+                        <Size>88px, 56px</Size>
                         <Style>
                             <BorderStyle>
                                 <Right>Solid</Right>
@@ -3974,8 +3980,8 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                         <Value>=[SOOrder.ShipVia_description]</Value>
                     </TextBox>
                     <TextBox Name="textBox47">
-                        <Location>440px, 0px</Location>
-                        <Size>88px, 64px</Size>
+                        <Location>456px, 0px</Location>
+                        <Size>88px, 56px</Size>
                         <Style>
                             <BorderStyle>
                                 <Right>Solid</Right>
@@ -3992,8 +3998,8 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                     </TextBox>
                     <TextBox Name="textBox48">
                         <Format>$#,##0.00;-$#,##0.00</Format>
-                        <Location>528px, 0px</Location>
-                        <Size>80px, 64px</Size>
+                        <Location>544px, 0px</Location>
+                        <Size>80px, 56px</Size>
                         <Style>
                             <BorderStyle>
                                 <Right>Solid</Right>
@@ -4011,8 +4017,8 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                     </TextBox>
                     <TextBox Name="textBox49">
                         <Format>$#,##0.00;-$#,##0.00</Format>
-                        <Location>608px, 0px</Location>
-                        <Size>88px, 64px</Size>
+                        <Location>624px, 0px</Location>
+                        <Size>88px, 56px</Size>
                         <Style>
                             <BorderStyle>
                                 <Right>Solid</Right>
@@ -4031,7 +4037,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                 </Items>
             </Detail>
             <PageFooter Name="pageFooterSection1">
-                <Height>0cm</Height>
+                <Height>0in</Height>
                 <Visible>False</Visible>
             </PageFooter>
         </Sections>
@@ -4040,19 +4046,20 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
             <Group Name="group1">
                 <Headers>
                     <Header Name="groupHeaderSection1">
-                        <Height>0cm</Height>
+                        <Height>0in</Height>
                         <Visible>False</Visible>
                     </Header>
                 </Headers>
                 <Footers>
                     <Footer Name="groupFooterSection1">
+                        <Height>1.08333in</Height>
                         <Items>
                             <Line Name="line2">
                                 <Location>0px, 0px</Location>
-                                <Size>7.25in, 0.08333in</Size>
+                                <Size>712px, 0.08333in</Size>
                             </Line>
                             <TextBox Name="textBox36">
-                                <Location>392px, 8px</Location>
+                                <Location>408px, 8px</Location>
                                 <Size>152px, 24px</Size>
                                 <Style>
                                     <BorderStyle>
@@ -4074,7 +4081,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                             </TextBox>
                             <TextBox Name="textBox37">
                                 <Format>$#,##0.00;-$#,##0.00</Format>
-                                <Location>544px, 8px</Location>
+                                <Location>560px, 8px</Location>
                                 <Size>152px, 24px</Size>
                                 <Style>
                                     <BorderStyle>
@@ -4096,7 +4103,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                                 <Value>=[SOOrder.UsrCurySubTot]</Value>
                             </TextBox>
                             <TextBox Name="textBox38">
-                                <Location>392px, 56px</Location>
+                                <Location>408px, 56px</Location>
                                 <Size>152px, 24px</Size>
                                 <Style>
                                     <BorderStyle>
@@ -4116,7 +4123,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                             </TextBox>
                             <TextBox Name="textBox39">
                                 <Format>$#,##0.00;-$#,##0.00</Format>
-                                <Location>544px, 56px</Location>
+                                <Location>560px, 56px</Location>
                                 <Size>152px, 24px</Size>
                                 <Style>
                                     <BorderStyle>
@@ -4136,7 +4143,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                                 <Value>=[SOOrder.CuryTaxTotal]</Value>
                             </TextBox>
                             <TextBox Name="textBox40">
-                                <Location>392px, 80px</Location>
+                                <Location>408px, 80px</Location>
                                 <Size>152px, 24px</Size>
                                 <Style>
                                     <BackColor>Silver</BackColor>
@@ -4160,7 +4167,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                             </TextBox>
                             <TextBox Name="textBox41">
                                 <Format>$#,##0.00;-$#,##0.00</Format>
-                                <Location>544px, 80px</Location>
+                                <Location>560px, 80px</Location>
                                 <Size>152px, 24px</Size>
                                 <Style>
                                     <BackColor>Silver</BackColor>
@@ -4181,7 +4188,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                                 <Value>=[SOOrder.CuryOrderTotal]</Value>
                             </TextBox>
                             <TextBox Name="textBox50">
-                                <Location>544px, 32px</Location>
+                                <Location>560px, 32px</Location>
                                 <Size>152px, 24px</Size>
                                 <Style>
                                     <BorderStyle>
@@ -4201,7 +4208,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                                 <Value>=[SOOrder.CuryFreightTot]</Value>
                             </TextBox>
                             <TextBox Name="textBox51">
-                                <Location>392px, 32px</Location>
+                                <Location>408px, 32px</Location>
                                 <Size>152px, 24px</Size>
                                 <Style>
                                     <BorderStyle>
@@ -4220,7 +4227,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                                 <Value>Freight</Value>
                             </TextBox>
                             <TextBox Name="textBox57">
-                                <Location>168px, 48px</Location>
+                                <Location>184px, 48px</Location>
                                 <NavigateUrl>=[SOOrder.UsrCTPSOLink]</NavigateUrl>
                                 <Size>216px, 56px</Size>
                                 <Style>
@@ -4239,18 +4246,18 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
             <Group Name="group2">
                 <Headers>
                     <Header Name="groupHeaderSection2">
-                        <Height>0cm</Height>
+                        <Height>0in</Height>
                         <Visible>False</Visible>
                     </Header>
                 </Headers>
                 <Footers>
                     <Footer Name="groupFooterSection2">
-                        <Height>1.69312cm</Height>
+                        <Height>0.58333in</Height>
                         <VisibleExpr>=IIF($TotalLine &lt;= 1, True, False)</VisibleExpr>
                         <Items>
                             <TextBox Name="textBox56">
                                 <Location>152px, 0px</Location>
-                                <Size>136px, 64px</Size>
+                                <Size>152px, 56px</Size>
                                 <Style>
                                     <BorderStyle>
                                         <Right>Solid</Right>
@@ -4268,8 +4275,8 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                                 </Style>
                             </TextBox>
                             <TextBox Name="textBox92">
-                                <Location>608px, 0px</Location>
-                                <Size>88px, 64px</Size>
+                                <Location>624px, 0px</Location>
+                                <Size>88px, 56px</Size>
                                 <Style>
                                     <BorderStyle>
                                         <Right>Solid</Right>
@@ -4285,8 +4292,8 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                                 </Style>
                             </TextBox>
                             <TextBox Name="textBox93">
-                                <Location>528px, 0px</Location>
-                                <Size>80px, 64px</Size>
+                                <Location>544px, 0px</Location>
+                                <Size>80px, 56px</Size>
                                 <Style>
                                     <BorderStyle>
                                         <Right>Solid</Right>
@@ -4302,8 +4309,8 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                                 </Style>
                             </TextBox>
                             <TextBox Name="textBox94">
-                                <Location>440px, 0px</Location>
-                                <Size>88px, 64px</Size>
+                                <Location>456px, 0px</Location>
+                                <Size>88px, 56px</Size>
                                 <Style>
                                     <BorderStyle>
                                         <Right>Solid</Right>
@@ -4319,8 +4326,8 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                                 </Style>
                             </TextBox>
                             <TextBox Name="textBox95">
-                                <Location>352px, 0px</Location>
-                                <Size>88px, 64px</Size>
+                                <Location>368px, 0px</Location>
+                                <Size>88px, 56px</Size>
                                 <Style>
                                     <BorderStyle>
                                         <Right>Solid</Right>
@@ -4336,8 +4343,8 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                                 </Style>
                             </TextBox>
                             <TextBox Name="textBox96">
-                                <Location>288px, 0px</Location>
-                                <Size>64px, 64px</Size>
+                                <Location>304px, 0px</Location>
+                                <Size>64px, 56px</Size>
                                 <Style>
                                     <BorderStyle>
                                         <Right>Solid</Right>
@@ -4354,7 +4361,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                             </TextBox>
                             <TextBox Name="textBox98">
                                 <Location>64px, 0px</Location>
-                                <Size>88px, 64px</Size>
+                                <Size>88px, 56px</Size>
                                 <Style>
                                     <BorderStyle>
                                         <Right>Solid</Right>
@@ -4371,7 +4378,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                             </TextBox>
                             <TextBox Name="textBox99">
                                 <Location>0px, 0px</Location>
-                                <Size>64px, 64px</Size>
+                                <Size>64px, 56px</Size>
                                 <Style>
                                     <BorderStyle>
                                         <Left>Solid</Left>
@@ -4395,18 +4402,18 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
             <Group Name="group3">
                 <Headers>
                     <Header Name="groupHeaderSection3">
-                        <Height>0cm</Height>
+                        <Height>0in</Height>
                         <Visible>False</Visible>
                     </Header>
                 </Headers>
                 <Footers>
                     <Footer Name="groupFooterSection3">
-                        <Height>1.69312cm</Height>
+                        <Height>0.58333in</Height>
                         <VisibleExpr>=IIF($TotalLine &lt;= 2, True, False)</VisibleExpr>
                         <Items>
                             <TextBox Name="textBox55">
                                 <Location>152px, 0px</Location>
-                                <Size>136px, 64px</Size>
+                                <Size>152px, 56px</Size>
                                 <Style>
                                     <BorderStyle>
                                         <Right>Solid</Right>
@@ -4424,8 +4431,8 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                                 </Style>
                             </TextBox>
                             <TextBox Name="textBox84">
-                                <Location>608px, 0px</Location>
-                                <Size>88px, 64px</Size>
+                                <Location>624px, 0px</Location>
+                                <Size>88px, 56px</Size>
                                 <Style>
                                     <BorderStyle>
                                         <Right>Solid</Right>
@@ -4441,8 +4448,8 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                                 </Style>
                             </TextBox>
                             <TextBox Name="textBox85">
-                                <Location>528px, 0px</Location>
-                                <Size>80px, 64px</Size>
+                                <Location>544px, 0px</Location>
+                                <Size>80px, 56px</Size>
                                 <Style>
                                     <BorderStyle>
                                         <Right>Solid</Right>
@@ -4458,8 +4465,8 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                                 </Style>
                             </TextBox>
                             <TextBox Name="textBox86">
-                                <Location>440px, 0px</Location>
-                                <Size>88px, 64px</Size>
+                                <Location>456px, 0px</Location>
+                                <Size>88px, 56px</Size>
                                 <Style>
                                     <BorderStyle>
                                         <Right>Solid</Right>
@@ -4475,8 +4482,8 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                                 </Style>
                             </TextBox>
                             <TextBox Name="textBox87">
-                                <Location>352px, 0px</Location>
-                                <Size>88px, 64px</Size>
+                                <Location>368px, 0px</Location>
+                                <Size>88px, 56px</Size>
                                 <Style>
                                     <BorderStyle>
                                         <Right>Solid</Right>
@@ -4492,8 +4499,8 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                                 </Style>
                             </TextBox>
                             <TextBox Name="textBox88">
-                                <Location>288px, 0px</Location>
-                                <Size>64px, 64px</Size>
+                                <Location>304px, 0px</Location>
+                                <Size>64px, 56px</Size>
                                 <Style>
                                     <BorderStyle>
                                         <Right>Solid</Right>
@@ -4510,7 +4517,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                             </TextBox>
                             <TextBox Name="textBox90">
                                 <Location>64px, 0px</Location>
-                                <Size>88px, 64px</Size>
+                                <Size>88px, 56px</Size>
                                 <Style>
                                     <BorderStyle>
                                         <Right>Solid</Right>
@@ -4527,7 +4534,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                             </TextBox>
                             <TextBox Name="textBox91">
                                 <Location>0px, 0px</Location>
-                                <Size>64px, 64px</Size>
+                                <Size>64px, 56px</Size>
                                 <Style>
                                     <BorderStyle>
                                         <Left>Solid</Left>
@@ -4551,18 +4558,18 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
             <Group Name="group4">
                 <Headers>
                     <Header Name="groupHeaderSection4">
-                        <Height>0cm</Height>
+                        <Height>0in</Height>
                         <Visible>False</Visible>
                     </Header>
                 </Headers>
                 <Footers>
                     <Footer Name="groupFooterSection4">
-                        <Height>1.69312cm</Height>
+                        <Height>0.58333in</Height>
                         <VisibleExpr>=IIF($TotalLine &lt;= 3, True, False)</VisibleExpr>
                         <Items>
                             <TextBox Name="textBox54">
                                 <Location>152px, 0px</Location>
-                                <Size>136px, 64px</Size>
+                                <Size>152px, 56px</Size>
                                 <Style>
                                     <BorderStyle>
                                         <Right>Solid</Right>
@@ -4580,8 +4587,8 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                                 </Style>
                             </TextBox>
                             <TextBox Name="textBox76">
-                                <Location>608px, 0px</Location>
-                                <Size>88px, 64px</Size>
+                                <Location>624px, 0px</Location>
+                                <Size>88px, 56px</Size>
                                 <Style>
                                     <BorderStyle>
                                         <Right>Solid</Right>
@@ -4597,8 +4604,8 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                                 </Style>
                             </TextBox>
                             <TextBox Name="textBox77">
-                                <Location>528px, 0px</Location>
-                                <Size>80px, 64px</Size>
+                                <Location>544px, 0px</Location>
+                                <Size>80px, 56px</Size>
                                 <Style>
                                     <BorderStyle>
                                         <Right>Solid</Right>
@@ -4614,8 +4621,8 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                                 </Style>
                             </TextBox>
                             <TextBox Name="textBox78">
-                                <Location>440px, 0px</Location>
-                                <Size>88px, 64px</Size>
+                                <Location>456px, 0px</Location>
+                                <Size>88px, 56px</Size>
                                 <Style>
                                     <BorderStyle>
                                         <Right>Solid</Right>
@@ -4631,8 +4638,8 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                                 </Style>
                             </TextBox>
                             <TextBox Name="textBox79">
-                                <Location>352px, 0px</Location>
-                                <Size>88px, 64px</Size>
+                                <Location>368px, 0px</Location>
+                                <Size>88px, 56px</Size>
                                 <Style>
                                     <BorderStyle>
                                         <Right>Solid</Right>
@@ -4648,8 +4655,8 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                                 </Style>
                             </TextBox>
                             <TextBox Name="textBox80">
-                                <Location>288px, 0px</Location>
-                                <Size>64px, 64px</Size>
+                                <Location>304px, 0px</Location>
+                                <Size>64px, 56px</Size>
                                 <Style>
                                     <BorderStyle>
                                         <Right>Solid</Right>
@@ -4666,7 +4673,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                             </TextBox>
                             <TextBox Name="textBox82">
                                 <Location>64px, 0px</Location>
-                                <Size>88px, 64px</Size>
+                                <Size>88px, 56px</Size>
                                 <Style>
                                     <BorderStyle>
                                         <Right>Solid</Right>
@@ -4683,7 +4690,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                             </TextBox>
                             <TextBox Name="textBox83">
                                 <Location>0px, 0px</Location>
-                                <Size>64px, 64px</Size>
+                                <Size>64px, 56px</Size>
                                 <Style>
                                     <BorderStyle>
                                         <Left>Solid</Left>
@@ -4707,18 +4714,18 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
             <Group Name="group5">
                 <Headers>
                     <Header Name="groupHeaderSection5">
-                        <Height>0cm</Height>
+                        <Height>0in</Height>
                         <Visible>False</Visible>
                     </Header>
                 </Headers>
                 <Footers>
                     <Footer Name="groupFooterSection5">
-                        <Height>1.69312cm</Height>
+                        <Height>0.58333in</Height>
                         <VisibleExpr>=IIF($TotalLine &lt;= 4, True, False)</VisibleExpr>
                         <Items>
                             <TextBox Name="textBox53">
                                 <Location>152px, 0px</Location>
-                                <Size>136px, 64px</Size>
+                                <Size>152px, 56px</Size>
                                 <Style>
                                     <BorderStyle>
                                         <Right>Solid</Right>
@@ -4736,8 +4743,8 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                                 </Style>
                             </TextBox>
                             <TextBox Name="textBox68">
-                                <Location>608px, 0px</Location>
-                                <Size>88px, 64px</Size>
+                                <Location>624px, 0px</Location>
+                                <Size>88px, 56px</Size>
                                 <Style>
                                     <BorderStyle>
                                         <Right>Solid</Right>
@@ -4753,8 +4760,8 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                                 </Style>
                             </TextBox>
                             <TextBox Name="textBox69">
-                                <Location>528px, 0px</Location>
-                                <Size>80px, 64px</Size>
+                                <Location>544px, 0px</Location>
+                                <Size>80px, 56px</Size>
                                 <Style>
                                     <BorderStyle>
                                         <Right>Solid</Right>
@@ -4770,8 +4777,8 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                                 </Style>
                             </TextBox>
                             <TextBox Name="textBox70">
-                                <Location>440px, 0px</Location>
-                                <Size>88px, 64px</Size>
+                                <Location>456px, 0px</Location>
+                                <Size>88px, 56px</Size>
                                 <Style>
                                     <BorderStyle>
                                         <Right>Solid</Right>
@@ -4787,8 +4794,8 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                                 </Style>
                             </TextBox>
                             <TextBox Name="textBox71">
-                                <Location>352px, 0px</Location>
-                                <Size>88px, 64px</Size>
+                                <Location>368px, 0px</Location>
+                                <Size>88px, 56px</Size>
                                 <Style>
                                     <BorderStyle>
                                         <Right>Solid</Right>
@@ -4804,8 +4811,8 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                                 </Style>
                             </TextBox>
                             <TextBox Name="textBox72">
-                                <Location>288px, 0px</Location>
-                                <Size>64px, 64px</Size>
+                                <Location>304px, 0px</Location>
+                                <Size>64px, 56px</Size>
                                 <Style>
                                     <BorderStyle>
                                         <Right>Solid</Right>
@@ -4822,7 +4829,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                             </TextBox>
                             <TextBox Name="textBox74">
                                 <Location>64px, 0px</Location>
-                                <Size>88px, 64px</Size>
+                                <Size>88px, 56px</Size>
                                 <Style>
                                     <BorderStyle>
                                         <Right>Solid</Right>
@@ -4839,7 +4846,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                             </TextBox>
                             <TextBox Name="textBox75">
                                 <Location>0px, 0px</Location>
-                                <Size>64px, 64px</Size>
+                                <Size>64px, 56px</Size>
                                 <Style>
                                     <BorderStyle>
                                         <Left>Solid</Left>
@@ -4863,18 +4870,18 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
             <Group Name="group6">
                 <Headers>
                     <Header Name="groupHeaderSection6">
-                        <Height>0cm</Height>
+                        <Height>0in</Height>
                         <Visible>False</Visible>
                     </Header>
                 </Headers>
                 <Footers>
                     <Footer Name="groupFooterSection6">
-                        <Height>1.69312cm</Height>
+                        <Height>0.58333in</Height>
                         <VisibleExpr>=IIF($TotalLine &lt;= 5, True, False)</VisibleExpr>
                         <Items>
                             <TextBox Name="textBox52">
                                 <Location>152px, 0px</Location>
-                                <Size>136px, 64px</Size>
+                                <Size>152px, 56px</Size>
                                 <Style>
                                     <BorderStyle>
                                         <Right>Solid</Right>
@@ -4892,8 +4899,8 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                                 </Style>
                             </TextBox>
                             <TextBox Name="textBox60">
-                                <Location>608px, 0px</Location>
-                                <Size>88px, 64px</Size>
+                                <Location>624px, 0px</Location>
+                                <Size>88px, 56px</Size>
                                 <Style>
                                     <BorderStyle>
                                         <Right>Solid</Right>
@@ -4909,8 +4916,8 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                                 </Style>
                             </TextBox>
                             <TextBox Name="textBox61">
-                                <Location>528px, 0px</Location>
-                                <Size>80px, 64px</Size>
+                                <Location>544px, 0px</Location>
+                                <Size>80px, 56px</Size>
                                 <Style>
                                     <BorderStyle>
                                         <Right>Solid</Right>
@@ -4926,8 +4933,8 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                                 </Style>
                             </TextBox>
                             <TextBox Name="textBox62">
-                                <Location>440px, 0px</Location>
-                                <Size>88px, 64px</Size>
+                                <Location>456px, 0px</Location>
+                                <Size>88px, 56px</Size>
                                 <Style>
                                     <BorderStyle>
                                         <Right>Solid</Right>
@@ -4943,8 +4950,8 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                                 </Style>
                             </TextBox>
                             <TextBox Name="textBox63">
-                                <Location>352px, 0px</Location>
-                                <Size>88px, 64px</Size>
+                                <Location>368px, 0px</Location>
+                                <Size>88px, 56px</Size>
                                 <Style>
                                     <BorderStyle>
                                         <Right>Solid</Right>
@@ -4960,8 +4967,8 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                                 </Style>
                             </TextBox>
                             <TextBox Name="textBox64">
-                                <Location>288px, 0px</Location>
-                                <Size>64px, 64px</Size>
+                                <Location>304px, 0px</Location>
+                                <Size>64px, 56px</Size>
                                 <Style>
                                     <BorderStyle>
                                         <Right>Solid</Right>
@@ -4978,7 +4985,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                             </TextBox>
                             <TextBox Name="textBox66">
                                 <Location>64px, 0px</Location>
-                                <Size>88px, 64px</Size>
+                                <Size>88px, 56px</Size>
                                 <Style>
                                     <BorderStyle>
                                         <Right>Solid</Right>
@@ -4995,7 +5002,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                             </TextBox>
                             <TextBox Name="textBox67">
                                 <Location>0px, 0px</Location>
-                                <Size>64px, 64px</Size>
+                                <Size>64px, 56px</Size>
                                 <Style>
                                     <BorderStyle>
                                         <Left>Solid</Left>
