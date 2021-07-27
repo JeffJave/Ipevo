@@ -1,0 +1,30 @@
+﻿<Sql TableName="CreatevPACAdjCostIssue" SqlScriptPriority="1" CustomScript="#CDATA">
+    <CDATA name="CustomScript"><![CDATA[IF EXISTS
+(
+	SELECT *
+	FROM SYS.views
+	WHERE name = 'vPACAdjCostIssue' AND SCHEMA_ID = SCHEMA_ID('dbo')
+)
+DROP VIEW [dbo].[vPACAdjCostIssue]	
+GO
+CREATE VIEW vPACAdjCostIssue AS
+select cost.CompanyID,
+	　 cost.FinPeriodID,
+	   i.ItemClassID,
+	 　MAX(isnull(cost.FinPtdCostIssued,0)) as FinPtdCostIssued,
+	   MAX(cost.FinPtdQtyIssued) as FinPtdQtyIssued,
+	   MAX(p.PACUnitCost) as PACUnitCost,
+	   MAX(cost.InventoryID) as InventoryID,
+	   MAX(cost.FinPtdQtyIssued * p.PACUnitCost) as PACIssueCost,
+	   MAX(s.SiteID) as SiteID,
+	   MAX(isnull(cost.FinPtdCostIssued,0) - (cost.FinPtdQtyIssued * p.PACUnitCost)) as IssueAdjAmount
+from INItemCostHist cost
+left join INSite s on cost.CompanyID = s.CompanyID
+				  and cost.SiteID = s.SiteID
+inner join InventoryItem i on cost.CompanyID = i.CompanyID
+						  and cost.InventoryID = i.InventoryID
+left join vPACUnitCost p on cost.CompanyID = p.companyid
+						 and cost.InventoryID = p.InventoryID
+						 and cost.FinPeriodID = p.FinPeriodID
+group by cost.FinPeriodID,cost.SiteID,cost.InventoryID,i.ItemClassID,cost.CompanyID having SUM(cost.FinPtdQtyIssued) > 0]]></CDATA>
+</Sql>
