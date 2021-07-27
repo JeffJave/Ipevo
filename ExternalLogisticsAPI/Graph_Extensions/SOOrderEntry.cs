@@ -568,23 +568,26 @@ namespace ExternalLogisticsAPI.Graph_Extensions
                                                                    And<SOOrderShipment.invoiceNbr, Equal<ARInvoice.refNbr>>>>,
                                      Where<SOOrderShipment.orderNoteID, Equal<Required<SOOrder.noteID>>>>.Update(Base, root.description, order.NoteID);
 
-                        Item:
-                        for (int i = 0; i < root.item.Count; i++)
+                    Item:
+                        if (root.item != null)
                         {
-                            if (root.item[i].sku == null) { goto Invoice; }
-
-                            foreach (SOLine row in Base.Transactions.Select())
+                            for (int i = 0; i < root.item.Count; i++)
                             {
-                                if (string.Format("{0}-{1}", (int)row.OrderQty, InventoryItem.PK.Find(Base, row.InventoryID).InventoryCD.TrimEnd()).CompareTo(root.item[i].qty + "-" + root.item[i].sku) == 0)
-                                {
-                                    row.GetExtension<SOLineExt>().UsrAmazWHTaxAmt = (decimal)root.item[i].whTax;
+                                if (root.item[i].sku == null) { goto Invoice; }
 
-                                    Base.Transactions.Cache.MarkUpdated(row);
+                                foreach (SOLine row in Base.Transactions.Select())
+                                {
+                                    if (string.Format("{0}-{1}", (int)row.OrderQty, InventoryItem.PK.Find(Base, row.InventoryID).InventoryCD.TrimEnd()).CompareTo(root.item[i].qty + "-" + root.item[i].sku) == 0)
+                                    {
+                                        row.GetExtension<SOLineExt>().UsrAmazWHTaxAmt = (decimal)root.item[i].whTax;
+
+                                        Base.Transactions.Cache.MarkUpdated(row);
+                                    }
                                 }
                             }
-                        }
 
-                        Base.Save.Press();
+                            Base.Save.Press();
+                        }
 
                         Invoice:
                         if (root.taxAmount != 0)
