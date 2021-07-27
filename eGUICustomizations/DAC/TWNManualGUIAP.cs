@@ -4,7 +4,7 @@ using PX.Objects.AP;
 using PX.Objects.CR;
 using PX.Objects.CS;
 using PX.Objects.TX;
-using eGUICustomizations.Graph;
+using eGUICustomizations.Descriptor;
 using static eGUICustomizations.Descriptor.TWNStringList;
 
 namespace eGUICustomizations.DAC
@@ -136,7 +136,7 @@ namespace eGUICustomizations.DAC
         #endregion
 
         #region TaxAmt
-        [TWTaxAmount(0)]
+        [TWTaxAmount(0, typeof(netAmt))]
         [PXDefault(TypeCode.Decimal, "0.0")]
         [PXUIField(DisplayName = "Tax Amt")]
         public virtual decimal? TaxAmt { get; set; }

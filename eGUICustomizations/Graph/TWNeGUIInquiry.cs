@@ -1,20 +1,18 @@
+using System;
+using System.Globalization;
+using System.Collections.Generic;
 using PX.SM;
 using PX.Data;
 using PX.Data.BQL;
 using PX.Data.BQL.Fluent;
-using PX.Objects.AP;
 using PX.Objects.AR;
 using PX.Objects.CA;
 using PX.Objects.CS;
 using PX.Objects.FS;
-using System;
-using System.Globalization;
-using System.Collections.Generic;
 using eGUICustomizations.DAC;
 using eGUICustomizations.Descriptor;
 using Branch = PX.Objects.GL.Branch;
 using static eGUICustomizations.Descriptor.TWNStringList;
-using PX.Common;
 
 namespace eGUICustomizations.Graph
 {
@@ -382,111 +380,4 @@ namespace eGUICustomizations.Graph
         }
         #endregion
     }
-
-    #region Custom Attribute
-    #region GUINumberAttribute
-    public class GUINumberAttribute : PXDBStringAttribute, IPXFieldVerifyingSubscriber
-    {
-        public GUINumberAttribute(int length) : base(length) { }
-
-        public void FieldVerifying(PXCache sender, PXFieldVerifyingEventArgs e)
-        {
-            if (string.IsNullOrEmpty((string)e.NewValue) ||
-                e.NewValue.ToString().Length.Equals(10) ||
-                TWNGUIValidation.ActivateTWGUI(new PXGraph()).Equals(false)) { return; }
-
-            object obj = null;
-            string vATCode = null;
-
-            switch (this.BqlTable.Name)
-            {
-                case nameof(APRegister):
-                    obj = sender.GetValueExt<APRegisterExt.usrVATInCode>(e.Row);
-                    break;
-                case nameof(ARRegister):
-                    obj = sender.GetValueExt<ARRegisterExt.usrVATOutCode>(e.Row);
-                    break;
-                case nameof(TWNGUITrans):
-                    obj = sender.GetValueExt<TWNGUITrans.gUIFormatcode>(e.Row);
-                    break;
-                case nameof(TWNManualGUIAP):
-                    obj = sender.GetValueExt<TWNManualGUIAP.vATInCode>(e.Row);
-                    break;
-                case nameof(TWNManualGUIAR):
-                    obj = sender.GetValueExt<TWNManualGUIAR.vatOutCode>(e.Row);
-                    break;
-                case nameof(TWNManualGUIBank):
-                    obj = sender.GetValueExt<TWNManualGUIBank.vATInCode>(e.Row);
-                    break;
-                case nameof(TWNManualGUIExpense):
-                    obj = sender.GetValueExt<TWNManualGUIExpense.vATInCode>(e.Row);
-                    break;
-            }
-
-            vATCode = obj is null ? string.Empty : obj.ToString();
-
-            if (!vATCode.IsIn(TWGUIFormatCode.vATOutCode33, TWGUIFormatCode.vATOutCode34) || 
-                vATCode.IsIn(TWGUIFormatCode.vATInCode21, TWGUIFormatCode.vATInCode23, TWGUIFormatCode.vATInCode25)
-               )
-            {
-                throw new PXSetPropertyException(e.NewValue.ToString().Length > 10 ? TWMessages.GUINbrLength : TWMessages.GUINbrMini, PXErrorLevel.Error);
-            }
-        }
-    }
-    #endregion
-
-    #region TaxNbrVerifyAttribute
-    public class TaxNbrVerifyAttribute : PXDBStringAttribute, IPXFieldVerifyingSubscriber
-    {
-        public TaxNbrVerifyAttribute(int length) : base(length) { }
-
-        public void FieldVerifying(PXCache sender, PXFieldVerifyingEventArgs e)
-        {
-            if (e.NewValue == null) { return; }
-
-            TWNGUIValidation validation = new TWNGUIValidation();
-
-            validation.CheckTabNbr(e.NewValue.ToString());
-
-            if (validation.errorOccurred == true)
-            {
-                throw new PXSetPropertyException(validation.errorMessage, (PXErrorLevel)validation.errorLevel);
-            }
-
-        }
-    }
-    #endregion
-
-    #region TWNetAmountAttribute
-    public class TWNetAmountAttribute : PXDBDecimalAttribute, IPXFieldVerifyingSubscriber
-    {
-        public TWNetAmountAttribute(int percision) : base(percision) { }
-
-        public void FieldVerifying(PXCache sender, PXFieldVerifyingEventArgs e)
-        {
-            if ((decimal)e.NewValue < 0)
-            {
-                // Throwing an exception to cancel assignment of the new value to the field
-                throw new PXSetPropertyException(TWMessages.NetAmtNegError);
-            }
-        }
-    }
-    #endregion
-
-    #region TWTaxAmountAttribute
-    public class TWTaxAmountAttribute : PXDBDecimalAttribute, IPXFieldVerifyingSubscriber
-    {
-        public TWTaxAmountAttribute(int percision) : base(percision) { }
-
-        public void FieldVerifying(PXCache sender, PXFieldVerifyingEventArgs e)
-        {
-            if ((decimal)e.NewValue < 0)
-            {
-                // Throwing an exception to cancel assignment of the new value to the field
-                throw new PXSetPropertyException(TWMessages.TaxAmtNegError);
-            }
-        }
-    }
-    #endregion
-    #endregion
 }

@@ -1,8 +1,9 @@
 using System;
-using eGUICustomizations.Graph;
 using PX.Data;
 using PX.Objects.AR;
 using PX.Objects.CS;
+using eGUICustomizations.Descriptor;
+using eGUICustomizations.Graph;
 using static eGUICustomizations.Descriptor.TWNStringList;
 
 namespace eGUICustomizations.DAC
@@ -55,9 +56,9 @@ namespace eGUICustomizations.DAC
         public virtual Decimal? GUINetAmt { get; set; }
         public abstract class gUINetAmt : PX.Data.BQL.BqlDecimal.Field<gUINetAmt> { }
         #endregion
-    
+
         #region GUITaxAmt
-        [TWTaxAmount(0)]
+        [TWTaxAmount(0, typeof(gUINetAmt))]
         [PXUIField(DisplayName = "GUI Tax")]
         public virtual Decimal? GUITaxAmt { get; set; }
         public abstract class gUITaxAmt : PX.Data.BQL.BqlDecimal.Field<gUITaxAmt> { }
@@ -114,7 +115,7 @@ namespace eGUICustomizations.DAC
         #endregion
 
         #region CalcTaxAmt
-        [TWTaxAmount(0)]
+        [TWTaxAmount(0, typeof(calcNetAmt))]
         [PXUIField(DisplayName = "Calculation Tax Amt")]
         public virtual Decimal? CalcTaxAmt { get; set; }
         public abstract class calcTaxAmt : PX.Data.BQL.BqlDecimal.Field<calcTaxAmt> { }

@@ -1,7 +1,6 @@
 using System;
 using PX.Data;
-using PX.Objects.CS;
-using eGUICustomizations.Graph;
+using eGUICustomizations.Descriptor;
 
 namespace PX.Objects.AP
 {

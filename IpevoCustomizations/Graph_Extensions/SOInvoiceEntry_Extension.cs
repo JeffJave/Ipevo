@@ -13,12 +13,18 @@ namespace PX.Objects.SO
         {
             base.Initialize();
             ExportInvoice.SetVisible(false);
+            ExportInvoiceUS.SetVisible(false);
 
             var curCoutry = (PXSelect<Branch>.Select(Base, PX.Data.Update.PXInstanceHelper.CurrentCompany)).TopFirst;
             if (curCoutry?.CountryID == "TW" || curCoutry?.BaseCuryID == "TWD")
             {
                 ExportInvoice.SetVisible(true);
                 Base.report.AddMenuAction(ExportInvoice);
+            }
+            else if (curCoutry?.CountryID == "US" || curCoutry?.BaseCuryID == "USD")
+            {
+                ExportInvoiceUS.SetVisible(true);
+                Base.report.AddMenuAction(ExportInvoiceUS);
             }
         }
 
@@ -34,6 +40,21 @@ namespace PX.Objects.SO
                 parameters["DocType"] = Base.Document.Current.DocType;
                 parameters["RefNbr"] = Base.Document.Current.RefNbr;
                 throw new PXReportRequiredException(parameters, "LM606400", "Report LM606400");
+            }
+            return adapter.Get();
+        }
+
+        public PXAction<ARInvoice> ExportInvoiceUS;
+        [PXButton]
+        [PXUIField(DisplayName = "Print Invoice - US", Enabled = true, MapEnableRights = PXCacheRights.Select)]
+        protected virtual IEnumerable exportInvoiceUS(PXAdapter adapter)
+        {
+            if (Base.Document.Current != null)
+            {
+                Dictionary<string, string> parameters = new Dictionary<string, string>();
+                parameters["DocType"] = Base.Document.Current.DocType;
+                parameters["RefNbr"] = Base.Document.Current.RefNbr;
+                throw new PXReportRequiredException(parameters, "LM606405", "Report LM606405") { Mode = PXBaseRedirectException.WindowMode.New };
             }
             return adapter.Get();
         }

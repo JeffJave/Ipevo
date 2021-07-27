@@ -42,6 +42,7 @@
                                                     <PXGridColumn TypeFullName="PX.Web.UI.PXGridColumn">
                                                         <Prop Key="DataField" Value="VATInCode" />
                                                         <Prop Key="Width" Value="70" />
+                                                        <Prop Key="CommitChanges" Value="True" />
                                                     </PXGridColumn>
                                                 </AddItem>
                                                 <AddItem>
