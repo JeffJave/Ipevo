@@ -108,7 +108,7 @@ namespace ExternalLogisticsAPI.Descripter
                     InvoiceNumber  = arrays[i].InvoiceNumber,
                     OrderNbr       = string.Format("{0}{1}", arrays[i].InvoiceNumberPrefix, arrays[i].InvoiceNumber),
                     CustomerID     = arrays[i].CustomerID == 0 ? null : arrays[i].CustomerID.ToString(),
-                    OrderDate      = arrays[i].OrderDate,
+                    OrderDate      = arrays[i].OrderDate.Date,
                     OrderStatusID  = arrays[i].OrderStatusID.ToString(),
                     OrderAmount    = (decimal)arrays[i].OrderAmount,
                     SalesTaxAmt    = (decimal)(arrays[i].SalesTax + arrays[i].SalesTax2),
@@ -140,7 +140,7 @@ namespace ExternalLogisticsAPI.Descripter
                 order.OrderType        = curSetup.OrderType;
                 order.CustomerID       = curSetup.CustomerID;
                 order.CustomerOrderNbr = processOrder.OrderID;
-                order.CustomerRefNbr   = processOrder.OrderNbr;
+                order.OrderDesc        = $"Invoice No. : {processOrder.OrderNbr}";
                 order.DocDate          = processOrder.OrderDate;
 
                 order = orderEntry.Document.Insert(order);
@@ -236,7 +236,7 @@ namespace ExternalLogisticsAPI.Descripter
 
             for (int i = 0; i < shipList.Count; i++)
             {
-                order.OrderDesc = string.IsNullOrEmpty(shipList[i].ShipmentTrackingCode) ? null : string.Format("Tracking Nbr. : {0}", shipList[i].ShipmentTrackingCode);
+                //order.OrderDesc = string.IsNullOrEmpty(shipList[i].ShipmentTrackingCode) ? null : string.Format("Tracking Nbr. : {0}", shipList[i].ShipmentTrackingCode);
 
                 orderEntry.Document.Cache.SetValueExt<SOOrder.curyPremiumFreightAmt>(order, (decimal)shipList[i].ShipmentCost);
 
@@ -340,10 +340,11 @@ namespace ExternalLogisticsAPI.Descripter
             }
             pymtEntry.Actions.PressSave();
 
-            //if (orderParams.paymentGraph.Actions.Contains("Release"))
-            //{
-            //    orderParams.paymentGraph.Actions["Release"].Press();
-            //}
+            if (pymtEntry.Actions.Contains("Release"))
+            {
+                pymtEntry.releaseFromHold.Press();
+                pymtEntry.Actions["Release"].Press();
+            }
         }
 
         /// <summary>
@@ -396,10 +397,9 @@ namespace ExternalLogisticsAPI.Descripter
         /// </summary>
         /// <param name="curSetup"></param>
         /// <param name="orderID"></param>
-        public static void Update3DCartOrderStatus(LUM3DCartSetup curSetup, int orderID)
-        {
-            GetResponse(curSetup, string.Format("3dCartWebAPI/v2/Orders/{0}", orderID), true);
-        }
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+        public static void Update3DCartOrderStatus(LUM3DCartSetup curSetup, int orderID) => GetResponse(curSetup, string.Format("3dCartWebAPI/v2/Orders/{0}", orderID), true);
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
     }
 
     #region Entity Classes
