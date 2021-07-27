@@ -3,7 +3,6 @@ using PX.Data;
 using PX.Data.BQL;
 using PX.Data.BQL.Fluent;
 using PX.Objects.CS;
-using PX.Objects.TX;
 using eGUICustomizations.DAC;
 using eGUICustomizations.Descriptor;
 
@@ -19,6 +18,23 @@ namespace PX.Objects.AP
                                                     .And<TWNManualGUIAPBill.refNbr.IsEqual<APInvoice.refNbr.FromCurrent>>>.View ManualAPBill;
         #endregion
 
+        #region Delegate Methods
+        public delegate void PersistDelegate();
+        [PXOverride]
+        public void Persist(PersistDelegate baseMethod)
+        {
+            var invoice = Base.CurrentDocument.Current;
+
+            if (invoice != null && string.IsNullOrEmpty(invoice.InvoiceNbr))
+            {
+                Base.CurrentDocument.Cache.SetValue<APInvoice.invoiceNbr>(invoice, ManualAPBill.Select().TopFirst?.GUINbr);
+                Base.CurrentDocument.UpdateCurrent();
+            }
+
+            baseMethod();
+        }
+        #endregion
+
         #region Event Handlers
         public bool activateGUI = TWNGUIValidation.ActivateTWGUI(new PXGraph());
 
@@ -26,32 +42,12 @@ namespace PX.Objects.AP
         {
             baseHandler?.Invoke(e.Cache, e.Args);
 
-            if (ManualAPBill.Select().Count == 0 && Base.Taxes.Select().Count > 0)
+            var row = e.Row as APInvoice;
+
+            if (row != null && row.DocType.IsIn(APDocType.Invoice, APDocType.DebitAdj) && ManualAPBill.Select().Count == 0 && Base.Taxes.Select().Count > 0)
             {
                 throw new PXException(TWMessages.NoGUIWithTax);
             }
-
-            //if (activateGUI.Equals(false) || e.Row.Status.Equals(APDocStatus.Open)) { return; }
-
-            //APRegisterExt regisExt = PXCache<APRegister>.GetExtension<APRegisterExt>(e.Row);
-
-            //TWNGUIValidation tWNGUIValidation = new TWNGUIValidation();
-
-            //if (regisExt.UsrVATInCode == TWGUIFormatCode.vATInCode21 ||
-            //    regisExt.UsrVATInCode == TWGUIFormatCode.vATInCode22 ||
-            //    regisExt.UsrVATInCode == TWGUIFormatCode.vATInCode25)
-            //{
-            //    tWNGUIValidation.CheckGUINbrExisted(Base, regisExt.UsrGUINbr, regisExt.UsrVATInCode);
-            //}
-            //else
-            //{
-            //    tWNGUIValidation.CheckCorrespondingInv(Base, regisExt.UsrGUINbr, regisExt.UsrVATInCode);
-
-            //    if (tWNGUIValidation.errorOccurred.Equals(true))
-            //    {
-            //        e.Cache.RaiseExceptionHandling<APRegisterExt.usrGUINbr>(e.Row, regisExt.UsrGUINbr, new PXSetPropertyException(tWNGUIValidation.errorMessage, PXErrorLevel.Error));
-            //    }
-            //}
         }
 
         protected void _(Events.RowSelected<APInvoice> e, PXRowSelected baseHandler)
@@ -119,22 +115,22 @@ namespace PX.Objects.AP
 
         protected void _(Events.RowPersisting<TWNManualGUIAPBill> e)
         {
-            if (Base.Document.Current == null) { return; }
+            var row = e.Row as TWNManualGUIAPBill;
 
-            tWNGUIValidation.CheckCorrespondingInv(Base, e.Row.GUINbr, e.Row.VATInCode);
-
-            if (tWNGUIValidation.errorOccurred == true)
+            if (row != null && row.DocType.IsIn(APDocType.Invoice, APDocType.DebitAdj) )
             {
-                e.Cache.RaiseExceptionHandling<TWNManualGUIAPBill.gUINbr>(e.Row, e.Row.GUINbr, new PXSetPropertyException(tWNGUIValidation.errorMessage, PXErrorLevel.RowError));
-            }
+                tWNGUIValidation.CheckCorrespondingInv(Base, e.Row.GUINbr, e.Row.VATInCode);
 
-            if (Base.Document.Current.DocType == APDocType.Invoice)
-            {
+                if (tWNGUIValidation.errorOccurred == true)
+                {
+                    e.Cache.RaiseExceptionHandling<TWNManualGUIAPBill.gUINbr>(e.Row, e.Row.GUINbr, new PXSetPropertyException(tWNGUIValidation.errorMessage, PXErrorLevel.RowError));
+                }
+
                 decimal? taxSum = 0;
 
-                foreach (TWNManualGUIAPBill row in ManualAPBill.Cache.Cached)
+                foreach (TWNManualGUIAPBill line in ManualAPBill.Cache.Cached)
                 {
-                    taxSum += row.TaxAmt.Value;
+                    taxSum += line.TaxAmt.Value;
                 }
 
                 if (taxSum != Base.Document.Current.TaxTotal)
@@ -161,30 +157,30 @@ namespace PX.Objects.AP
             e.NewValue = row.VendorID == null ? preferences.OurTaxNbr : e.NewValue;
         }
 
-        protected void _(Events.FieldVerifying<TWNManualGUIAPBill.gUINbr> e)
-        {
-            var row = e.Row as TWNManualGUIAPBill;
+        //protected void _(Events.FieldVerifying<TWNManualGUIAPBill.gUINbr> e)
+        //{
+        //    var row = e.Row as TWNManualGUIAPBill;
 
-            tWNGUIValidation.CheckGUINbrExisted(Base, (string)e.NewValue, row.VATInCode);
-        }
+        //    tWNGUIValidation.CheckGUINbrExisted(Base, (string)e.NewValue, row.VATInCode);
+        //}
 
-        protected void _(Events.FieldVerifying<TWNManualGUIAPBill.taxAmt> e)
-        {
-            var row = e.Row as TWNManualGUIAPBill;
+        //protected void _(Events.FieldVerifying<TWNManualGUIAPBill.taxAmt> e)
+        //{
+        //    var row = e.Row as TWNManualGUIAPBill;
 
-            tWNGUIValidation.CheckTaxAmount((decimal)row.NetAmt, (decimal)e.NewValue);
-        }
+        //    tWNGUIValidation.CheckTaxAmount((decimal)row.NetAmt, (decimal)e.NewValue);
+        //}
 
-        protected void _(Events.FieldUpdated<TWNManualGUIAPBill.netAmt> e)
-        {
-            var row = e.Row as TWNManualGUIAPBill;
+        //protected void _(Events.FieldUpdated<TWNManualGUIAPBill.netAmt> e)
+        //{
+        //    var row = e.Row as TWNManualGUIAPBill;
 
-            foreach (TaxRev taxRev in SelectFrom<TaxRev>.Where<TaxRev.taxID.IsEqual<@P.AsString>
-                                                               .And<TaxRev.taxType.IsEqual<TaxRev.taxType>>>.View.Select(Base, row.TaxID, "P")) // P = Group type (Input)
-            {
-                row.TaxAmt = row.NetAmt * (taxRev.TaxRate / taxRev.NonDeductibleTaxRate);
-            }
-        }
+        //    foreach (TaxRev taxRev in SelectFrom<TaxRev>.Where<TaxRev.taxID.IsEqual<@P.AsString>
+        //                                                       .And<TaxRev.taxType.IsEqual<TaxRev.taxType>>>.View.Select(Base, row.TaxID, "P")) // P = Group type (Input)
+        //    {
+        //        row.TaxAmt = row.NetAmt * (taxRev.TaxRate / taxRev.NonDeductibleTaxRate);
+        //    }
+        //}
         #endregion
 
         #endregion
@@ -193,8 +189,7 @@ namespace PX.Objects.AP
         public static CSAnswers SelectCSAnswers(PXGraph graph, System.Guid? noteID)
         {
             return SelectFrom<CSAnswers>.Where<CSAnswers.refNoteID.IsEqual<@P.AsGuid>
-                                               .And<CSAnswers.attributeID.IsEqual<APRegisterExt.VATINFRMTNameAtt>>>
-                                        .View.Select(graph, noteID);
+                                               .And<CSAnswers.attributeID.IsEqual<APRegisterExt.VATINFRMTNameAtt>>>.View.Select(graph, noteID).TopFirst;
         }
         #endregion
     }
