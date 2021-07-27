@@ -26,5 +26,5 @@ inner join InventoryItem i on cost.CompanyID = i.CompanyID
 left join vPACUnitCost p on cost.CompanyID = p.companyid
 						 and cost.InventoryID = p.InventoryID
 						 and cost.FinPeriodID = p.FinPeriodID
-group by cost.FinPeriodID,cost.SiteID,cost.InventoryID,i.ItemClassID,cost.CompanyID having SUM(cost.FinPtdQtyAssemblyIn) != 0 and SUM(cost.FinPtdQtyAssemblyOut) != 0]]></CDATA>
+group by cost.FinPeriodID,cost.SiteID,cost.InventoryID,i.ItemClassID,cost.CompanyID having (SUM(cost.FinPtdQtyAssemblyIn) > 0 or SUM(cost.FinPtdQtyAssemblyOut) > 0)]]></CDATA>
 </Sql>

@@ -1,5 +1,6 @@
 ﻿using System;
 using PX.Data;
+using PX.Data.ReferentialIntegrity.Attributes;
 using PX.Objects.IN;
 
 namespace ExternalLogisticsAPI
@@ -8,6 +9,13 @@ namespace ExternalLogisticsAPI
     [PXCacheName("LUMPacAssemblyAdjCost")]
     public class LUMPacAssemblyAdjCost : IBqlTable
     {
+
+        public static class FK
+        {
+            public class InventoryItem : PX.Objects.IN.InventoryItem.PK.ForeignKeyOf<LUMPacAssemblyAdjCost>.By<inventoryID> { }
+            public class Site : INSite.PK.ForeignKeyOf<LUMPacAssemblyAdjCost>.By<siteid> { }
+        }
+
         #region FinPeriodID
         [PXDBString(6, IsUnicode = true, InputMask = "",IsKey = true)]
         [PXUIField(DisplayName = "Fin Period ID")]
@@ -37,7 +45,7 @@ namespace ExternalLogisticsAPI
         #endregion
 
         #region InventoryID
-        [PXDBInt(IsKey = true)]
+        [StockItem(IsKey = true)]
         [PXUIField(DisplayName = "Inventory ID")]
         public virtual int? InventoryID { get; set; }
         public abstract class inventoryID : PX.Data.BQL.BqlInt.Field<inventoryID> { }
@@ -59,8 +67,9 @@ namespace ExternalLogisticsAPI
         #endregion
 
         #region Siteid
-        [PXDBInt()]
-        [PXUIField(DisplayName = "Siteid")]
+        [PX.Objects.IN.Site(DisplayName = "Warehouse ID", DescriptionField = typeof(INSite.descr), IsKey = true)]
+        [PXUIField(DisplayName = "Warehouse")]
+        [PXForeignReference(typeof(FK.Site))]
         public virtual int? Siteid { get; set; }
         public abstract class siteid : PX.Data.BQL.BqlInt.Field<siteid> { }
         #endregion

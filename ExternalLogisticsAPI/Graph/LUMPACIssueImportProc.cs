@@ -41,7 +41,7 @@ namespace ExternalLogisticsAPI.Graph
             {
                 var data = this.ImportPACList.Insert((LumPacIssueAdjCost)this.ImportPACList.Cache.CreateInstance());
                 data.FinPeriodID = item.FinPeriodID;
-                data.PACIssueCost = item.PACIssueCost;
+                data.FinPtdCostIssued = item.FinPtdCostIssued;
                 data.FinPtdQtyIssued = item.FinPtdQtyIssued;
                 data.PACUnitCost = item.PACUnitCost;
                 data.InventoryID = item.InventoryID;
