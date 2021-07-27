@@ -69,30 +69,30 @@ namespace PX.Objects.CA
             e.NewValue = row.VendorID == null ? GUIPreferences.Current.OurTaxNbr : e.NewValue;
         }
 
-        protected void _(Events.FieldVerifying<TWNManualGUIBank, TWNManualGUIBank.gUINbr> e)
-        {
-            var row = (TWNManualGUIBank)e.Row;
+        //protected void _(Events.FieldVerifying<TWNManualGUIBank, TWNManualGUIBank.gUINbr> e)
+        //{
+        //    var row = (TWNManualGUIBank)e.Row;
 
-            tWNGUIValidation.CheckGUINbrExisted(Base, (string)e.NewValue, row.VATInCode);
-        }
+        //    tWNGUIValidation.CheckGUINbrExisted(Base, (string)e.NewValue, row.VATInCode);
+        //}
 
-        protected void _(Events.FieldVerifying<TWNManualGUIBank, TWNManualGUIBank.taxAmt> e)
-        {
-            var row = (TWNManualGUIBank)e.Row;
+        //protected void _(Events.FieldVerifying<TWNManualGUIBank, TWNManualGUIBank.taxAmt> e)
+        //{
+        //    var row = (TWNManualGUIBank)e.Row;
 
-            tWNGUIValidation.CheckTaxAmount((decimal)row.NetAmt, (decimal)e.NewValue);
-        }
+        //    tWNGUIValidation.CheckTaxAmount((decimal)row.NetAmt, (decimal)e.NewValue);
+        //}
 
-        protected void _(Events.FieldUpdated<TWNManualGUIBank, TWNManualGUIBank.netAmt> e)
-        {        
-            var row = (TWNManualGUIBank)e.Row;
+        //protected void _(Events.FieldUpdated<TWNManualGUIBank, TWNManualGUIBank.netAmt> e)
+        //{        
+        //    var row = (TWNManualGUIBank)e.Row;
 
-            foreach (TaxRev taxRev in SelectFrom<TaxRev>.Where<TaxRev.taxID.IsEqual<@P.AsString>
-                                                               .And<TaxRev.taxType.IsEqual<TaxRev.taxType>>>.View.Select(Base, row.TaxID, "P")) // P = Group type (Input)
-            {
-                row.TaxAmt = row.NetAmt * (taxRev.TaxRate / taxRev.NonDeductibleTaxRate);
-            }
-        }
+        //    foreach (TaxRev taxRev in SelectFrom<TaxRev>.Where<TaxRev.taxID.IsEqual<@P.AsString>
+        //                                                       .And<TaxRev.taxType.IsEqual<TaxRev.taxType>>>.View.Select(Base, row.TaxID, "P")) // P = Group type (Input)
+        //    {
+        //        row.TaxAmt = row.NetAmt * (taxRev.TaxRate / taxRev.NonDeductibleTaxRate);
+        //    }
+        //}
         #endregion
     }
 }

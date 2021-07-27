@@ -74,7 +74,7 @@
     <Compile Include="DAC_Extension\APRegisterExtensions.cs" />
     <Compile Include="DAC_Extension\ARRegisterExtensions.cs" />
     <Compile Include="DAC_Extension\TaxExtensions.cs" />
-    <Compile Include="Descriptor\ARGUINbrAutoNumAttribute.cs" />
+    <Compile Include="Descriptor\TWNAttribute.cs" />
     <Compile Include="Descriptor\TWMessages.cs" />
     <Compile Include="Descriptor\TWNB2CPrinter.cs" />
     <Compile Include="Descriptor\TWNGUIValidation.cs" />

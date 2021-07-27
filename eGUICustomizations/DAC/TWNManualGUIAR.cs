@@ -4,7 +4,6 @@ using PX.Objects.AR;
 using PX.Objects.CR;
 using PX.Objects.CS;
 using PX.Objects.TX;
-using eGUICustomizations.Graph;
 using eGUICustomizations.Descriptor;
 using static eGUICustomizations.Descriptor.TWNStringList;
 
@@ -120,15 +119,15 @@ namespace eGUICustomizations.DAC
         #endregion
     
         #region NetAmt
-        [TWNetAmount(0)]
+        [TWTaxAmountCalc(0, typeof(taxID), typeof(netAmt), typeof(taxAmt))]
         [PXDefault(TypeCode.Decimal, "0.0")]
         [PXUIField(DisplayName = "Net Amt")]
         public virtual decimal? NetAmt { get; set; }
         public abstract class netAmt : PX.Data.BQL.BqlDecimal.Field<netAmt> { }
         #endregion
-    
+
         #region TaxAmt
-        [TWTaxAmount(0)]
+        [TWTaxAmount(0, typeof(netAmt))]
         [PXDefault(TypeCode.Decimal, "0.0")]
         [PXUIField(DisplayName = "Tax Amt")]
         public virtual decimal? TaxAmt { get; set; }

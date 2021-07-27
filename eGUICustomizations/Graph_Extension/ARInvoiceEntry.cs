@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Linq;
-using System.Collections;
-using System.Collections.Generic;
 using PX.Common;
 using PX.Data;
 using PX.Data.BQL;
 using PX.Data.BQL.Fluent;
 using PX.Objects.CS;
-using PX.Objects.CR;
 using PX.Objects.FS;
 using eGUICustomizations.DAC;
 using eGUICustomizations.Descriptor;
@@ -18,49 +15,6 @@ namespace PX.Objects.AR
 {
     public class ARInvoiceEntry_Extension : PXGraphExtension<ARInvoiceEntry>
     { 
-        #region Delegate Action Menu
-        //public delegate IEnumerable ReportDelegate(PXAdapter adapter, string reportID);
-        //[PXOverride]
-        //public IEnumerable Report(PXAdapter adapter, string reportID, ReportDelegate baseMethod)
-        //{
-        //    IEnumerable records = baseMethod(adapter, reportID);
-
-        //    //if we are here that means that report is not identified by base method
-        //    PXReportRequiredException ex = null;
-
-        //    var parameters = new Dictionary<string, string>();
-        //    Dictionary<PX.SM.PrintSettings, PXReportRequiredException> reportsToPrint = new Dictionary<PX.SM.PrintSettings, PXReportRequiredException>();
-
-        //    foreach (ARInvoice doc in records)
-        //    {
-        //        if (reportID == "TW601000")
-        //        {
-        //            parameters["ARInvoice.DocType"] = doc.DocType;
-        //            parameters["ARInvoice.RefNbr"] = doc.RefNbr;
-
-        //            ex = PXReportRequiredException.CombineReport(ex, reportID, parameters);
-        //        }
-        //    }
-
-        //    //if (ex != null) throw ex;
-        //    string actualReportID = new NotificationUtility(Base).SearchReport(ARNotificationSource.Customer, Base.Document, reportID, Base.Document.Current.BranchID);
-
-        //    reportsToPrint = PX.SM.SMPrintJobMaint.AssignPrintJobToPrinter(reportsToPrint, parameters, adapter, 
-        //                                                                   new NotificationUtility(Base).SearchPrinter, 
-        //                                                                   ARNotificationSource.Customer, reportID, actualReportID, 
-        //                                                                   Base.Document.Current.BranchID);
-
-        //    if (ex != null)
-        //    {
-        //        PX.SM.SMPrintJobMaint.CreatePrintJobGroups(reportsToPrint);
-
-        //        throw ex;
-        //    }
-
-        //    return records;
-        //}
-        #endregion
-
         #region Action
         public PXAction<PX.Objects.AR.ARInvoice> BuyPlasticBag;
         [PXButton(CommitChanges = true)]
@@ -104,15 +58,15 @@ namespace PX.Objects.AR
                 //}
                 //else 
                 if (string.IsNullOrEmpty(regisExt.UsrGUINbr) && (regisExt.UsrVATOutCode == TWGUIFormatCode.vATOutCode31 ||
-                                                                      regisExt.UsrVATOutCode == TWGUIFormatCode.vATOutCode32 ||
-                                                                      regisExt.UsrVATOutCode == TWGUIFormatCode.vATOutCode35) )
+                                                                 regisExt.UsrVATOutCode == TWGUIFormatCode.vATOutCode32 ||
+                                                                 regisExt.UsrVATOutCode == TWGUIFormatCode.vATOutCode35) )
                 {
                     TWNGUIPreferences gUIPreferences = SelectFrom<TWNGUIPreferences>.View.Select(Base);
 
                     regisExt.UsrGUINbr = ARGUINbrAutoNumAttribute.GetNextNumber(e.Cache, e.Row, regisExt.UsrVATOutCode == TWGUIFormatCode.vATOutCode32 ? gUIPreferences.GUI2CopiesNumbering : gUIPreferences.GUI3CopiesNumbering, 
                                                                                 regisExt.UsrGUIDate);
 
-                    tWNGUIValidation.CheckGUINbrExisted(Base, regisExt.UsrGUINbr, regisExt.UsrVATOutCode);
+                    //tWNGUIValidation.CheckGUINbrExisted(Base, regisExt.UsrGUINbr, regisExt.UsrVATOutCode);
                 }
             }
         }
@@ -155,7 +109,7 @@ namespace PX.Objects.AR
             baseHandler?.Invoke(e.Cache, e.Args);
 
             /// When using the copy and paste feature, don't bring the source GUI number into the new one.
-            if (Base.IsCopyPasteContext.Equals(true))
+            if (Base.IsCopyPasteContext == true)
             {
                 PXCache<ARRegister>.GetExtension<ARRegisterExt>(e.Row).UsrGUINbr = null;
             }
@@ -259,25 +213,6 @@ namespace PX.Objects.AR
                     Base.Document.Ask(TWMessages.RemindHeader, TWMessages.ReminderMesg, MessageButtons.OKCancel);
 
                     if (Base.Document.AskExt() == WebDialogResult.Cancel) { e.Cancel = true; }
-                }
-            }
-        }
-        #endregion
-
-        #region Custom Attribute
-        /// <summary>
-        /// Create custom attribute that convert number to Chinese word.
-        /// </summary>
-        [AttributeUsage(AttributeTargets.Property | AttributeTargets.Class)]
-        public class ChineseAmountAttribute : PXStringAttribute, IPXFieldSelectingSubscriber
-        {
-            void IPXFieldSelectingSubscriber.FieldSelecting(PXCache sender, PXFieldSelectingEventArgs e)
-            {
-                ARInvoice invoice = sender.Graph.Caches[typeof(ARInvoice)].Current as ARInvoice;
-
-                if (invoice != null)
-                {
-                    e.ReturnValue = AmtInChinese((int)invoice.CuryDocBal);
                 }
             }
         }

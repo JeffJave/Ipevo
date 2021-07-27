@@ -4,6 +4,7 @@ using PX.Objects.CR.MassProcess;
 using PX.Objects.CS;
 using PX.Objects.IN;
 using eGUICustomizations.Graph;
+using eGUICustomizations.Descriptor;
 
 namespace eGUICustomizations.DAC
 {

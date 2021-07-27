@@ -1,13 +1,8 @@
-using System.Collections.Generic;
 using PX.Common;
 using PX.Data;
 using PX.Data.BQL;
 using PX.Data.BQL.Fluent;
-using PX.Objects.CM;
-using PX.Objects.GL;
-using PX.Objects.CS;
 using PX.Objects.TX;
-using PX.Objects.IN;
 using eGUICustomizations.DAC;
 using eGUICustomizations.Descriptor;
 using eGUICustomizations.Graph_Release;
@@ -37,12 +32,7 @@ namespace PX.Objects.AP
                 doc != null && 
                 doc.Released == true &&
                 doc.DocType.IsIn(APDocType.Invoice, APDocType.DebitAdj) )
-            {
-                //if (Base.APTaxTran_TranType_RefNbr.Current == null)
-                //{
-                //    throw new PXException(TWMessages.NoInvTaxDtls);
-                //}
-
+            { 
                 foreach (TWNManualGUIAPBill row in SelectFrom<TWNManualGUIAPBill>.Where<TWNManualGUIAPBill.docType.IsEqual<@P.AsString>
                                                                                         .And<TWNManualGUIAPBill.refNbr.IsEqual<@P.AsString>>>.View.Select(Base, doc.DocType, doc.RefNbr))
                 {
