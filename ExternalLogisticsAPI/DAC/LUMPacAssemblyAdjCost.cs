@@ -14,6 +14,7 @@ namespace ExternalLogisticsAPI
         {
             public class InventoryItem : PX.Objects.IN.InventoryItem.PK.ForeignKeyOf<LUMPacAssemblyAdjCost>.By<inventoryID> { }
             public class Site : INSite.PK.ForeignKeyOf<LUMPacAssemblyAdjCost>.By<siteid> { }
+            public class ProductSite : INSite.PK.ForeignKeyOf<LUMPacAssemblyAdjCost>.By<productSiteid> { }
         }
 
         #region FinPeriodID
@@ -93,6 +94,14 @@ namespace ExternalLogisticsAPI
         [PXUIField(DisplayName = "PAC Cost ADJ - Products")]
         public virtual Decimal? ProductAdjAmount { get; set; }
         public abstract class productAdjAmount : PX.Data.BQL.BqlDecimal.Field<productAdjAmount> { }
+        #endregion
+
+        #region Siteid
+        [PX.Objects.IN.Site(DisplayName = "Product Warehouse", DescriptionField = typeof(INSite.descr))]
+        [PXUIField(DisplayName = "Product Warehouse")]
+        [PXForeignReference(typeof(FK.ProductSite))]
+        public virtual int? ProductSiteid { get; set; }
+        public abstract class productSiteid : PX.Data.BQL.BqlInt.Field<productSiteid> { }
         #endregion
 
         #region CreatedByID

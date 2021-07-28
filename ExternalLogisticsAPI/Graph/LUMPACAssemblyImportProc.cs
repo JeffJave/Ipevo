@@ -33,32 +33,37 @@ namespace ExternalLogisticsAPI.Graph
         protected virtual IEnumerable LoadData(PXAdapter adapter)
         {
             var filter = this.Filter.Current;
-            var sourceData = SelectFrom<vPACAdjCostAssembly>
-                             .InnerJoin<INComponentTran>.On<vPACAdjCostAssembly.inventoryID.IsEqual<INComponentTran.inventoryID>
-                                        .And<vPACAdjCostAssembly.finPeriodID.IsEqual<INComponentTran.finPeriodID>>>
-                             .InnerJoin<PX.Objects.IN.INKitRegister>.On<INComponentTran.docType.IsEqual<PX.Objects.IN.INKitRegister.docType>
-                                        .And<INComponentTran.refNbr.IsEqual<PX.Objects.IN.INKitRegister.refNbr>>>
-                             .Where<vPACAdjCostAssembly.finPeriodID.IsEqual<P.AsString>
-                                        .And<vPACAdjCostAssembly.itemClassID.IsEqual<P.AsInt>>>
-                             .View.Select(new PXGraph(), filter.FinPeriod, filter.ItemClassID).ToList();
+            var sourceData = SelectFrom<vPACUnitCost>.View.Select(new PXGraph()).RowCast<vPACUnitCost>().ToList();
+            var inComponentTranData = SelectFrom<INComponentTran>
+                                      .Where<INComponentTran.finPeriodID.IsEqual<P.AsString>>.View.Select(new PXGraph(), filter.FinPeriod).RowCast<INComponentTran>().ToList();
+            var inKitRegisterData = SelectFrom<INKitRegister>.View.Select(new PXGraph()).RowCast<INKitRegister>().ToList();
+            var inventoryItemData = SelectFrom<InventoryItem>.View.Select(new PXGraph()).RowCast<InventoryItem>().ToList();
+            var result = from t in sourceData
+                         join kit in inComponentTranData on new { A = t.InventoryID, B = t.FinPeriodID } equals new { A = kit.InventoryID, B = kit.FinPeriodID }
+                         join item in inventoryItemData on kit.InventoryID equals item.InventoryID
+                         join kitItem in inKitRegisterData on new { A = kit.DocType, B = kit.RefNbr } equals new { A = kitItem.DocType, B = kitItem.RefNbr }
+                         where item.ItemClassID == filter.ItemClassID
+                         select new { sc = t, kit, kitItem, item };
+
             // Delete temp table data
             PXDatabase.Delete<LUMPacAssemblyAdjCost>();
             this.ImportPACList.Cache.Clear();
 
-            foreach (var item in sourceData)
+            foreach (var row in result.ToList())
             {
                 var data = this.ImportPACList.Insert((LUMPacAssemblyAdjCost)this.ImportPACList.Cache.CreateInstance());
-                data.FinPeriodID = item.GetItem<vPACAdjCostAssembly>().FinPeriodID;
-                data.FinPtdCostAssemblyOut = item.GetItem<vPACAdjCostAssembly>().FinPtdCostAssemblyOut;
-                data.FinPtdQtyAssemblyOut = item.GetItem<vPACAdjCostAssembly>().FinPtdQtyAssemblyOut;
-                data.PACUnitCost = item.GetItem<vPACAdjCostAssembly>().PACUnitCost;
-                data.InventoryID = item.GetItem<vPACAdjCostAssembly>().InventoryID;
-                data.ItemClassID = item.GetItem<vPACAdjCostAssembly>().ItemClassID;
-                data.PACIssueCost = item.GetItem<vPACAdjCostAssembly>().PACIssueCost;
-                data.Siteid = item.GetItem<vPACAdjCostAssembly>().Siteid;
-                data.AssemblyAdjAmount = item.GetItem<vPACAdjCostAssembly>().AssemblyAdjAmount;
-                data.ProductInventoryID = item.GetItem<INKitRegister>().KitInventoryID;
+                data.FinPeriodID = row.sc.FinPeriodID;
+                data.FinPtdCostAssemblyOut = row.kit.TranCost;
+                data.FinPtdQtyAssemblyOut = row.kit.Qty;
+                data.PACUnitCost = row.sc.PACUnitCost;
+                data.InventoryID = row.sc.InventoryID;
+                data.ItemClassID = row.item.ItemClassID;
+                data.PACIssueCost = row.sc.PACUnitCost * row.kit.Qty;
+                data.Siteid = row.kit.SiteID;
+                data.AssemblyAdjAmount = data.FinPtdCostAssemblyOut - data.PACIssueCost;
+                data.ProductInventoryID = row.kitItem.KitInventoryID;
                 data.ProductAdjAmount = data.AssemblyAdjAmount * -1;
+                data.ProductSiteid = row.kitItem.SiteID;
             }
             this.Actions.PressSave();
             return adapter.Get();
@@ -92,15 +97,28 @@ namespace ExternalLogisticsAPI.Graph
 
                 foreach (var row in impDatas)
                 {
-                    if (Math.Round((row.ProductAdjAmount ?? 0), 0) == 0)
-                        continue;
-                    var line = graph.transactions.Insert((INTran)graph.transactions.Cache.CreateInstance());
-                    graph.transactions.SetValueExt<INTran.inventoryID>(line, row.ProductInventoryID);
-                    graph.transactions.SetValueExt<INTran.siteID>(line, row.Siteid);
-                    graph.transactions.SetValueExt<INTran.tranCost>(line, row.ProductAdjAmount);
-                    graph.transactions.SetValueExt<INTran.reasonCode>(line, "PACADJ");
-                    graph.transactions.SetValueExt<INTran.lotSerialNbr>(line, string.Empty);
-                    sum += (row.ProductAdjAmount ?? 0);
+                    // AssemblyAdjAmount
+                    if (Math.Round((row.AssemblyAdjAmount ?? 0), 0) != 0)
+                    {
+                        var line = graph.transactions.Insert((INTran)graph.transactions.Cache.CreateInstance());
+                        graph.transactions.SetValueExt<INTran.inventoryID>(line, row.InventoryID);
+                        graph.transactions.SetValueExt<INTran.siteID>(line, row.Siteid);
+                        graph.transactions.SetValueExt<INTran.tranCost>(line, row.AssemblyAdjAmount);
+                        graph.transactions.SetValueExt<INTran.reasonCode>(line, "PACADJ");
+                        graph.transactions.SetValueExt<INTran.lotSerialNbr>(line, string.Empty);
+                        sum += (row.AssemblyAdjAmount ?? 0);
+                    }
+                    // ProductAdjAmount
+                    if (Math.Round((row.ProductAdjAmount ?? 0), 0) != 0)
+                    {
+                        var line = graph.transactions.Insert((INTran)graph.transactions.Cache.CreateInstance());
+                        graph.transactions.SetValueExt<INTran.inventoryID>(line, row.ProductInventoryID);
+                        graph.transactions.SetValueExt<INTran.siteID>(line, row.ProductSiteid);
+                        graph.transactions.SetValueExt<INTran.tranCost>(line, row.ProductAdjAmount);
+                        graph.transactions.SetValueExt<INTran.reasonCode>(line, "PACADJ");
+                        graph.transactions.SetValueExt<INTran.lotSerialNbr>(line, string.Empty);
+                        sum += (row.ProductAdjAmount ?? 0);
+                    }
                 }
                 doc.TotalCost = sum;
                 graph.Save.Press();
