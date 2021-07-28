@@ -32,6 +32,8 @@
                     <px:PXGridColumn DataField="PACUnitCost"></px:PXGridColumn>
                     <px:PXGridColumn DataField="PACIssueCost"></px:PXGridColumn>
                     <px:PXGridColumn DataField="AssemblyAdjAmount"></px:PXGridColumn>
+                    <px:PXGridColumn DataField="ProductInventoryID"></px:PXGridColumn>
+                    <px:PXGridColumn DataField="ProductAdjAmount"></px:PXGridColumn>
                 </Columns>
             </px:PXGridLevel>
         </Levels>

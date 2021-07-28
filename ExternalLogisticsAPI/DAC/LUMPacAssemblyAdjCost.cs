@@ -81,6 +81,20 @@ namespace ExternalLogisticsAPI
         public abstract class assemblyAdjAmount : PX.Data.BQL.BqlDecimal.Field<assemblyAdjAmount> { }
         #endregion
 
+        #region InventoryID
+        [StockItem()]
+        [PXUIField(DisplayName = "Products Stock ID")]
+        public virtual int? ProductInventoryID { get; set; }
+        public abstract class productInventoryID : PX.Data.BQL.BqlInt.Field<productInventoryID> { }
+        #endregion
+
+        #region AssembleAdjAmountJ
+        [PXDBDecimal()]
+        [PXUIField(DisplayName = "PAC Cost ADJ - Products")]
+        public virtual Decimal? ProductAdjAmount { get; set; }
+        public abstract class productAdjAmount : PX.Data.BQL.BqlDecimal.Field<productAdjAmount> { }
+        #endregion
+
         #region CreatedByID
         [PXDBCreatedByID()]
         public virtual Guid? CreatedByID { get; set; }

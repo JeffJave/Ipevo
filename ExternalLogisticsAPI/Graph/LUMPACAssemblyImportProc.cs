@@ -23,7 +23,9 @@ namespace ExternalLogisticsAPI.Graph
         }
 
         [PXFilterable]
-        public PXFilteredProcessing<LUMPacAssemblyAdjCost, PACFilter, Where<LUMPacAssemblyAdjCost.finPeriodID, Equal<Current<PACFilter.finPeriod>>>> ImportPACList;
+        public PXFilteredProcessing<LUMPacAssemblyAdjCost, 
+                                    PACFilter, 
+                                    Where<LUMPacAssemblyAdjCost.finPeriodID, Equal<Current<PACFilter.finPeriod>>>> ImportPACList;
 
         public PXAction<PACFilter> loadData;
         [PXButton]
@@ -31,7 +33,14 @@ namespace ExternalLogisticsAPI.Graph
         protected virtual IEnumerable LoadData(PXAdapter adapter)
         {
             var filter = this.Filter.Current;
-            var sourceData = SelectFrom<vPACAdjCostAssembly>.Where<vPACAdjCostAssembly.finPeriodID.IsEqual<P.AsString>.And<vPACAdjCostAssembly.itemClassID.IsEqual<P.AsInt>>>.View.Select(this, filter.FinPeriod, filter.ItemClassID).RowCast<vPACAdjCostAssembly>().ToList().Where(x => x.FinPeriodID == filter.FinPeriod);
+            var sourceData = SelectFrom<vPACAdjCostAssembly>
+                             .InnerJoin<INComponentTran>.On<vPACAdjCostAssembly.inventoryID.IsEqual<INComponentTran.inventoryID>
+                                        .And<vPACAdjCostAssembly.finPeriodID.IsEqual<INComponentTran.finPeriodID>>>
+                             .InnerJoin<INKitRegister>.On<INComponentTran.docType.IsEqual<INKitRegister.docType>
+                                        .And<INComponentTran.refNbr.IsEqual<INKitRegister.refNbr>>>
+                             .Where<vPACAdjCostAssembly.finPeriodID.IsEqual<P.AsString>
+                                        .And<vPACAdjCostAssembly.itemClassID.IsEqual<P.AsInt>>>
+                             .View.Select(this, filter.FinPeriod, filter.ItemClassID).ToList();
 
             // Delete temp table data
             PXDatabase.Delete<LUMPacAssemblyAdjCost>();
@@ -40,15 +49,17 @@ namespace ExternalLogisticsAPI.Graph
             foreach (var item in sourceData)
             {
                 var data = this.ImportPACList.Insert((LUMPacAssemblyAdjCost)this.ImportPACList.Cache.CreateInstance());
-                data.FinPeriodID = item.FinPeriodID;
-                data.FinPtdCostAssemblyOut = item.FinPtdCostAssemblyOut;
-                data.FinPtdQtyAssemblyOut = item.FinPtdQtyAssemblyOut;
-                data.PACUnitCost = item.PACUnitCost;
-                data.InventoryID = item.InventoryID;
-                data.ItemClassID = item.ItemClassID;
-                data.PACIssueCost = item.PACIssueCost;
-                data.Siteid = item.Siteid;
-                data.AssemblyAdjAmount = item.AssemblyAdjAmount;
+                data.FinPeriodID = item.GetItem<vPACAdjCostAssembly>().FinPeriodID;
+                data.FinPtdCostAssemblyOut = item.GetItem<vPACAdjCostAssembly>().FinPtdCostAssemblyOut;
+                data.FinPtdQtyAssemblyOut = item.GetItem<vPACAdjCostAssembly>().FinPtdQtyAssemblyOut;
+                data.PACUnitCost = item.GetItem<vPACAdjCostAssembly>().PACUnitCost;
+                data.InventoryID = item.GetItem<vPACAdjCostAssembly>().InventoryID;
+                data.ItemClassID = item.GetItem<vPACAdjCostAssembly>().ItemClassID;
+                data.PACIssueCost = item.GetItem<vPACAdjCostAssembly>().PACIssueCost;
+                data.Siteid = item.GetItem<vPACAdjCostAssembly>().Siteid;
+                data.AssemblyAdjAmount = item.GetItem<vPACAdjCostAssembly>().AssemblyAdjAmount;
+                data.ProductInventoryID = item.GetItem<INKitRegister>().KitInventoryID;
+                data.ProductAdjAmount = (item.GetItem<INComponentTran>().UnitCost -  item.GetItem<INComponentTran>().Qty * (item.GetItem<vPACAdjCostAssembly>().PACUnitCost)) * -1;
             }
             this.Actions.PressSave();
             return adapter.Get();
@@ -85,12 +96,12 @@ namespace ExternalLogisticsAPI.Graph
                     if (Math.Round((row.AssemblyAdjAmount ?? 0), 0) == 0)
                         continue;
                     var line = graph.transactions.Insert((INTran)graph.transactions.Cache.CreateInstance());
-                    graph.transactions.SetValueExt<INTran.inventoryID>(line, row.InventoryID);
+                    graph.transactions.SetValueExt<INTran.inventoryID>(line, row.ProductInventoryID);
                     graph.transactions.SetValueExt<INTran.siteID>(line, row.Siteid);
-                    graph.transactions.SetValueExt<INTran.tranCost>(line, row.AssemblyAdjAmount);
+                    graph.transactions.SetValueExt<INTran.tranCost>(line, row.ProductAdjAmount);
                     graph.transactions.SetValueExt<INTran.reasonCode>(line, "PACADJ");
                     graph.transactions.SetValueExt<INTran.lotSerialNbr>(line, string.Empty);
-                    sum += (row.AssemblyAdjAmount ?? 0);
+                    sum += (row.ProductAdjAmount ?? 0);
                 }
                 doc.TotalCost = sum;
                 graph.Save.Press();
