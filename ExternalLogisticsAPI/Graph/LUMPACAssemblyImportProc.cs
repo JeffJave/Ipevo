@@ -33,13 +33,13 @@ namespace ExternalLogisticsAPI.Graph
         protected virtual IEnumerable LoadData(PXAdapter adapter)
         {
             var filter = this.Filter.Current;
-            var sourceData = SelectFrom<vPACUnitCost>.View.Select(new PXGraph()).RowCast<vPACUnitCost>().ToList();
+            var pacData = SelectFrom<vPACUnitCost>.View.Select(new PXGraph()).RowCast<vPACUnitCost>().ToList();
             var inComponentTranData = SelectFrom<INComponentTran>
                                       .Where<INComponentTran.finPeriodID.IsEqual<P.AsString>>.View.Select(new PXGraph(), filter.FinPeriod).RowCast<INComponentTran>().ToList();
             var inKitRegisterData = SelectFrom<INKitRegister>.View.Select(new PXGraph()).RowCast<INKitRegister>().ToList();
             var inventoryItemData = SelectFrom<InventoryItem>.View.Select(new PXGraph()).RowCast<InventoryItem>().ToList();
-            var result = from t in sourceData
-                         join kit in inComponentTranData on new { A = t.InventoryID, B = t.FinPeriodID } equals new { A = kit.InventoryID, B = kit.FinPeriodID }
+            var result = from kit in inComponentTranData 
+                         join t in pacData on new { A = kit.InventoryID, B = kit.FinPeriodID } equals new { A = t.InventoryID, B = t.FinPeriodID }
                          join item in inventoryItemData on kit.InventoryID equals item.InventoryID
                          join kitItem in inKitRegisterData on new { A = kit.DocType, B = kit.RefNbr } equals new { A = kitItem.DocType, B = kitItem.RefNbr }
                          where item.ItemClassID == filter.ItemClassID

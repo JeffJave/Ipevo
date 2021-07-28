@@ -83,7 +83,7 @@ namespace ExternalLogisticsAPI
         #endregion
 
         #region InventoryID
-        [StockItem()]
+        [StockItem(IsKey = true)]
         [PXUIField(DisplayName = "Products Stock ID")]
         public virtual int? ProductInventoryID { get; set; }
         public abstract class productInventoryID : PX.Data.BQL.BqlInt.Field<productInventoryID> { }
