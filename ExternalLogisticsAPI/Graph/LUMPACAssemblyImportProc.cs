@@ -23,8 +23,8 @@ namespace ExternalLogisticsAPI.Graph
         }
 
         [PXFilterable]
-        public PXFilteredProcessing<LUMPacAssemblyAdjCost, 
-                                    PACFilter, 
+        public PXFilteredProcessing<LUMPacAssemblyAdjCost,
+                                    PACFilter,
                                     Where<LUMPacAssemblyAdjCost.finPeriodID, Equal<Current<PACFilter.finPeriod>>>> ImportPACList;
 
         public PXAction<PACFilter> loadData;
@@ -36,12 +36,11 @@ namespace ExternalLogisticsAPI.Graph
             var sourceData = SelectFrom<vPACAdjCostAssembly>
                              .InnerJoin<INComponentTran>.On<vPACAdjCostAssembly.inventoryID.IsEqual<INComponentTran.inventoryID>
                                         .And<vPACAdjCostAssembly.finPeriodID.IsEqual<INComponentTran.finPeriodID>>>
-                             .InnerJoin<INKitRegister>.On<INComponentTran.docType.IsEqual<INKitRegister.docType>
-                                        .And<INComponentTran.refNbr.IsEqual<INKitRegister.refNbr>>>
+                             .InnerJoin<PX.Objects.IN.INKitRegister>.On<INComponentTran.docType.IsEqual<PX.Objects.IN.INKitRegister.docType>
+                                        .And<INComponentTran.refNbr.IsEqual<PX.Objects.IN.INKitRegister.refNbr>>>
                              .Where<vPACAdjCostAssembly.finPeriodID.IsEqual<P.AsString>
                                         .And<vPACAdjCostAssembly.itemClassID.IsEqual<P.AsInt>>>
-                             .View.Select(this, filter.FinPeriod, filter.ItemClassID).ToList();
-
+                             .View.Select(new PXGraph(), filter.FinPeriod, filter.ItemClassID).ToList();
             // Delete temp table data
             PXDatabase.Delete<LUMPacAssemblyAdjCost>();
             this.ImportPACList.Cache.Clear();
@@ -59,7 +58,7 @@ namespace ExternalLogisticsAPI.Graph
                 data.Siteid = item.GetItem<vPACAdjCostAssembly>().Siteid;
                 data.AssemblyAdjAmount = item.GetItem<vPACAdjCostAssembly>().AssemblyAdjAmount;
                 data.ProductInventoryID = item.GetItem<INKitRegister>().KitInventoryID;
-                data.ProductAdjAmount = (item.GetItem<INComponentTran>().UnitCost -  item.GetItem<INComponentTran>().Qty * (item.GetItem<vPACAdjCostAssembly>().PACUnitCost)) * -1;
+                data.ProductAdjAmount = data.AssemblyAdjAmount * -1;
             }
             this.Actions.PressSave();
             return adapter.Get();
@@ -93,7 +92,7 @@ namespace ExternalLogisticsAPI.Graph
 
                 foreach (var row in impDatas)
                 {
-                    if (Math.Round((row.AssemblyAdjAmount ?? 0), 0) == 0)
+                    if (Math.Round((row.ProductAdjAmount ?? 0), 0) == 0)
                         continue;
                     var line = graph.transactions.Insert((INTran)graph.transactions.Cache.CreateInstance());
                     graph.transactions.SetValueExt<INTran.inventoryID>(line, row.ProductInventoryID);
