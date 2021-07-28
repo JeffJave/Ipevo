@@ -171,11 +171,13 @@ namespace eGUICustomizations.Descriptor
         {
             if ((decimal)e.NewValue < 0)
             {
-                // Throwing an exception to cancel assignment of the new value to the field
                 throw new PXSetPropertyException(TWMessages.TaxAmtNegError);
             }
 
-            new TWNGUIValidation().CheckTaxAmount((decimal)sender.GetValue(e.Row, _NetAmt.Name), (decimal)e.NewValue);
+            if (_NetAmt != null)
+            {
+                new TWNGUIValidation().CheckTaxAmount((decimal)sender.GetValue(e.Row, _NetAmt.Name), (decimal)e.NewValue);
+            }
         }
     }
     #endregion
