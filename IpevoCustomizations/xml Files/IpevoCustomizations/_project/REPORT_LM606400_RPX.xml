@@ -1,4 +1,4 @@
-<Report Name="lm606400.rpx">
+﻿<Report Name="lm606400.rpx">
     <Report Name="report1" version="20201103">
         <CommonSettings>
             <ViewPdf>True</ViewPdf>
@@ -5116,11 +5116,11 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
         </Tables>
         <Sections>
             <PageHeader Name="pageHeaderSection1">
-                <Height>9.94709cm</Height>
+                <Height>10.15873cm</Height>
                 <Items>
                     <Panel Name="panel1">
                         <Location>0px, 160px</Location>
-                        <Size>312px, 128px</Size>
+                        <Size>312px, 136px</Size>
                         <Style>
                             <BorderStyle>
                                 <Bottom>Solid</Bottom>
@@ -5149,7 +5149,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                             </TextBox>
                             <TextBox Name="textBox12">
                                 <Location>0px, 24px</Location>
-                                <Size>64px, 32px</Size>
+                                <Size>64px, 40px</Size>
                                 <Style>
                                     <Padding>
                                         <Left>4px</Left>
@@ -5159,7 +5159,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                                 <Value>Address:</Value>
                             </TextBox>
                             <TextBox Name="textBox13">
-                                <Location>0px, 56px</Location>
+                                <Location>0px, 64px</Location>
                                 <Size>64px, 24px</Size>
                                 <Style>
                                     <Padding>
@@ -5170,7 +5170,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                                 <Value>Tel:</Value>
                             </TextBox>
                             <TextBox Name="textBox14">
-                                <Location>0px, 80px</Location>
+                                <Location>0px, 88px</Location>
                                 <Size>64px, 24px</Size>
                                 <Style>
                                     <Padding>
@@ -5181,7 +5181,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                                 <Value>Fax:</Value>
                             </TextBox>
                             <TextBox Name="textBox15">
-                                <Location>0px, 104px</Location>
+                                <Location>0px, 112px</Location>
                                 <Size>64px, 24px</Size>
                                 <Style>
                                     <Padding>
@@ -5192,7 +5192,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                                 <Value>Attn:</Value>
                             </TextBox>
                             <TextBox Name="textBox52">
-                                <Location>64px, 104px</Location>
+                                <Location>64px, 112px</Location>
                                 <Size>248px, 24px</Size>
                                 <Style>
                                     <VerticalAlign>Middle</VerticalAlign>
@@ -5200,7 +5200,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                                 <Value>=[ARShippingContact.Attention]</Value>
                             </TextBox>
                             <TextBox Name="textBox53">
-                                <Location>64px, 80px</Location>
+                                <Location>64px, 88px</Location>
                                 <Size>248px, 24px</Size>
                                 <Style>
                                     <VerticalAlign>Middle</VerticalAlign>
@@ -5208,7 +5208,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                                 <Value>=[ARShippingContact.Email]</Value>
                             </TextBox>
                             <TextBox Name="textBox54">
-                                <Location>64px, 56px</Location>
+                                <Location>64px, 64px</Location>
                                 <Size>248px, 24px</Size>
                                 <Style>
                                     <VerticalAlign>Middle</VerticalAlign>
@@ -5217,7 +5217,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                             </TextBox>
                             <TextBox Name="textBox55">
                                 <Location>64px, 24px</Location>
-                                <Size>248px, 32px</Size>
+                                <Size>248px, 40px</Size>
                                 <Style>
                                     <VerticalAlign>Middle</VerticalAlign>
                                 </Style>
@@ -5235,7 +5235,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                     </Panel>
                     <Panel Name="panel2">
                         <Location>312px, 160px</Location>
-                        <Size>384px, 128px</Size>
+                        <Size>384px, 136px</Size>
                         <Style>
                             <BorderStyle>
                                 <Bottom>Solid</Bottom>
@@ -5250,7 +5250,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                         </Style>
                         <Items>
                             <TextBox Name="textBox16">
-                                <Location>0px, 104px</Location>
+                                <Location>0px, 112px</Location>
                                 <Size>64px, 24px</Size>
                                 <Style>
                                     <Padding>
@@ -5261,7 +5261,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                                 <Value>Attn:</Value>
                             </TextBox>
                             <TextBox Name="textBox17">
-                                <Location>0px, 80px</Location>
+                                <Location>0px, 88px</Location>
                                 <Size>64px, 24px</Size>
                                 <Style>
                                     <Padding>
@@ -5272,7 +5272,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                                 <Value>Fax:</Value>
                             </TextBox>
                             <TextBox Name="textBox18">
-                                <Location>0px, 56px</Location>
+                                <Location>0px, 64px</Location>
                                 <Size>64px, 24px</Size>
                                 <Style>
                                     <Padding>
@@ -5284,7 +5284,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                             </TextBox>
                             <TextBox Name="textBox19">
                                 <Location>0px, 24px</Location>
-                                <Size>64px, 32px</Size>
+                                <Size>64px, 40px</Size>
                                 <Style>
                                     <Padding>
                                         <Left>4px</Left>
@@ -5305,7 +5305,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                                 <Value>Title:</Value>
                             </TextBox>
                             <TextBox Name="textBox57">
-                                <Location>64px, 104px</Location>
+                                <Location>64px, 112px</Location>
                                 <Size>320px, 24px</Size>
                                 <Style>
                                     <VerticalAlign>Middle</VerticalAlign>
@@ -5313,7 +5313,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                                 <Value>=[ARContact.Attention]</Value>
                             </TextBox>
                             <TextBox Name="textBox58">
-                                <Location>64px, 80px</Location>
+                                <Location>64px, 88px</Location>
                                 <Size>320px, 24px</Size>
                                 <Style>
                                     <VerticalAlign>Middle</VerticalAlign>
@@ -5321,7 +5321,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                                 <Value>=[ARContact.Fax]</Value>
                             </TextBox>
                             <TextBox Name="textBox59">
-                                <Location>64px, 56px</Location>
+                                <Location>64px, 64px</Location>
                                 <Size>320px, 24px</Size>
                                 <Style>
                                     <VerticalAlign>Middle</VerticalAlign>
@@ -5330,7 +5330,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                             </TextBox>
                             <TextBox Name="textBox60">
                                 <Location>64px, 24px</Location>
-                                <Size>320px, 32px</Size>
+                                <Size>320px, 40px</Size>
                                 <Style>
                                     <VerticalAlign>Middle</VerticalAlign>
                                 </Style>
@@ -5347,7 +5347,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                         </Items>
                     </Panel>
                     <Panel Name="panel3">
-                        <Location>0px, 336px</Location>
+                        <Location>0px, 344px</Location>
                         <Size>696px, 40px</Size>
                         <Style>
                             <BorderStyle>
@@ -5511,7 +5511,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                         <Value>1F., No.348, Sec. 6, Nanjing E. Rd., Neihu Dist., Taipei City 11470, Taiwan#010;Tel: +886-2-55508686 Fax: +886-2-2382-0420 CRN: 28685046</Value>
                     </TextBox>
                     <TextBox Name="textBox21">
-                        <Location>0px, 288px</Location>
+                        <Location>0px, 296px</Location>
                         <Size>96px, 0.16667in</Size>
                         <Style>
                             <VerticalAlign>Middle</VerticalAlign>
@@ -5520,7 +5520,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                     </TextBox>
                     <TextBox Name="textBox22">
                         <Format>='yyyy/MM/dd'</Format>
-                        <Location>96px, 288px</Location>
+                        <Location>96px, 296px</Location>
                         <Size>1.25in, 0.16667in</Size>
                         <Style>
                             <VerticalAlign>Middle</VerticalAlign>
@@ -5528,7 +5528,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                         <Value>=[SOShipment.ShipDate]</Value>
                     </TextBox>
                     <TextBox Name="textBox23">
-                        <Location>472px, 288px</Location>
+                        <Location>472px, 296px</Location>
                         <Size>224px, 0.16667in</Size>
                         <Style>
                             <VerticalAlign>Middle</VerticalAlign>
@@ -5536,7 +5536,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                         <Value>='Shipping Method: BY ' + IsNull([SOShipment.ShipVia], '')</Value>
                     </TextBox>
                     <TextBox Name="textBox24">
-                        <Location>472px, 304px</Location>
+                        <Location>472px, 312px</Location>
                         <Size>224px, 0.16667in</Size>
                         <Style>
                             <VerticalAlign>Middle</VerticalAlign>
@@ -5575,7 +5575,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                     </TextBox>
                     <TextBox Name="textBox63">
                         <Format>='yyyy/MM/dd'</Format>
-                        <Location>56px, 304px</Location>
+                        <Location>56px, 312px</Location>
                         <Size>160px, 0.16667in</Size>
                         <Style>
                             <VerticalAlign>Middle</VerticalAlign>
@@ -5584,7 +5584,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                         <VisibleExpr>=IIF([InvoiceCustomerInfo.CustomerClassID] = 'INTERCO', False, True)</VisibleExpr>
                     </TextBox>
                     <TextBox Name="textBox64">
-                        <Location>0px, 304px</Location>
+                        <Location>0px, 312px</Location>
                         <Size>56px, 0.16667in</Size>
                         <Style>
                             <VerticalAlign>Middle</VerticalAlign>
@@ -5594,7 +5594,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                     </TextBox>
                     <TextBox Name="textBox65">
                         <Format>='yyyy/MM/dd'</Format>
-                        <Location>56px, 320px</Location>
+                        <Location>56px, 328px</Location>
                         <Size>160px, 0.16667in</Size>
                         <Style>
                             <VerticalAlign>Middle</VerticalAlign>
@@ -5603,7 +5603,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                         <VisibleExpr>=IIF([InvoiceCustomerInfo.CustomerClassID] = 'INTERCO', False, True)</VisibleExpr>
                     </TextBox>
                     <TextBox Name="textBox66">
-                        <Location>0px, 320px</Location>
+                        <Location>0px, 328px</Location>
                         <Size>56px, 0.16667in</Size>
                         <Style>
                             <VerticalAlign>Middle</VerticalAlign>
@@ -5613,7 +5613,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                     </TextBox>
                     <TextBox Name="textBox67">
                         <Format>='yyyy/MM/dd'</Format>
-                        <Location>536px, 320px</Location>
+                        <Location>536px, 328px</Location>
                         <Size>160px, 0.16667in</Size>
                         <Style>
                             <VerticalAlign>Middle</VerticalAlign>
@@ -5622,7 +5622,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                         <VisibleExpr>=IIF([InvoiceCustomerInfo.CustomerClassID] = 'INTERCO', False, True)</VisibleExpr>
                     </TextBox>
                     <TextBox Name="textBox68">
-                        <Location>472px, 320px</Location>
+                        <Location>472px, 328px</Location>
                         <Size>64px, 0.16667in</Size>
                         <Style>
                             <VerticalAlign>Middle</VerticalAlign>

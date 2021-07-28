@@ -1,0 +1,20 @@
+﻿<Sql TableName="LUMPacIssueAdjCost" TableSchemaXml="#CDATA">
+    <CDATA name="TableSchemaXml"><![CDATA[<table name="LUMPacIssueAdjCost">
+  <col name="CompanyID" type="Int" default="Zero" />
+  <col name="FinPeriodID" type="NVarChar(6)" />
+  <col name="FinPtdCostIssued" type="Decimal(18,6)" nullable="true" />
+  <col name="FinPtdQtyIssued" type="Decimal(18,6)" nullable="true" />
+  <col name="PACUnitCost" type="Decimal(18,6)" nullable="true" />
+  <col name="InventoryID" type="Int" />
+  <col name="PACIssueCost" type="Decimal(18,6)" nullable="true" />
+  <col name="SiteID" type="Int" />
+  <col name="IssueAdjAmount" type="Decimal(18,6)" nullable="true" />
+  <col name="CreatedByID" type="UniqueIdentifier" />
+  <col name="CreatedByScreenID" type="Char(8)" />
+  <col name="CreatedDateTime" type="DateTime" />
+  <col name="LastModifiedByID" type="UniqueIdentifier" />
+  <col name="LastModifiedByScreenID" type="Char(8)" />
+  <col name="LastModifiedDateTime" type="DateTime" />
+  <col name="tstamp" type="Timestamp" />
+</table>]]></CDATA>
+</Sql>
