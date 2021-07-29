@@ -6057,7 +6057,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                             <TextAlign>Center</TextAlign>
                             <VerticalAlign>Middle</VerticalAlign>
                         </Style>
-                        <Value>Ship Due</Value>
+                        <Value>Ship Date</Value>
                     </TextBox>
                     <TextBox Name="textBox24">
                         <Location>592px, 448px</Location>
@@ -6472,6 +6472,10 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                         <Name>TotalLine</Name>
                         <ValueExpr>=1+$TotalLine</ValueExpr>
                     </ReportVariable>
+                    <ReportVariable>
+                        <Name>SubTotal</Name>
+                        <ValueExpr>=$SubTotal + [ARTran.CuryTranAmt]</ValueExpr>
+                    </ReportVariable>
                 </Variables>
                 <Items>
                     <TextBox Name="textBox42">
@@ -6689,7 +6693,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                                     <TextAlign>Right</TextAlign>
                                     <VerticalAlign>Middle</VerticalAlign>
                                 </Style>
-                                <Value>=[ARInvoice.CuryVatTaxableTotal]</Value>
+                                <Value>=$SubTotal</Value>
                             </TextBox>
                             <TextBox Name="textBox38">
                                 <Location>392px, 56px</Location>
