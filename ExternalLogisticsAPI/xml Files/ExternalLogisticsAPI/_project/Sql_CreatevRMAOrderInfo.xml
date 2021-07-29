@@ -1,0 +1,50 @@
+﻿<Sql TableName="CreatevRMAOrderInfo" CustomScript="#CDATA">
+    <CDATA name="CustomScript"><![CDATA[IF EXISTS
+(
+	SELECT *
+	FROM SYS.views
+	WHERE name = 'vRMAOrderInfo' AND SCHEMA_ID = SCHEMA_ID('dbo')
+)
+DROP VIEW [dbo].[vRMAOrderInfo]	
+GO
+CREATE VIEW vRMAOrderInfo AS
+SELECT c.CompanyCD,
+	   so.OrderType,
+	   so.OrderNbr,
+	   so.OrderDesc,
+	   so.CustomerOrderNbr,
+	   b.AcctName as CustomerID,
+	   so.CustomerRefNbr,
+	   soShip.ShipmentNbr,
+	   soShip.ShipDate,
+	   item.InventoryCD as InventoryID,
+	   item.Descr as InventoryDescr,
+	   soLine.OrderQty,
+	   soTax.CuryTaxAmt,
+	   shipInfo.SiteID,
+	   s.Descr as SiteDescr,
+	   soContact.Email,
+	   so.ContactID
+FROM SOOrder so
+INNER JOIN SOLine soline on so.OrderType = soline.OrderType 
+						and so.OrderNbr = soline.OrderNbr
+						and so.CompanyID = soline.CompanyID
+INNER JOIN InventoryItem item on soLine.InventoryID = item.InventoryID
+						     and soLine.CompanyID = item.CompanyID
+LEFT JOIN SOTaxTran soTax on so.OrderType = soTax.OrderType
+					     and so.OrderNbr = soTax.OrderNbr
+						 and so.CompanyID = soTax.CompanyID
+LEFT JOIN SOContact soContact on so.BillContactID = soContact.ContactID
+							 and so.CompanyID = soContact.CompanyID
+LEFT JOIN SOOrderShipment soShip on so.OrderType = soShip.OrderType
+								and so.OrderNbr = soShip.OrderNbr
+								and so.CompanyID = soShip.CompanyID
+LEFT JOIN SOShipment shipInfo on soShip.ShipmentNbr = shipInfo.ShipmentNbr
+							  and soShip.CompanyID = shipInfo.CompanyID
+INNER JOIN INSite s on shipInfo.SiteID = s.SiteID
+				   and shipInfo.CompanyID = s.CompanyID
+INNER JOIN Company c on so.CompanyID = c.CompanyID
+INNER JOIN BAccount b on so.CustomerID = b.BAccountID
+					 and so.CompanyID = b.CompanyID
+WHERE so.CompanyID > 0]]></CDATA>
+</Sql>

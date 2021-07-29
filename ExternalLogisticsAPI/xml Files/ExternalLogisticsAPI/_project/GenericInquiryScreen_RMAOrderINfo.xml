@@ -138,56 +138,30 @@
         <data>
             <GIDesign>
                 <row DesignID="f411ae33-d23d-4e14-825f-0ca5c7d20d60" Name="RMAOrderINfo" FilterColCount="3" PageSize="0" ExportTop="0" NewRecordCreationEnabled="0" MassDeleteEnabled="0" AutoConfirmDelete="0" MassRecordsUpdateEnabled="0" MassActionsOnRecordsEnabled="0" ExposeViaOData="0" ExposeViaMobile="0" ShowDeletedRecords="0" NotesAndFilesTable="$&lt;None&gt;">
-                    <GIFilter LineNbr="1" IsActive="1" Name="Test" FieldName="so.customerOrderNbr" DataType="string" DisplayName="CPanelInput" IsExpression="0" ColSpan="1" Required="0" />
-                    <GITable Alias="soTax" Name="PX.Objects.SO.SOTaxTran">
-                        <GIResult LineNbr="11" SortOrder="11" IsActive="1" Field="curyTaxAmt" SchemaField="soTax.CuryTaxAmt" IsVisible="1" DefaultNav="1" QuickFilter="0" FastFilter="0" RowID="a561b358-bffb-44dc-b87e-916ec0866642" />
+                    <GIFilter LineNbr="1" IsActive="1" Name="Cpanel" FieldName="t.customerOrderNbr" DataType="string" DisplayName="Cpanel" IsExpression="0" ColSpan="1" Required="0" />
+                    <GITable Alias="t" Name="ExternalLogisticsAPI.vRMAOrderInfo">
+                        <GIResult LineNbr="17" SortOrder="16" IsActive="1" Field="siteid" IsVisible="1" DefaultNav="1" QuickFilter="0" FastFilter="0" RowID="6636c67e-dd18-45e7-b8a0-32d65995ba28" />
+                        <GIResult LineNbr="16" SortOrder="15" IsActive="1" Field="siteDescr" IsVisible="1" DefaultNav="1" QuickFilter="0" FastFilter="0" RowID="d4e5dbda-860d-4105-b3c0-a595e9967783" />
+                        <GIResult LineNbr="15" SortOrder="14" IsActive="1" Field="shipmentNbr" IsVisible="1" DefaultNav="1" QuickFilter="0" FastFilter="0" RowID="8e98bd54-f682-4d73-a721-5b0bb21f9c70" />
+                        <GIResult LineNbr="14" SortOrder="13" IsActive="1" Field="shipDate" IsVisible="1" DefaultNav="1" QuickFilter="0" FastFilter="0" RowID="ac5c4b07-647d-449d-b6ed-b4a41114a96e" />
+                        <GIResult LineNbr="13" SortOrder="12" IsActive="1" Field="orderType" IsVisible="1" DefaultNav="1" QuickFilter="0" FastFilter="0" RowID="b0b27025-aed9-4b1a-8751-5de4ed085b1a" />
+                        <GIResult LineNbr="12" SortOrder="11" IsActive="1" Field="orderQty" IsVisible="1" DefaultNav="1" QuickFilter="0" FastFilter="0" RowID="653374e3-ccdf-45c0-aa5a-ba299fc99e69" />
+                        <GIResult LineNbr="11" SortOrder="10" IsActive="1" Field="orderNbr" IsVisible="1" DefaultNav="1" QuickFilter="0" FastFilter="0" RowID="1fc9b74f-cb16-4d7f-ac58-2f9112fd79fa" />
+                        <GIResult LineNbr="10" SortOrder="9" IsActive="1" Field="orderDesc" IsVisible="1" DefaultNav="1" QuickFilter="0" FastFilter="0" RowID="79efbbe4-3e8b-40fa-b400-7e042250c37e" />
+                        <GIResult LineNbr="9" SortOrder="8" IsActive="1" Field="inventoryID" IsVisible="1" DefaultNav="1" QuickFilter="0" FastFilter="0" RowID="85f100c7-7d7a-46e0-a1f3-86f5677f2f6d" />
+                        <GIResult LineNbr="8" SortOrder="7" IsActive="1" Field="inventoryDescr" IsVisible="1" DefaultNav="1" QuickFilter="0" FastFilter="0" RowID="c849b49e-d5ed-482b-8124-546b4aba01f6" />
+                        <GIResult LineNbr="7" SortOrder="6" IsActive="1" Field="email" IsVisible="1" DefaultNav="1" QuickFilter="0" FastFilter="0" RowID="3ada3c33-0c2f-40e6-97fc-80c36b26b203" />
+                        <GIResult LineNbr="6" SortOrder="5" IsActive="1" Field="customerRefNbr" IsVisible="1" DefaultNav="1" QuickFilter="0" FastFilter="0" RowID="35f0090f-1b01-4172-9b0e-11eea1848487" />
+                        <GIResult LineNbr="5" SortOrder="4" IsActive="1" Field="customerOrderNbr" IsVisible="1" DefaultNav="1" QuickFilter="0" FastFilter="0" RowID="f2750858-f609-425c-a1e7-ec8f49b002c2" />
+                        <GIResult LineNbr="4" SortOrder="3" IsActive="1" Field="customerID" IsVisible="1" DefaultNav="1" QuickFilter="0" FastFilter="0" RowID="17db5e34-0377-43af-8807-888fb877f3fa" />
+                        <GIResult LineNbr="3" SortOrder="2" IsActive="1" Field="curyTaxAmt" IsVisible="1" DefaultNav="1" QuickFilter="0" FastFilter="0" RowID="a3c6738d-10a1-42df-ada1-a25c723c2ea9" />
+                        <GIResult LineNbr="2" SortOrder="1" IsActive="1" Field="companyCD" IsVisible="1" DefaultNav="1" QuickFilter="0" FastFilter="0" RowID="70628221-b5c8-43ce-8932-46cdc63f8919" />
                     </GITable>
-                    <GITable Alias="soShip" Name="PX.Objects.SO.SOOrderShipment">
-                        <GIRelation LineNbr="5" ChildTable="shipinfo" IsActive="1" JoinType="L">
-                            <GIOn LineNbr="14" ParentField="shipmentNbr" Condition="E " ChildField="shipmentNbr" Operation="A" />
-                        </GIRelation>
-                        <GIResult LineNbr="7" SortOrder="7" IsActive="1" Field="shipDate" SchemaField="soShip.ShipDate" IsVisible="1" DefaultNav="1" QuickFilter="0" FastFilter="0" RowID="4a88ba0a-dc89-4c90-bc52-5c1819736b2e" />
-                        <GIResult LineNbr="4" SortOrder="4" IsActive="1" Field="shipmentNbr" SchemaField="soShip.ShipmentNbr" IsVisible="1" DefaultNav="1" QuickFilter="0" FastFilter="0" RowID="432bbf54-d319-4441-a44b-8a618fe19cb5" />
-                    </GITable>
-                    <GITable Alias="soLine" Name="PX.Objects.SO.SOLine">
-                        <GIResult LineNbr="10" SortOrder="9" IsActive="1" Field="inventoryID_description" IsVisible="1" DefaultNav="1" QuickFilter="0" FastFilter="0" RowID="602bc525-81de-420c-9aef-4bd4319c5dde" />
-                        <GIResult LineNbr="9" SortOrder="10" IsActive="1" Field="orderQty" SchemaField="soLine.OrderQty" IsVisible="1" DefaultNav="1" QuickFilter="0" FastFilter="0" RowID="41bfc3ae-721d-4540-9362-7ca159b6009a" />
-                        <GIResult LineNbr="6" SortOrder="8" IsActive="1" Field="inventoryID" SchemaField="soLine.InventoryID" IsVisible="1" DefaultNav="1" QuickFilter="0" FastFilter="0" RowID="e32229d1-5011-49d9-b714-c4a9a65a1ea3" />
-                    </GITable>
-                    <GITable Alias="soContact" Name="PX.Objects.CR.Contact">
-                        <GIResult LineNbr="12" SortOrder="12" IsActive="1" Field="email" SchemaField="soContact.Email" IsVisible="1" DefaultNav="1" QuickFilter="0" FastFilter="0" RowID="50590d5e-78c3-4ee5-8656-4f700371d86f" />
-                    </GITable>
-                    <GITable Alias="so" Name="PX.Objects.SO.SOOrder">
-                        <GIRelation LineNbr="4" ChildTable="soShip" IsActive="1" JoinType="L">
-                            <GIOn LineNbr="13" ParentField="so.OrderNbr" Condition="E " ChildField="soShip.OrderNbr" Operation="A" />
-                            <GIOn LineNbr="12" ParentField="so.OrderType" Condition="E " ChildField="soShip.OrderType" Operation="A" />
-                        </GIRelation>
-                        <GIRelation LineNbr="3" ChildTable="soContact" IsActive="1" JoinType="L">
-                            <GIOn LineNbr="11" ParentField="so.ContactID" Condition="E " ChildField="soContact.ContactID" Operation="A" />
-                        </GIRelation>
-                        <GIRelation LineNbr="2" ChildTable="soTax" IsActive="1" JoinType="L">
-                            <GIOn LineNbr="10" ParentField="so.OrderNbr" Condition="E " ChildField="soTax.OrderNbr" Operation="A" />
-                            <GIOn LineNbr="9" ParentField="so.OrderType" Condition="E " ChildField="soTax.OrderType" Operation="A" />
-                        </GIRelation>
-                        <GIRelation LineNbr="1" ChildTable="soLine" IsActive="1" JoinType="I">
-                            <GIOn LineNbr="4" ParentField="so.OrderNbr" Condition="E " ChildField="soLine.OrderNbr" Operation="A" />
-                            <GIOn LineNbr="3" ParentField="so.OrderType" Condition="E " ChildField="soLine.OrderType" Operation="A" />
-                        </GIRelation>
-                        <GIResult LineNbr="14" SortOrder="14" IsActive="1" Field="customerRefNbr" IsVisible="1" DefaultNav="1" QuickFilter="0" FastFilter="0" RowID="1bd2d1a6-23ad-452b-bda9-5bf99f12cf57" />
-                        <GIResult LineNbr="8" SortOrder="6" IsActive="1" Field="customerID" SchemaField="so.CustomerID" IsVisible="1" DefaultNav="1" QuickFilter="0" FastFilter="0" RowID="576147e5-9fb4-4bd8-ae36-b5afc702f679" />
-                        <GIResult LineNbr="5" SortOrder="5" IsActive="1" Field="customerOrderNbr" IsVisible="1" DefaultNav="1" QuickFilter="0" FastFilter="0" RowID="f2b567dc-45e3-4644-be61-b9be6fa45a07" />
-                        <GIResult LineNbr="3" SortOrder="3" IsActive="1" Field="invoiceNbr" SchemaField="so.InvoiceNbr" IsVisible="1" DefaultNav="1" QuickFilter="0" FastFilter="0" RowID="acb8e964-6ff4-4d01-96dc-9c15576c7a65" />
-                        <GIResult LineNbr="2" SortOrder="2" IsActive="1" Field="orderNbr" SchemaField="so.ordernb" IsVisible="1" DefaultNav="1" QuickFilter="0" FastFilter="0" RowID="a682922c-f741-480f-8845-6dbf96979632" />
-                        <GIResult LineNbr="1" SortOrder="1" IsActive="1" Field="orderType" SchemaField="so.order" IsVisible="1" DefaultNav="1" QuickFilter="0" FastFilter="0" RowID="14f19494-73d8-4cdd-84d6-111099c235af" />
-                    </GITable>
-                    <GITable Alias="shipinfo" Name="PX.Objects.SO.SOShipment">
-                        <GIResult LineNbr="13" SortOrder="13" IsActive="1" Field="siteID" SchemaField="shipinfo.SiteID" IsVisible="1" DefaultNav="1" QuickFilter="0" FastFilter="0" RowID="63947380-7aa5-4a06-94cb-6144e6433c82" />
-                    </GITable>
-                    <GIWhere LineNbr="5" IsActive="1" DataFieldName="so.customerRefNbr" Condition="E " IsExpression="0" Value1="[Test]" Operation="A" />
-                    <GIWhere LineNbr="4" IsActive="1" DataFieldName="so.customerOrderNbr" Condition="E " IsExpression="0" Value1="[Test]" Operation="O" />
-                    <GIWhere LineNbr="3" IsActive="1" DataFieldName="so.invoiceNbr" Condition="E " IsExpression="0" Value1="[Test]" Operation="O" />
-                    <GIWhere LineNbr="2" IsActive="1" DataFieldName="soShip.shipmentNbr" Condition="E " IsExpression="0" Value1="[Test]" Operation="O" />
-                    <GIWhere LineNbr="1" IsActive="1" DataFieldName="so.orderNbr" Condition="E " IsExpression="0" Value1="[Test]" Operation="O" />
+                    <GIWhere LineNbr="5" IsActive="1" DataFieldName="t.customerRefNbr" Condition="LI" IsExpression="0" Value1="[Cpanel]" Operation="A" />
+                    <GIWhere LineNbr="4" IsActive="1" DataFieldName="t.customerOrderNbr" Condition="LI" IsExpression="0" Value1="[Cpanel]" Operation="O" />
+                    <GIWhere LineNbr="3" IsActive="1" DataFieldName="t.shipmentNbr" Condition="LI" IsExpression="0" Value1="[Cpanel]" Operation="O" />
+                    <GIWhere LineNbr="2" IsActive="1" DataFieldName="t.orderDesc" Condition="LI" IsExpression="0" Value1="[Cpanel]" Operation="O" />
+                    <GIWhere LineNbr="1" IsActive="1" DataFieldName="t.orderNbr" Condition="LI" IsExpression="0" Value1="[Cpanel]" Operation="O" />
                     <SiteMap linkname="toDesignById">
                         <row Title="RMAOrderINfo" Url="~/GenericInquiry/GenericInquiry.aspx?id=f411ae33-d23d-4e14-825f-0ca5c7d20d60" ScreenID="GI000958" NodeID="9fb19975-afa5-4ce1-b81f-ddc2e31ec6df" ParentID="00000000-0000-0000-0000-000000000000">
                             <MUIScreen IsPortal="0" WorkspaceID="bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb" Order="640192" SubcategoryID="98e86774-69e3-41ea-b94f-eb2c7a8426d4">
