@@ -140,6 +140,8 @@
                 <row DesignID="f411ae33-d23d-4e14-825f-0ca5c7d20d60" Name="RMAOrderINfo" FilterColCount="3" PageSize="0" ExportTop="0" NewRecordCreationEnabled="0" MassDeleteEnabled="0" AutoConfirmDelete="0" MassRecordsUpdateEnabled="0" MassActionsOnRecordsEnabled="0" ExposeViaOData="0" ExposeViaMobile="0" ShowDeletedRecords="0" NotesAndFilesTable="$&lt;None&gt;">
                     <GIFilter LineNbr="1" IsActive="1" Name="Cpanel" FieldName="t.customerOrderNbr" DataType="string" DisplayName="Cpanel" IsExpression="0" ColSpan="1" Required="0" />
                     <GITable Alias="t" Name="ExternalLogisticsAPI.vRMAOrderInfo">
+                        <GIResult LineNbr="19" SortOrder="2" IsActive="1" Field="taxRate" IsVisible="1" DefaultNav="1" QuickFilter="0" FastFilter="0" RowID="e557f8ae-d9df-48ff-94db-195806b5a6ca" />
+                        <GIResult LineNbr="18" SortOrder="17" IsActive="1" Field="inventoryID" IsVisible="1" DefaultNav="1" QuickFilter="0" FastFilter="0" RowID="12e7ab8f-1469-48a3-be4c-74fd462c7d3c" />
                         <GIResult LineNbr="17" SortOrder="16" IsActive="1" Field="siteid" IsVisible="1" DefaultNav="1" QuickFilter="0" FastFilter="0" RowID="6636c67e-dd18-45e7-b8a0-32d65995ba28" />
                         <GIResult LineNbr="16" SortOrder="15" IsActive="1" Field="siteDescr" IsVisible="1" DefaultNav="1" QuickFilter="0" FastFilter="0" RowID="d4e5dbda-860d-4105-b3c0-a595e9967783" />
                         <GIResult LineNbr="15" SortOrder="14" IsActive="1" Field="shipmentNbr" IsVisible="1" DefaultNav="1" QuickFilter="0" FastFilter="0" RowID="8e98bd54-f682-4d73-a721-5b0bb21f9c70" />
@@ -148,13 +150,12 @@
                         <GIResult LineNbr="12" SortOrder="11" IsActive="1" Field="orderQty" IsVisible="1" DefaultNav="1" QuickFilter="0" FastFilter="0" RowID="653374e3-ccdf-45c0-aa5a-ba299fc99e69" />
                         <GIResult LineNbr="11" SortOrder="10" IsActive="1" Field="orderNbr" IsVisible="1" DefaultNav="1" QuickFilter="0" FastFilter="0" RowID="1fc9b74f-cb16-4d7f-ac58-2f9112fd79fa" />
                         <GIResult LineNbr="10" SortOrder="9" IsActive="1" Field="orderDesc" IsVisible="1" DefaultNav="1" QuickFilter="0" FastFilter="0" RowID="79efbbe4-3e8b-40fa-b400-7e042250c37e" />
-                        <GIResult LineNbr="9" SortOrder="8" IsActive="1" Field="inventoryID" IsVisible="1" DefaultNav="1" QuickFilter="0" FastFilter="0" RowID="85f100c7-7d7a-46e0-a1f3-86f5677f2f6d" />
-                        <GIResult LineNbr="8" SortOrder="7" IsActive="1" Field="inventoryDescr" IsVisible="1" DefaultNav="1" QuickFilter="0" FastFilter="0" RowID="c849b49e-d5ed-482b-8124-546b4aba01f6" />
-                        <GIResult LineNbr="7" SortOrder="6" IsActive="1" Field="email" IsVisible="1" DefaultNav="1" QuickFilter="0" FastFilter="0" RowID="3ada3c33-0c2f-40e6-97fc-80c36b26b203" />
-                        <GIResult LineNbr="6" SortOrder="5" IsActive="1" Field="customerRefNbr" IsVisible="1" DefaultNav="1" QuickFilter="0" FastFilter="0" RowID="35f0090f-1b01-4172-9b0e-11eea1848487" />
-                        <GIResult LineNbr="5" SortOrder="4" IsActive="1" Field="customerOrderNbr" IsVisible="1" DefaultNav="1" QuickFilter="0" FastFilter="0" RowID="f2750858-f609-425c-a1e7-ec8f49b002c2" />
-                        <GIResult LineNbr="4" SortOrder="3" IsActive="1" Field="customerID" IsVisible="1" DefaultNav="1" QuickFilter="0" FastFilter="0" RowID="17db5e34-0377-43af-8807-888fb877f3fa" />
-                        <GIResult LineNbr="3" SortOrder="2" IsActive="1" Field="curyTaxAmt" IsVisible="1" DefaultNav="1" QuickFilter="0" FastFilter="0" RowID="a3c6738d-10a1-42df-ada1-a25c723c2ea9" />
+                        <GIResult LineNbr="8" SortOrder="8" IsActive="1" Field="inventoryDescr" IsVisible="1" DefaultNav="1" QuickFilter="0" FastFilter="0" RowID="c849b49e-d5ed-482b-8124-546b4aba01f6" />
+                        <GIResult LineNbr="7" SortOrder="7" IsActive="1" Field="email" IsVisible="1" DefaultNav="1" QuickFilter="0" FastFilter="0" RowID="3ada3c33-0c2f-40e6-97fc-80c36b26b203" />
+                        <GIResult LineNbr="6" SortOrder="6" IsActive="1" Field="customerRefNbr" IsVisible="1" DefaultNav="1" QuickFilter="0" FastFilter="0" RowID="35f0090f-1b01-4172-9b0e-11eea1848487" />
+                        <GIResult LineNbr="5" SortOrder="5" IsActive="1" Field="customerOrderNbr" IsVisible="1" DefaultNav="1" QuickFilter="0" FastFilter="0" RowID="f2750858-f609-425c-a1e7-ec8f49b002c2" />
+                        <GIResult LineNbr="4" SortOrder="4" IsActive="1" Field="customerID" IsVisible="1" DefaultNav="1" QuickFilter="0" FastFilter="0" RowID="17db5e34-0377-43af-8807-888fb877f3fa" />
+                        <GIResult LineNbr="3" SortOrder="3" IsActive="1" Field="curyTaxAmt" IsVisible="1" DefaultNav="1" QuickFilter="0" FastFilter="0" RowID="a3c6738d-10a1-42df-ada1-a25c723c2ea9" />
                         <GIResult LineNbr="2" SortOrder="1" IsActive="1" Field="companyCD" IsVisible="1" DefaultNav="1" QuickFilter="0" FastFilter="0" RowID="70628221-b5c8-43ce-8932-46cdc63f8919" />
                     </GITable>
                     <GIWhere LineNbr="5" IsActive="1" DataFieldName="t.customerRefNbr" Condition="LI" IsExpression="0" Value1="[Cpanel]" Operation="A" />
