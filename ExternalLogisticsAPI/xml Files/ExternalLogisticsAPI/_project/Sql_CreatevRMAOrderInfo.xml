@@ -23,7 +23,7 @@ SELECT c.CompanyCD,
 	   soTax.CuryTaxAmt,
 	   soTax.TaxRate,
 	   shipInfo.SiteID,
-	   s.Descr as SiteDescr,
+	   s.SiteCD as SiteDescr,
 	   soContact.Email,
 	   so.ContactID
 FROM SOOrder so
