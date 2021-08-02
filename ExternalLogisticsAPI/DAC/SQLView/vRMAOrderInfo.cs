@@ -8,7 +8,7 @@ namespace ExternalLogisticsAPI
     public class vRMAOrderInfo : IBqlTable
     {
         #region CompanyCD
-        [PXDBString(128, IsUnicode = true, InputMask = "",IsKey = true)]
+        [PXDBString(128, IsUnicode = true, InputMask = "", IsKey = true)]
         [PXUIField(DisplayName = "Company CD")]
         public virtual string CompanyCD { get; set; }
         public abstract class companyCD : PX.Data.BQL.BqlString.Field<companyCD> { }
@@ -71,7 +71,7 @@ namespace ExternalLogisticsAPI
         #endregion
 
         #region InventoryID
-        [PXDBString(IsKey = true)]
+        [PXDBString(255, IsKey = true)]
         [PXUIField(DisplayName = "Inventory ID")]
         public virtual string InventoryID { get; set; }
         public abstract class inventoryID : PX.Data.BQL.BqlString.Field<inventoryID> { }
@@ -89,6 +89,13 @@ namespace ExternalLogisticsAPI
         [PXUIField(DisplayName = "Order Qty")]
         public virtual Decimal? OrderQty { get; set; }
         public abstract class orderQty : PX.Data.BQL.BqlDecimal.Field<orderQty> { }
+        #endregion
+
+        #region TaxRate
+        [PXDBDecimal()]
+        [PXUIField(DisplayName = "Tax Rate")]
+        public virtual Decimal? TaxRate { get; set; }
+        public abstract class taxRate : PX.Data.BQL.BqlDecimal.Field<taxRate> { }
         #endregion
 
         #region CuryTaxAmt

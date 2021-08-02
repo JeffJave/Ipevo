@@ -21,8 +21,9 @@ SELECT c.CompanyCD,
 	   item.Descr as InventoryDescr,
 	   soLine.OrderQty,
 	   soTax.CuryTaxAmt,
+	   soTax.TaxRate,
 	   shipInfo.SiteID,
-	   s.Descr as SiteDescr,
+	   s.SiteCD as SiteDescr,
 	   soContact.Email,
 	   so.ContactID
 FROM SOOrder so
