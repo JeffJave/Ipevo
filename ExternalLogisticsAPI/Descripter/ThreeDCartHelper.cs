@@ -149,7 +149,7 @@ namespace ExternalLogisticsAPI.Descripter
 
                 orderEntry.Save.Press();
 
-                CreatePaymentProcess(order);
+                CreatePaymentProcess(order, processOrder.OrderNbr);
             }
             catch (PXException ex)
             {
@@ -303,7 +303,7 @@ namespace ExternalLogisticsAPI.Descripter
         /// <summary>
         /// Manually create AR payment and related to specified sales order.
         /// </summary>
-        public static void CreatePaymentProcess(SOOrder order)
+        public static void CreatePaymentProcess(SOOrder order, string orderNbr)
         {
             ARPaymentEntry pymtEntry = PXGraph.CreateInstance<ARPaymentEntry>();
 
@@ -321,8 +321,8 @@ namespace ExternalLogisticsAPI.Descripter
             payment.PaymentMethodID    = order.PaymentMethodID;
             payment.PMInstanceID       = order.PMInstanceID;
             payment.CuryOrigDocAmt     = 0m;
-            payment.ExtRefNbr          = order.CustomerRefNbr ?? order.OrderNbr;
-            payment.DocDesc            = order.OrderDesc;
+            payment.ExtRefNbr          = orderNbr;
+            payment.DocDesc            = order.OrderNbr;
 
             payment = pymtEntry.Document.Update(payment);
 

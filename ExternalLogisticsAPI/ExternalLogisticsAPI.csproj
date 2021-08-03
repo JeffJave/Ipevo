@@ -19,7 +19,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\Bin\</OutputPath>
+    <OutputPath>..\..\..\..\Bin\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
@@ -33,16 +33,17 @@
   <ItemGroup>
     <Reference Include="APILibrary, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Bin\APILibrary.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\..\..\..\Bin\APILibrary.dll</HintPath>
     </Reference>
     <Reference Include="BouncyCastle.Crypto">
       <HintPath>..\..\..\..\Bin\BouncyCastle.Crypto.dll</HintPath>
     </Reference>
     <Reference Include="itextsharp">
-      <HintPath>..\packages\iTextSharp.5.5.13.2\lib\itextsharp.dll</HintPath>
+      <HintPath>..\..\..\..\Bin\itextsharp.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Bin\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="PX.CarrierService">
       <HintPath>..\..\..\..\Bin\PX.CarrierService.dll</HintPath>
@@ -119,6 +120,7 @@
     <Compile Include="Graph\LUMPACIssueImportProc.cs" />
     <Compile Include="Graph\LUMSalesChanelSetup.cs" />
     <Compile Include="Graph\LUMWarehouseImportProc.cs" />
+    <Compile Include="Graph_Extensions\CADepositEntry.cs" />
     <Compile Include="Graph_Extensions\QuoteMaint.cs" />
     <Compile Include="Graph_Extensions\SOInvoiceEntry_Extension.cs" />
     <Compile Include="Graph_Extensions\SOCreateShipment.cs" />
@@ -130,7 +132,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
