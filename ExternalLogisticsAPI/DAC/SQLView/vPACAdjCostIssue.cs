@@ -63,11 +63,19 @@ namespace ExternalLogisticsAPI
         public abstract class siteid : PX.Data.BQL.BqlInt.Field<siteid> { }
         #endregion
 
-        #region AssemblyAdjAmount
+        #region IssueAdjAmount
         [PXDBDecimal()]
         [PXUIField(DisplayName = "Issue Adj Amount")]
         public virtual Decimal? IssueAdjAmount { get; set; }
         public abstract class issueAdjAmount : PX.Data.BQL.BqlDecimal.Field<issueAdjAmount> { }
         #endregion
+
+        #region ReasonCode
+        [PXDBString(PX.Objects.CS.ReasonCode.reasonCodeID.Length, IsUnicode = true)]
+        [PXUIField(DisplayName = "Reason Code")]
+        public virtual String ReasonCode { get;set;}
+        public abstract class reasonCode : PX.Data.BQL.BqlString.Field<reasonCode> { }
+        #endregion
+
     }
 }
