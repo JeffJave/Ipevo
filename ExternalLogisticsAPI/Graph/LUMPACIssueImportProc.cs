@@ -49,6 +49,7 @@ namespace ExternalLogisticsAPI.Graph
                 data.PACIssueCost = item.PACIssueCost;
                 data.Siteid = item.Siteid;
                 data.IssueAdjAmount = item.IssueAdjAmount;
+                data.ReasonCode = item.ReasonCode;
             }
             this.Actions.PressSave();
             return adapter.Get();

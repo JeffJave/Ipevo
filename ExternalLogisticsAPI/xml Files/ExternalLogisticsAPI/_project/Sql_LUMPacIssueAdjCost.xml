@@ -9,6 +9,7 @@
   <col name="PACIssueCost" type="Decimal(18,6)" nullable="true" />
   <col name="SiteID" type="Int" />
   <col name="IssueAdjAmount" type="Decimal(18,6)" nullable="true" />
+  <col name="ReasonCode" type="NVarChar(20)" nullable="true" />
   <col name="CreatedByID" type="UniqueIdentifier" />
   <col name="CreatedByScreenID" type="Char(8)" />
   <col name="CreatedDateTime" type="DateTime" />

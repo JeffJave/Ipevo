@@ -11,14 +11,15 @@ CREATE VIEW vPACAdjCostIssue AS
 select cost.CompanyID,
 	　 cost.FinPeriodID,
 	   i.ItemClassID,
-	 　MAX(isnull(cost.FinPtdCostIssued,0)) as FinPtdCostIssued,
-	   MAX(cost.FinPtdQtyIssued) as FinPtdQtyIssued,
-	   MAX(p.PACUnitCost) as PACUnitCost,
-	   MAX(cost.InventoryID) as InventoryID,
-	   MAX(cost.FinPtdQtyIssued * p.PACUnitCost) as PACIssueCost,
-	   MAX(s.SiteID) as SiteID,
-	   MAX(isnull(cost.FinPtdCostIssued,0) - (cost.FinPtdQtyIssued * p.PACUnitCost)) as IssueAdjAmount
-from INItemCostHist cost
+	 　isnull(cost.BaseQty,0) as FinPtdCostIssued,
+	   cost.TranCost as FinPtdQtyIssued,
+	   p.PACUnitCost as PACUnitCost,
+	   cost.InventoryID as InventoryID,
+	   (cost.BaseQty * p.PACUnitCost) as PACIssueCost,
+	   (s.SiteID) as SiteID,
+	   (isnull(cost.TranCost,0) - (cost.BaseQty * p.PACUnitCost)) as IssueAdjAmount,
+	   cost.ReasonCode
+from INTran cost
 left join INSite s on cost.CompanyID = s.CompanyID
 				  and cost.SiteID = s.SiteID
 inner join InventoryItem i on cost.CompanyID = i.CompanyID
@@ -26,5 +27,6 @@ inner join InventoryItem i on cost.CompanyID = i.CompanyID
 left join vPACUnitCost p on cost.CompanyID = p.companyid
 						 and cost.InventoryID = p.InventoryID
 						 and cost.FinPeriodID = p.FinPeriodID
-group by cost.FinPeriodID,cost.SiteID,cost.InventoryID,i.ItemClassID,cost.CompanyID having SUM(cost.FinPtdQtyIssued) > 0]]></CDATA>
+where cost.DocType not in ('R','T','A','P','D')
+  and cost.ReasonCode is not null]]></CDATA>
 </Sql>

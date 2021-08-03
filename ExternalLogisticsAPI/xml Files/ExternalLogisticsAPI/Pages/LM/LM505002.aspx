@@ -27,6 +27,7 @@
                     <px:PXGridColumn DataField="Siteid"></px:PXGridColumn>
                     <px:PXGridColumn DataField="InventoryID"></px:PXGridColumn>
                     <px:PXGridColumn DataField="ItemClassID"></px:PXGridColumn>
+                    <px:PXGridColumn DataField="ReasonCode"></px:PXGridColumn>
                     <px:PXGridColumn DataField="FinPtdQtyIssued"></px:PXGridColumn>
                     <px:PXGridColumn DataField="FinPtdCostIssued"></px:PXGridColumn>
                     <px:PXGridColumn DataField="PACUnitCost"></px:PXGridColumn>
