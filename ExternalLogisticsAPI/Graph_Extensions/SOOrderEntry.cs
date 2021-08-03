@@ -58,17 +58,17 @@ namespace ExternalLogisticsAPI.Graph_Extensions
                 DCLShipmentRequestEntity model = new DCLShipmentRequestEntity();
                 CombineDLCShipmentEntity(model, order);
                 PXNoteAttribute.SetNote(Base.Document.Cache, order, APIHelper.GetJsonString(model));
-                order.GetExtension<SOOrderExt>().UsrDCLShipmentCreated = true;
+                //order.GetExtension<SOOrderExt>().UsrDCLShipmentCreated = true;
 
 
                 #region  Send Data to DCL for Create Shipment(Implement)
 
-                //var dclResult = DCLHelper.CallDCLToCreateShipment(this.DCLSetup.Select().RowCast<LUMVendCntrlSetup>().FirstOrDefault(), model);
-                //var response = APIHelper.GetObjectFromString<DCLShipmentResponseEntity>(dclResult.ContentResult);
-                //if (dclResult.StatusCode == System.Net.HttpStatusCode.OK)
-                //    order.GetExtension<SOOrderExt>().UsrDCLShipmentCreated = true;
-                //else
-                //    throw new PXException(response.error_message); 
+                var dclResult = DCLHelper.CallDCLToCreateShipment(this.DCLSetup.Select().RowCast<LUMVendCntrlSetup>().FirstOrDefault(), model);
+                var response = APIHelper.GetObjectFromString<DCLShipmentResponseEntity>(dclResult.ContentResult);
+                if (dclResult.StatusCode == System.Net.HttpStatusCode.OK)
+                    order.GetExtension<SOOrderExt>().UsrDCLShipmentCreated = true;
+                else
+                    throw new PXException(response.error_message);
 
                 #endregion
                 Base.Document.Cache.Update(order);
