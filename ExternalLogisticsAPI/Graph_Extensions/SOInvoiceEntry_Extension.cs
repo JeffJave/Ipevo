@@ -35,11 +35,12 @@ namespace PX.Objects.SO
             base.Initialize();
             Base.action.AddMenuAction(LumLOBMailPaperInvoice);
             LumLOBMailPaperInvoice.SetEnabled(false);
+            LumLOBMailPaperInvoice.SetVisible(false);
 
             var curCoutry = (PXSelect<Branch>.Select(Base, PX.Data.Update.PXInstanceHelper.CurrentCompany)).TopFirst;
             if (curCoutry?.CountryID == "US" || curCoutry?.BaseCuryID == "USD")
             {
-                LumLOBMailPaperInvoice.SetEnabled(true);
+                LumLOBMailPaperInvoice.SetVisible(true);
             }
         }
 
@@ -50,10 +51,12 @@ namespace PX.Objects.SO
             if (aRInvoice == null) return;
 
             //show Send Papper Invoice or not
+            //Type = INV and Attribute clicked
             bool needPapperInvoice = (SelectFrom<CSAnswers>.
                                       LeftJoin<Customer>.On<Customer.noteID.IsEqual<CSAnswers.refNoteID>.And<CSAnswers.attributeID.IsEqual<PapperInvoiceAttr>>>.
                                       Where<Customer.bAccountID.IsEqual<ARInvoice.customerID.FromCurrent>>.View.Select(Base).TopFirst?.Value) != null ? true : false;
-            if (needPapperInvoice) LumLOBMailPaperInvoice.SetEnabled(true);
+            if (aRInvoice.GetExtension<ARInvoiceExt>().UsrLOBSent == true) LumLOBMailPaperInvoice.SetEnabled(false);
+            else if (needPapperInvoice && aRInvoice.DocType == "INV") LumLOBMailPaperInvoice.SetEnabled(true);
             else LumLOBMailPaperInvoice.SetEnabled(false);
         }
         #endregion
@@ -71,6 +74,12 @@ namespace PX.Objects.SO
                 if (requestBaseInfo?.IsProd == null || requestBaseInfo?.Lobapiurl == null || requestBaseInfo?.AuthCode_Test == null || requestBaseInfo?.AuthCode_Prod == null)
                 {
                     throw new PXException("Please set some base information in Sales Chanel Preferences.");
+                }
+
+                //Check it sent or not
+                if (Base.Document.Current.GetExtension<ARInvoiceExt>().UsrLOBSent == true)
+                {
+                    throw new PXException("It is already sent to LOB paper invoice.");
                 }
 
                 //Report Paramenters
@@ -156,12 +165,17 @@ namespace PX.Objects.SO
 
                             if (response.StatusCode == System.Net.HttpStatusCode.OK)
                             {
-
+                                ARInvoice aRInvoice = Base.Document.Current;
+                                aRInvoice.GetExtension<ARInvoiceExt>().UsrLOBSent = true;
+                                Base.Document.Cache.Update(aRInvoice);
+                                //enable button
+                                LumLOBMailPaperInvoice.SetEnabled(false);
                             }
                         }
                     }
                 });
             }
+            Base.Persist();
             return adapter.Get();
         }
         #endregion
