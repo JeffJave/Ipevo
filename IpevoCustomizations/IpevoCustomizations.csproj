@@ -68,11 +68,13 @@
     <Compile Include="DAC_Extensions\PaymentInfo.cs" />
     <Compile Include="DAC_Extensions\SOOrderExtensions.cs" />
     <Compile Include="DAC_Extensions\Tax.cs" />
+    <Compile Include="Descriptor\LUMGetAvailablePaymentsAttribute.cs" />
     <Compile Include="Graph\LUMFrtNonTaxStateMaint.cs" />
     <Compile Include="Graph\LUMRestockNonTaxStateMaint.cs" />
     <Compile Include="Graph_Extensions\APPaymentEntryExt.cs" />
     <Compile Include="Graph_Extensions\APPayBills_Extension.cs" />
     <Compile Include="Graph_Extensions\ARInvoiceEntryExternalTax.cs" />
+    <Compile Include="Graph_Extensions\CADepositEntry.cs" />
     <Compile Include="Graph_Extensions\SOInvoiceEntry_Extension.cs" />
     <Compile Include="DAC_Extensions\SOShipLineExt.cs" />
     <Compile Include="Graph_Extensions\SOOrderEntry.cs" />
