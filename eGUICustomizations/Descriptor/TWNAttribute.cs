@@ -72,11 +72,11 @@ namespace eGUICustomizations.Descriptor
 
         public void FieldVerifying(PXCache sender, PXFieldVerifyingEventArgs e)
         {
-            if (string.IsNullOrEmpty((string)e.NewValue) ||
-                TWNGUIValidation.ActivateTWGUI(new PXGraph()) == false) { return; }
+            if (string.IsNullOrEmpty((string)e.NewValue) || TWNGUIValidation.ActivateTWGUI(new PXGraph()) == false) { return; }
 
             object obj = null;
             string vATCode = null;
+            string erroMsg = null;
 
             switch (this.BqlTable.Name)
             {
@@ -105,11 +105,16 @@ namespace eGUICustomizations.Descriptor
 
             vATCode = obj is null ? string.Empty : obj.ToString();
 
-            if ((!vATCode.IsIn(TWGUIFormatCode.vATOutCode33, TWGUIFormatCode.vATOutCode34) ||
-                vATCode.IsIn(TWGUIFormatCode.vATInCode21, TWGUIFormatCode.vATInCode23, TWGUIFormatCode.vATInCode25)) &&
-                e.NewValue.ToString().Length < 10)
+            if (!vATCode.IsIn(TWGUIFormatCode.vATOutCode33, TWGUIFormatCode.vATOutCode34) )
             {
-                throw new PXSetPropertyException(TWMessages.GUINbrMini, PXErrorLevel.Error);
+                erroMsg = (vATCode.IsIn(TWGUIFormatCode.vATInCode21, TWGUIFormatCode.vATInCode23, TWGUIFormatCode.vATInCode25) && e.NewValue.ToString().Length != 10) ? TWMessages.GUINbrLength : 
+                                                                                                                                                                        (e.NewValue.ToString().Length < 10) ? TWMessages.GUINbrMini : 
+                                                                                                                                                                                                              null;
+            }
+
+            if (!string.IsNullOrEmpty(erroMsg))
+            {
+                throw new PXSetPropertyException(erroMsg, PXErrorLevel.Error);
             }
 
             new TWNGUIValidation().CheckGUINbrExisted(sender.Graph, (string)e.NewValue, vATCode);
