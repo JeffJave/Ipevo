@@ -140,6 +140,7 @@ namespace ExternalLogisticsAPI.Descripter
                 order.OrderType        = curSetup.OrderType;
                 order.CustomerID       = curSetup.CustomerID;
                 order.CustomerOrderNbr = processOrder.OrderID;
+                order.CustomerRefNbr   = processOrder.OrderNbr;
                 order.OrderDesc        = $"Invoice No. : {processOrder.OrderNbr}";
                 order.DocDate          = processOrder.OrderDate;
 
@@ -149,7 +150,7 @@ namespace ExternalLogisticsAPI.Descripter
 
                 orderEntry.Save.Press();
 
-                CreatePaymentProcess(order, processOrder.OrderNbr);
+                CreatePaymentProcess(order);
             }
             catch (PXException ex)
             {
@@ -185,10 +186,10 @@ namespace ExternalLogisticsAPI.Descripter
                 orderEntry.Taxes.Cache.SetValueExt<SOTaxTran.curyTaxAmt>(orderEntry.Taxes.Current, list[0].SalesTax + list[0].SalesTax2);
                 orderEntry.CurrentDocument.SetValueExt<SOOrder.paymentMethodID>(order, GetAcuPymtMethod(orderEntry, order.CustomerID, list[0].BillingPaymentMethod));
 
-                string tranID = list.Find(x => x.TransactionList.Count > 0).TransactionList[0].TransactionID;
-                int    index  = tranID.IndexOf(':') + 2; // Because there is a space between the ':' of transaction ID.
+                //string tranID = list.Find(x => x.TransactionList.Count > 0).TransactionList[0].TransactionID;
+                //int    index  = tranID.IndexOf(':') + 2; // Because there is a space between the ':' of transaction ID.
 
-                order.CustomerRefNbr = tranID.Contains(PX.Objects.PO.Messages.Completed) ? tranID.Substring(index, tranID.Length - index) : null;
+                //order.CustomerRefNbr = tranID.Contains(PX.Objects.PO.Messages.Completed) ? tranID.Substring(index, tranID.Length - index) : null;
 
                 // Refer to PX.AmazonIntegration project SetDocumentLevelDiscountandTaxData() to manully update SOOrder total amount fields.
                 order.CuryTaxTotal    = orderEntry.Taxes.Current.CuryTaxAmt;
@@ -303,7 +304,7 @@ namespace ExternalLogisticsAPI.Descripter
         /// <summary>
         /// Manually create AR payment and related to specified sales order.
         /// </summary>
-        public static void CreatePaymentProcess(SOOrder order, string orderNbr)
+        public static void CreatePaymentProcess(SOOrder order)
         {
             ARPaymentEntry pymtEntry = PXGraph.CreateInstance<ARPaymentEntry>();
 
@@ -321,7 +322,7 @@ namespace ExternalLogisticsAPI.Descripter
             payment.PaymentMethodID    = order.PaymentMethodID;
             payment.PMInstanceID       = order.PMInstanceID;
             payment.CuryOrigDocAmt     = 0m;
-            payment.ExtRefNbr          = orderNbr;
+            payment.ExtRefNbr          = order.CustomerRefNbr;
             payment.DocDesc            = order.OrderNbr;
 
             payment = pymtEntry.Document.Update(payment);
