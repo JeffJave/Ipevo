@@ -128,7 +128,7 @@ namespace PX.Objects.AP
 
                 decimal? taxSum = 0;
 
-                foreach (TWNManualGUIAPBill line in ManualAPBill.Cache.Cached)
+                foreach (TWNManualGUIAPBill line in ManualAPBill.Select())
                 {
                     taxSum += line.TaxAmt.Value;
                 }
