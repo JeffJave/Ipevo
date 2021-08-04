@@ -102,6 +102,12 @@ namespace PX.Objects.AR
             PXUIFieldAttribute.SetEnabled<ARRegisterExt.usrVATOutCode>  (e.Cache, e.Row, string.IsNullOrEmpty(registerExt.UsrGUINbr));
 
             PXUIFieldAttribute.SetEnabled<ARRegisterExt.usrCreditAction>(e.Cache, e.Row, state.DocumentDescrEnabled);
+            PXUIFieldAttribute.SetVisible<ARRegisterExt.usrGUITitle>(e.Cache, null, activateGUI);
+            PXUIFieldAttribute.SetVisible<ARRegisterExt.usrCustomType>(e.Cache, null, activateGUI);
+            PXUIFieldAttribute.SetVisible<ARRegisterExt.usrClearingDate>(e.Cache, null, activateGUI);
+            PXUIFieldAttribute.SetVisible<ARRegisterExt.usrExportMethods>(e.Cache, null, activateGUI);
+            PXUIFieldAttribute.SetVisible<ARRegisterExt.usrExportTicketType>(e.Cache, null, activateGUI);
+            PXUIFieldAttribute.SetVisible<ARRegisterExt.usrExportTicketNbr>(e.Cache, null, activateGUI);
         }
 
         protected void _(Events.RowUpdated<ARInvoice> e, PXRowUpdated baseHandler)

@@ -149,6 +149,8 @@ namespace PX.Objects.AR
                                     NPONbr        = docExt.UsrB2CType == TWNB2CType.NPO ? GetNPOBAN(docExt.UsrTaxNbr, docExt.UsrNPONbr) : null,
                                     B2CPrinted    = (docExt.UsrB2CType == TWNB2CType.DEF && string.IsNullOrEmpty(docExt.UsrTaxNbr)) ? true : false,
                                 });
+
+                                TWNReleaseProcess.UpdateAddilInfoFromInvoice(rp, docExt);
                             }                           
 
                             if (tWNGUITrans != null)

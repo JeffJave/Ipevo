@@ -27,7 +27,7 @@ namespace eGUICustomizations.Descriptor
         public const string NoPlasticBag   = "No Plastic Bag Pecified On GUI Preferences.";
         public const string StatusNotUsed  = "The GUI <{0}> Status Isn't [Used].";
         public const string FmtCodeIncort  = "The GUI <{0}> Format Code Isn't [31] Or [35].";
-        public const string GUINbrLength   = "The Length Of GUI Number Should be 10 Characters";
+        public const string GUINbrLength   = "The Length Of GUI Number Need To Be 10 Characters";
         public const string GUINbrMini     = "The Minimum Length Of GUI Number Is 10.";
         public const string DefPrinter     = "Please Define Default Printer.";
         public const string RemainAmt      = "The Remaining Amount Isn't Enough to Settle.";
