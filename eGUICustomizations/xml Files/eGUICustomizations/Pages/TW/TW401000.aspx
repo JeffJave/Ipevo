@@ -16,10 +16,9 @@
 			    <Columns>
 				<px:PXGridColumn DataField="GUIStatus" Width="70" ></px:PXGridColumn>
 				<px:PXGridColumn DataField="Branch" Width="70" ></px:PXGridColumn>
-				<px:PXGridColumn DataField="Branch_Branch_acctName" Width="220" ></px:PXGridColumn>
+				<px:PXGridColumn DataField="Branch_Branch_acctName" Width="180" ></px:PXGridColumn>
 				<px:PXGridColumn DataField="GUIDirection" Width="70" ></px:PXGridColumn>
 				<px:PXGridColumn DataField="GUIFormatcode" Width="70" ></px:PXGridColumn>
-				<px:PXGridColumn Visible="" DataField="GUIControlCode" Width="140" ></px:PXGridColumn>
 				<px:PXGridColumn DataField="Guinbr" Width="70" ></px:PXGridColumn>
 				<px:PXGridColumn DataField="Guidate" Width="90" ></px:PXGridColumn>
 				<px:PXGridColumn DataField="GUIDecPeriod" Width="90" ></px:PXGridColumn>
@@ -33,16 +32,16 @@
 				<px:PXGridColumn DataField="TaxAmount" Width="100" ></px:PXGridColumn>
 				<px:PXGridColumn DataField="NetAmtRemain" Width="100" ></px:PXGridColumn>
 				<px:PXGridColumn DataField="TaxAmtRemain" Width="100" ></px:PXGridColumn>
-				<px:PXGridColumn DataField="SequenceNo" Width="70" ></px:PXGridColumn>
-				<px:PXGridColumn DataField="CustVend" Width="80" ></px:PXGridColumn>
+				<px:PXGridColumn DataField="SequenceNo" Width="90" ></px:PXGridColumn>
+				<px:PXGridColumn DataField="CustVend" Width="120" ></px:PXGridColumn>
 				<px:PXGridColumn DataField="CustVendName" Width="280" ></px:PXGridColumn>
-				<px:PXGridColumn DisplayMode="Hint" DataField="DeductionCode" Width="70" ></px:PXGridColumn>
-				<px:PXGridColumn DataField="BatchNbr" Width="70" ></px:PXGridColumn>
-				<px:PXGridColumn DataField="OrderNbr" Width="80" ></px:PXGridColumn>
+				<px:PXGridColumn DisplayMode="Hint" DataField="DeductionCode" Width="100" ></px:PXGridColumn>
+				<px:PXGridColumn DataField="BatchNbr" Width="100" ></px:PXGridColumn>
+				<px:PXGridColumn DataField="OrderNbr" Width="100" ></px:PXGridColumn>
 				<px:PXGridColumn DataField="TransDate" Width="90" ></px:PXGridColumn>
 				<px:PXGridColumn DataField="PrintedDate" Width="90" ></px:PXGridColumn>
 				<px:PXGridColumn DataField="ExportMethods" Width="70" ></px:PXGridColumn>
-				<px:PXGridColumn DataField="ExportTicketType" Width="70" ></px:PXGridColumn>
+				<px:PXGridColumn DataField="ExportTicketType" Width="90" ></px:PXGridColumn>
 				<px:PXGridColumn DataField="ExportTicketNbr" Width="140" ></px:PXGridColumn>
 				<px:PXGridColumn DataField="CustomType" Width="140" ></px:PXGridColumn>
 				<px:PXGridColumn Visible="" DataField="ClearingDate" Width="90" ></px:PXGridColumn>
@@ -69,7 +68,7 @@
 								<px:PXSelector AllowEdit="True" runat="server" ID="CstPXSelector7" DataField="TaxZoneID" ></px:PXSelector>
 								<px:PXSelector AllowEdit="True" runat="server" ID="CstPXSelector8" DataField="Branch" ></px:PXSelector>
 								<px:PXSelector runat="server" ID="CstPXSelector9" DataField="CustVend" AllowEdit="True" ></px:PXSelector>
-								<px:PXSelector runat="server" ID="CstPXSelector10" DataField="BatchNbr" AllowEdit="True" /></RowTemplate></px:PXGridLevel>
+								<px:PXSelector runat="server" ID="CstPXSelector10" DataField="BatchNbr" AllowEdit="True" ></px:PXSelector></RowTemplate></px:PXGridLevel>
 		</Levels>
 		<AutoSize Container="Window" Enabled="True"></AutoSize>
 		<ActionBar >
