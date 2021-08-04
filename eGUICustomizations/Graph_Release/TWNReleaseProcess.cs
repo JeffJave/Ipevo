@@ -2,11 +2,11 @@
 using PX.Data;
 using PX.Data.BQL;
 using PX.Data.BQL.Fluent;
+using PX.Objects.AR;
 using PX.Objects.GL;
 using PX.Objects.TX;
 using eGUICustomizations.DAC;
 using eGUICustomizations.Descriptor;
-using eGUICustomizations.Graph;
 using static eGUICustomizations.Descriptor.TWNStringList;
 
 namespace eGUICustomizations.Graph_Release
@@ -19,7 +19,7 @@ namespace eGUICustomizations.Graph_Release
         public int SequenceNo { get; set; }
         #endregion
 
-        #region Functions
+        #region Methods
         public TWNGUITrans InitAndCheckOnAP(string gUINbr, string vATInCode)
         {
             SequenceNo = (int)PXSelectGroupBy<TWNGUITrans,
@@ -177,6 +177,25 @@ namespace eGUICustomizations.Graph_Release
                                And<TWNGUITrans.sequenceNo, Equal<Zero>,
                                    And<TWNGUITrans.gUINbr, Equal<Required<TWNGUITrans.gUINbr>>>>>>>
                                    .Update(new PXGraph(), TWNGUIStatus.Voided, gUINbr);
+        }
+
+        /// <summary>
+        /// Add the following update logic per spec [GUI enhancement].
+        /// </summary>
+        /// <param name="graph"></param>
+        /// <param name="registerExt"></param>
+        public static void UpdateAddilInfoFromInvoice(PXGraph graph, ARRegisterExt registerExt)
+        {
+            TWNGUITrans gUITran = graph.Caches[typeof(TWNGUITrans)].Current as TWNGUITrans;
+
+            gUITran.CustomType       = registerExt.UsrCustomType;
+            gUITran.ClearingDate     = registerExt.UsrClearingDate;
+            gUITran.ExportMethods    = registerExt.UsrExportMethods;
+            gUITran.ExportTicketType = registerExt.UsrExportTicketType;
+            gUITran.ExportTicketNbr  = registerExt.UsrExportTicketNbr;
+
+            graph.Caches[typeof(TWNGUITrans)].Update(gUITran);
+            graph.Actions.PressSave();
         }
         #endregion
     }
