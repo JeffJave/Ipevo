@@ -180,7 +180,7 @@ namespace eGUICustomizations.DAC
 
         #region CustVend
         [PXDBString(20, IsUnicode = true)]
-        [PXUIField(DisplayName = "Cust/Vend")]
+        [PXUIField(DisplayName = "Customer/Vendor")]
         [PXSelector(typeof(Search<PX.Objects.CR.BAccount.acctCD,
                                   Where<PX.Objects.CR.BAccount.type.IsIn<PX.Objects.CR.BAccountType.customerType,
                                                                          PX.Objects.CR.BAccountType.vendorType,
@@ -248,7 +248,7 @@ namespace eGUICustomizations.DAC
 
         #region PrintedDate
         [PXDBDate()]
-        [PXUIField(DisplayName = "Printed Date")]
+        [PXUIField(DisplayName = "Printed Date", Visible = false)]
         public virtual DateTime? PrintedDate { get; set; }
         public abstract class printedDate : PX.Data.BQL.BqlDateTime.Field<printedDate> { }
         #endregion
