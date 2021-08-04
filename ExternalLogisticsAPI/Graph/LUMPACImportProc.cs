@@ -31,7 +31,11 @@ namespace ExternalLogisticsAPI.Graph
         protected virtual IEnumerable LoadData(PXAdapter adapter)
         {
             var filter = this.Filter.Current;
-            var sourceData = SelectFrom<vPACAdjCost>.Where<vPACAdjCost.finPeriodID.IsEqual<P.AsString>.And<vPACAdjCost.itemClassID.IsEqual<P.AsInt>>>.View.Select(this, filter.FinPeriod,filter.ItemClassID).RowCast<vPACAdjCost>().ToList().Where(x => x.FinPeriodID == filter.FinPeriod);
+            var sourceData = SelectFrom<vPACAdjCost>
+                            .Where<vPACAdjCost.finPeriodID.IsEqual<P.AsString>>.View.Select(this, filter.FinPeriod).RowCast<vPACAdjCost>().ToList();
+
+            if (filter.ItemClassID.HasValue)
+                sourceData = sourceData.Where(x => x.ItemClassID == filter.ItemClassID.Value).ToList();
 
             // Delete temp table data
             PXDatabase.Delete<LUMPacAdjCost>();
@@ -67,8 +71,6 @@ namespace ExternalLogisticsAPI.Graph
 
                 if (string.IsNullOrEmpty(filter.FinPeriod))
                     throw new PXException("Period can not be empty!!");
-                if(!filter.ItemClassID.HasValue)
-                    throw new PXException("ItemClass can not be empty!!");
 
                 if (!impDatas.Any())
                     throw new PXException("No Data Found!!");
@@ -80,7 +82,7 @@ namespace ExternalLogisticsAPI.Graph
                 doc.FinPeriodID = filter.FinPeriod;
                 doc.TranDesc = "PAC COGS Adujstment";
 
-                foreach (var row in impDatas)
+                foreach (var row in impDatas.Where(x => x.Selected ?? false))
                 {
                     if (Math.Round((row.Cogsadj ?? 0), 0) == 0)
                         continue;

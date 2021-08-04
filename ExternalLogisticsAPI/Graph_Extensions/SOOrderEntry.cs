@@ -168,6 +168,8 @@ namespace ExternalLogisticsAPI.Graph_Extensions
                             try
                             {
                                 // Get Carrier and TrackingNbr
+                                var dclShipdate = dclOrders.orders.FirstOrDefault()?.shipments.FirstOrDefault()?.ship_date ?? DateTime.Now.ToString("yyyy/MM/dd");
+                                _soShipment.ShipDate = DateTime.Parse(dclShipdate);
                                 _soShipment.GetExtension<SOShipmentExt>().UsrCarrier = shippingCarrier;
                                 _soShipment.GetExtension<SOShipmentExt>().UsrTrackingNbr = packagesInfo.Select(x => x.tracking_number).FirstOrDefault();
                                 _soShipment.ShipmentDesc = tempDesc;

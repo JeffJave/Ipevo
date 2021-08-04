@@ -31,7 +31,11 @@ namespace ExternalLogisticsAPI.Graph
         protected virtual IEnumerable LoadData(PXAdapter adapter)
         {
             var filter = this.Filter.Current;
-            var sourceData = SelectFrom<vPACAdjCostIssue>.Where<vPACAdjCostIssue.finPeriodID.IsEqual<P.AsString>.And<vPACAdjCostIssue.itemClassID.IsEqual<P.AsInt>>>.View.Select(this, filter.FinPeriod, filter.ItemClassID).RowCast<vPACAdjCostIssue>().ToList().Where(x => x.FinPeriodID == filter.FinPeriod);
+            var sourceData = SelectFrom<vPACAdjCostIssue>
+                             .Where<vPACAdjCostIssue.finPeriodID.IsEqual<P.AsString>>.View.Select(this, filter.FinPeriod).RowCast<vPACAdjCostIssue>().ToList();
+
+            if(filter.ItemClassID.HasValue)
+                sourceData = sourceData.Where(x => x.ItemClassID == filter.ItemClassID.Value).ToList();
 
             // Delete temp table data
             PXDatabase.Delete<LumPacIssueAdjCost>();
@@ -68,8 +72,6 @@ namespace ExternalLogisticsAPI.Graph
 
                 if (string.IsNullOrEmpty(filter.FinPeriod))
                     throw new PXException("Period can not be empty!!");
-                if (!filter.ItemClassID.HasValue)
-                    throw new PXException("ItemClass can not be empty!!");
 
                 if (!impDatas.Any())
                     throw new PXException("No Data Found!!");
@@ -81,7 +83,7 @@ namespace ExternalLogisticsAPI.Graph
                 doc.FinPeriodID = filter.FinPeriod;
                 doc.TranDesc = "PAC Issue Adujstment";
 
-                foreach (var row in impDatas)
+                foreach (var row in impDatas.Where(x => x.Selected ?? false))
                 {
                     if (Math.Round((row.IssueAdjAmount ?? 0), 0) == 0)
                         continue;
@@ -89,7 +91,7 @@ namespace ExternalLogisticsAPI.Graph
                     graph.transactions.SetValueExt<INTran.inventoryID>(line, row.InventoryID);
                     graph.transactions.SetValueExt<INTran.siteID>(line, row.Siteid);
                     graph.transactions.SetValueExt<INTran.tranCost>(line, row.IssueAdjAmount);
-                    graph.transactions.SetValueExt<INTran.reasonCode>(line, "PACADJ");
+                    graph.transactions.SetValueExt<INTran.reasonCode>(line, string.IsNullOrEmpty(row.ReasonCode) ? string.Empty : row.ReasonCode + "A");
                     graph.transactions.SetValueExt<INTran.lotSerialNbr>(line, string.Empty);
                     sum += (row.IssueAdjAmount ?? 0);
                 }

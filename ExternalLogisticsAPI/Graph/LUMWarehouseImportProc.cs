@@ -183,6 +183,7 @@ namespace ExternalLogisticsAPI.Graph
 
                         // Update Shipment
                         var shipmentGraph = PXGraph.CreateInstance<SOShipmentEntry>();
+                        _soShipment.ShipDate =  row.ShipmentDate ?? DateTime.Now;
                         _soShipment.GetExtension<SOShipmentExt>().UsrTrackingNbr = row.TrackingNbr;
                         _soShipment.GetExtension<SOShipmentExt>().UsrCarrier = row.Carrier;
                         shipmentGraph.Document.Update(_soShipment);

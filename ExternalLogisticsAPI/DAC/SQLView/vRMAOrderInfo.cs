@@ -43,10 +43,17 @@ namespace ExternalLogisticsAPI
         #endregion
 
         #region CustomerID
-        [PXDBString()]
+        [PXDBInt()]
         [PXUIField(DisplayName = "Customer ID")]
-        public virtual string CustomerID { get; set; }
-        public abstract class customerID : PX.Data.BQL.BqlString.Field<customerID> { }
+        public virtual int? CustomerID { get; set; }
+        public abstract class customerID : PX.Data.BQL.BqlInt.Field<customerID> { }
+        #endregion
+
+        #region CustomerName
+        [PXDBString(100, IsUnicode = true)]
+        [PXUIField(DisplayName = "Customer Name")]
+        public virtual string CustomerName { get; set; }
+        public abstract class customerName : PX.Data.BQL.BqlString.Field<customerName> { }
         #endregion
 
         #region CustomerRefNbr
