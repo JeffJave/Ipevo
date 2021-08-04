@@ -134,5 +134,50 @@ namespace PX.Objects.AR
         public virtual string UsrCreditAction { get; set; }
         public abstract class usrCreditAction : PX.Data.BQL.BqlString.Field<usrCreditAction> { }
         #endregion
+
+        #region UsrGUITitle
+        [PXDBString(80, IsUnicode = true)]
+        [PXUIField(DisplayName = "GUI Title")]
+        public virtual string UsrGUITitle { get; set; }
+        public abstract class usrGUITitle : PX.Data.BQL.BqlString.Field<usrGUITitle> { }
+        #endregion
+
+        #region UsrCustomType
+        [PXDBString(1, IsUnicode = true, IsFixed = true)]
+        [PXUIField(DisplayName = "Custom Type")]
+        [TWNGUICustomType.List]
+        public virtual string UsrCustomType { get; set; }
+        public abstract class usrCustomType : PX.Data.BQL.BqlString.Field<usrCustomType> { }
+        #endregion
+
+        #region UsrClearingDate
+        [PXDBDate()]
+        [PXUIField(DisplayName = "Clearing Date")]
+        public virtual DateTime? UsrClearingDate { get; set; }
+        public abstract class usrClearingDate : PX.Data.BQL.BqlDateTime.Field<usrClearingDate> { }
+        #endregion
+
+        #region UsrExportMethods
+        [PXDBString(1, IsUnicode = true, IsFixed = true)]
+        [PXUIField(DisplayName = "Export Methods")]
+        [ExportMthSelector()]
+        public virtual string UsrExportMethods { get; set; }
+        public abstract class usrExportMethods : PX.Data.BQL.BqlString.Field<usrExportMethods> { }
+        #endregion
+
+        #region UsrExportTicketType
+        [PXDBString(2, IsUnicode = true, IsFixed = true)]
+        [PXUIField(DisplayName = "Export Ticket Types")]
+        [ExportTickTypeSelector]
+        public virtual string UsrExportTicketType { get; set; }
+        public abstract class usrExportTicketType : PX.Data.BQL.BqlString.Field<usrExportTicketType> { }
+        #endregion
+
+        #region UsrExportTicketNbr
+        [PXDBString(14, IsUnicode = true)]
+        [PXUIField(DisplayName = "Export Ticket Nbr.")]
+        public virtual string UsrExportTicketNbr { get; set; }
+        public abstract class usrExportTicketNbr : PX.Data.BQL.BqlString.Field<usrExportTicketNbr> { }
+        #endregion
     }
 }
