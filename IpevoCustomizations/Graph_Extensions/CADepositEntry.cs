@@ -7,23 +7,18 @@ using PX.Objects.CA;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace IpevoCustomizations.Graph_Extensions
 {
     public class CADepositEntryExt : PXGraphExtension<CADepositEntry>
     {
         #region Override DAC
-        [LUMGetAvailablePaymentsAttribute]
+        [LUMGetAvailablePayments]
         [PXMergeAttributes(Method = MergeMethod.Append)]
         public virtual void _(Events.CacheAttached<CADepositDetail.origRefNbr> e) { }
-
         #endregion
 
-
-        #region Event
-
+        #region Event Handlers
         public virtual void _(Events.RowSelected<CADeposit> e, PXRowSelected baseHandler)
         {
             baseHandler?.Invoke(e.Cache, e.Args);
@@ -60,35 +55,43 @@ namespace IpevoCustomizations.Graph_Extensions
             {
                 throw new Exception("Can not find data in Available PAYMENT!");
             }
+
             // Insert Data
-            IEnumerable<PaymentInfo> toAdd = Base.AvailablePayments.Cache.Inserted.Cast<PaymentInfo>().Where(p => p.Selected == true);
-            var curyDetails = Base.Details.Current;
+            IEnumerable<PaymentInfo> toAdd = Base.AvailablePayments.Cache.Inserted.Cast<PaymentInfo>().Where(p => p.Selected == true && p.RefNbr == (string)e.NewValue);
+            //var curyDetails = Base.Details.Current;
             //Base.AddPaymentInfoBatch(toAdd);
 
-            var existingDetails = Base.DepositPayments.Select();
-            HashSet<string> existingDetailsHash = new HashSet<string>();
-            foreach (CADepositDetail detail in existingDetails)
-            {
-                existingDetailsHash.Add(detail.OrigModule + detail.OrigDocType + detail.OrigRefNbr);
-            }
-            foreach (PaymentInfo payment in toAdd)
-            {
-                CashAccountDeposit settings = GetCashAccountDepositSettings(payment);
+            //var existingDetails = Base.DepositPayments.Select();
+            //HashSet<string> existingDetailsHash = new HashSet<string>();
+            //foreach (CADepositDetail detail in existingDetails)
+            //{
+            //    existingDetailsHash.Add(detail.OrigModule + detail.OrigDocType + detail.OrigRefNbr);
+            //}
 
-                if (settings == null)
-                {
-                    continue;
-                }
-                if (!existingDetailsHash.Contains(payment.Module + payment.DocType + payment.RefNbr))
-                {
-                    Copy(curyDetails, payment);
-                    Copy(curyDetails, settings);
-                    //Base.Details.Update(curyDetails);
-                }
-            }
+            Base.DepositPayments.Cache.Clear();
+            Base.AddPaymentInfoBatch(toAdd);
 
-            foreach (PaymentInfo it in toAdd)
-                it.Selected = false;
+            //foreach (PaymentInfo payment in toAdd)
+            //{
+            //    CashAccountDeposit settings = GetCashAccountDepositSettings(payment);
+
+            //    if (settings == null)
+            //    {
+            //        continue;
+            //    }
+            //    if (!existingDetailsHash.Contains(payment.Module + payment.DocType + payment.RefNbr))
+            //    {
+            //        Copy(curyDetails, payment);
+            //        Copy(curyDetails, settings);
+            //        //Base.Details.Update(curyDetails);
+            //    }
+            //}
+
+            //foreach (PaymentInfo it in toAdd)
+            //{
+            //    it.Selected = false;
+            //}
+
             Base.AvailablePayments.Cache.AllowInsert = Base.AvailablePayments.Cache.AllowUpdate = false;
             Base.AvailablePayments.Cache.Clear();
 
@@ -97,7 +100,6 @@ namespace IpevoCustomizations.Graph_Extensions
             // Refresh
             Base.DepositPayments.View.RequestRefresh();
         }
-
         #endregion
 
         #region Method
@@ -145,13 +147,12 @@ namespace IpevoCustomizations.Graph_Extensions
             aDest.CuryTranAmt = aDest.CuryOrigAmtSigned; //Check Later - for the case when currencies are different
             aDest.TranAmt = aDest.OrigAmtSigned;
         }
+
         protected static void Copy(CADepositDetail aDest, CashAccountDeposit aSettings)
         {
             aDest.ChargeEntryTypeID = aSettings.ChargeEntryTypeID;
             aDest.PaymentMethodID = aSettings.PaymentMethodID;
         }
-
         #endregion
-
     }
 }
