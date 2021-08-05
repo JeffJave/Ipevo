@@ -15,6 +15,13 @@ namespace ExternalLogisticsAPI
             public class Site : INSite.PK.ForeignKeyOf<LumPacIssueAdjCost>.By<siteid> { }
         }
 
+        #region Selected
+        [PXBool()]
+        [PXUIField(DisplayName = "Selected")]
+        public virtual bool? Selected { get; set; }
+        public abstract class selected : PX.Data.BQL.BqlBool.Field<selected> { }
+        #endregion
+
         #region FinPeriodID
         [PXDBString(6, IsUnicode = true, InputMask = "",IsKey = true)]
         [PXUIField(DisplayName = "Fin Period ID")]
@@ -51,7 +58,7 @@ namespace ExternalLogisticsAPI
         #endregion
 
         #region ItemClassID
-        [PXInt()]
+        [PXDBInt()]
         [PXUIField(DisplayName = "Item Class")]
         [PXDimensionSelector(INItemClass.Dimension, typeof(Search<INItemClass.itemClassID>), typeof(INItemClass.itemClassCD), DescriptionField = typeof(INItemClass.descr), CacheGlobal = true)]
         public virtual int? ItemClassID { get; set; }

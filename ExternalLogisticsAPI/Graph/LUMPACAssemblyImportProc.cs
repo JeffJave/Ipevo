@@ -95,7 +95,7 @@ namespace ExternalLogisticsAPI.Graph
                 doc.FinPeriodID = filter.FinPeriod;
                 doc.TranDesc = "PAC Assembly Adujstment";
 
-                foreach (var row in impDatas)
+                foreach (var row in impDatas.Where(x => x.Selected ?? false))
                 {
                     // AssemblyAdjAmount
                     if (Math.Round((row.AssemblyAdjAmount ?? 0), 0) != 0)

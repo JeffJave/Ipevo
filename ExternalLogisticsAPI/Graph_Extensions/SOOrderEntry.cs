@@ -58,17 +58,17 @@ namespace ExternalLogisticsAPI.Graph_Extensions
                 DCLShipmentRequestEntity model = new DCLShipmentRequestEntity();
                 CombineDLCShipmentEntity(model, order);
                 PXNoteAttribute.SetNote(Base.Document.Cache, order, APIHelper.GetJsonString(model));
-                order.GetExtension<SOOrderExt>().UsrDCLShipmentCreated = true;
+                //order.GetExtension<SOOrderExt>().UsrDCLShipmentCreated = true;
 
 
                 #region  Send Data to DCL for Create Shipment(Implement)
 
-                //var dclResult = DCLHelper.CallDCLToCreateShipment(this.DCLSetup.Select().RowCast<LUMVendCntrlSetup>().FirstOrDefault(), model);
-                //var response = APIHelper.GetObjectFromString<DCLShipmentResponseEntity>(dclResult.ContentResult);
-                //if (dclResult.StatusCode == System.Net.HttpStatusCode.OK)
-                //    order.GetExtension<SOOrderExt>().UsrDCLShipmentCreated = true;
-                //else
-                //    throw new PXException(response.error_message);
+                var dclResult = DCLHelper.CallDCLToCreateShipment(this.DCLSetup.Select().RowCast<LUMVendCntrlSetup>().FirstOrDefault(), model);
+                var response = APIHelper.GetObjectFromString<DCLShipmentResponseEntity>(dclResult.ContentResult);
+                if (dclResult.StatusCode == System.Net.HttpStatusCode.Created)
+                    order.GetExtension<SOOrderExt>().UsrDCLShipmentCreated = true;
+                else
+                    throw new PXException(response.order_statuses.FirstOrDefault()?.error_message);
 
                 #endregion
                 Base.Document.Cache.Update(order);
@@ -168,6 +168,8 @@ namespace ExternalLogisticsAPI.Graph_Extensions
                             try
                             {
                                 // Get Carrier and TrackingNbr
+                                var dclShipdate = dclOrders.orders.FirstOrDefault()?.shipments.FirstOrDefault()?.ship_date ?? DateTime.Now.ToString("yyyy/MM/dd");
+                                _soShipment.ShipDate = DateTime.Parse(dclShipdate);
                                 _soShipment.GetExtension<SOShipmentExt>().UsrCarrier = shippingCarrier;
                                 _soShipment.GetExtension<SOShipmentExt>().UsrTrackingNbr = packagesInfo.Select(x => x.tracking_number).FirstOrDefault();
                                 _soShipment.ShipmentDesc = tempDesc;
@@ -634,9 +636,9 @@ namespace ExternalLogisticsAPI.Graph_Extensions
                 .RowCast<SOLine>()
                 .ToList();
 
-            var shippingContact = SOShippingContact.PK.Find(Base, soOrder.CustomerID) ?? new SOShippingContact();
+            var shippingContact = SOShippingContact.PK.Find(Base, soOrder.ShipContactID) ?? new SOShippingContact();
             var shippingAddress = SOShippingAddress.PK.Find(Base, soOrder.ShipAddressID) ?? new SOShippingAddress();
-            var billingContact = SOBillingContact.PK.Find(Base, soOrder.ContactID) ?? new SOBillingContact();
+            var billingContact = SOBillingContact.PK.Find(Base, soOrder.BillContactID) ?? new SOBillingContact();
             var billingAddress = SOBillingAddress.PK.Find(Base, soOrder.BillAddressID) ?? new SOBillingAddress();
             model.allow_partial = true;
             model.location = "LA";
@@ -690,6 +692,7 @@ namespace ExternalLogisticsAPI.Graph_Extensions
                         attention = shippingContact.Attention?.Length > 40 ? shippingContact.Attention.Substring(0,40) : shippingContact.FullName,
                         address1 = shippingAddress.AddressLine1,
                         address2 = shippingAddress.AddressLine2,
+                        city = shippingAddress.City,
                         phone = shippingContact.Phone1,
                         email = shippingContact.Email,
                         state_province = shippingAddress.State,

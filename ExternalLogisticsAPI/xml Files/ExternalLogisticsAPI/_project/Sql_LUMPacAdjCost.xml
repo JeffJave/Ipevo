@@ -6,6 +6,7 @@
   <col name="FinPtdQtySales" type="Decimal(18,6)" nullable="true" />
   <col name="PACUnitCost" type="Decimal(18,6)" nullable="true" />
   <col name="InventoryID" type="Int" />
+  <col name="ItemClassID" type="Int" nullable="true" />
   <col name="PacCOGS" type="Decimal(18,6)" nullable="true" />
   <col name="SiteID" type="Int" />
   <col name="COGSADJ" type="Decimal(18,6)" nullable="true" />

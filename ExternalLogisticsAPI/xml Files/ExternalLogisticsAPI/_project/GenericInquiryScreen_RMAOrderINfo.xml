@@ -140,6 +140,7 @@
                 <row DesignID="f411ae33-d23d-4e14-825f-0ca5c7d20d60" Name="RMAOrderINfo" FilterColCount="3" PageSize="0" ExportTop="0" NewRecordCreationEnabled="0" MassDeleteEnabled="0" AutoConfirmDelete="0" MassRecordsUpdateEnabled="0" MassActionsOnRecordsEnabled="0" ExposeViaOData="0" ExposeViaMobile="0" ShowDeletedRecords="0" NotesAndFilesTable="$&lt;None&gt;">
                     <GIFilter LineNbr="1" IsActive="1" Name="Cpanel" FieldName="t.customerOrderNbr" DataType="string" DisplayName="Cpanel" IsExpression="0" ColSpan="1" Required="0" />
                     <GITable Alias="t" Name="ExternalLogisticsAPI.vRMAOrderInfo">
+                        <GIResult LineNbr="20" SortOrder="18" IsActive="1" Field="customerName" IsVisible="1" DefaultNav="1" QuickFilter="0" FastFilter="0" RowID="f1feabda-aeab-48f4-be03-1e775c9791a9" />
                         <GIResult LineNbr="19" SortOrder="2" IsActive="1" Field="taxRate" IsVisible="1" DefaultNav="1" QuickFilter="0" FastFilter="0" RowID="e557f8ae-d9df-48ff-94db-195806b5a6ca" />
                         <GIResult LineNbr="18" SortOrder="17" IsActive="1" Field="inventoryID" IsVisible="1" DefaultNav="1" QuickFilter="0" FastFilter="0" RowID="12e7ab8f-1469-48a3-be4c-74fd462c7d3c" />
                         <GIResult LineNbr="17" SortOrder="16" IsActive="1" Field="siteid" IsVisible="1" DefaultNav="1" QuickFilter="0" FastFilter="0" RowID="6636c67e-dd18-45e7-b8a0-32d65995ba28" />
