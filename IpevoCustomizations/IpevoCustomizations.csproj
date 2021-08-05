@@ -64,6 +64,7 @@
   <ItemGroup>
     <Compile Include="DAC\LUMFreightNonTaxState.cs" />
     <Compile Include="DAC\LUMRestockNonTaxState.cs" />
+    <Compile Include="DAC\LUMStateZipCode.cs" />
     <Compile Include="DAC_Extensions\ARInvoiceExtension.cs" />
     <Compile Include="DAC_Extensions\PaymentInfo.cs" />
     <Compile Include="DAC_Extensions\SOOrderExtensions.cs" />
@@ -71,6 +72,7 @@
     <Compile Include="Descriptor\LUMGetAvailablePaymentsAttribute.cs" />
     <Compile Include="Graph\LUMFrtNonTaxStateMaint.cs" />
     <Compile Include="Graph\LUMRestockNonTaxStateMaint.cs" />
+    <Compile Include="Graph\LUMStateZipCodeMaint.cs" />
     <Compile Include="Graph_Extensions\APPaymentEntryExt.cs" />
     <Compile Include="Graph_Extensions\APPayBills_Extension.cs" />
     <Compile Include="Graph_Extensions\ARInvoiceEntryExternalTax.cs" />
