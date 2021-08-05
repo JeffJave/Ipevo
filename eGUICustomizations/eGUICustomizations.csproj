@@ -99,6 +99,7 @@
     <Compile Include="Graph_Extension\CATranEntry.cs" />
     <Compile Include="Graph_Extension\ExpenseClaimEntry.cs" />
     <Compile Include="Graph_Extension\SalesTaxMaint.cs" />
+    <Compile Include="Graph_Extension\SOInvoiceEntry.cs" />
     <Compile Include="Graph_Extension\SOOrderEntry.cs" />
     <Compile Include="Graph_Release\APDocumentRelease.cs" />
     <Compile Include="Graph_Release\ARReleaseProcess.cs" />

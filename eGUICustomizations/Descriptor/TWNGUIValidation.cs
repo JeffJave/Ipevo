@@ -1,7 +1,6 @@
 ﻿using PX.Data;
 using PX.Data.BQL;
 using PX.Data.BQL.Fluent;
-using PX.Objects.AR;
 using PX.Data.Licensing;
 using eGUICustomizations.DAC;
 using Branch = PX.Objects.GL.Branch;
