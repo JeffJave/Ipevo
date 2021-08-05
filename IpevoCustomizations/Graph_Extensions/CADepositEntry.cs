@@ -36,6 +36,8 @@ namespace IpevoCustomizations.Graph_Extensions
             // Check is Manual Insert New Record
             if (row == null || !string.IsNullOrEmpty(row.OrigDocType))
                 return;
+            // Import Scenario will get Wrong Line Nbr
+            var deleteLineNbr = row.LineNbr;
             baseHandler?.Invoke(e.Cache, e.Args);
             // Get ARInfomation
             var ARInfo = SelectFrom<ARPayment>.Where<ARPayment.refNbr.IsEqual<P.AsString>>.View.Select(Base, (string)e.NewValue).RowCast<ARPayment>().FirstOrDefault();
@@ -43,10 +45,10 @@ namespace IpevoCustomizations.Graph_Extensions
             Base.filter.Current.StartDate = ARInfo.DepositAfter;
             Base.filter.Current.EndDate = ARInfo.DepositAfter;
             Base.filter.Current.PaymentMethodID = null;
-            //
+            // Select Available Payments
             Base.AvailablePayments.Select().ToList();
             // Delete Manual insert record
-            Base.DepositPayments.Delete(e.Row as CADepositDetail);
+            //Base.Caches[typeof(CADepositDetail)].Delete(e.Row);
 
             // Get Availalbe Payment and set current record Selected
             Base.AvailablePayments.Cache.AllowInsert = Base.AvailablePayments.Cache.AllowUpdate = true;
@@ -60,11 +62,39 @@ namespace IpevoCustomizations.Graph_Extensions
             }
             // Insert Data
             IEnumerable<PaymentInfo> toAdd = Base.AvailablePayments.Cache.Inserted.Cast<PaymentInfo>().Where(p => p.Selected == true);
-            Base.AddPaymentInfoBatch(toAdd);
+            var curyDetails = Base.Details.Current;
+            //Base.AddPaymentInfoBatch(toAdd);
+
+            var existingDetails = Base.DepositPayments.Select();
+            HashSet<string> existingDetailsHash = new HashSet<string>();
+            foreach (CADepositDetail detail in existingDetails)
+            {
+                existingDetailsHash.Add(detail.OrigModule + detail.OrigDocType + detail.OrigRefNbr);
+            }
+            foreach (PaymentInfo payment in toAdd)
+            {
+                CashAccountDeposit settings = GetCashAccountDepositSettings(payment);
+
+                if (settings == null)
+                {
+                    continue;
+                }
+                if (!existingDetailsHash.Contains(payment.Module + payment.DocType + payment.RefNbr))
+                {
+                    Copy(curyDetails, payment);
+                    Copy(curyDetails, settings);
+                    //Base.Details.Update(curyDetails);
+                }
+            }
+
             foreach (PaymentInfo it in toAdd)
                 it.Selected = false;
             Base.AvailablePayments.Cache.AllowInsert = Base.AvailablePayments.Cache.AllowUpdate = false;
             Base.AvailablePayments.Cache.Clear();
+
+            // FixLineNbr
+            //Base.Details.Current.LineNbr = deleteLineNbr + 1;
+            // Refresh
             Base.DepositPayments.View.RequestRefresh();
         }
 
@@ -103,7 +133,7 @@ namespace IpevoCustomizations.Graph_Extensions
 
         protected void Copy(CADepositDetail aDest, PaymentInfo aPayment)
         {
-            //aDest.OrigModule = aPayment.Module;
+            aDest.OrigModule = aPayment.Module;
             aDest.OrigDocType = aPayment.DocType;
             //aDest.OrigRefNbr = aPayment.RefNbr;
             aDest.OrigCuryID = aPayment.CuryID;
