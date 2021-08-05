@@ -1,0 +1,21 @@
+﻿<Sql TableName="LUMStateZipCode" TableSchemaXml="#CDATA">
+    <CDATA name="TableSchemaXml"><![CDATA[<table name="LUMStateZipCode">
+  <col name="CompanyID" type="Int" default="Zero" />
+  <col name="CountryID" type="NVarChar(2)" />
+  <col name="State" type="NVarChar(50)" />
+  <col name="CountyName" type="NVarChar(30)" nullable="true" />
+  <col name="ZipCode" type="VarChar(20)" nullable="true" />
+  <col name="CreatedByID" type="UniqueIdentifier" />
+  <col name="CreatedByScreenID" type="Char(8)" />
+  <col name="CreatedDateTime" type="DateTime" />
+  <col name="LastModifiedByID" type="UniqueIdentifier" />
+  <col name="LastModifiedByScreenID" type="Char(8)" />
+  <col name="LastModifiedDateTime" type="DateTime" />
+  <col name="NoteID" type="UniqueIdentifier" nullable="true" />
+  <index name="PK_LUMStateZipCode" clustered="true" primary="true" unique="true">
+    <col name="CompanyID" />
+    <col name="CountryID" />
+    <col name="State" />
+  </index>
+</table>]]></CDATA>
+</Sql>
