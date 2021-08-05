@@ -120,7 +120,6 @@
     <Compile Include="Graph\LUMPACIssueImportProc.cs" />
     <Compile Include="Graph\LUMSalesChanelSetup.cs" />
     <Compile Include="Graph\LUMWarehouseImportProc.cs" />
-    <Compile Include="Graph_Extensions\CADepositEntry.cs" />
     <Compile Include="Graph_Extensions\QuoteMaint.cs" />
     <Compile Include="Graph_Extensions\SOInvoiceEntry_Extension.cs" />
     <Compile Include="Graph_Extensions\SOCreateShipment.cs" />
