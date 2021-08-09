@@ -38,6 +38,7 @@
                             <px:PXTextEdit runat="server" ID="CstPXTextEdit12" DataField="ClientSecret"></px:PXTextEdit>
                             <px:PXTextEdit runat="server" ID="edAuthType" DataField="AuthType"></px:PXTextEdit>
                             <px:PXTextEdit runat="server" ID="CstPXTextEdit13" DataField="AuthToken"></px:PXTextEdit>
+                            <px:PXCheckBox runat="server" ID="edIsGoLive" DataField="IsGoLive"></px:PXCheckBox>
                             <px:PXLayoutRule StartColumn="False" ColumnSpan="1" ControlSize="S" GroupCaption="Integration Settings" runat="server" ID="CstPXLayoutRule14" StartGroup="True"></px:PXLayoutRule>
                             <px:PXSelector runat="server" ID="CstPXSelector15" DataField="OrderType"></px:PXSelector>
                             <px:PXSegmentMask runat="server" ID="CstPXSegmentMask16" DataField="CustomerID"></px:PXSegmentMask>
