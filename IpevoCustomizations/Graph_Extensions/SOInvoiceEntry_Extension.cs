@@ -14,17 +14,35 @@ namespace PX.Objects.SO
             base.Initialize();
             ExportInvoice.SetVisible(false);
             ExportInvoiceUS.SetVisible(false);
+            ExportInvoiceUK.SetVisible(false);
+            ExportInvoiceCA.SetVisible(false);
+            ExportInvoiceNL.SetVisible(false);
 
             var curCoutry = (PXSelect<Branch>.Select(Base, PX.Data.Update.PXInstanceHelper.CurrentCompany)).TopFirst;
-            if (curCoutry?.CountryID == "TW" || curCoutry?.BaseCuryID == "TWD")
+            if (curCoutry?.BranchCD.Trim() == "IPEVOTW" || curCoutry?.BaseCuryID == "TWD")
             {
                 ExportInvoice.SetVisible(true);
                 Base.report.AddMenuAction(ExportInvoice);
             }
-            else if (curCoutry?.CountryID == "US" || curCoutry?.BaseCuryID == "USD")
+            else if (curCoutry?.BranchCD.Trim() == "IPEVOUS" || curCoutry?.BaseCuryID == "USD")
             {
                 ExportInvoiceUS.SetVisible(true);
                 Base.report.AddMenuAction(ExportInvoiceUS);
+            }
+            else if (curCoutry?.BranchCD.Trim() == "IPEVOUK" || curCoutry?.BaseCuryID == "GBP")
+            {
+                ExportInvoiceUK.SetVisible(true);
+                Base.report.AddMenuAction(ExportInvoiceUK);
+            }
+            else if (curCoutry?.BranchCD.Trim() == "IPEVOCA" || curCoutry?.BaseCuryID == "CAD")
+            {
+                ExportInvoiceCA.SetVisible(true);
+                Base.report.AddMenuAction(ExportInvoiceCA);
+            }
+            else if (curCoutry?.BranchCD.Trim() == "IPEVONL" || curCoutry?.BaseCuryID == "NLG") //EUR
+            {
+                ExportInvoiceNL.SetVisible(true);
+                Base.report.AddMenuAction(ExportInvoiceNL);
             }
         }
 
@@ -55,6 +73,51 @@ namespace PX.Objects.SO
                 parameters["DocType"] = Base.Document.Current.DocType;
                 parameters["RefNbr"] = Base.Document.Current.RefNbr;
                 throw new PXReportRequiredException(parameters, "LM606405", "Report LM606405") { Mode = PXBaseRedirectException.WindowMode.New };
+            }
+            return adapter.Get();
+        }
+
+        public PXAction<ARInvoice> ExportInvoiceCA;
+        [PXButton]
+        [PXUIField(DisplayName = "Print Invoice - CA", Enabled = true, MapEnableRights = PXCacheRights.Select)]
+        protected virtual IEnumerable exportInvoiceCA(PXAdapter adapter)
+        {
+            if (Base.Document.Current != null)
+            {
+                Dictionary<string, string> parameters = new Dictionary<string, string>();
+                parameters["DocType"] = Base.Document.Current.DocType;
+                parameters["RefNbr"] = Base.Document.Current.RefNbr;
+                throw new PXReportRequiredException(parameters, "LM606410", "Report LM606410") { Mode = PXBaseRedirectException.WindowMode.New };
+            }
+            return adapter.Get();
+        }
+
+        public PXAction<ARInvoice> ExportInvoiceUK;
+        [PXButton]
+        [PXUIField(DisplayName = "Print Invoice - UK", Enabled = true, MapEnableRights = PXCacheRights.Select)]
+        protected virtual IEnumerable exportInvoiceUK(PXAdapter adapter)
+        {
+            if (Base.Document.Current != null)
+            {
+                Dictionary<string, string> parameters = new Dictionary<string, string>();
+                parameters["DocType"] = Base.Document.Current.DocType;
+                parameters["RefNbr"] = Base.Document.Current.RefNbr;
+                throw new PXReportRequiredException(parameters, "LM606415", "Report LM606415") { Mode = PXBaseRedirectException.WindowMode.New };
+            }
+            return adapter.Get();
+        }
+
+        public PXAction<ARInvoice> ExportInvoiceNL;
+        [PXButton]
+        [PXUIField(DisplayName = "Print Invoice - NL", Enabled = true, MapEnableRights = PXCacheRights.Select)]
+        protected virtual IEnumerable exportInvoiceNL(PXAdapter adapter)
+        {
+            if (Base.Document.Current != null)
+            {
+                Dictionary<string, string> parameters = new Dictionary<string, string>();
+                parameters["DocType"] = Base.Document.Current.DocType;
+                parameters["RefNbr"] = Base.Document.Current.RefNbr;
+                throw new PXReportRequiredException(parameters, "LM606420", "Report LM606420") { Mode = PXBaseRedirectException.WindowMode.New };
             }
             return adapter.Get();
         }

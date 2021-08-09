@@ -58,19 +58,22 @@ namespace ExternalLogisticsAPI.Graph_Extensions
                 DCLShipmentRequestEntity model = new DCLShipmentRequestEntity();
                 CombineDLCShipmentEntity(model, order);
                 PXNoteAttribute.SetNote(Base.Document.Cache, order, APIHelper.GetJsonString(model));
-                //order.GetExtension<SOOrderExt>().UsrDCLShipmentCreated = true;
-
-
-                #region  Send Data to DCL for Create Shipment(Implement)
-
-                var dclResult = DCLHelper.CallDCLToCreateShipment(this.DCLSetup.Select().RowCast<LUMVendCntrlSetup>().FirstOrDefault(), model);
-                var response = APIHelper.GetObjectFromString<DCLShipmentResponseEntity>(dclResult.ContentResult);
-                if (dclResult.StatusCode == System.Net.HttpStatusCode.Created)
+                var dclSetUp = this.DCLSetup.Select().RowCast<LUMVendCntrlSetup>().FirstOrDefault();
+                if (!dclSetUp.IsGoLive ?? false)
                     order.GetExtension<SOOrderExt>().UsrDCLShipmentCreated = true;
                 else
-                    throw new PXException(response.order_statuses.FirstOrDefault()?.error_message);
+                {
+                    #region  Send Data to DCL for Create Shipment(Implement)
 
-                #endregion
+                    var dclResult = DCLHelper.CallDCLToCreateShipment(dclSetUp, model);
+                    var response = APIHelper.GetObjectFromString<DCLShipmentResponseEntity>(dclResult.ContentResult);
+                    if (dclResult.StatusCode == System.Net.HttpStatusCode.Created)
+                        order.GetExtension<SOOrderExt>().UsrDCLShipmentCreated = true;
+                    else
+                        throw new PXException(response.order_statuses.FirstOrDefault()?.error_message);
+
+                    #endregion
+                }
                 Base.Document.Cache.Update(order);
             }
 
@@ -86,16 +89,22 @@ namespace ExternalLogisticsAPI.Graph_Extensions
             try
             {
                 var _soOrder = adapter.Get<SOOrder>().ToList()[0];
-
+                var dclSetup = this.DCLSetup.Select().RowCast<LUMVendCntrlSetup>().FirstOrDefault();
+                var dclOrders = new OrderResponse();
                 // Get DCL SO. Data(正式:order_number = SO.OrderNbr)
-                //var dclOrders = JsonConvert.DeserializeObject<OrderResponse>(
-                //    DCLHelper.CallDCLToGetSOByOrderNumbers(
-                //        this.DCLSetup.Select().RowCast<LUMVendCntrlSetup>().FirstOrDefault(), soOrder.OrderNbr).ContentResult);
-
-                // Get DCL SO. Data(理論上資料一定存在，因為Process Order已經先篩選了)
-                var dclOrders = JsonConvert.DeserializeObject<OrderResponse>(
-                    DCLHelper.CallDCLToGetSOByOrderNumbers(
-                        this.DCLSetup.Select().RowCast<LUMVendCntrlSetup>().FirstOrDefault(), _soOrder.CustomerRefNbr).ContentResult);
+                if (dclSetup.IsGoLive ?? false)
+                {
+                    dclOrders = JsonConvert.DeserializeObject<OrderResponse>(
+                            DCLHelper.CallDCLToGetSOByOrderNumbers(
+                            this.DCLSetup.Select().RowCast<LUMVendCntrlSetup>().FirstOrDefault(), _soOrder.OrderNbr).ContentResult);
+                }
+                else
+                {
+                    // Get DCL SO. Data
+                    dclOrders = JsonConvert.DeserializeObject<OrderResponse>(
+                            DCLHelper.CallDCLToGetSOByOrderNumbers(
+                            this.DCLSetup.Select().RowCast<LUMVendCntrlSetup>().FirstOrDefault(), _soOrder.CustomerRefNbr).ContentResult);
+                }
 
                 if (dclOrders.orders == null)
                     throw new Exception("Can not Mapping DCL Data");
@@ -570,7 +579,7 @@ namespace ExternalLogisticsAPI.Graph_Extensions
                                                                    And<SOOrderShipment.invoiceNbr, Equal<ARInvoice.refNbr>>>>,
                                      Where<SOOrderShipment.orderNoteID, Equal<Required<SOOrder.noteID>>>>.Update(Base, root.description, order.NoteID);
 
-                    Item:
+                        Item:
                         if (root.item != null)
                         {
                             for (int i = 0; i < root.item.Count; i++)

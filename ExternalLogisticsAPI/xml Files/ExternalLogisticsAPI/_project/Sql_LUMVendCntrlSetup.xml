@@ -10,6 +10,7 @@
   <col name="OrderType" type="Char(2)" nullable="true" />
   <col name="CustomerID" type="Int" nullable="true" />
   <col name="NoteID" type="UniqueIdentifier" nullable="true" />
+  <col name="IsGoLive" type="Bit" nullable="true" />
   <col name="CreatedByID" type="UniqueIdentifier" />
   <col name="CreatedByScreenID" type="Char(8)" />
   <col name="CreatedDateTime" type="DateTime" />

@@ -66,6 +66,12 @@ namespace ExternalLogisticsAPI.DAC
         public abstract class customerID : PX.Data.BQL.BqlInt.Field<customerID> { }
         #endregion
 
+        #region IsGoLive
+        [PXDBBool]
+        public virtual bool? IsGoLive { get;set;}
+        public abstract class isGoLive : PX.Data.BQL.BqlBool.Field<isGoLive> { }
+        #endregion
+
         #region NoteID
         [PXNote()]
         public virtual Guid? NoteID { get; set; }
