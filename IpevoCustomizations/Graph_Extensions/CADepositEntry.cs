@@ -25,80 +25,67 @@ namespace IpevoCustomizations.Graph_Extensions
             Base.DepositPayments.Cache.AllowInsert = Base.DepositPayments.Cache.AllowUpdate = true;
         }
 
-        public virtual void _(Events.FieldUpdated<CADepositDetail.origRefNbr> e, PXFieldUpdated baseHandler)
+        public virtual void _(Events.FieldUpdated<CADepositDetail.origRefNbr> e)
         {
             var row = e.Row as CADepositDetail;
+
             // Check is Manual Insert New Record
-            if (row == null || !string.IsNullOrEmpty(row.OrigDocType))
-                return;
+            if (row == null || !string.IsNullOrEmpty(row.OrigDocType)) { return; }
+
             // Import Scenario will get Wrong Line Nbr
-            var deleteLineNbr = row.LineNbr;
-            baseHandler?.Invoke(e.Cache, e.Args);
+            //var deleteLineNbr = row.LineNbr;
+            
             // Get ARInfomation
             var ARInfo = SelectFrom<ARPayment>.Where<ARPayment.refNbr.IsEqual<P.AsString>>.View.Select(Base, (string)e.NewValue).RowCast<ARPayment>().FirstOrDefault();
+
             // Setting filter
             Base.filter.Current.StartDate = ARInfo.DepositAfter;
             Base.filter.Current.EndDate = ARInfo.DepositAfter;
             Base.filter.Current.PaymentMethodID = null;
             // Select Available Payments
             Base.AvailablePayments.Select().ToList();
-            // Delete Manual insert record
-            //Base.Caches[typeof(CADepositDetail)].Delete(e.Row);
 
             // Get Availalbe Payment and set current record Selected
             Base.AvailablePayments.Cache.AllowInsert = Base.AvailablePayments.Cache.AllowUpdate = true;
+
             try
             {
                 Base.AvailablePayments.Cache.Inserted.Cast<PaymentInfo>().Where(p => p.RefNbr == (string)e.NewValue).FirstOrDefault().Selected = true;
             }
-            catch (NullReferenceException ex)
+            catch (NullReferenceException)
             {
                 throw new Exception("Can not find data in Available PAYMENT!");
             }
 
             // Insert Data
             IEnumerable<PaymentInfo> toAdd = Base.AvailablePayments.Cache.Inserted.Cast<PaymentInfo>().Where(p => p.Selected == true && p.RefNbr == (string)e.NewValue);
-            //var curyDetails = Base.Details.Current;
-            //Base.AddPaymentInfoBatch(toAdd);
-
-            //var existingDetails = Base.DepositPayments.Select();
-            //HashSet<string> existingDetailsHash = new HashSet<string>();
-            //foreach (CADepositDetail detail in existingDetails)
-            //{
-            //    existingDetailsHash.Add(detail.OrigModule + detail.OrigDocType + detail.OrigRefNbr);
-            //}
 
             Base.DepositPayments.Cache.Clear();
             Base.AddPaymentInfoBatch(toAdd);
 
-            //foreach (PaymentInfo payment in toAdd)
-            //{
-            //    CashAccountDeposit settings = GetCashAccountDepositSettings(payment);
-
-            //    if (settings == null)
-            //    {
-            //        continue;
-            //    }
-            //    if (!existingDetailsHash.Contains(payment.Module + payment.DocType + payment.RefNbr))
-            //    {
-            //        Copy(curyDetails, payment);
-            //        Copy(curyDetails, settings);
-            //        //Base.Details.Update(curyDetails);
-            //    }
-            //}
-
-            //foreach (PaymentInfo it in toAdd)
-            //{
-            //    it.Selected = false;
-            //}
+            /// <remarks> 
+            /// Because this event will be triggered in advance when using the import scenario, resulting in unpredictable errors. This is not the right approach, but it is currently the only way to solve the problem. 
+            /// </remarks>
+            if (Base.IsImport == true)
+            {
+                Base.Actions.PressSave();
+            }
 
             Base.AvailablePayments.Cache.AllowInsert = Base.AvailablePayments.Cache.AllowUpdate = false;
             Base.AvailablePayments.Cache.Clear();
 
-            // FixLineNbr
-            //Base.Details.Current.LineNbr = deleteLineNbr + 1;
-            // Refresh
             Base.DepositPayments.View.RequestRefresh();
+        }
+
+        protected void _(Events.RowInserted<CADepositDetail> e, PXRowInserted baseHandler)
+        {
+            baseHandler?.Invoke(e.Cache, e.Args);
+
+            /// <remarks> Avoid inserting missing required field values to return an error. </remarks>
+            if (e.Row.OrigDrCr == null || e.Row.OrigRefNbr == null)
+            {
+                Base.DepositPayments.Cache.Delete(e.Row);
+            }
         }
         #endregion
 
