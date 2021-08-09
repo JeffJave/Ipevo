@@ -6078,8 +6078,8 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                         <Value>IPEVO CORP</Value>
                     </TextBox>
                     <TextBox Name="textBox10">
-                        <Location>576px, 184px</Location>
-                        <Size>120px, 24px</Size>
+                        <Location>568px, 184px</Location>
+                        <Size>128px, 24px</Size>
                         <Style>
                             <BorderStyle>
                                 <Bottom>Solid</Bottom>
@@ -6499,7 +6499,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                     </TextBox>
                     <TextBox Name="textBox3">
                         <Location>488px, 112px</Location>
-                        <Size>88px, 24px</Size>
+                        <Size>80px, 24px</Size>
                         <Style>
                             <BackColor>Silver</BackColor>
                             <BorderStyle>
@@ -6661,8 +6661,8 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                         <Value>Amount</Value>
                     </TextBox>
                     <TextBox Name="textBox4">
-                        <Location>576px, 112px</Location>
-                        <Size>1.25in, 24px</Size>
+                        <Location>568px, 112px</Location>
+                        <Size>128px, 24px</Size>
                         <Style>
                             <BackColor>Silver</BackColor>
                             <BorderStyle>
@@ -6681,12 +6681,12 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                             <TextAlign>Center</TextAlign>
                             <VerticalAlign>Middle</VerticalAlign>
                         </Style>
-                        <Value>Invoice #</Value>
+                        <Value>Customer Order Nbr.</Value>
                     </TextBox>
                     <TextBox Name="textBox5">
                         <Format>='MM/dd/yyyy'</Format>
                         <Location>488px, 136px</Location>
-                        <Size>88px, 24px</Size>
+                        <Size>80px, 24px</Size>
                         <Style>
                             <BorderStyle>
                                 <Left>Solid</Left>
@@ -6702,8 +6702,8 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                         <Value>=[ARInvoice.DocDate]</Value>
                     </TextBox>
                     <TextBox Name="textBox6">
-                        <Location>576px, 136px</Location>
-                        <Size>120px, 24px</Size>
+                        <Location>568px, 136px</Location>
+                        <Size>128px, 24px</Size>
                         <Style>
                             <BorderStyle>
                                 <Right>Solid</Right>
@@ -6714,11 +6714,11 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                             <TextAlign>Center</TextAlign>
                             <VerticalAlign>Middle</VerticalAlign>
                         </Style>
-                        <Value>=[ARInvoice.RefNbr]</Value>
+                        <Value>=[ARInvoice.InvoiceNbr]</Value>
                     </TextBox>
                     <TextBox Name="textBox7">
                         <Location>488px, 160px</Location>
-                        <Size>88px, 24px</Size>
+                        <Size>80px, 24px</Size>
                         <Style>
                             <BackColor>Silver</BackColor>
                             <BorderStyle>
@@ -6742,8 +6742,8 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                         <Value>Terms</Value>
                     </TextBox>
                     <TextBox Name="textBox8">
-                        <Location>576px, 160px</Location>
-                        <Size>120px, 24px</Size>
+                        <Location>568px, 160px</Location>
+                        <Size>128px, 24px</Size>
                         <Style>
                             <BackColor>Silver</BackColor>
                             <BorderStyle>
@@ -6776,7 +6776,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                     </TextBox>
                     <TextBox Name="textBox9">
                         <Location>488px, 184px</Location>
-                        <Size>88px, 24px</Size>
+                        <Size>80px, 24px</Size>
                         <Style>
                             <BorderStyle>
                                 <Bottom>Solid</Bottom>
