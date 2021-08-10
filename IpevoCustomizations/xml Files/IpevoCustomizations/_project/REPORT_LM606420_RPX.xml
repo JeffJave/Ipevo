@@ -6074,7 +6074,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                     </TextBox>
                     <TextBox Name="textBox10">
                         <Location>576px, 40px</Location>
-                        <Size>1.25in, 24px</Size>
+                        <Size>120px, 24px</Size>
                         <Style>
                             <BackColor>Silver</BackColor>
                             <BorderStyle>
@@ -6093,7 +6093,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                             <TextAlign>Center</TextAlign>
                             <VerticalAlign>Middle</VerticalAlign>
                         </Style>
-                        <Value>Invoice #</Value>
+                        <Value>Invoice Receipt #</Value>
                     </TextBox>
                     <TextBox Name="textBox11">
                         <Location>80px, 152px</Location>
@@ -6640,7 +6640,12 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                             <TextAlign>Center</TextAlign>
                             <VerticalAlign>Middle</VerticalAlign>
                         </Style>
-                        <Value>=[ARInvoice.RefNbr]</Value>
+                        <Value>=[ARInvoice.InvoiceNbr]</Value>
+                    </TextBox>
+                    <TextBox Name="textBox7">
+                        <Location>488px, 24px</Location>
+                        <Size>208px, 16px</Size>
+                        <Value>='Invoice # ' + [ARInvoice.RefNbr]</Value>
                     </TextBox>
                     <TextBox Name="textBox9">
                         <Location>488px, 112px</Location>
