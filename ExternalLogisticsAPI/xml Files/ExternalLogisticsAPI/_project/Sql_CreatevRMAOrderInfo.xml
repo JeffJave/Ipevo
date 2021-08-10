@@ -21,12 +21,33 @@ SELECT c.CompanyCD,
 	   item.InventoryCD as InventoryID,
 	   item.Descr as InventoryDescr,
 	   soLine.OrderQty,
+	   soTax.TaxID,
 	   soTax.CuryTaxAmt,
+	   soTax.CuryTaxableAmt,
 	   soTax.TaxRate,
 	   shipInfo.SiteID,
 	   s.SiteCD as SiteDescr,
-	   soContact.Email,
-	   so.ContactID
+	   billContact.FullName as BillCompany,
+	   billContact.Attention as BillAttention,
+	   billContact.Phone1 as BillPhone,
+	   billContact.Email as BillEmail,
+	   billAddress.AddressLine1 as BillAddr1,
+	   billAddress.AddressLine2 as BillAddr2,
+	   billAddress.City as BillCity,
+	   billAddress.CountryID as BillCountry,
+	   billAddress.State as BillState,
+	   billAddress.PostalCode as BillPostalCode,
+	   shipContact.FullName as ShipCompany,
+	   shipContact.Attention as ShipAttention,
+	   shipContact.Phone1 as shipPhone,
+	   shipContact.Email as shipEmail,
+	   shipAddress.AddressLine1 as shipAddr1,
+	   shipAddress.AddressLine2 as shipAddr2,
+	   shipAddress.City as shipCity,
+	   shipAddress.CountryID as shipCountryID,
+	   shipAddress.State as shipState,
+	   shipAddress.PostalCode as shipPostalCode,
+	   so.InvoiceNbr
 FROM SOOrder so
 INNER JOIN SOLine soline on so.OrderType = soline.OrderType 
 						and so.OrderNbr = soline.OrderNbr
@@ -36,8 +57,14 @@ INNER JOIN InventoryItem item on soLine.InventoryID = item.InventoryID
 LEFT JOIN SOTaxTran soTax on so.OrderType = soTax.OrderType
 					     and so.OrderNbr = soTax.OrderNbr
 						 and so.CompanyID = soTax.CompanyID
-LEFT JOIN SOContact soContact on so.BillContactID = soContact.ContactID
-							 and so.CompanyID = soContact.CompanyID
+LEFT JOIN SOContact billContact on so.BillContactID = billContact.ContactID
+							   and so.CompanyID = billContact.CompanyID
+LEFT JOIN SOAddress billAddress on so.BillAddressID = billAddress.AddressID
+							  and so.CompanyID = billAddress.CompanyID
+LEFT JOIN SOContact shipContact on so.ShipContactID = shipContact.ContactID
+							   and so.CompanyID = shipContact.CompanyID
+LEFT JOIN SOAddress shipAddress on so.ShipAddressID = shipAddress.AddressID
+							   and so.CompanyID = shipAddress.CompanyID
 LEFT JOIN SOOrderShipment soShip on so.OrderType = soShip.OrderType
 								and so.OrderNbr = soShip.OrderNbr
 								and so.CompanyID = soShip.CompanyID

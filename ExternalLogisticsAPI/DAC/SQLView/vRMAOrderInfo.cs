@@ -98,11 +98,11 @@ namespace ExternalLogisticsAPI
         public abstract class orderQty : PX.Data.BQL.BqlDecimal.Field<orderQty> { }
         #endregion
 
-        #region TaxRate
-        [PXDBDecimal()]
-        [PXUIField(DisplayName = "Tax Rate")]
-        public virtual Decimal? TaxRate { get; set; }
-        public abstract class taxRate : PX.Data.BQL.BqlDecimal.Field<taxRate> { }
+        #region Taxid
+        [PXDBString(30, IsUnicode = true, InputMask = "")]
+        [PXUIField(DisplayName = "Taxid")]
+        public virtual string Taxid { get; set; }
+        public abstract class taxid : PX.Data.BQL.BqlString.Field<taxid> { }
         #endregion
 
         #region CuryTaxAmt
@@ -110,6 +110,20 @@ namespace ExternalLogisticsAPI
         [PXUIField(DisplayName = "Cury Tax Amt")]
         public virtual Decimal? CuryTaxAmt { get; set; }
         public abstract class curyTaxAmt : PX.Data.BQL.BqlDecimal.Field<curyTaxAmt> { }
+        #endregion
+
+        #region CuryTaxableAmt
+        [PXDBDecimal()]
+        [PXUIField(DisplayName = "Cury Taxable Amt")]
+        public virtual Decimal? CuryTaxableAmt { get; set; }
+        public abstract class curyTaxableAmt : PX.Data.BQL.BqlDecimal.Field<curyTaxableAmt> { }
+        #endregion
+
+        #region TaxRate
+        [PXDBDecimal()]
+        [PXUIField(DisplayName = "Tax Rate")]
+        public virtual Decimal? TaxRate { get; set; }
+        public abstract class taxRate : PX.Data.BQL.BqlDecimal.Field<taxRate> { }
         #endregion
 
         #region Siteid
@@ -126,11 +140,151 @@ namespace ExternalLogisticsAPI
         public abstract class siteDescr : PX.Data.BQL.BqlString.Field<siteDescr> { }
         #endregion
 
-        #region Email
+        #region BillCompany
+        [PXDBString(255, IsUnicode = true, InputMask = "")]
+        [PXUIField(DisplayName = "Bill Company")]
+        public virtual string BillCompany { get; set; }
+        public abstract class billCompany : PX.Data.BQL.BqlString.Field<billCompany> { }
+        #endregion
+
+        #region BillAttention
+        [PXDBString(255, IsUnicode = true, InputMask = "")]
+        [PXUIField(DisplayName = "Bill Attention")]
+        public virtual string BillAttention { get; set; }
+        public abstract class billAttention : PX.Data.BQL.BqlString.Field<billAttention> { }
+        #endregion
+
+        #region BillPhone
+        [PXDBString(50, InputMask = "")]
+        [PXUIField(DisplayName = "Bill Phone")]
+        public virtual string BillPhone { get; set; }
+        public abstract class billPhone : PX.Data.BQL.BqlString.Field<billPhone> { }
+        #endregion
+
+        #region BillEmail
         [PXDBString(255, InputMask = "")]
-        [PXUIField(DisplayName = "Email")]
-        public virtual string Email { get; set; }
-        public abstract class email : PX.Data.BQL.BqlString.Field<email> { }
+        [PXUIField(DisplayName = "Bill Email")]
+        public virtual string BillEmail { get; set; }
+        public abstract class billEmail : PX.Data.BQL.BqlString.Field<billEmail> { }
+        #endregion
+
+        #region BillAddr1
+        [PXDBString(50, IsUnicode = true, InputMask = "")]
+        [PXUIField(DisplayName = "Bill Addr1")]
+        public virtual string BillAddr1 { get; set; }
+        public abstract class billAddr1 : PX.Data.BQL.BqlString.Field<billAddr1> { }
+        #endregion
+
+        #region BillAddr2
+        [PXDBString(50, IsUnicode = true, InputMask = "")]
+        [PXUIField(DisplayName = "Bill Addr2")]
+        public virtual string BillAddr2 { get; set; }
+        public abstract class billAddr2 : PX.Data.BQL.BqlString.Field<billAddr2> { }
+        #endregion
+
+        #region BillCity
+        [PXDBString(50, IsUnicode = true, InputMask = "")]
+        [PXUIField(DisplayName = "Bill City")]
+        public virtual string BillCity { get; set; }
+        public abstract class billCity : PX.Data.BQL.BqlString.Field<billCity> { }
+        #endregion
+
+        #region BillCountry
+        [PXDBString(2, IsUnicode = true, InputMask = "")]
+        [PXUIField(DisplayName = "Bill Country")]
+        public virtual string BillCountry { get; set; }
+        public abstract class billCountry : PX.Data.BQL.BqlString.Field<billCountry> { }
+        #endregion
+
+        #region BillState
+        [PXDBString(50, IsUnicode = true, InputMask = "")]
+        [PXUIField(DisplayName = "Bill State")]
+        public virtual string BillState { get; set; }
+        public abstract class billState : PX.Data.BQL.BqlString.Field<billState> { }
+        #endregion
+
+        #region BillPostalCode
+        [PXDBString(20, InputMask = "")]
+        [PXUIField(DisplayName = "Bill Postal Code")]
+        public virtual string BillPostalCode { get; set; }
+        public abstract class billPostalCode : PX.Data.BQL.BqlString.Field<billPostalCode> { }
+        #endregion
+
+        #region ShipCompany
+        [PXDBString(255, IsUnicode = true, InputMask = "")]
+        [PXUIField(DisplayName = "Ship Company")]
+        public virtual string ShipCompany { get; set; }
+        public abstract class shipCompany : PX.Data.BQL.BqlString.Field<shipCompany> { }
+        #endregion
+
+        #region ShipAttention
+        [PXDBString(255, IsUnicode = true, InputMask = "")]
+        [PXUIField(DisplayName = "Ship Attention")]
+        public virtual string ShipAttention { get; set; }
+        public abstract class shipAttention : PX.Data.BQL.BqlString.Field<shipAttention> { }
+        #endregion
+
+        #region ShipPhone
+        [PXDBString(50, InputMask = "")]
+        [PXUIField(DisplayName = "Ship Phone")]
+        public virtual string ShipPhone { get; set; }
+        public abstract class shipPhone : PX.Data.BQL.BqlString.Field<shipPhone> { }
+        #endregion
+
+        #region ShipEmail
+        [PXDBString(255, InputMask = "")]
+        [PXUIField(DisplayName = "Ship Email")]
+        public virtual string ShipEmail { get; set; }
+        public abstract class shipEmail : PX.Data.BQL.BqlString.Field<shipEmail> { }
+        #endregion
+
+        #region ShipAddr1
+        [PXDBString(50, IsUnicode = true, InputMask = "")]
+        [PXUIField(DisplayName = "Ship Addr1")]
+        public virtual string ShipAddr1 { get; set; }
+        public abstract class shipAddr1 : PX.Data.BQL.BqlString.Field<shipAddr1> { }
+        #endregion
+
+        #region ShipAddr2
+        [PXDBString(50, IsUnicode = true, InputMask = "")]
+        [PXUIField(DisplayName = "Ship Addr2")]
+        public virtual string ShipAddr2 { get; set; }
+        public abstract class shipAddr2 : PX.Data.BQL.BqlString.Field<shipAddr2> { }
+        #endregion
+
+        #region ShipCity
+        [PXDBString(50, IsUnicode = true, InputMask = "")]
+        [PXUIField(DisplayName = "Ship City")]
+        public virtual string ShipCity { get; set; }
+        public abstract class shipCity : PX.Data.BQL.BqlString.Field<shipCity> { }
+        #endregion
+
+        #region ShipCountryID
+        [PXDBString(2, IsUnicode = true, InputMask = "")]
+        [PXUIField(DisplayName = "Ship Country ID")]
+        public virtual string ShipCountryID { get; set; }
+        public abstract class shipCountryID : PX.Data.BQL.BqlString.Field<shipCountryID> { }
+        #endregion
+
+        #region ShipState
+        [PXDBString(50, IsUnicode = true, InputMask = "")]
+        [PXUIField(DisplayName = "Ship State")]
+        public virtual string ShipState { get; set; }
+        public abstract class shipState : PX.Data.BQL.BqlString.Field<shipState> { }
+        #endregion
+
+        #region ShipPostalCode
+        [PXDBString(20, InputMask = "")]
+        [PXUIField(DisplayName = "Ship Postal Code")]
+        public virtual string ShipPostalCode { get; set; }
+        public abstract class shipPostalCode : PX.Data.BQL.BqlString.Field<shipPostalCode> { }
+        #endregion
+
+        #region InvoiceNbr
+        [PXDBString(15, IsUnicode = true, InputMask = "")]
+        [PXUIField(DisplayName = "Invoice Nbr")]
+        public virtual string InvoiceNbr { get; set; }
+        public abstract class invoiceNbr : PX.Data.BQL.BqlString.Field<invoiceNbr> { }
         #endregion
     }
 }
