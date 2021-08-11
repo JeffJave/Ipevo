@@ -44,9 +44,33 @@ namespace PX.Objects.AP
 
             var row = e.Row as APInvoice;
 
-            if (row != null && row.DocType.IsIn(APDocType.Invoice, APDocType.DebitAdj) && ManualAPBill.Select().Count == 0 && Base.Taxes.Select().Count > 0)
+            if (row != null && row.DocType.IsIn(APDocType.Invoice, APDocType.DebitAdj) )
             {
-                throw new PXException(TWMessages.NoGUIWithTax);
+                if (ManualAPBill.Select().Count == 0 && Base.Taxes.Select().Count > 0)
+                {
+                    throw new PXException(TWMessages.NoGUIWithTax);
+                }
+                else
+                {
+                    decimal? taxSum = 0;
+
+                    foreach (TWNManualGUIAPBill line in ManualAPBill.Select())
+                    {
+                        tWNGUIValidation.CheckCorrespondingInv(Base, line.GUINbr, line.VATInCode);
+
+                        if (tWNGUIValidation.errorOccurred == true)
+                        {
+                            e.Cache.RaiseExceptionHandling<TWNManualGUIAPBill.gUINbr>(e.Row, line.GUINbr, new PXSetPropertyException(tWNGUIValidation.errorMessage, PXErrorLevel.RowError));
+                        }
+
+                        taxSum += line.TaxAmt.Value;
+                    }
+
+                    if (taxSum != row.TaxTotal && e.Operation != PXDBOperation.Delete)
+                    {
+                        throw new PXException(TWMessages.ChkTotalGUIAmt);
+                    }
+                }
             }
         }
 
@@ -113,39 +137,12 @@ namespace PX.Objects.AP
         #region TWNManualGUIAPBill
         TWNGUIValidation tWNGUIValidation = new TWNGUIValidation();
 
-        protected void _(Events.RowPersisting<TWNManualGUIAPBill> e)
-        {
-            var row = e.Row as TWNManualGUIAPBill;
-
-            if (row != null && row.DocType.IsIn(APDocType.Invoice, APDocType.DebitAdj) )
-            {
-                tWNGUIValidation.CheckCorrespondingInv(Base, e.Row.GUINbr, e.Row.VATInCode);
-
-                if (tWNGUIValidation.errorOccurred == true)
-                {
-                    e.Cache.RaiseExceptionHandling<TWNManualGUIAPBill.gUINbr>(e.Row, e.Row.GUINbr, new PXSetPropertyException(tWNGUIValidation.errorMessage, PXErrorLevel.RowError));
-                }
-
-                decimal? taxSum = 0;
-
-                foreach (TWNManualGUIAPBill line in ManualAPBill.Select())
-                {
-                    taxSum += line.TaxAmt.Value;
-                }
-
-                if (taxSum != Base.Document.Current.TaxTotal)
-                {
-                    throw new PXException(TWMessages.ChkTotalGUIAmt);
-                }
-            }
-        }
-
         protected void _(Events.FieldDefaulting<TWNManualGUIAPBill.deduction> e)
         {
             var row = e.Row as TWNManualGUIAPBill;
 
             /// If user doesn't choose a vendor then bring the fixed default value from Attribure "DEDUCTCODE" first record.
-            e.NewValue = row.VendorID == null ? "1" : e.NewValue;
+            e.NewValue = row.VendorID == null ? new string1() : e.NewValue;
         }
 
         protected void _(Events.FieldDefaulting<TWNManualGUIAPBill.ourTaxNbr> e)
@@ -156,31 +153,6 @@ namespace PX.Objects.AP
 
             e.NewValue = row.VendorID == null ? preferences.OurTaxNbr : e.NewValue;
         }
-
-        //protected void _(Events.FieldVerifying<TWNManualGUIAPBill.gUINbr> e)
-        //{
-        //    var row = e.Row as TWNManualGUIAPBill;
-
-        //    tWNGUIValidation.CheckGUINbrExisted(Base, (string)e.NewValue, row.VATInCode);
-        //}
-
-        //protected void _(Events.FieldVerifying<TWNManualGUIAPBill.taxAmt> e)
-        //{
-        //    var row = e.Row as TWNManualGUIAPBill;
-
-        //    tWNGUIValidation.CheckTaxAmount((decimal)row.NetAmt, (decimal)e.NewValue);
-        //}
-
-        //protected void _(Events.FieldUpdated<TWNManualGUIAPBill.netAmt> e)
-        //{
-        //    var row = e.Row as TWNManualGUIAPBill;
-
-        //    foreach (TaxRev taxRev in SelectFrom<TaxRev>.Where<TaxRev.taxID.IsEqual<@P.AsString>
-        //                                                       .And<TaxRev.taxType.IsEqual<TaxRev.taxType>>>.View.Select(Base, row.TaxID, "P")) // P = Group type (Input)
-        //    {
-        //        row.TaxAmt = row.NetAmt * (taxRev.TaxRate / taxRev.NonDeductibleTaxRate);
-        //    }
-        //}
         #endregion
 
         #endregion

@@ -1,20 +1,32 @@
-﻿using System.Collections.Generic;
-using PX.Data;
+﻿using PX.Data;
+using PX.Data.WorkflowAPI;
 using PX.Objects.AR;
+using System.Collections;
+using System.Collections.Generic;
 using eGUICustomizations.Descriptor;
 
 namespace PX.Objects.SO
 {
-    public class SOInvoiceEntry_Extension : PXGraphExtension<SOInvoiceEntry>
+    public class SOInvoiceEntry_Extension : PXGraphExtension<SOInvoiceEntry_Workflow, SOInvoiceEntry>
     {
         public const string GUIReportID = "TW601000";
 
         #region Override Methods
-        public override void Initialize()
+        public override void Configure(PXScreenConfiguration config)
         {
-            base.Initialize();
+            Configure(config.GetScreenConfigurationContext<SOInvoiceEntry, ARInvoice>());
+        }
 
-            Base.report.AddMenuAction(printGUIInvoice);
+        protected virtual void Configure(WorkflowContext<SOInvoiceEntry, ARInvoice> context)
+        {
+            context.UpdateScreenConfigurationFor(screen =>
+            {
+                return screen.WithActions(actions =>
+                                          {
+                                              actions.Add<SOInvoiceEntry_Extension>(e => e.printGUIInvoice, 
+                                                                                    a => a.InFolder(FolderType.ReportsFolder).PlaceAfter(s => s.printInvoice));
+                                          });
+                });
         }
         #endregion
 
@@ -22,7 +34,7 @@ namespace PX.Objects.SO
         public PXAction<ARInvoice> printGUIInvoice;
         [PXButton()]
         [PXUIField(DisplayName = "Print GUI Invoice", MapEnableRights = PXCacheRights.Select)]
-        protected virtual void PrintGUIInvoice()
+        protected virtual IEnumerable PrintGUIInvoice(PXAdapter adapter)
         {
             if (Base.Document.Current != null)
             {
@@ -34,6 +46,8 @@ namespace PX.Objects.SO
 
                 throw new PXReportRequiredException(parameters, GUIReportID, GUIReportID);
             }
+
+            return adapter.Get();
         }
         #endregion
 
@@ -44,7 +58,7 @@ namespace PX.Objects.SO
 
             Base.report.SetVisible(nameof(PrintGUIInvoice), TWNGUIValidation.ActivateTWGUI(e.Cache.Graph));
 
-            printGUIInvoice.SetEnabled(TWNGUIValidation.ActivateTWGUI(e.Cache.Graph) && !string.IsNullOrEmpty(Base.Document.Current.GetExtension<ARRegisterExt>()?.UsrGUINbr) );
+            printGUIInvoice.SetEnabled(TWNGUIValidation.ActivateTWGUI(e.Cache.Graph) && !string.IsNullOrEmpty(Base.Document.Current.GetExtension<ARRegisterExt>()?.UsrGUINbr));
         }
         #endregion
     }

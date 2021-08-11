@@ -74,36 +74,35 @@ namespace eGUICustomizations.Descriptor
         {
             if (string.IsNullOrEmpty((string)e.NewValue) || TWNGUIValidation.ActivateTWGUI(new PXGraph()) == false) { return; }
 
-            object obj = null;
+            bool   reverse = false;
             string vATCode = null;
             string erroMsg = null;
 
             switch (this.BqlTable.Name)
             {
                 case nameof(ARRegister):
-                    obj = sender.GetValueExt<ARRegisterExt.usrVATOutCode>(e.Row);
+                    vATCode = (string)sender.GetValue<ARRegisterExt.usrVATOutCode>(e.Row);
+                    reverse = (bool)sender.GetValue<ARRegister.docType>(e.Row).Equals(ARDocType.CreditMemo);
                     break;
                 case nameof(TWNGUITrans):
-                    obj = sender.GetValueExt<TWNGUITrans.gUIFormatcode>(e.Row);
+                    vATCode = (string)sender.GetValue<TWNGUITrans.gUIFormatcode>(e.Row);
                     break;
                 case nameof(TWNManualGUIAP):
-                    obj = sender.GetValueExt<TWNManualGUIAP.vATInCode>(e.Row);
+                    vATCode = (string)sender.GetValue<TWNManualGUIAP.vATInCode>(e.Row);
                     break;
                 case nameof(TWNManualGUIAR):
-                    obj = sender.GetValueExt<TWNManualGUIAR.vatOutCode>(e.Row);
+                    vATCode = (string)sender.GetValue<TWNManualGUIAR.vatOutCode>(e.Row);
                     break;
                 case nameof(TWNManualGUIBank):
-                    obj = sender.GetValueExt<TWNManualGUIBank.vATInCode>(e.Row);
+                    vATCode = (string)sender.GetValue<TWNManualGUIBank.vATInCode>(e.Row);
                     break;
                 case nameof(TWNManualGUIExpense):
-                    obj = sender.GetValueExt<TWNManualGUIExpense.vATInCode>(e.Row);
+                    vATCode = (string)sender.GetValue<TWNManualGUIExpense.vATInCode>(e.Row);
                     break;
                 case nameof(TWNManualGUIAPBill):
-                    obj = sender.GetValueExt<TWNManualGUIAPBill.vATInCode>(e.Row);
+                    vATCode = (string)sender.GetValue<TWNManualGUIAPBill.vATInCode>(e.Row);
                     break;
             }
-
-            vATCode = obj is null ? string.Empty : obj.ToString();
 
             if (!vATCode.IsIn(TWGUIFormatCode.vATOutCode33, TWGUIFormatCode.vATOutCode34) )
             {
@@ -117,7 +116,10 @@ namespace eGUICustomizations.Descriptor
                 throw new PXSetPropertyException(erroMsg, PXErrorLevel.Error);
             }
 
-            new TWNGUIValidation().CheckGUINbrExisted(sender.Graph, (string)e.NewValue, vATCode);
+            if (reverse == false)
+            {
+                new TWNGUIValidation().CheckGUINbrExisted(sender.Graph, (string)e.NewValue, vATCode);
+            }
         }
     }
     #endregion

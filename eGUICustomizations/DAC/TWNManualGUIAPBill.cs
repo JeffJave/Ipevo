@@ -122,11 +122,12 @@ namespace eGUICustomizations.DAC
         #endregion
 
         #region TaxNbr
-        [TaxNbrVerify(8, IsUnicode = true, InputMask = "")]
-        [PXUIField(DisplayName = "Tax Nbr")]
-        [PXDefault(typeof(Search<CSAnswers.value,
-                                 Where<CSAnswers.refNoteID, Equal<Current<Vendor.noteID>>,
-                                       And<CSAnswers.attributeID, Equal<APRegisterExt.TaxNbrNameAtt>>>>),
+        [TaxNbrVerify(8, IsUnicode = true)]
+        [PXUIField(DisplayName = "Tax Nbr.")]
+        [PXDefault(typeof(Search2<CSAnswers.value,
+                                  InnerJoin<Vendor, On<Vendor.noteID, Equal<CSAnswers.refNoteID>,
+                                                       And<CSAnswers.attributeID, Equal<APRegisterExt.TaxNbrNameAtt>>>>,
+                                  Where<Vendor.bAccountID, Equal<Current<vendorID>>>>),
                    PersistingCheck = PXPersistingCheck.Nothing)]
         [PXFormula(typeof(Default<vendorID>))]
         public virtual string TaxNbr { get; set; }
@@ -134,11 +135,12 @@ namespace eGUICustomizations.DAC
         #endregion
 
         #region OurTaxNbr
-        [TaxNbrVerify(8, IsUnicode = true, InputMask = "")]
-        [PXUIField(DisplayName = "Our Tax Nbr")]
-        [PXDefault(typeof(Search<CSAnswers.value,
-                                 Where<CSAnswers.refNoteID, Equal<Current<Vendor.noteID>>,
-                                       And<CSAnswers.attributeID, Equal<APRegisterExt.OurTaxNbrNameAtt>>>>),
+        [TaxNbrVerify(8, IsUnicode = true)]
+        [PXUIField(DisplayName = "Our Tax Nbr.")]
+        [PXDefault(typeof(Search2<CSAnswers.value,
+                                  InnerJoin<Vendor, On<Vendor.noteID, Equal<CSAnswers.refNoteID>,
+                                                       And<CSAnswers.attributeID, Equal<APRegisterExt.OurTaxNbrNameAtt>>>>,
+                                  Where<Vendor.bAccountID, Equal<Current<vendorID>>>>),
                    PersistingCheck = PXPersistingCheck.Nothing)]
         [PXFormula(typeof(Default<vendorID>))]
         public virtual string OurTaxNbr { get; set; }
@@ -146,14 +148,15 @@ namespace eGUICustomizations.DAC
         #endregion
 
         #region Deduction
-        [PXDBString(2, IsUnicode = true, InputMask = "")]
+        [PXDBString(2, IsUnicode = true, IsFixed = true)]
         [PXUIField(DisplayName = "Deduction")]
         [PXSelector(typeof(Search<CSAttributeDetail.valueID,
                                   Where<CSAttributeDetail.attributeID, Equal<APRegisterExt.DeductionNameAtt>>>),
                     typeof(CSAttributeDetail.description))]
-        [PXDefault(typeof(Search<CSAnswers.value,
-                                 Where<CSAnswers.refNoteID, Equal<Current<Vendor.noteID>>,
-                                       And<CSAnswers.attributeID, Equal<APRegisterExt.DeductionNameAtt>>>>),
+        [PXDefault(typeof(Search2<CSAnswers.value,
+                                  InnerJoin<Vendor, On<Vendor.noteID, Equal<CSAnswers.refNoteID>,
+                                                       And<CSAnswers.attributeID, Equal<APRegisterExt.DeductionNameAtt>>>>,
+                                  Where<Vendor.bAccountID, Equal<Current<vendorID>>>>),
                    PersistingCheck = PXPersistingCheck.Nothing)]
         [PXFormula(typeof(Default<vendorID>))]
         public virtual string Deduction { get; set; }
