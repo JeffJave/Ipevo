@@ -143,10 +143,11 @@
 								</Columns>
 							</px:PXGridLevel>
 						</Levels>
-						<Mode InitNewRow="True" AllowFormEdit="True" AllowAddNew="True" />
+						<Mode InitNewRow="True" AllowFormEdit="True" AllowAddNew="True" AllowUpload="True" />
 						<ActionBar>
 							<Actions>
 								<AddNew Enabled="true" />
+								<Upload Enabled="true" />
 							</Actions>
 							<CustomItems>
 								<px:PXToolBarButton Text="Add AR Payment" Key="cmdPO" CommandSourceID="ds" CommandName="AddPayment">

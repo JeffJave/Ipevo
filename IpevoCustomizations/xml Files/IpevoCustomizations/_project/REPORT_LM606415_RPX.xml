@@ -6093,7 +6093,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                             <TextAlign>Center</TextAlign>
                             <VerticalAlign>Middle</VerticalAlign>
                         </Style>
-                        <Value>Invoice #</Value>
+                        <Value>Invoice Receipt #</Value>
                     </TextBox>
                     <TextBox Name="textBox11">
                         <Location>80px, 152px</Location>
@@ -6272,6 +6272,11 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                             <VerticalAlign>Middle</VerticalAlign>
                         </Style>
                         <Value>=[ARInvoice.DocDate]</Value>
+                    </TextBox>
+                    <TextBox Name="textBox19">
+                        <Location>488px, 24px</Location>
+                        <Size>208px, 16px</Size>
+                        <Value>='Invoice # ' + [ARInvoice.RefNbr]</Value>
                     </TextBox>
                     <TextBox Name="textBox2">
                         <Location>16px, 40px</Location>
@@ -6637,10 +6642,13 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                             <BorderWidth>
                                 <Right>1px</Right>
                             </BorderWidth>
+                            <Font>
+                                <Size>10px</Size>
+                            </Font>
                             <TextAlign>Center</TextAlign>
                             <VerticalAlign>Middle</VerticalAlign>
                         </Style>
-                        <Value>=[ARInvoice.RefNbr]</Value>
+                        <Value>=[ARInvoice.InvoiceNbr]</Value>
                     </TextBox>
                     <TextBox Name="textBox9">
                         <Location>488px, 112px</Location>
