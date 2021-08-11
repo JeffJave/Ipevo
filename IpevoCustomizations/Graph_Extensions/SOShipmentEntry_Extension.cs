@@ -45,7 +45,7 @@ namespace PX.Objects.SO
             }
         }
 
-        # region Override Persist Event
+        #region Override Persist Event
         [PXOverride]
         public void Persist(PersistDelegate baseMethod)
         {
@@ -80,10 +80,13 @@ namespace PX.Objects.SO
         {
             if (Base.Document.Current != null)
             {
+                var _packagesFromDB = SelectFrom<SOPackageDetail>.Where<SOPackageDetail.shipmentNbr.IsEqual<SOPackageDetail.shipmentNbr.FromCurrent>>.View.Select(Base);
+                int _packageCount = _packagesFromDB.Where(x => Convert.ToInt32(((SOPackageDetail)x).CustomRefNbr1) > 0).Sum(x => Convert.ToInt32(((SOPackageDetail)x).CustomRefNbr1));
+
                 Dictionary<string, string> parameters = new Dictionary<string, string>();
                 parameters["ShipmentNbr"] = Base.Document.Current.ShipmentNbr;
-                parameters["PackageCountNo"] = Convert.ToString(Base.Document.Current.PackageCount);
-                parameters["PackageCountEn"] = Number2English(Convert.ToDecimal(Base.Document.Current.PackageCount));
+                parameters["PackageCountNo"] = Convert.ToString(_packageCount);
+                parameters["PackageCountEn"] = Number2English(Convert.ToDecimal(_packageCount));
                 throw new PXReportRequiredException(parameters, "LM642005", "Report LM642005");
             }
             return adapter.Get();
@@ -112,6 +115,9 @@ namespace PX.Objects.SO
                                 LeftJoin<InventoryItem>.On<InventoryItem.noteID.IsEqual<CSAnswers.refNoteID>.And<CSAnswers.attributeID.IsEqual<QtyPerCartonAttr>>>.
                                 Where<InventoryItem.inventoryID.IsEqual<SOShipLine.inventoryID.FromCurrent>>.View.Select(Base).TopFirst?.Value, out parseResult) ? parseResult : 0;
 
+            if (_CartonsPerPallet == 0)
+                throw new PXException("Qty per Pallets cannot be zero or blank.");
+
             if (_line.ShippedQty < (_CartonsPerPallet * _QtyPerCarton))
                 throw new PXException("Shipped Qty should greater or equal to Cartons Per Pallet.");
 
@@ -127,6 +133,7 @@ namespace PX.Objects.SO
                     Base.Packages.Insert((SOPackageDetailEx)Base.Packages.Cache.CreateInstance());
                     SOPackageDetailEx _package = Base.Packages.Cache.Dirty.RowCast<SOPackageDetailEx>().ElementAt(i);
                     Base.Packages.Cache.SetValueExt<SOPackageDetail.shipmentNbr>(_package, _line.ShipmentNbr);
+                    Base.Packages.Cache.SetValueExt<SOPackageDetail.customRefNbr1>(_package, 1);
                     Base.Packages.Cache.SetValueExt<SOPackageDetailEx.customRefNbr2>(_package, (++_maxCartno).ToString().PadLeft(3, '0'));
                     Base.Packages.Cache.SetValueExt<SOPackageDetailExt.usrShipmentSplitLineNbr>(_package, _line.LineNbr);
                     Base.Packages.Cache.SetValueExt<SOPackageDetailExt.usrCartonQty>(_package, (int)_CartonsPerPallet);
@@ -153,6 +160,7 @@ namespace PX.Objects.SO
             
             PXLongOperation.StartOperation(Base, () =>
             {
+                int palletCount = 1;
                 int pointer = 0;
                 var _maxCartonNbr = GetMaxPalletNbr() + 1;
                 foreach (var _shipline in _shipLines.Where(x => x.GetExtension<SOShipLineExt>().UsrPackingQty > 0))
@@ -164,6 +172,8 @@ namespace PX.Objects.SO
                     Base.Packages.Insert((SOPackageDetailEx)Base.Packages.Cache.CreateInstance());
                     SOPackageDetailEx _package = Base.Packages.Cache.Dirty.RowCast<SOPackageDetailEx>().ElementAt(pointer++);
                     Base.Packages.Cache.SetValueExt<SOPackageDetail.shipmentNbr>(_package, _shipline.ShipmentNbr);
+                    Base.Packages.Cache.SetValueExt<SOPackageDetail.customRefNbr1>(_package, palletCount);
+                    palletCount--;
                     Base.Packages.Cache.SetValueExt<SOPackageDetailEx.customRefNbr2>(_package, _maxCartonNbr.ToString().PadLeft(3, '0'));
                     Base.Packages.Cache.SetValueExt<SOPackageDetailExt.usrShipmentSplitLineNbr>(_package, _shipline.LineNbr);
                     Base.Packages.Cache.SetValueExt<SOPackageDetail.qty>(_package, _shipline.GetExtension<SOShipLineExt>().UsrPackingQty);
@@ -230,7 +240,7 @@ namespace PX.Objects.SO
             e.Cache.SetValueExt<SOPackageDetailExt.usrMeasurement>(e.Row, _line.UsrLength * _line.UsrWidth * _line.UsrHeight / 1000000);
         }
         #endregion
-        
+
         #region Other Methods
 
         #region Get Max Pallet Nbr
