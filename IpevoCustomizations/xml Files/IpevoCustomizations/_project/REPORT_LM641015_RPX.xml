@@ -3940,6 +3940,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                                 <Left>3px</Left>
                                 <Top>3px</Top>
                             </Padding>
+                            <VerticalAlign>Middle</VerticalAlign>
                         </Style>
                         <Value>=[SOLine.TranDesc]</Value>
                     </TextBox>
@@ -3959,7 +3960,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                             <TextAlign>Center</TextAlign>
                             <VerticalAlign>Middle</VerticalAlign>
                         </Style>
-                        <Value>=[SOLine.OrderQty]</Value>
+                        <Value>=IIF([SOLine.Operation] = 'R', #010;[SOLine.OrderQty] * -1,#010;[SOLine.OrderQty])</Value>
                     </TextBox>
                     <TextBox Name="textBox46">
                         <Location>368px, 0px</Location>
@@ -4032,7 +4033,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                             <TextAlign>Center</TextAlign>
                             <VerticalAlign>Middle</VerticalAlign>
                         </Style>
-                        <Value>=[SOLine.CuryLineAmt]</Value>
+                        <Value>=IIF([SOLine.Operation] = 'R',#010;[SOLine.CuryLineAmt] * -1,#010;[SOLine.CuryLineAmt])</Value>
                     </TextBox>
                 </Items>
             </Detail>

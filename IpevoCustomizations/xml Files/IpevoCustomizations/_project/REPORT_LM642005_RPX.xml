@@ -3425,7 +3425,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                     </ReportVariable>
                     <ReportVariable>
                         <Name>TotalPalletQty</Name>
-                        <ValueExpr>=$TotalPalletQty + [SOPackageDetailEx.UsrCartonQty]</ValueExpr>
+                        <ValueExpr>=$TotalPalletQty + IIF(CDec([SOPackageDetailEx.CustomRefNbr1]) &gt; 0, ([SOPackageDetailEx.UsrCartonQty] * CDec([SOPackageDetailEx.CustomRefNbr1])), [SOPackageDetailEx.UsrCartonQty])</ValueExpr>
                     </ReportVariable>
                     <ReportVariable>
                         <Name>TotalNWQty</Name>
@@ -3437,7 +3437,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                     </ReportVariable>
                     <ReportVariable>
                         <Name>TotalMeasurement</Name>
-                        <ValueExpr>=$TotalMeasurement + [SOPackageDetailEx.UsrMeasurement]</ValueExpr>
+                        <ValueExpr>=$TotalMeasurement + ([SOPackageDetailEx.UsrMeasurement] * CDec([SOPackageDetailEx.CustomRefNbr1]))</ValueExpr>
                     </ReportVariable>
                 </Variables>
                 <Items>
@@ -3451,7 +3451,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                             <TextAlign>Center</TextAlign>
                             <VerticalAlign>Middle</VerticalAlign>
                         </Style>
-                        <Value>=[SOPackageDetailEx.UsrCartonQty] + ' CTNS'</Value>
+                        <Value>=IIF(CDec([SOPackageDetailEx.CustomRefNbr1]) &gt; 0, ([SOPackageDetailEx.UsrCartonQty] * CDec([SOPackageDetailEx.CustomRefNbr1])) + ' CTNS', [SOPackageDetailEx.UsrCartonQty] + ' CTNS')</Value>
                     </TextBox>
                     <TextBox Name="textBox18">
                         <Location>80px, 0px</Location>
@@ -3508,6 +3508,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                             <TextAlign>Center</TextAlign>
                         </Style>
                         <Value>=Round([SOPackageDetailEx.UsrLength], 2) + '*'#010;+Round([SOPackageDetailEx.UsrWidth], 2) + '*'#010;+Round([SOPackageDetailEx.UsrHeight], 2) + 'cm'</Value>
+                        <VisibleExpr>=IIF(([SOPackageDetailEx.UsrMeasurement] * CDec([SOPackageDetailEx.CustomRefNbr1])) &gt; 0, True, False)</VisibleExpr>
                     </TextBox>
                     <TextBox Name="textBox25">
                         <Location>80px, 16px</Location>
@@ -3549,7 +3550,8 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                             </Font>
                             <TextAlign>Right</TextAlign>
                         </Style>
-                        <Value>=[SOPackageDetailEx.UsrMeasurement]</Value>
+                        <Value>=[SOPackageDetailEx.UsrMeasurement] * CDec([SOPackageDetailEx.CustomRefNbr1])</Value>
+                        <VisibleExpr>=IIF(([SOPackageDetailEx.UsrMeasurement] * CDec([SOPackageDetailEx.CustomRefNbr1])) &gt; 0, True, False)</VisibleExpr>
                     </TextBox>
                     <TextBox Name="textBox29">
                         <Location>360px, 24px</Location>
@@ -3605,6 +3607,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                             <TextAlign>Left</TextAlign>
                         </Style>
                         <Value> CBM</Value>
+                        <VisibleExpr>=IIF(([SOPackageDetailEx.UsrMeasurement] * CDec([SOPackageDetailEx.CustomRefNbr1])) &gt; 0, True, False)</VisibleExpr>
                     </TextBox>
                 </Items>
             </Detail>
