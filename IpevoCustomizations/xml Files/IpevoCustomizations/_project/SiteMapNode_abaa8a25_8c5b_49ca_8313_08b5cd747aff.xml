@@ -25,7 +25,7 @@
         </layout>
         <data>
             <SiteMap>
-                <row Title="Print Invoice - NL" Url="~/Frames/ReportLauncher.aspx?ID=LM606420.rpx" ScreenID="LM606420" NodeID="abaa8a25-8c5b-49ca-8313-08b5cd747aff" ParentID="00000000-0000-0000-0000-000000000000">
+                <row Title="Print Invoice - NL" Url="~/Frames/ReportLauncher.aspx?ID=SO606420.rpx" ScreenID="SO606420" NodeID="abaa8a25-8c5b-49ca-8313-08b5cd747aff" ParentID="00000000-0000-0000-0000-000000000000">
                     <MUIScreen IsPortal="0" WorkspaceID="e2c3849a-6280-41df-81f3-552b91adfae5" Order="345" SubcategoryID="0b491e12-c58d-4e47-8a0d-96dd3a8ab395" />
                 </row>
             </SiteMap>
