@@ -35,8 +35,6 @@ namespace ExternalLogisticsAPI.Graph
             //LUMP3PLImportProc graph = null;
             ImportDataList.SetProcessDelegate(delegate (List<LUMP3PLImportProcess> list)
                                               {
-                                                  //graph = PXGraph.CreateInstance<LUMP3PLImportProc>();
-                                                  //graph.UpdateTrackingInfo(list);
                                                   GoUpdate(list);
                                               });
         }
@@ -185,7 +183,11 @@ namespace ExternalLogisticsAPI.Graph
                             _soShipment.GetExtension<SOShipmentExt>().UsrCarrier = row.Carrier;
                             shipmentGraph.Document.Update(_soShipment);
                             shipmentGraph.Save.Press();
-
+                            // Confirm Shipment
+                            shipmentGraph.confirmShipmentAction.Press();
+                            // Prepare Invoice
+                            shipmentGraph.createInvoice.Press();
+                            // Insert Log
                             InsertLogAndDeleteFile(graph, row, true, string.Empty);
                         }
 

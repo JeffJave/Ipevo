@@ -188,7 +188,11 @@ namespace ExternalLogisticsAPI.Graph
                         _soShipment.GetExtension<SOShipmentExt>().UsrCarrier = row.Carrier;
                         shipmentGraph.Document.Update(_soShipment);
                         shipmentGraph.Save.Press();
-
+                        // Confirm Shipment
+                        shipmentGraph.confirmShipmentAction.Press();
+                        // Prepare Invoice
+                        shipmentGraph.createInvoice.Press();
+                        // Insert Log
                         InsertLog(row, true, string.Empty);
                     }
 
