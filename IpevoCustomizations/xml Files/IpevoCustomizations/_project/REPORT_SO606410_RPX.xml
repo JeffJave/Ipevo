@@ -1,4 +1,4 @@
-﻿<Report Name="lm606405.rpx">
+﻿<Report Name="so606410.rpx">
     <Report Name="report1" version="20201103">
         <CommonSettings>
             <ViewPdf>True</ViewPdf>
@@ -49,12 +49,6 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                 <DataField>ARTran.InventoryID</DataField>
             </FilterExp>
         </Filters>
-        <PageSettings>
-            <Margins>
-                <Bottom>0.47cm</Bottom>
-                <Top>1.87cm</Top>
-            </Margins>
-        </PageSettings>
         <Parameters>
             <ReportParameter>
                 <ColumnSpan>2</ColumnSpan>
@@ -306,6 +300,20 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                     <RelationRow>
                         <ChildField>BAccountID</ChildField>
                         <ParentField>CustomerID</ParentField>
+                    </RelationRow>
+                </Links>
+                <ParentName>ARInvoice</ParentName>
+            </ReportRelation>
+            <ReportRelation>
+                <ChildName>ARTaxTran</ChildName>
+                <Links>
+                    <RelationRow>
+                        <ChildField>RefNbr</ChildField>
+                        <ParentField>RefNbr</ParentField>
+                    </RelationRow>
+                    <RelationRow>
+                        <ChildField>TranType</ChildField>
+                        <ParentField>DocType</ParentField>
                     </RelationRow>
                 </Links>
                 <ParentName>ARInvoice</ParentName>
@@ -5735,6 +5743,318 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                 </Fields>
                 <FullName>PX.Objects.CR.Location</FullName>
             </ReportTable>
+            <ReportTable Name="ARTaxTran">
+                <Fields>
+                    <ReportField Name="AccountID">
+                    </ReportField>
+                    <ReportField Name="AccountID_Account_description">
+                    </ReportField>
+                    <ReportField Name="AccountID_description">
+                    </ReportField>
+                    <ReportField Name="AccountID_Segment1">
+                    </ReportField>
+                    <ReportField Name="AdjdDocType">
+                    </ReportField>
+                    <ReportField Name="AdjdRefNbr">
+                    </ReportField>
+                    <ReportField Name="AdjNbr">
+                        <DataType>Int32</DataType>
+                    </ReportField>
+                    <ReportField Name="BAccountID">
+                        <DataType>Int32</DataType>
+                    </ReportField>
+                    <ReportField Name="BranchID">
+                    </ReportField>
+                    <ReportField Name="BranchID_Branch_acctName">
+                    </ReportField>
+                    <ReportField Name="BranchID_description">
+                    </ReportField>
+                    <ReportField Name="BranchID_Segment1">
+                    </ReportField>
+                    <ReportField Name="CreatedByID">
+                    </ReportField>
+                    <ReportField Name="CreatedByID_Creator_displayName">
+                    </ReportField>
+                    <ReportField Name="CreatedByID_Creator_Username">
+                    </ReportField>
+                    <ReportField Name="CreatedByID_description">
+                    </ReportField>
+                    <ReportField Name="CreatedByScreenID">
+                    </ReportField>
+                    <ReportField Name="CreatedDateTime">
+                        <DataType>DateTime</DataType>
+                    </ReportField>
+                    <ReportField Name="CreatedDateTime_Day">
+                    </ReportField>
+                    <ReportField Name="CreatedDateTime_Hour">
+                    </ReportField>
+                    <ReportField Name="CreatedDateTime_Month">
+                    </ReportField>
+                    <ReportField Name="CreatedDateTime_Quarter">
+                    </ReportField>
+                    <ReportField Name="CuryDiscountedPrice">
+                        <DataType>Decimal</DataType>
+                    </ReportField>
+                    <ReportField Name="CuryDiscountedTaxableAmt">
+                        <DataType>Decimal</DataType>
+                    </ReportField>
+                    <ReportField Name="CuryEffDate">
+                        <DataType>DateTime</DataType>
+                    </ReportField>
+                    <ReportField Name="CuryExemptedAmt">
+                        <DataType>Decimal</DataType>
+                    </ReportField>
+                    <ReportField Name="CuryExpenseAmt">
+                        <DataType>Decimal</DataType>
+                    </ReportField>
+                    <ReportField Name="CuryID">
+                    </ReportField>
+                    <ReportField Name="CuryInfoID">
+                        <DataType>Int64</DataType>
+                    </ReportField>
+                    <ReportField Name="CuryOrigTaxableAmt">
+                        <DataType>Decimal</DataType>
+                    </ReportField>
+                    <ReportField Name="CuryRate">
+                        <DataType>Decimal</DataType>
+                    </ReportField>
+                    <ReportField Name="CuryRetainedTaxableAmt">
+                        <DataType>Decimal</DataType>
+                    </ReportField>
+                    <ReportField Name="CuryRetainedTaxAmt">
+                        <DataType>Decimal</DataType>
+                    </ReportField>
+                    <ReportField Name="CuryRetainedTaxAmtSumm">
+                        <DataType>Decimal</DataType>
+                    </ReportField>
+                    <ReportField Name="CuryTaxableAmt">
+                        <DataType>Decimal</DataType>
+                    </ReportField>
+                    <ReportField Name="CuryTaxableDiscountAmt">
+                        <DataType>Decimal</DataType>
+                    </ReportField>
+                    <ReportField Name="CuryTaxAmt">
+                        <DataType>Decimal</DataType>
+                    </ReportField>
+                    <ReportField Name="CuryTaxAmtSumm">
+                        <DataType>Decimal</DataType>
+                    </ReportField>
+                    <ReportField Name="CuryTaxDiscountAmt">
+                        <DataType>Decimal</DataType>
+                    </ReportField>
+                    <ReportField Name="CuryViewState">
+                        <DataType>Boolean</DataType>
+                    </ReportField>
+                    <ReportField Name="Description">
+                    </ReportField>
+                    <ReportField Name="DiscountedPrice">
+                        <DataType>Decimal</DataType>
+                    </ReportField>
+                    <ReportField Name="DiscountedTaxableAmt">
+                        <DataType>Decimal</DataType>
+                    </ReportField>
+                    <ReportField Name="ExemptedAmt">
+                        <DataType>Decimal</DataType>
+                    </ReportField>
+                    <ReportField Name="ExpenseAmt">
+                        <DataType>Decimal</DataType>
+                    </ReportField>
+                    <ReportField Name="FinDate">
+                        <DataType>DateTime</DataType>
+                    </ReportField>
+                    <ReportField Name="FinDate_Day">
+                    </ReportField>
+                    <ReportField Name="FinDate_Hour">
+                    </ReportField>
+                    <ReportField Name="FinDate_Month">
+                    </ReportField>
+                    <ReportField Name="FinDate_Quarter">
+                    </ReportField>
+                    <ReportField Name="FinPeriodID">
+                    </ReportField>
+                    <ReportField Name="JurisName">
+                    </ReportField>
+                    <ReportField Name="JurisType">
+                    </ReportField>
+                    <ReportField Name="LastModifiedByID">
+                    </ReportField>
+                    <ReportField Name="LastModifiedByID_description">
+                    </ReportField>
+                    <ReportField Name="LastModifiedByID_Modifier_displayName">
+                    </ReportField>
+                    <ReportField Name="LastModifiedByID_Modifier_Username">
+                    </ReportField>
+                    <ReportField Name="LastModifiedByScreenID">
+                    </ReportField>
+                    <ReportField Name="LastModifiedDateTime">
+                        <DataType>DateTime</DataType>
+                    </ReportField>
+                    <ReportField Name="LastModifiedDateTime_Day">
+                    </ReportField>
+                    <ReportField Name="LastModifiedDateTime_Hour">
+                    </ReportField>
+                    <ReportField Name="LastModifiedDateTime_Month">
+                    </ReportField>
+                    <ReportField Name="LastModifiedDateTime_Quarter">
+                    </ReportField>
+                    <ReportField Name="LineNbr">
+                        <DataType>Int32</DataType>
+                    </ReportField>
+                    <ReportField Name="LineRefNbr">
+                    </ReportField>
+                    <ReportField Name="Module">
+                    </ReportField>
+                    <ReportField Name="NonDeductibleTaxRate">
+                        <DataType>Decimal</DataType>
+                    </ReportField>
+                    <ReportField Name="OrigRefNbr">
+                    </ReportField>
+                    <ReportField Name="OrigTaxableAmt">
+                        <DataType>Decimal</DataType>
+                    </ReportField>
+                    <ReportField Name="OrigTranType">
+                    </ReportField>
+                    <ReportField Name="RecordID">
+                        <DataType>Int32</DataType>
+                    </ReportField>
+                    <ReportField Name="RefNbr">
+                    </ReportField>
+                    <ReportField Name="Released">
+                        <DataType>Boolean</DataType>
+                    </ReportField>
+                    <ReportField Name="ReportCuryEffDate">
+                        <DataType>DateTime</DataType>
+                    </ReportField>
+                    <ReportField Name="ReportCuryEffDate_Day">
+                    </ReportField>
+                    <ReportField Name="ReportCuryEffDate_Hour">
+                    </ReportField>
+                    <ReportField Name="ReportCuryEffDate_Month">
+                    </ReportField>
+                    <ReportField Name="ReportCuryEffDate_Quarter">
+                    </ReportField>
+                    <ReportField Name="ReportCuryID">
+                    </ReportField>
+                    <ReportField Name="ReportCuryMultDiv">
+                    </ReportField>
+                    <ReportField Name="ReportCuryRate">
+                        <DataType>Decimal</DataType>
+                    </ReportField>
+                    <ReportField Name="ReportCuryRateTypeID">
+                    </ReportField>
+                    <ReportField Name="ReportCuryRateTypeID_CurrencyRateType_descr">
+                    </ReportField>
+                    <ReportField Name="ReportCuryRateTypeID_description">
+                    </ReportField>
+                    <ReportField Name="ReportExemptedAmt">
+                        <DataType>Decimal</DataType>
+                    </ReportField>
+                    <ReportField Name="ReportTaxableAmt">
+                        <DataType>Decimal</DataType>
+                    </ReportField>
+                    <ReportField Name="ReportTaxAmt">
+                        <DataType>Decimal</DataType>
+                    </ReportField>
+                    <ReportField Name="RetainedTaxableAmt">
+                        <DataType>Decimal</DataType>
+                    </ReportField>
+                    <ReportField Name="RetainedTaxAmt">
+                        <DataType>Decimal</DataType>
+                    </ReportField>
+                    <ReportField Name="RetainedTaxAmtSumm">
+                        <DataType>Decimal</DataType>
+                    </ReportField>
+                    <ReportField Name="RevisionID">
+                        <DataType>Int32</DataType>
+                    </ReportField>
+                    <ReportField Name="Selected">
+                        <DataType>Boolean</DataType>
+                    </ReportField>
+                    <ReportField Name="SubID">
+                    </ReportField>
+                    <ReportField Name="SubID_description">
+                    </ReportField>
+                    <ReportField Name="SubID_Segment1">
+                    </ReportField>
+                    <ReportField Name="SubID_Segment2">
+                    </ReportField>
+                    <ReportField Name="SubID_Sub_description">
+                    </ReportField>
+                    <ReportField Name="TaxableAmt">
+                        <DataType>Decimal</DataType>
+                    </ReportField>
+                    <ReportField Name="TaxableDiscountAmt">
+                        <DataType>Decimal</DataType>
+                    </ReportField>
+                    <ReportField Name="TaxableQty">
+                        <DataType>Decimal</DataType>
+                    </ReportField>
+                    <ReportField Name="TaxAmt">
+                        <DataType>Decimal</DataType>
+                    </ReportField>
+                    <ReportField Name="TaxAmtSumm">
+                        <DataType>Decimal</DataType>
+                    </ReportField>
+                    <ReportField Name="TaxBucketID">
+                        <DataType>Int32</DataType>
+                    </ReportField>
+                    <ReportField Name="TaxDiscountAmt">
+                        <DataType>Decimal</DataType>
+                    </ReportField>
+                    <ReportField Name="TaxID">
+                    </ReportField>
+                    <ReportField Name="TaxID_description">
+                    </ReportField>
+                    <ReportField Name="TaxID_Tax_descr">
+                    </ReportField>
+                    <ReportField Name="TaxInvoiceDate">
+                        <DataType>DateTime</DataType>
+                    </ReportField>
+                    <ReportField Name="TaxInvoiceDate_Day">
+                    </ReportField>
+                    <ReportField Name="TaxInvoiceDate_Hour">
+                    </ReportField>
+                    <ReportField Name="TaxInvoiceDate_Month">
+                    </ReportField>
+                    <ReportField Name="TaxInvoiceDate_Quarter">
+                    </ReportField>
+                    <ReportField Name="TaxInvoiceNbr">
+                    </ReportField>
+                    <ReportField Name="TaxPeriodID">
+                    </ReportField>
+                    <ReportField Name="TaxRate">
+                        <DataType>Decimal</DataType>
+                    </ReportField>
+                    <ReportField Name="TaxType">
+                    </ReportField>
+                    <ReportField Name="TaxUOM">
+                    </ReportField>
+                    <ReportField Name="TaxZoneID">
+                    </ReportField>
+                    <ReportField Name="TranDate">
+                        <DataType>DateTime</DataType>
+                    </ReportField>
+                    <ReportField Name="TranDate_Day">
+                    </ReportField>
+                    <ReportField Name="TranDate_Hour">
+                    </ReportField>
+                    <ReportField Name="TranDate_Month">
+                    </ReportField>
+                    <ReportField Name="TranDate_Quarter">
+                    </ReportField>
+                    <ReportField Name="TranType">
+                    </ReportField>
+                    <ReportField Name="tstamp">
+                    </ReportField>
+                    <ReportField Name="VendorID">
+                        <DataType>Int32</DataType>
+                    </ReportField>
+                    <ReportField Name="Voided">
+                        <DataType>Boolean</DataType>
+                    </ReportField>
+                </Fields>
+                <FullName>PX.Objects.AR.ARTaxTran</FullName>
+            </ReportTable>
         </Tables>
         <Sections>
             <PageHeader Name="pageHeaderSection1">
@@ -5755,10 +6075,10 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                             </Font>
                             <VerticalAlign>Middle</VerticalAlign>
                         </Style>
-                        <Value>IPEVO INC</Value>
+                        <Value>IPEVO CORP</Value>
                     </TextBox>
                     <TextBox Name="textBox10">
-                        <Location>576px, 96px</Location>
+                        <Location>576px, 184px</Location>
                         <Size>120px, 24px</Size>
                         <Style>
                             <BorderStyle>
@@ -5959,7 +6279,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                         <Value>=[ARInvoice.DocDate]</Value>
                     </TextBox>
                     <TextBox Name="textBox19">
-                        <Format>$#,##0.00;-$#,##0.00</Format>
+                        <Format>CAD #,##0.00;-CAD #,##0.00</Format>
                         <Location>456px, 392px</Location>
                         <Size>128px, 24px</Size>
                         <Style>
@@ -5977,14 +6297,14 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                         <Value>=[ARInvoice.CuryOrigDocAmt]</Value>
                     </TextBox>
                     <TextBox Name="textBox2">
-                        <Location>16px, 32px</Location>
-                        <Size>184px, 176px</Size>
+                        <Location>16px, 40px</Location>
+                        <Size>184px, 136px</Size>
                         <Style>
                             <Font>
                                 <Size>12px</Size>
                             </Font>
                         </Style>
-                        <Value>IPEVO INC#010;440 N. Wolfe Road#010;Sunnyvale, CA, 94085#010;#010;Mailing address:#010;IPEVO INC#010;4000 Pimlico Dr, Suite 114119#010;Pleasanton, CA 94588#010;#010;(408)490-3085#010;sales-ny@ipevo.com#010;W9: https://bit.ly/2W5Yq4c
+                        <Value>IPEVO CORP#010;Suite 103, 10030 114 St NW#010;Edmonton, AB, T5K 1R3, Canada#010;GST Number:785473315RC0001#010;#010;(408)490-3085#010;sales-canada@ipevo.com
 </Value>
                     </TextBox>
                     <TextBox Name="textBox20">
@@ -6097,7 +6417,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                             <TextAlign>Center</TextAlign>
                             <VerticalAlign>Middle</VerticalAlign>
                         </Style>
-                        <Value>Brian Yu</Value>
+                        <Value>David CW Chang</Value>
                     </TextBox>
                     <TextBox Name="textBox26">
                         <Location>504px, 472px</Location>
@@ -6178,7 +6498,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                         <Value>Product</Value>
                     </TextBox>
                     <TextBox Name="textBox3">
-                        <Location>488px, 24px</Location>
+                        <Location>488px, 112px</Location>
                         <Size>88px, 24px</Size>
                         <Style>
                             <BackColor>Silver</BackColor>
@@ -6341,7 +6661,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                         <Value>Amount</Value>
                     </TextBox>
                     <TextBox Name="textBox4">
-                        <Location>576px, 24px</Location>
+                        <Location>576px, 112px</Location>
                         <Size>1.25in, 24px</Size>
                         <Style>
                             <BackColor>Silver</BackColor>
@@ -6365,7 +6685,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                     </TextBox>
                     <TextBox Name="textBox5">
                         <Format>='MM/dd/yyyy'</Format>
-                        <Location>488px, 48px</Location>
+                        <Location>488px, 136px</Location>
                         <Size>88px, 24px</Size>
                         <Style>
                             <BorderStyle>
@@ -6382,7 +6702,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                         <Value>=[ARInvoice.DocDate]</Value>
                     </TextBox>
                     <TextBox Name="textBox6">
-                        <Location>576px, 48px</Location>
+                        <Location>576px, 136px</Location>
                         <Size>120px, 24px</Size>
                         <Style>
                             <BorderStyle>
@@ -6397,7 +6717,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                         <Value>=[ARInvoice.RefNbr]</Value>
                     </TextBox>
                     <TextBox Name="textBox7">
-                        <Location>488px, 72px</Location>
+                        <Location>488px, 160px</Location>
                         <Size>88px, 24px</Size>
                         <Style>
                             <BackColor>Silver</BackColor>
@@ -6422,7 +6742,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                         <Value>Terms</Value>
                     </TextBox>
                     <TextBox Name="textBox8">
-                        <Location>576px, 72px</Location>
+                        <Location>576px, 160px</Location>
                         <Size>120px, 24px</Size>
                         <Style>
                             <BackColor>Silver</BackColor>
@@ -6444,8 +6764,18 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                         </Style>
                         <Value>Due Date</Value>
                     </TextBox>
+                    <TextBox Name="textBox82">
+                        <Location>256px, 40px</Location>
+                        <Size>184px, 72px</Size>
+                        <Style>
+                            <Font>
+                                <Size>12px</Size>
+                            </Font>
+                        </Style>
+                        <Value>Mailing Address:#010;IPEVO Corp.#010;Suite 103, 10030 114 St NW#010;Edmonton, AV, T5K 1R3, Canada</Value>
+                    </TextBox>
                     <TextBox Name="textBox9">
-                        <Location>488px, 96px</Location>
+                        <Location>488px, 184px</Location>
                         <Size>88px, 24px</Size>
                         <Style>
                             <BorderStyle>
@@ -6466,169 +6796,58 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                 </Items>
             </PageHeader>
             <Detail Name="detailSection1">
-                <Height>1.69312cm</Height>
+                <Height>0cm</Height>
                 <Variables>
                     <ReportVariable>
-                        <Name>TotalLine</Name>
-                        <ValueExpr>=1+$TotalLine</ValueExpr>
+                        <Name>CAGST</Name>
+                        <ValueExpr>=$CAGST + IIF(([ARTaxTran.TaxID] = 'CAGST' AND $CAGST &lt;= 0), [ARTaxTran.CuryTaxAmt], 0)</ValueExpr>
                     </ReportVariable>
                     <ReportVariable>
-                        <Name>SubTotal</Name>
-                        <ValueExpr>=$SubTotal + [ARTran.CuryTranAmt]</ValueExpr>
+                        <Name>CAQCQST</Name>
+                        <ValueExpr>=$CAQCQST + IIF(([ARTaxTran.TaxID] = 'CAQCQST' AND $CAQCQST &lt;= 0), [ARTaxTran.CuryTaxAmt], 0)</ValueExpr>
+                    </ReportVariable>
+                    <ReportVariable>
+                        <Name>CASKPST</Name>
+                        <ValueExpr>=$CASKPST + IIF(([ARTaxTran.TaxID] = 'CASKPST' AND $CASKPST &lt;= 0), [ARTaxTran.CuryTaxAmt], 0)</ValueExpr>
+                    </ReportVariable>
+                    <ReportVariable>
+                        <Name>CAONHST</Name>
+                        <ValueExpr>=$CAONHST + IIF(([ARTaxTran.TaxID] = 'CAONHST' AND $CAONHST &lt;= 0), [ARTaxTran.CuryTaxAmt], 0)</ValueExpr>
+                    </ReportVariable>
+                    <ReportVariable>
+                        <Name>CAMBPST</Name>
+                        <ValueExpr>=$CAMBPST + IIF(([ARTaxTran.TaxID] = 'CAMBPST' AND $CAMBPST &lt;= 0), [ARTaxTran.CuryTaxAmt], 0)</ValueExpr>
+                    </ReportVariable>
+                    <ReportVariable>
+                        <Name>CABCPST</Name>
+                        <ValueExpr>=$CABCPST + IIF(([ARTaxTran.TaxID] = 'CABCPST' AND $CABCPST &lt;= 0), [ARTaxTran.CuryTaxAmt], 0)</ValueExpr>
+                    </ReportVariable>
+                    <ReportVariable>
+                        <Name>CA15HST</Name>
+                        <ValueExpr>=$CA15HST + IIF(([ARTaxTran.TaxID] = 'CA15HST' AND $CA15HST &lt;= 0), [ARTaxTran.CuryTaxAmt], 0)</ValueExpr>
+                    </ReportVariable>
+                    <ReportVariable>
+                        <Name>AMAZONQST</Name>
+                        <ValueExpr>=$AMAZONQST + IIF(([ARTaxTran.TaxID] = 'AMAZONQST' AND $AMAZONQST &lt;= 0), [ARTaxTran.CuryTaxAmt], 0)</ValueExpr>
+                    </ReportVariable>
+                    <ReportVariable>
+                        <Name>AMAZONPST</Name>
+                        <ValueExpr>=$AMAZONPST + IIF(([ARTaxTran.TaxID] = 'AMAZONPST' AND $AMAZONPST &lt;= 0), [ARTaxTran.CuryTaxAmt], 0)</ValueExpr>
+                    </ReportVariable>
+                    <ReportVariable>
+                        <Name>AMAZONHST</Name>
+                        <ValueExpr>=$AMAZONHST + IIF(([ARTaxTran.TaxID] = 'AMAZONHST' AND $AMAZONHST &lt;= 0), [ARTaxTran.CuryTaxAmt], 0)</ValueExpr>
+                    </ReportVariable>
+                    <ReportVariable>
+                        <Name>AMAZONGST</Name>
+                        <ValueExpr>=$AMAZONGST + IIF(([ARTaxTran.TaxID] = 'AMAZONGST' AND $AMAZONGST &lt;= 0), [ARTaxTran.CuryTaxAmt], 0)</ValueExpr>
+                    </ReportVariable>
+                    <ReportVariable>
+                        <Name>AMAZONCA</Name>
+                        <ValueExpr>=$AMAZONCA + IIF(([ARTaxTran.TaxID] = 'AMAZONCA' AND $AMAZONCA &lt;= 0), [ARTaxTran.CuryTaxAmt], 0)</ValueExpr>
                     </ReportVariable>
                 </Variables>
-                <Items>
-                    <TextBox Name="textBox42">
-                        <Location>0px, 0px</Location>
-                        <Size>64px, 64px</Size>
-                        <Style>
-                            <BorderStyle>
-                                <Left>Solid</Left>
-                                <Right>Solid</Right>
-                            </BorderStyle>
-                            <BorderWidth>
-                                <Left>1px</Left>
-                                <Right>1px</Right>
-                            </BorderWidth>
-                            <Font>
-                                <Size>11px</Size>
-                            </Font>
-                            <TextAlign>Center</TextAlign>
-                            <VerticalAlign>Middle</VerticalAlign>
-                        </Style>
-                        <Value>=[SOShipment.ShipDate]</Value>
-                    </TextBox>
-                    <TextBox Name="textBox43">
-                        <Location>64px, 0px</Location>
-                        <Size>88px, 64px</Size>
-                        <Style>
-                            <BorderStyle>
-                                <Right>Solid</Right>
-                            </BorderStyle>
-                            <BorderWidth>
-                                <Right>1px</Right>
-                            </BorderWidth>
-                            <Font>
-                                <Size>11px</Size>
-                            </Font>
-                            <TextAlign>Center</TextAlign>
-                            <VerticalAlign>Middle</VerticalAlign>
-                        </Style>
-                        <Value>=[ARTran.InventoryID]</Value>
-                    </TextBox>
-                    <TextBox Name="textBox44">
-                        <Location>152px, 0px</Location>
-                        <Size>136px, 64px</Size>
-                        <Style>
-                            <BorderStyle>
-                                <Right>Solid</Right>
-                            </BorderStyle>
-                            <BorderWidth>
-                                <Right>1px</Right>
-                            </BorderWidth>
-                            <Font>
-                                <Size>10px</Size>
-                            </Font>
-                            <Padding>
-                                <Left>3px</Left>
-                                <Top>3px</Top>
-                            </Padding>
-                        </Style>
-                        <Value>=[ARTran.InventoryID_description]</Value>
-                    </TextBox>
-                    <TextBox Name="textBox45">
-                        <Location>288px, 0px</Location>
-                        <Size>64px, 64px</Size>
-                        <Style>
-                            <BorderStyle>
-                                <Right>Solid</Right>
-                            </BorderStyle>
-                            <BorderWidth>
-                                <Right>1px</Right>
-                            </BorderWidth>
-                            <Font>
-                                <Size>11px</Size>
-                            </Font>
-                            <TextAlign>Center</TextAlign>
-                            <VerticalAlign>Middle</VerticalAlign>
-                        </Style>
-                        <Value>=[ARTran.Qty]</Value>
-                    </TextBox>
-                    <TextBox Name="textBox46">
-                        <Location>352px, 0px</Location>
-                        <Size>88px, 64px</Size>
-                        <Style>
-                            <BorderStyle>
-                                <Right>Solid</Right>
-                            </BorderStyle>
-                            <BorderWidth>
-                                <Right>1px</Right>
-                            </BorderWidth>
-                            <Font>
-                                <Size>11px</Size>
-                            </Font>
-                            <TextAlign>Center</TextAlign>
-                            <VerticalAlign>Middle</VerticalAlign>
-                        </Style>
-                        <Value>=[SOOrder.ShipVia_description]</Value>
-                    </TextBox>
-                    <TextBox Name="textBox47">
-                        <Location>440px, 0px</Location>
-                        <Size>88px, 64px</Size>
-                        <Style>
-                            <BorderStyle>
-                                <Right>Solid</Right>
-                            </BorderStyle>
-                            <BorderWidth>
-                                <Right>1px</Right>
-                            </BorderWidth>
-                            <Font>
-                                <Size>11px</Size>
-                            </Font>
-                            <TextAlign>Center</TextAlign>
-                            <VerticalAlign>Middle</VerticalAlign>
-                        </Style>
-                        <Value>=[SOShipment.UsrTrackingNbr]</Value>
-                    </TextBox>
-                    <TextBox Name="textBox48">
-                        <Format>$#,##0.00;-$#,##0.00</Format>
-                        <Location>528px, 0px</Location>
-                        <Size>80px, 64px</Size>
-                        <Style>
-                            <BorderStyle>
-                                <Right>Solid</Right>
-                            </BorderStyle>
-                            <BorderWidth>
-                                <Right>1px</Right>
-                            </BorderWidth>
-                            <Font>
-                                <Size>11px</Size>
-                            </Font>
-                            <TextAlign>Center</TextAlign>
-                            <VerticalAlign>Middle</VerticalAlign>
-                        </Style>
-                        <Value>=[ARTran.UnitPrice]</Value>
-                    </TextBox>
-                    <TextBox Name="textBox49">
-                        <Format>$#,##0.00;-$#,##0.00</Format>
-                        <Location>608px, 0px</Location>
-                        <Size>88px, 64px</Size>
-                        <Style>
-                            <BorderStyle>
-                                <Right>Solid</Right>
-                            </BorderStyle>
-                            <BorderWidth>
-                                <Right>1px</Right>
-                            </BorderWidth>
-                            <Font>
-                                <Size>11px</Size>
-                            </Font>
-                            <TextAlign>Center</TextAlign>
-                            <VerticalAlign>Middle</VerticalAlign>
-                        </Style>
-                        <Value>=[ARTran.CuryTranAmt]</Value>
-                    </TextBox>
-                </Items>
+                <Visible>False</Visible>
             </Detail>
             <PageFooter Name="pageFooterSection1">
                 <Height>0cm</Height>
@@ -6646,97 +6865,10 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                 </Headers>
                 <Footers>
                     <Footer Name="groupFooterSection1">
+                        <Height>1.26984cm</Height>
                         <Items>
-                            <Line Name="line2">
-                                <Location>0px, 0px</Location>
-                                <Size>7.25in, 0.08333in</Size>
-                            </Line>
-                            <TextBox Name="textBox36">
-                                <Location>392px, 8px</Location>
-                                <Size>152px, 24px</Size>
-                                <Style>
-                                    <BorderStyle>
-                                        <Bottom>Solid</Bottom>
-                                        <Left>Solid</Left>
-                                        <Right>Solid</Right>
-                                        <Top>Solid</Top>
-                                    </BorderStyle>
-                                    <BorderWidth>
-                                        <Bottom>1px</Bottom>
-                                        <Left>1px</Left>
-                                        <Right>1px</Right>
-                                        <Top>1px</Top>
-                                    </BorderWidth>
-                                    <TextAlign>Center</TextAlign>
-                                    <VerticalAlign>Middle</VerticalAlign>
-                                </Style>
-                                <Value>Subtotal</Value>
-                            </TextBox>
-                            <TextBox Name="textBox37">
-                                <Format>$#,##0.00;-$#,##0.00</Format>
-                                <Location>544px, 8px</Location>
-                                <Size>152px, 24px</Size>
-                                <Style>
-                                    <BorderStyle>
-                                        <Bottom>Solid</Bottom>
-                                        <Right>Solid</Right>
-                                        <Top>Solid</Top>
-                                    </BorderStyle>
-                                    <BorderWidth>
-                                        <Bottom>1px</Bottom>
-                                        <Right>1px</Right>
-                                        <Top>1px</Top>
-                                    </BorderWidth>
-                                    <Padding>
-                                        <Right>3px</Right>
-                                    </Padding>
-                                    <TextAlign>Right</TextAlign>
-                                    <VerticalAlign>Middle</VerticalAlign>
-                                </Style>
-                                <Value>=$SubTotal</Value>
-                            </TextBox>
-                            <TextBox Name="textBox38">
-                                <Location>392px, 56px</Location>
-                                <Size>152px, 24px</Size>
-                                <Style>
-                                    <BorderStyle>
-                                        <Bottom>Solid</Bottom>
-                                        <Left>Solid</Left>
-                                        <Right>Solid</Right>
-                                    </BorderStyle>
-                                    <BorderWidth>
-                                        <Bottom>1px</Bottom>
-                                        <Left>1px</Left>
-                                        <Right>1px</Right>
-                                    </BorderWidth>
-                                    <TextAlign>Center</TextAlign>
-                                    <VerticalAlign>Middle</VerticalAlign>
-                                </Style>
-                                <Value>Tax</Value>
-                            </TextBox>
-                            <TextBox Name="textBox39">
-                                <Format>$#,##0.00;-$#,##0.00</Format>
-                                <Location>544px, 56px</Location>
-                                <Size>152px, 24px</Size>
-                                <Style>
-                                    <BorderStyle>
-                                        <Bottom>Solid</Bottom>
-                                        <Right>Solid</Right>
-                                    </BorderStyle>
-                                    <BorderWidth>
-                                        <Bottom>1px</Bottom>
-                                        <Right>1px</Right>
-                                    </BorderWidth>
-                                    <Padding>
-                                        <Right>3px</Right>
-                                    </Padding>
-                                    <TextAlign>Right</TextAlign>
-                                    <VerticalAlign>Middle</VerticalAlign>
-                                </Style>
-                                <Value>=[ARInvoice.CuryTaxTotal]</Value>
-                            </TextBox>
                             <TextBox Name="textBox40">
-                                <Location>392px, 80px</Location>
+                                <Location>392px, 0px</Location>
                                 <Size>152px, 24px</Size>
                                 <Style>
                                     <BackColor>Silver</BackColor>
@@ -6759,8 +6891,8 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                                 <Value>Total</Value>
                             </TextBox>
                             <TextBox Name="textBox41">
-                                <Format>$#,##0.00;-$#,##0.00</Format>
-                                <Location>544px, 80px</Location>
+                                <Format>CAD #,##0.00;-CAD #,##0.00</Format>
+                                <Location>544px, 0px</Location>
                                 <Size>152px, 24px</Size>
                                 <Style>
                                     <BackColor>Silver</BackColor>
@@ -6778,10 +6910,769 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                                     <TextAlign>Right</TextAlign>
                                     <VerticalAlign>Middle</VerticalAlign>
                                 </Style>
-                                <Value>=[ARInvoice.CuryDocBal]</Value>
+                                <Value>=[ARInvoice.CuryOrigDocAmt]</Value>
                             </TextBox>
-                            <TextBox Name="textBox50">
-                                <Format>$#,##0.00;-$#,##0.00</Format>
+                            <TextBox Name="textBox75">
+                                <Location>392px, 24px</Location>
+                                <Size>152px, 24px</Size>
+                                <Style>
+                                    <BackColor>Silver</BackColor>
+                                    <BorderStyle>
+                                        <Bottom>Solid</Bottom>
+                                        <Left>Solid</Left>
+                                        <Right>Solid</Right>
+                                    </BorderStyle>
+                                    <BorderWidth>
+                                        <Bottom>1px</Bottom>
+                                        <Left>1px</Left>
+                                        <Right>1px</Right>
+                                    </BorderWidth>
+                                    <Font>
+                                        <Style>Bold</Style>
+                                    </Font>
+                                    <TextAlign>Center</TextAlign>
+                                    <VerticalAlign>Middle</VerticalAlign>
+                                </Style>
+                                <Value>Unpaid Amt</Value>
+                            </TextBox>
+                            <TextBox Name="textBox81">
+                                <Format>CAD #,##0.00;-CAD #,##0.00</Format>
+                                <Location>544px, 24px</Location>
+                                <Size>152px, 24px</Size>
+                                <Style>
+                                    <BackColor>Silver</BackColor>
+                                    <BorderStyle>
+                                        <Bottom>Solid</Bottom>
+                                        <Right>Solid</Right>
+                                    </BorderStyle>
+                                    <BorderWidth>
+                                        <Bottom>1px</Bottom>
+                                        <Right>1px</Right>
+                                    </BorderWidth>
+                                    <Padding>
+                                        <Right>3px</Right>
+                                    </Padding>
+                                    <TextAlign>Right</TextAlign>
+                                    <VerticalAlign>Middle</VerticalAlign>
+                                </Style>
+                                <Value>=[ARInvoice.CuryUnpaidBalance]</Value>
+                            </TextBox>
+                        </Items>
+                    </Footer>
+                </Footers>
+            </Group>
+            <Group Name="group2">
+                <Headers>
+                    <Header Name="groupHeaderSection2">
+                        <Height>0cm</Height>
+                        <Visible>False</Visible>
+                    </Header>
+                </Headers>
+                <Footers>
+                    <Footer Name="groupFooterSection2">
+                        <Height>0.63492cm</Height>
+                        <VisibleExpr>=IIF($CAQCQST &gt; 0, True, False)</VisibleExpr>
+                        <Items>
+                            <TextBox Name="textBox36">
+                                <Format>CAD #,##0.00;-CAD #,##0.00</Format>
+                                <Location>544px, 0px</Location>
+                                <Size>152px, 24px</Size>
+                                <Style>
+                                    <BorderStyle>
+                                        <Bottom>Solid</Bottom>
+                                        <Right>Solid</Right>
+                                    </BorderStyle>
+                                    <BorderWidth>
+                                        <Bottom>1px</Bottom>
+                                        <Right>1px</Right>
+                                    </BorderWidth>
+                                    <Padding>
+                                        <Right>3px</Right>
+                                    </Padding>
+                                    <TextAlign>Right</TextAlign>
+                                    <VerticalAlign>Middle</VerticalAlign>
+                                </Style>
+                                <Value>=$CAQCQST</Value>
+                            </TextBox>
+                            <TextBox Name="textBox37">
+                                <Location>392px, 0px</Location>
+                                <Size>152px, 24px</Size>
+                                <Style>
+                                    <BorderStyle>
+                                        <Bottom>Solid</Bottom>
+                                        <Left>Solid</Left>
+                                        <Right>Solid</Right>
+                                    </BorderStyle>
+                                    <BorderWidth>
+                                        <Bottom>1px</Bottom>
+                                        <Left>1px</Left>
+                                        <Right>1px</Right>
+                                    </BorderWidth>
+                                    <TextAlign>Center</TextAlign>
+                                    <VerticalAlign>Middle</VerticalAlign>
+                                </Style>
+                                <Value>Canada QC QST (9.975%)</Value>
+                            </TextBox>
+                        </Items>
+                    </Footer>
+                </Footers>
+            </Group>
+            <Group Name="group3">
+                <Headers>
+                    <Header Name="groupHeaderSection3">
+                        <Height>0cm</Height>
+                        <Visible>False</Visible>
+                    </Header>
+                </Headers>
+                <Footers>
+                    <Footer Name="groupFooterSection3">
+                        <Height>0.63492cm</Height>
+                        <VisibleExpr>=IIF($CAGST &gt; 0, True, False)</VisibleExpr>
+                        <Items>
+                            <TextBox Name="textBox38">
+                                <Location>392px, 0px</Location>
+                                <Size>152px, 24px</Size>
+                                <Style>
+                                    <BorderStyle>
+                                        <Bottom>Solid</Bottom>
+                                        <Left>Solid</Left>
+                                        <Right>Solid</Right>
+                                    </BorderStyle>
+                                    <BorderWidth>
+                                        <Bottom>1px</Bottom>
+                                        <Left>1px</Left>
+                                        <Right>1px</Right>
+                                    </BorderWidth>
+                                    <TextAlign>Center</TextAlign>
+                                    <VerticalAlign>Middle</VerticalAlign>
+                                </Style>
+                                <Value>Canada GST (5%)</Value>
+                            </TextBox>
+                            <TextBox Name="textBox39">
+                                <Format>CAD #,##0.00;-CAD #,##0.00</Format>
+                                <Location>544px, 0px</Location>
+                                <Size>152px, 24px</Size>
+                                <Style>
+                                    <BorderStyle>
+                                        <Bottom>Solid</Bottom>
+                                        <Right>Solid</Right>
+                                    </BorderStyle>
+                                    <BorderWidth>
+                                        <Bottom>1px</Bottom>
+                                        <Right>1px</Right>
+                                    </BorderWidth>
+                                    <Padding>
+                                        <Right>3px</Right>
+                                    </Padding>
+                                    <TextAlign>Right</TextAlign>
+                                    <VerticalAlign>Middle</VerticalAlign>
+                                </Style>
+                                <Value>=$CAGST</Value>
+                            </TextBox>
+                        </Items>
+                    </Footer>
+                </Footers>
+            </Group>
+            <Group Name="group4">
+                <Headers>
+                    <Header Name="groupHeaderSection4">
+                        <Height>0cm</Height>
+                        <Visible>False</Visible>
+                    </Header>
+                </Headers>
+                <Footers>
+                    <Footer Name="groupFooterSection4">
+                        <Height>0.63492cm</Height>
+                        <VisibleExpr>=IIF($CASKPST &gt; 0, True, False)</VisibleExpr>
+                        <Items>
+                            <TextBox Name="textBox117">
+                                <Format>CAD #,##0.00;-CAD #,##0.00</Format>
+                                <Location>544px, 0px</Location>
+                                <Size>152px, 24px</Size>
+                                <Style>
+                                    <BorderStyle>
+                                        <Bottom>Solid</Bottom>
+                                        <Right>Solid</Right>
+                                    </BorderStyle>
+                                    <BorderWidth>
+                                        <Bottom>1px</Bottom>
+                                        <Right>1px</Right>
+                                    </BorderWidth>
+                                    <Padding>
+                                        <Right>3px</Right>
+                                    </Padding>
+                                    <TextAlign>Right</TextAlign>
+                                    <VerticalAlign>Middle</VerticalAlign>
+                                </Style>
+                                <Value>=$CASKPST</Value>
+                            </TextBox>
+                            <TextBox Name="textBox118">
+                                <Location>392px, 0px</Location>
+                                <Size>152px, 24px</Size>
+                                <Style>
+                                    <BorderStyle>
+                                        <Bottom>Solid</Bottom>
+                                        <Left>Solid</Left>
+                                        <Right>Solid</Right>
+                                    </BorderStyle>
+                                    <BorderWidth>
+                                        <Bottom>1px</Bottom>
+                                        <Left>1px</Left>
+                                        <Right>1px</Right>
+                                    </BorderWidth>
+                                    <TextAlign>Center</TextAlign>
+                                    <VerticalAlign>Middle</VerticalAlign>
+                                </Style>
+                                <Value>Canada SK PST (6%)</Value>
+                            </TextBox>
+                        </Items>
+                    </Footer>
+                </Footers>
+            </Group>
+            <Group Name="group5">
+                <Headers>
+                    <Header Name="groupHeaderSection5">
+                        <Height>0cm</Height>
+                        <Visible>False</Visible>
+                    </Header>
+                </Headers>
+                <Footers>
+                    <Footer Name="groupFooterSection5">
+                        <Height>0.63492cm</Height>
+                        <VisibleExpr>=IIF($CAONHST &gt; 0, True, False)</VisibleExpr>
+                        <Items>
+                            <TextBox Name="textBox115">
+                                <Format>CAD #,##0.00;-CAD #,##0.00</Format>
+                                <Location>544px, 0px</Location>
+                                <Size>152px, 24px</Size>
+                                <Style>
+                                    <BorderStyle>
+                                        <Bottom>Solid</Bottom>
+                                        <Right>Solid</Right>
+                                    </BorderStyle>
+                                    <BorderWidth>
+                                        <Bottom>1px</Bottom>
+                                        <Right>1px</Right>
+                                    </BorderWidth>
+                                    <Padding>
+                                        <Right>3px</Right>
+                                    </Padding>
+                                    <TextAlign>Right</TextAlign>
+                                    <VerticalAlign>Middle</VerticalAlign>
+                                </Style>
+                                <Value>=$CAONHST</Value>
+                            </TextBox>
+                            <TextBox Name="textBox116">
+                                <Location>392px, 0px</Location>
+                                <Size>152px, 24px</Size>
+                                <Style>
+                                    <BorderStyle>
+                                        <Bottom>Solid</Bottom>
+                                        <Left>Solid</Left>
+                                        <Right>Solid</Right>
+                                    </BorderStyle>
+                                    <BorderWidth>
+                                        <Bottom>1px</Bottom>
+                                        <Left>1px</Left>
+                                        <Right>1px</Right>
+                                    </BorderWidth>
+                                    <TextAlign>Center</TextAlign>
+                                    <VerticalAlign>Middle</VerticalAlign>
+                                </Style>
+                                <Value>Canada ON HST (13%)</Value>
+                            </TextBox>
+                        </Items>
+                    </Footer>
+                </Footers>
+            </Group>
+            <Group Name="group6">
+                <Headers>
+                    <Header Name="groupHeaderSection6">
+                        <Height>0cm</Height>
+                        <Visible>False</Visible>
+                    </Header>
+                </Headers>
+                <Footers>
+                    <Footer Name="groupFooterSection6">
+                        <Height>0.63492cm</Height>
+                        <VisibleExpr>=IIF($CAMBPST &gt; 0, True, False)</VisibleExpr>
+                        <Items>
+                            <TextBox Name="textBox113">
+                                <Format>CAD #,##0.00;-CAD #,##0.00</Format>
+                                <Location>544px, 0px</Location>
+                                <Size>152px, 24px</Size>
+                                <Style>
+                                    <BorderStyle>
+                                        <Bottom>Solid</Bottom>
+                                        <Right>Solid</Right>
+                                    </BorderStyle>
+                                    <BorderWidth>
+                                        <Bottom>1px</Bottom>
+                                        <Right>1px</Right>
+                                    </BorderWidth>
+                                    <Padding>
+                                        <Right>3px</Right>
+                                    </Padding>
+                                    <TextAlign>Right</TextAlign>
+                                    <VerticalAlign>Middle</VerticalAlign>
+                                </Style>
+                                <Value>=$CAMBPST</Value>
+                            </TextBox>
+                            <TextBox Name="textBox114">
+                                <Location>392px, 0px</Location>
+                                <Size>152px, 24px</Size>
+                                <Style>
+                                    <BorderStyle>
+                                        <Bottom>Solid</Bottom>
+                                        <Left>Solid</Left>
+                                        <Right>Solid</Right>
+                                    </BorderStyle>
+                                    <BorderWidth>
+                                        <Bottom>1px</Bottom>
+                                        <Left>1px</Left>
+                                        <Right>1px</Right>
+                                    </BorderWidth>
+                                    <TextAlign>Center</TextAlign>
+                                    <VerticalAlign>Middle</VerticalAlign>
+                                </Style>
+                                <Value>Canada MB PST (7%)</Value>
+                            </TextBox>
+                        </Items>
+                    </Footer>
+                </Footers>
+            </Group>
+            <Group Name="group7">
+                <Headers>
+                    <Header Name="groupHeaderSection7">
+                        <Height>0cm</Height>
+                        <Visible>False</Visible>
+                    </Header>
+                </Headers>
+                <Footers>
+                    <Footer Name="groupFooterSection7">
+                        <Height>0.63492cm</Height>
+                        <VisibleExpr>=IIF($CABCPST &gt; 0, True, False)</VisibleExpr>
+                        <Items>
+                            <TextBox Name="textBox111">
+                                <Format>CAD #,##0.00;-CAD #,##0.00</Format>
+                                <Location>544px, 0px</Location>
+                                <Size>152px, 24px</Size>
+                                <Style>
+                                    <BorderStyle>
+                                        <Bottom>Solid</Bottom>
+                                        <Right>Solid</Right>
+                                    </BorderStyle>
+                                    <BorderWidth>
+                                        <Bottom>1px</Bottom>
+                                        <Right>1px</Right>
+                                    </BorderWidth>
+                                    <Padding>
+                                        <Right>3px</Right>
+                                    </Padding>
+                                    <TextAlign>Right</TextAlign>
+                                    <VerticalAlign>Middle</VerticalAlign>
+                                </Style>
+                                <Value>=$CABCPST</Value>
+                            </TextBox>
+                            <TextBox Name="textBox112">
+                                <Location>392px, 0px</Location>
+                                <Size>152px, 24px</Size>
+                                <Style>
+                                    <BorderStyle>
+                                        <Bottom>Solid</Bottom>
+                                        <Left>Solid</Left>
+                                        <Right>Solid</Right>
+                                    </BorderStyle>
+                                    <BorderWidth>
+                                        <Bottom>1px</Bottom>
+                                        <Left>1px</Left>
+                                        <Right>1px</Right>
+                                    </BorderWidth>
+                                    <TextAlign>Center</TextAlign>
+                                    <VerticalAlign>Middle</VerticalAlign>
+                                </Style>
+                                <Value>Canada BC PST (7%)</Value>
+                            </TextBox>
+                        </Items>
+                    </Footer>
+                </Footers>
+            </Group>
+            <Group Name="group8">
+                <Headers>
+                    <Header Name="groupHeaderSection8">
+                        <Height>0cm</Height>
+                        <Visible>False</Visible>
+                    </Header>
+                </Headers>
+                <Footers>
+                    <Footer Name="groupFooterSection8">
+                        <Height>0.63492cm</Height>
+                        <VisibleExpr>=IIF($CA15HST &gt; 0, True, False)</VisibleExpr>
+                        <Items>
+                            <TextBox Name="textBox105">
+                                <Format>CAD #,##0.00;-CAD #,##0.00</Format>
+                                <Location>544px, 0px</Location>
+                                <Size>152px, 24px</Size>
+                                <Style>
+                                    <BorderStyle>
+                                        <Bottom>Solid</Bottom>
+                                        <Right>Solid</Right>
+                                    </BorderStyle>
+                                    <BorderWidth>
+                                        <Bottom>1px</Bottom>
+                                        <Right>1px</Right>
+                                    </BorderWidth>
+                                    <Padding>
+                                        <Right>3px</Right>
+                                    </Padding>
+                                    <TextAlign>Right</TextAlign>
+                                    <VerticalAlign>Middle</VerticalAlign>
+                                </Style>
+                                <Value>=$CA15HST</Value>
+                            </TextBox>
+                            <TextBox Name="textBox106">
+                                <Location>392px, 0px</Location>
+                                <Size>152px, 24px</Size>
+                                <Style>
+                                    <BorderStyle>
+                                        <Bottom>Solid</Bottom>
+                                        <Left>Solid</Left>
+                                        <Right>Solid</Right>
+                                    </BorderStyle>
+                                    <BorderWidth>
+                                        <Bottom>1px</Bottom>
+                                        <Left>1px</Left>
+                                        <Right>1px</Right>
+                                    </BorderWidth>
+                                    <TextAlign>Center</TextAlign>
+                                    <VerticalAlign>Middle</VerticalAlign>
+                                </Style>
+                                <Value>Canada 15% HST</Value>
+                            </TextBox>
+                        </Items>
+                    </Footer>
+                </Footers>
+            </Group>
+            <Group Name="group9">
+                <Headers>
+                    <Header Name="groupHeaderSection9">
+                        <Height>0cm</Height>
+                        <Visible>False</Visible>
+                    </Header>
+                </Headers>
+                <Footers>
+                    <Footer Name="groupFooterSection9">
+                        <Height>0.63492cm</Height>
+                        <VisibleExpr>=IIF($AMAZONQST &gt; 0, True, False)</VisibleExpr>
+                        <Items>
+                            <TextBox Name="textBox103">
+                                <Format>CAD #,##0.00;-CAD #,##0.00</Format>
+                                <Location>544px, 0px</Location>
+                                <Size>152px, 24px</Size>
+                                <Style>
+                                    <BorderStyle>
+                                        <Bottom>Solid</Bottom>
+                                        <Right>Solid</Right>
+                                    </BorderStyle>
+                                    <BorderWidth>
+                                        <Bottom>1px</Bottom>
+                                        <Right>1px</Right>
+                                    </BorderWidth>
+                                    <Padding>
+                                        <Right>3px</Right>
+                                    </Padding>
+                                    <TextAlign>Right</TextAlign>
+                                    <VerticalAlign>Middle</VerticalAlign>
+                                </Style>
+                                <Value>=$AMAZONQST</Value>
+                            </TextBox>
+                            <TextBox Name="textBox104">
+                                <Location>392px, 0px</Location>
+                                <Size>152px, 24px</Size>
+                                <Style>
+                                    <BorderStyle>
+                                        <Bottom>Solid</Bottom>
+                                        <Left>Solid</Left>
+                                        <Right>Solid</Right>
+                                    </BorderStyle>
+                                    <BorderWidth>
+                                        <Bottom>1px</Bottom>
+                                        <Left>1px</Left>
+                                        <Right>1px</Right>
+                                    </BorderWidth>
+                                    <TextAlign>Center</TextAlign>
+                                    <VerticalAlign>Middle</VerticalAlign>
+                                </Style>
+                                <Value>Amazon QST</Value>
+                            </TextBox>
+                        </Items>
+                    </Footer>
+                </Footers>
+            </Group>
+            <Group Name="group10">
+                <Headers>
+                    <Header Name="groupHeaderSection10">
+                        <Height>0cm</Height>
+                        <Visible>False</Visible>
+                    </Header>
+                </Headers>
+                <Footers>
+                    <Footer Name="groupFooterSection10">
+                        <Height>0.63492cm</Height>
+                        <Visible>False</Visible>
+                        <VisibleExpr>=IIF($AMAZONPST &gt; 0, True, False)</VisibleExpr>
+                        <Items>
+                            <TextBox Name="textBox101">
+                                <Format>CAD #,##0.00;-CAD #,##0.00</Format>
+                                <Location>544px, 0px</Location>
+                                <Size>152px, 24px</Size>
+                                <Style>
+                                    <BorderStyle>
+                                        <Bottom>Solid</Bottom>
+                                        <Right>Solid</Right>
+                                    </BorderStyle>
+                                    <BorderWidth>
+                                        <Bottom>1px</Bottom>
+                                        <Right>1px</Right>
+                                    </BorderWidth>
+                                    <Padding>
+                                        <Right>3px</Right>
+                                    </Padding>
+                                    <TextAlign>Right</TextAlign>
+                                    <VerticalAlign>Middle</VerticalAlign>
+                                </Style>
+                                <Value>=$AMAZONPST</Value>
+                            </TextBox>
+                            <TextBox Name="textBox102">
+                                <Location>392px, 0px</Location>
+                                <Size>152px, 24px</Size>
+                                <Style>
+                                    <BorderStyle>
+                                        <Bottom>Solid</Bottom>
+                                        <Left>Solid</Left>
+                                        <Right>Solid</Right>
+                                    </BorderStyle>
+                                    <BorderWidth>
+                                        <Bottom>1px</Bottom>
+                                        <Left>1px</Left>
+                                        <Right>1px</Right>
+                                    </BorderWidth>
+                                    <TextAlign>Center</TextAlign>
+                                    <VerticalAlign>Middle</VerticalAlign>
+                                </Style>
+                                <Value>Amazon PST</Value>
+                            </TextBox>
+                        </Items>
+                    </Footer>
+                </Footers>
+            </Group>
+            <Group Name="group11">
+                <Headers>
+                    <Header Name="groupHeaderSection11">
+                        <Height>0cm</Height>
+                        <Visible>False</Visible>
+                    </Header>
+                </Headers>
+                <Footers>
+                    <Footer Name="groupFooterSection11">
+                        <Height>0.63492cm</Height>
+                        <VisibleExpr>=IIF($AMAZONHST &gt; 0, True, False)</VisibleExpr>
+                        <Items>
+                            <TextBox Name="textBox100">
+                                <Location>392px, 0px</Location>
+                                <Size>152px, 24px</Size>
+                                <Style>
+                                    <BorderStyle>
+                                        <Bottom>Solid</Bottom>
+                                        <Left>Solid</Left>
+                                        <Right>Solid</Right>
+                                    </BorderStyle>
+                                    <BorderWidth>
+                                        <Bottom>1px</Bottom>
+                                        <Left>1px</Left>
+                                        <Right>1px</Right>
+                                    </BorderWidth>
+                                    <TextAlign>Center</TextAlign>
+                                    <VerticalAlign>Middle</VerticalAlign>
+                                </Style>
+                                <Value>Amazon HST</Value>
+                            </TextBox>
+                            <TextBox Name="textBox95">
+                                <Format>CAD #,##0.00;-CAD #,##0.00</Format>
+                                <Location>544px, 0px</Location>
+                                <Size>152px, 24px</Size>
+                                <Style>
+                                    <BorderStyle>
+                                        <Bottom>Solid</Bottom>
+                                        <Right>Solid</Right>
+                                    </BorderStyle>
+                                    <BorderWidth>
+                                        <Bottom>1px</Bottom>
+                                        <Right>1px</Right>
+                                    </BorderWidth>
+                                    <Padding>
+                                        <Right>3px</Right>
+                                    </Padding>
+                                    <TextAlign>Right</TextAlign>
+                                    <VerticalAlign>Middle</VerticalAlign>
+                                </Style>
+                                <Value>=$AMAZONHST</Value>
+                            </TextBox>
+                        </Items>
+                    </Footer>
+                </Footers>
+            </Group>
+            <Group Name="group12">
+                <Headers>
+                    <Header Name="groupHeaderSection12">
+                        <Height>0cm</Height>
+                        <Visible>False</Visible>
+                    </Header>
+                </Headers>
+                <Footers>
+                    <Footer Name="groupFooterSection12">
+                        <Height>0.63492cm</Height>
+                        <VisibleExpr>=IIF($AMAZONGST &gt; 0, True, False)</VisibleExpr>
+                        <Items>
+                            <TextBox Name="textBox71">
+                                <Format>CAD #,##0.00;-CAD #,##0.00</Format>
+                                <Location>544px, 0px</Location>
+                                <Size>152px, 24px</Size>
+                                <Style>
+                                    <BorderStyle>
+                                        <Bottom>Solid</Bottom>
+                                        <Right>Solid</Right>
+                                    </BorderStyle>
+                                    <BorderWidth>
+                                        <Bottom>1px</Bottom>
+                                        <Right>1px</Right>
+                                    </BorderWidth>
+                                    <Padding>
+                                        <Right>3px</Right>
+                                    </Padding>
+                                    <TextAlign>Right</TextAlign>
+                                    <VerticalAlign>Middle</VerticalAlign>
+                                </Style>
+                                <Value>=$AMAZONGST</Value>
+                            </TextBox>
+                            <TextBox Name="textBox72">
+                                <Location>392px, 0px</Location>
+                                <Size>152px, 24px</Size>
+                                <Style>
+                                    <BorderStyle>
+                                        <Bottom>Solid</Bottom>
+                                        <Left>Solid</Left>
+                                        <Right>Solid</Right>
+                                    </BorderStyle>
+                                    <BorderWidth>
+                                        <Bottom>1px</Bottom>
+                                        <Left>1px</Left>
+                                        <Right>1px</Right>
+                                    </BorderWidth>
+                                    <TextAlign>Center</TextAlign>
+                                    <VerticalAlign>Middle</VerticalAlign>
+                                </Style>
+                                <Value>Amazon GST</Value>
+                            </TextBox>
+                        </Items>
+                    </Footer>
+                </Footers>
+            </Group>
+            <Group Name="group13">
+                <Headers>
+                    <Header Name="groupHeaderSection13">
+                        <Height>0cm</Height>
+                        <Visible>False</Visible>
+                    </Header>
+                </Headers>
+                <Footers>
+                    <Footer Name="groupFooterSection13">
+                        <Height>1.0582cm</Height>
+                        <VisibleExpr>=IIF($AMAZONCA &gt; 0, True, False)</VisibleExpr>
+                        <Items>
+                            <TextBox Name="textBox73">
+                                <Format>CAD #,##0.00;-CAD #,##0.00</Format>
+                                <Location>544px, 0px</Location>
+                                <Size>152px, 40px</Size>
+                                <Style>
+                                    <BorderStyle>
+                                        <Bottom>Solid</Bottom>
+                                        <Right>Solid</Right>
+                                    </BorderStyle>
+                                    <BorderWidth>
+                                        <Bottom>1px</Bottom>
+                                        <Right>1px</Right>
+                                    </BorderWidth>
+                                    <Padding>
+                                        <Right>3px</Right>
+                                    </Padding>
+                                    <TextAlign>Right</TextAlign>
+                                    <VerticalAlign>Middle</VerticalAlign>
+                                </Style>
+                                <Value>=$AMAZONCA</Value>
+                            </TextBox>
+                            <TextBox Name="textBox74">
+                                <Location>392px, 0px</Location>
+                                <Size>152px, 40px</Size>
+                                <Style>
+                                    <BorderStyle>
+                                        <Bottom>Solid</Bottom>
+                                        <Left>Solid</Left>
+                                        <Right>Solid</Right>
+                                    </BorderStyle>
+                                    <BorderWidth>
+                                        <Bottom>1px</Bottom>
+                                        <Left>1px</Left>
+                                        <Right>1px</Right>
+                                    </BorderWidth>
+                                    <Padding>
+                                        <Left>5px</Left>
+                                    </Padding>
+                                    <TextAlign>Left</TextAlign>
+                                    <VerticalAlign>Middle</VerticalAlign>
+                                </Style>
+                                <Value>Tax Collection Agent by Amazon</Value>
+                            </TextBox>
+                        </Items>
+                    </Footer>
+                </Footers>
+            </Group>
+            <Group Name="group14">
+                <Headers>
+                    <Header Name="groupHeaderSection14">
+                        <Height>0cm</Height>
+                        <Visible>False</Visible>
+                    </Header>
+                </Headers>
+                <Footers>
+                    <Footer Name="groupFooterSection14">
+                        <Height>1.48148cm</Height>
+                        <Items>
+                            <Line Name="line2">
+                                <Location>0px, 0px</Location>
+                                <Size>7.25in, 0.08333in</Size>
+                            </Line>
+                            <TextBox Name="textBox54">
+                                <Location>392px, 32px</Location>
+                                <Size>152px, 24px</Size>
+                                <Style>
+                                    <BorderStyle>
+                                        <Bottom>Solid</Bottom>
+                                        <Left>Solid</Left>
+                                        <Right>Solid</Right>
+                                    </BorderStyle>
+                                    <BorderWidth>
+                                        <Bottom>1px</Bottom>
+                                        <Left>1px</Left>
+                                        <Right>1px</Right>
+                                    </BorderWidth>
+                                    <TextAlign>Center</TextAlign>
+                                    <VerticalAlign>Middle</VerticalAlign>
+                                </Style>
+                                <Value>Shipping Fee</Value>
+                            </TextBox>
+                            <TextBox Name="textBox76">
+                                <Format>CAD #,##0.00;-CAD #,##0.00</Format>
                                 <Location>544px, 32px</Location>
                                 <Size>152px, 24px</Size>
                                 <Style>
@@ -6801,176 +7692,67 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                                 </Style>
                                 <Value>=[ARInvoice.CuryFreightAmt]</Value>
                             </TextBox>
-                            <TextBox Name="textBox51">
-                                <Location>392px, 32px</Location>
+                            <TextBox Name="textBox77">
+                                <Format>CAD #,##0.00;-CAD #,##0.00</Format>
+                                <Location>544px, 8px</Location>
+                                <Size>152px, 24px</Size>
+                                <Style>
+                                    <BorderStyle>
+                                        <Bottom>Solid</Bottom>
+                                        <Right>Solid</Right>
+                                        <Top>Solid</Top>
+                                    </BorderStyle>
+                                    <BorderWidth>
+                                        <Bottom>1px</Bottom>
+                                        <Right>1px</Right>
+                                        <Top>1px</Top>
+                                    </BorderWidth>
+                                    <Padding>
+                                        <Right>3px</Right>
+                                    </Padding>
+                                    <TextAlign>Right</TextAlign>
+                                    <VerticalAlign>Middle</VerticalAlign>
+                                </Style>
+                                <Value>=$SubTotal</Value>
+                            </TextBox>
+                            <TextBox Name="textBox78">
+                                <Location>392px, 8px</Location>
                                 <Size>152px, 24px</Size>
                                 <Style>
                                     <BorderStyle>
                                         <Bottom>Solid</Bottom>
                                         <Left>Solid</Left>
                                         <Right>Solid</Right>
+                                        <Top>Solid</Top>
                                     </BorderStyle>
                                     <BorderWidth>
                                         <Bottom>1px</Bottom>
                                         <Left>1px</Left>
                                         <Right>1px</Right>
+                                        <Top>1px</Top>
                                     </BorderWidth>
                                     <TextAlign>Center</TextAlign>
                                     <VerticalAlign>Middle</VerticalAlign>
                                 </Style>
-                                <Value>Shipping Fee</Value>
-                            </TextBox>
-                            <TextBox Name="textBox57">
-                                <Location>168px, 48px</Location>
-                                <NavigateUrl>=[SOOrder.UsrCTPSOLink]</NavigateUrl>
-                                <Size>216px, 56px</Size>
-                                <Style>
-                                    <BackImage>
-                                        <Image>clicktopay_logo</Image>
-                                        <MimeType>image/png</MimeType>
-                                        <Source>Embedded</Source>
-                                    </BackImage>
-                                </Style>
-                                <VisibleExpr>=IIF(Len([SOOrder.UsrCTPSOLink]) &gt; 0, True, False)</VisibleExpr>
+                                <Value>Subtotal</Value>
                             </TextBox>
                         </Items>
                     </Footer>
                 </Footers>
             </Group>
-            <Group Name="group2">
+            <Group Name="group15">
                 <Headers>
-                    <Header Name="groupHeaderSection2">
+                    <Header Name="groupHeaderSection15">
                         <Height>0cm</Height>
                         <Visible>False</Visible>
                     </Header>
                 </Headers>
                 <Footers>
-                    <Footer Name="groupFooterSection2">
+                    <Footer Name="groupFooterSection15">
                         <Height>1.69312cm</Height>
-                        <VisibleExpr>=IIF($TotalLine &lt;= 1, True, False)</VisibleExpr>
+                        <VisibleExpr>=IIF($TotalLine &lt;= 1 AND $SortOfTax &lt;= 1, True, False)</VisibleExpr>
                         <Items>
-                            <TextBox Name="textBox56">
-                                <Location>152px, 0px</Location>
-                                <Size>136px, 64px</Size>
-                                <Style>
-                                    <BorderStyle>
-                                        <Right>Solid</Right>
-                                    </BorderStyle>
-                                    <BorderWidth>
-                                        <Right>1px</Right>
-                                    </BorderWidth>
-                                    <Font>
-                                        <Size>10px</Size>
-                                    </Font>
-                                    <Padding>
-                                        <Left>3px</Left>
-                                        <Top>3px</Top>
-                                    </Padding>
-                                </Style>
-                            </TextBox>
-                            <TextBox Name="textBox92">
-                                <Location>608px, 0px</Location>
-                                <Size>88px, 64px</Size>
-                                <Style>
-                                    <BorderStyle>
-                                        <Right>Solid</Right>
-                                    </BorderStyle>
-                                    <BorderWidth>
-                                        <Right>1px</Right>
-                                    </BorderWidth>
-                                    <Font>
-                                        <Size>11px</Size>
-                                    </Font>
-                                    <TextAlign>Center</TextAlign>
-                                    <VerticalAlign>Middle</VerticalAlign>
-                                </Style>
-                            </TextBox>
-                            <TextBox Name="textBox93">
-                                <Location>528px, 0px</Location>
-                                <Size>80px, 64px</Size>
-                                <Style>
-                                    <BorderStyle>
-                                        <Right>Solid</Right>
-                                    </BorderStyle>
-                                    <BorderWidth>
-                                        <Right>1px</Right>
-                                    </BorderWidth>
-                                    <Font>
-                                        <Size>11px</Size>
-                                    </Font>
-                                    <TextAlign>Center</TextAlign>
-                                    <VerticalAlign>Middle</VerticalAlign>
-                                </Style>
-                            </TextBox>
-                            <TextBox Name="textBox94">
-                                <Location>440px, 0px</Location>
-                                <Size>88px, 64px</Size>
-                                <Style>
-                                    <BorderStyle>
-                                        <Right>Solid</Right>
-                                    </BorderStyle>
-                                    <BorderWidth>
-                                        <Right>1px</Right>
-                                    </BorderWidth>
-                                    <Font>
-                                        <Size>11px</Size>
-                                    </Font>
-                                    <TextAlign>Center</TextAlign>
-                                    <VerticalAlign>Middle</VerticalAlign>
-                                </Style>
-                            </TextBox>
-                            <TextBox Name="textBox95">
-                                <Location>352px, 0px</Location>
-                                <Size>88px, 64px</Size>
-                                <Style>
-                                    <BorderStyle>
-                                        <Right>Solid</Right>
-                                    </BorderStyle>
-                                    <BorderWidth>
-                                        <Right>1px</Right>
-                                    </BorderWidth>
-                                    <Font>
-                                        <Size>11px</Size>
-                                    </Font>
-                                    <TextAlign>Center</TextAlign>
-                                    <VerticalAlign>Middle</VerticalAlign>
-                                </Style>
-                            </TextBox>
-                            <TextBox Name="textBox96">
-                                <Location>288px, 0px</Location>
-                                <Size>64px, 64px</Size>
-                                <Style>
-                                    <BorderStyle>
-                                        <Right>Solid</Right>
-                                    </BorderStyle>
-                                    <BorderWidth>
-                                        <Right>1px</Right>
-                                    </BorderWidth>
-                                    <Font>
-                                        <Size>11px</Size>
-                                    </Font>
-                                    <TextAlign>Center</TextAlign>
-                                    <VerticalAlign>Middle</VerticalAlign>
-                                </Style>
-                            </TextBox>
-                            <TextBox Name="textBox98">
-                                <Location>64px, 0px</Location>
-                                <Size>88px, 64px</Size>
-                                <Style>
-                                    <BorderStyle>
-                                        <Right>Solid</Right>
-                                    </BorderStyle>
-                                    <BorderWidth>
-                                        <Right>1px</Right>
-                                    </BorderWidth>
-                                    <Font>
-                                        <Size>11px</Size>
-                                    </Font>
-                                    <TextAlign>Center</TextAlign>
-                                    <VerticalAlign>Middle</VerticalAlign>
-                                </Style>
-                            </TextBox>
-                            <TextBox Name="textBox99">
+                            <TextBox Name="textBox63">
                                 <Location>0px, 0px</Location>
                                 <Size>64px, 64px</Size>
                                 <Style>
@@ -6989,23 +7771,109 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                                     <VerticalAlign>Middle</VerticalAlign>
                                 </Style>
                             </TextBox>
-                        </Items>
-                    </Footer>
-                </Footers>
-            </Group>
-            <Group Name="group3">
-                <Headers>
-                    <Header Name="groupHeaderSection3">
-                        <Height>0cm</Height>
-                        <Visible>False</Visible>
-                    </Header>
-                </Headers>
-                <Footers>
-                    <Footer Name="groupFooterSection3">
-                        <Height>1.69312cm</Height>
-                        <VisibleExpr>=IIF($TotalLine &lt;= 2, True, False)</VisibleExpr>
-                        <Items>
-                            <TextBox Name="textBox55">
+                            <TextBox Name="textBox64">
+                                <Location>64px, 0px</Location>
+                                <Size>88px, 64px</Size>
+                                <Style>
+                                    <BorderStyle>
+                                        <Right>Solid</Right>
+                                    </BorderStyle>
+                                    <BorderWidth>
+                                        <Right>1px</Right>
+                                    </BorderWidth>
+                                    <Font>
+                                        <Size>11px</Size>
+                                    </Font>
+                                    <TextAlign>Center</TextAlign>
+                                    <VerticalAlign>Middle</VerticalAlign>
+                                </Style>
+                            </TextBox>
+                            <TextBox Name="textBox65">
+                                <Location>288px, 0px</Location>
+                                <Size>64px, 64px</Size>
+                                <Style>
+                                    <BorderStyle>
+                                        <Right>Solid</Right>
+                                    </BorderStyle>
+                                    <BorderWidth>
+                                        <Right>1px</Right>
+                                    </BorderWidth>
+                                    <Font>
+                                        <Size>11px</Size>
+                                    </Font>
+                                    <TextAlign>Center</TextAlign>
+                                    <VerticalAlign>Middle</VerticalAlign>
+                                </Style>
+                            </TextBox>
+                            <TextBox Name="textBox66">
+                                <Location>352px, 0px</Location>
+                                <Size>88px, 64px</Size>
+                                <Style>
+                                    <BorderStyle>
+                                        <Right>Solid</Right>
+                                    </BorderStyle>
+                                    <BorderWidth>
+                                        <Right>1px</Right>
+                                    </BorderWidth>
+                                    <Font>
+                                        <Size>11px</Size>
+                                    </Font>
+                                    <TextAlign>Center</TextAlign>
+                                    <VerticalAlign>Middle</VerticalAlign>
+                                </Style>
+                            </TextBox>
+                            <TextBox Name="textBox67">
+                                <Location>440px, 0px</Location>
+                                <Size>88px, 64px</Size>
+                                <Style>
+                                    <BorderStyle>
+                                        <Right>Solid</Right>
+                                    </BorderStyle>
+                                    <BorderWidth>
+                                        <Right>1px</Right>
+                                    </BorderWidth>
+                                    <Font>
+                                        <Size>11px</Size>
+                                    </Font>
+                                    <TextAlign>Center</TextAlign>
+                                    <VerticalAlign>Middle</VerticalAlign>
+                                </Style>
+                            </TextBox>
+                            <TextBox Name="textBox68">
+                                <Location>528px, 0px</Location>
+                                <Size>80px, 64px</Size>
+                                <Style>
+                                    <BorderStyle>
+                                        <Right>Solid</Right>
+                                    </BorderStyle>
+                                    <BorderWidth>
+                                        <Right>1px</Right>
+                                    </BorderWidth>
+                                    <Font>
+                                        <Size>11px</Size>
+                                    </Font>
+                                    <TextAlign>Center</TextAlign>
+                                    <VerticalAlign>Middle</VerticalAlign>
+                                </Style>
+                            </TextBox>
+                            <TextBox Name="textBox69">
+                                <Location>608px, 0px</Location>
+                                <Size>88px, 64px</Size>
+                                <Style>
+                                    <BorderStyle>
+                                        <Right>Solid</Right>
+                                    </BorderStyle>
+                                    <BorderWidth>
+                                        <Right>1px</Right>
+                                    </BorderWidth>
+                                    <Font>
+                                        <Size>11px</Size>
+                                    </Font>
+                                    <TextAlign>Center</TextAlign>
+                                    <VerticalAlign>Middle</VerticalAlign>
+                                </Style>
+                            </TextBox>
+                            <TextBox Name="textBox70">
                                 <Location>152px, 0px</Location>
                                 <Size>136px, 64px</Size>
                                 <Style>
@@ -7024,8 +7892,250 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                                     </Padding>
                                 </Style>
                             </TextBox>
-                            <TextBox Name="textBox84">
+                        </Items>
+                    </Footer>
+                </Footers>
+            </Group>
+            <Group Name="group16">
+                <Headers>
+                    <Header Name="groupHeaderSection16">
+                        <Height>0cm</Height>
+                        <Visible>False</Visible>
+                    </Header>
+                </Headers>
+                <Footers>
+                    <Footer Name="groupFooterSection16">
+                        <Height>1.69312cm</Height>
+                        <VisibleExpr>=IIF($TotalLine &lt;= 2 AND $SortOfTax &lt;= 3, True, False)</VisibleExpr>
+                        <Items>
+                            <TextBox Name="textBox52">
+                                <Location>0px, 0px</Location>
+                                <Size>64px, 64px</Size>
+                                <Style>
+                                    <BorderStyle>
+                                        <Left>Solid</Left>
+                                        <Right>Solid</Right>
+                                    </BorderStyle>
+                                    <BorderWidth>
+                                        <Left>1px</Left>
+                                        <Right>1px</Right>
+                                    </BorderWidth>
+                                    <Font>
+                                        <Size>11px</Size>
+                                    </Font>
+                                    <TextAlign>Center</TextAlign>
+                                    <VerticalAlign>Middle</VerticalAlign>
+                                </Style>
+                            </TextBox>
+                            <TextBox Name="textBox53">
+                                <Location>64px, 0px</Location>
+                                <Size>88px, 64px</Size>
+                                <Style>
+                                    <BorderStyle>
+                                        <Right>Solid</Right>
+                                    </BorderStyle>
+                                    <BorderWidth>
+                                        <Right>1px</Right>
+                                    </BorderWidth>
+                                    <Font>
+                                        <Size>11px</Size>
+                                    </Font>
+                                    <TextAlign>Center</TextAlign>
+                                    <VerticalAlign>Middle</VerticalAlign>
+                                </Style>
+                            </TextBox>
+                            <TextBox Name="textBox57">
+                                <Location>288px, 0px</Location>
+                                <Size>64px, 64px</Size>
+                                <Style>
+                                    <BorderStyle>
+                                        <Right>Solid</Right>
+                                    </BorderStyle>
+                                    <BorderWidth>
+                                        <Right>1px</Right>
+                                    </BorderWidth>
+                                    <Font>
+                                        <Size>11px</Size>
+                                    </Font>
+                                    <TextAlign>Center</TextAlign>
+                                    <VerticalAlign>Middle</VerticalAlign>
+                                </Style>
+                            </TextBox>
+                            <TextBox Name="textBox58">
+                                <Location>352px, 0px</Location>
+                                <Size>88px, 64px</Size>
+                                <Style>
+                                    <BorderStyle>
+                                        <Right>Solid</Right>
+                                    </BorderStyle>
+                                    <BorderWidth>
+                                        <Right>1px</Right>
+                                    </BorderWidth>
+                                    <Font>
+                                        <Size>11px</Size>
+                                    </Font>
+                                    <TextAlign>Center</TextAlign>
+                                    <VerticalAlign>Middle</VerticalAlign>
+                                </Style>
+                            </TextBox>
+                            <TextBox Name="textBox59">
+                                <Location>440px, 0px</Location>
+                                <Size>88px, 64px</Size>
+                                <Style>
+                                    <BorderStyle>
+                                        <Right>Solid</Right>
+                                    </BorderStyle>
+                                    <BorderWidth>
+                                        <Right>1px</Right>
+                                    </BorderWidth>
+                                    <Font>
+                                        <Size>11px</Size>
+                                    </Font>
+                                    <TextAlign>Center</TextAlign>
+                                    <VerticalAlign>Middle</VerticalAlign>
+                                </Style>
+                            </TextBox>
+                            <TextBox Name="textBox60">
+                                <Location>528px, 0px</Location>
+                                <Size>80px, 64px</Size>
+                                <Style>
+                                    <BorderStyle>
+                                        <Right>Solid</Right>
+                                    </BorderStyle>
+                                    <BorderWidth>
+                                        <Right>1px</Right>
+                                    </BorderWidth>
+                                    <Font>
+                                        <Size>11px</Size>
+                                    </Font>
+                                    <TextAlign>Center</TextAlign>
+                                    <VerticalAlign>Middle</VerticalAlign>
+                                </Style>
+                            </TextBox>
+                            <TextBox Name="textBox61">
                                 <Location>608px, 0px</Location>
+                                <Size>88px, 64px</Size>
+                                <Style>
+                                    <BorderStyle>
+                                        <Right>Solid</Right>
+                                    </BorderStyle>
+                                    <BorderWidth>
+                                        <Right>1px</Right>
+                                    </BorderWidth>
+                                    <Font>
+                                        <Size>11px</Size>
+                                    </Font>
+                                    <TextAlign>Center</TextAlign>
+                                    <VerticalAlign>Middle</VerticalAlign>
+                                </Style>
+                            </TextBox>
+                            <TextBox Name="textBox62">
+                                <Location>152px, 0px</Location>
+                                <Size>136px, 64px</Size>
+                                <Style>
+                                    <BorderStyle>
+                                        <Right>Solid</Right>
+                                    </BorderStyle>
+                                    <BorderWidth>
+                                        <Right>1px</Right>
+                                    </BorderWidth>
+                                    <Font>
+                                        <Size>10px</Size>
+                                    </Font>
+                                    <Padding>
+                                        <Left>3px</Left>
+                                        <Top>3px</Top>
+                                    </Padding>
+                                </Style>
+                            </TextBox>
+                        </Items>
+                    </Footer>
+                </Footers>
+            </Group>
+            <Group Name="group17">
+                <Headers>
+                    <Header Name="groupHeaderSection17">
+                        <Height>0cm</Height>
+                        <Visible>False</Visible>
+                    </Header>
+                </Headers>
+                <Footers>
+                    <Footer Name="groupFooterSection17">
+                        <Height>1.69312cm</Height>
+                        <VisibleExpr>=IIF($TotalLine &lt;= 3 AND $SortOfTax &lt;= 5, True, False)</VisibleExpr>
+                        <Items>
+                            <TextBox Name="textBox50">
+                                <Location>0px, 0px</Location>
+                                <Size>64px, 64px</Size>
+                                <Style>
+                                    <BorderStyle>
+                                        <Left>Solid</Left>
+                                        <Right>Solid</Right>
+                                    </BorderStyle>
+                                    <BorderWidth>
+                                        <Left>1px</Left>
+                                        <Right>1px</Right>
+                                    </BorderWidth>
+                                    <Font>
+                                        <Size>11px</Size>
+                                    </Font>
+                                    <TextAlign>Center</TextAlign>
+                                    <VerticalAlign>Middle</VerticalAlign>
+                                </Style>
+                            </TextBox>
+                            <TextBox Name="textBox51">
+                                <Location>64px, 0px</Location>
+                                <Size>88px, 64px</Size>
+                                <Style>
+                                    <BorderStyle>
+                                        <Right>Solid</Right>
+                                    </BorderStyle>
+                                    <BorderWidth>
+                                        <Right>1px</Right>
+                                    </BorderWidth>
+                                    <Font>
+                                        <Size>11px</Size>
+                                    </Font>
+                                    <TextAlign>Center</TextAlign>
+                                    <VerticalAlign>Middle</VerticalAlign>
+                                </Style>
+                            </TextBox>
+                            <TextBox Name="textBox56">
+                                <Location>288px, 0px</Location>
+                                <Size>64px, 64px</Size>
+                                <Style>
+                                    <BorderStyle>
+                                        <Right>Solid</Right>
+                                    </BorderStyle>
+                                    <BorderWidth>
+                                        <Right>1px</Right>
+                                    </BorderWidth>
+                                    <Font>
+                                        <Size>11px</Size>
+                                    </Font>
+                                    <TextAlign>Center</TextAlign>
+                                    <VerticalAlign>Middle</VerticalAlign>
+                                </Style>
+                            </TextBox>
+                            <TextBox Name="textBox83">
+                                <Location>352px, 0px</Location>
+                                <Size>88px, 64px</Size>
+                                <Style>
+                                    <BorderStyle>
+                                        <Right>Solid</Right>
+                                    </BorderStyle>
+                                    <BorderWidth>
+                                        <Right>1px</Right>
+                                    </BorderWidth>
+                                    <Font>
+                                        <Size>11px</Size>
+                                    </Font>
+                                    <TextAlign>Center</TextAlign>
+                                    <VerticalAlign>Middle</VerticalAlign>
+                                </Style>
+                            </TextBox>
+                            <TextBox Name="textBox84">
+                                <Location>440px, 0px</Location>
                                 <Size>88px, 64px</Size>
                                 <Style>
                                     <BorderStyle>
@@ -7059,7 +8169,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                                 </Style>
                             </TextBox>
                             <TextBox Name="textBox86">
-                                <Location>440px, 0px</Location>
+                                <Location>608px, 0px</Location>
                                 <Size>88px, 64px</Size>
                                 <Style>
                                     <BorderStyle>
@@ -7076,92 +8186,6 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                                 </Style>
                             </TextBox>
                             <TextBox Name="textBox87">
-                                <Location>352px, 0px</Location>
-                                <Size>88px, 64px</Size>
-                                <Style>
-                                    <BorderStyle>
-                                        <Right>Solid</Right>
-                                    </BorderStyle>
-                                    <BorderWidth>
-                                        <Right>1px</Right>
-                                    </BorderWidth>
-                                    <Font>
-                                        <Size>11px</Size>
-                                    </Font>
-                                    <TextAlign>Center</TextAlign>
-                                    <VerticalAlign>Middle</VerticalAlign>
-                                </Style>
-                            </TextBox>
-                            <TextBox Name="textBox88">
-                                <Location>288px, 0px</Location>
-                                <Size>64px, 64px</Size>
-                                <Style>
-                                    <BorderStyle>
-                                        <Right>Solid</Right>
-                                    </BorderStyle>
-                                    <BorderWidth>
-                                        <Right>1px</Right>
-                                    </BorderWidth>
-                                    <Font>
-                                        <Size>11px</Size>
-                                    </Font>
-                                    <TextAlign>Center</TextAlign>
-                                    <VerticalAlign>Middle</VerticalAlign>
-                                </Style>
-                            </TextBox>
-                            <TextBox Name="textBox90">
-                                <Location>64px, 0px</Location>
-                                <Size>88px, 64px</Size>
-                                <Style>
-                                    <BorderStyle>
-                                        <Right>Solid</Right>
-                                    </BorderStyle>
-                                    <BorderWidth>
-                                        <Right>1px</Right>
-                                    </BorderWidth>
-                                    <Font>
-                                        <Size>11px</Size>
-                                    </Font>
-                                    <TextAlign>Center</TextAlign>
-                                    <VerticalAlign>Middle</VerticalAlign>
-                                </Style>
-                            </TextBox>
-                            <TextBox Name="textBox91">
-                                <Location>0px, 0px</Location>
-                                <Size>64px, 64px</Size>
-                                <Style>
-                                    <BorderStyle>
-                                        <Left>Solid</Left>
-                                        <Right>Solid</Right>
-                                    </BorderStyle>
-                                    <BorderWidth>
-                                        <Left>1px</Left>
-                                        <Right>1px</Right>
-                                    </BorderWidth>
-                                    <Font>
-                                        <Size>11px</Size>
-                                    </Font>
-                                    <TextAlign>Center</TextAlign>
-                                    <VerticalAlign>Middle</VerticalAlign>
-                                </Style>
-                            </TextBox>
-                        </Items>
-                    </Footer>
-                </Footers>
-            </Group>
-            <Group Name="group4">
-                <Headers>
-                    <Header Name="groupHeaderSection4">
-                        <Height>0cm</Height>
-                        <Visible>False</Visible>
-                    </Header>
-                </Headers>
-                <Footers>
-                    <Footer Name="groupFooterSection4">
-                        <Height>1.69312cm</Height>
-                        <VisibleExpr>=IIF($TotalLine &lt;= 3, True, False)</VisibleExpr>
-                        <Items>
-                            <TextBox Name="textBox54">
                                 <Location>152px, 0px</Location>
                                 <Size>136px, 64px</Size>
                                 <Style>
@@ -7180,8 +8204,43 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                                     </Padding>
                                 </Style>
                             </TextBox>
-                            <TextBox Name="textBox76">
-                                <Location>608px, 0px</Location>
+                        </Items>
+                    </Footer>
+                </Footers>
+            </Group>
+            <Group Name="group18">
+                <Headers>
+                    <Header Name="groupHeaderSection18">
+                        <Height>0cm</Height>
+                        <Visible>False</Visible>
+                    </Header>
+                </Headers>
+                <Footers>
+                    <Footer Name="groupFooterSection18">
+                        <Height>1.69312cm</Height>
+                        <VisibleExpr>=IIF($TotalLine &lt;= 4 AND $SortOfTax &lt;= 7, True, False)</VisibleExpr>
+                        <Items>
+                            <TextBox Name="textBox42">
+                                <Location>0px, 0px</Location>
+                                <Size>64px, 64px</Size>
+                                <Style>
+                                    <BorderStyle>
+                                        <Left>Solid</Left>
+                                        <Right>Solid</Right>
+                                    </BorderStyle>
+                                    <BorderWidth>
+                                        <Left>1px</Left>
+                                        <Right>1px</Right>
+                                    </BorderWidth>
+                                    <Font>
+                                        <Size>11px</Size>
+                                    </Font>
+                                    <TextAlign>Center</TextAlign>
+                                    <VerticalAlign>Middle</VerticalAlign>
+                                </Style>
+                            </TextBox>
+                            <TextBox Name="textBox43">
+                                <Location>64px, 0px</Location>
                                 <Size>88px, 64px</Size>
                                 <Style>
                                     <BorderStyle>
@@ -7197,9 +8256,9 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                                     <VerticalAlign>Middle</VerticalAlign>
                                 </Style>
                             </TextBox>
-                            <TextBox Name="textBox77">
-                                <Location>528px, 0px</Location>
-                                <Size>80px, 64px</Size>
+                            <TextBox Name="textBox44">
+                                <Location>288px, 0px</Location>
+                                <Size>64px, 64px</Size>
                                 <Style>
                                     <BorderStyle>
                                         <Right>Solid</Right>
@@ -7214,7 +8273,24 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                                     <VerticalAlign>Middle</VerticalAlign>
                                 </Style>
                             </TextBox>
-                            <TextBox Name="textBox78">
+                            <TextBox Name="textBox45">
+                                <Location>352px, 0px</Location>
+                                <Size>88px, 64px</Size>
+                                <Style>
+                                    <BorderStyle>
+                                        <Right>Solid</Right>
+                                    </BorderStyle>
+                                    <BorderWidth>
+                                        <Right>1px</Right>
+                                    </BorderWidth>
+                                    <Font>
+                                        <Size>11px</Size>
+                                    </Font>
+                                    <TextAlign>Center</TextAlign>
+                                    <VerticalAlign>Middle</VerticalAlign>
+                                </Style>
+                            </TextBox>
+                            <TextBox Name="textBox46">
                                 <Location>440px, 0px</Location>
                                 <Size>88px, 64px</Size>
                                 <Style>
@@ -7231,8 +8307,96 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                                     <VerticalAlign>Middle</VerticalAlign>
                                 </Style>
                             </TextBox>
+                            <TextBox Name="textBox47">
+                                <Location>528px, 0px</Location>
+                                <Size>80px, 64px</Size>
+                                <Style>
+                                    <BorderStyle>
+                                        <Right>Solid</Right>
+                                    </BorderStyle>
+                                    <BorderWidth>
+                                        <Right>1px</Right>
+                                    </BorderWidth>
+                                    <Font>
+                                        <Size>11px</Size>
+                                    </Font>
+                                    <TextAlign>Center</TextAlign>
+                                    <VerticalAlign>Middle</VerticalAlign>
+                                </Style>
+                            </TextBox>
+                            <TextBox Name="textBox48">
+                                <Location>608px, 0px</Location>
+                                <Size>88px, 64px</Size>
+                                <Style>
+                                    <BorderStyle>
+                                        <Right>Solid</Right>
+                                    </BorderStyle>
+                                    <BorderWidth>
+                                        <Right>1px</Right>
+                                    </BorderWidth>
+                                    <Font>
+                                        <Size>11px</Size>
+                                    </Font>
+                                    <TextAlign>Center</TextAlign>
+                                    <VerticalAlign>Middle</VerticalAlign>
+                                </Style>
+                            </TextBox>
+                            <TextBox Name="textBox49">
+                                <Location>152px, 0px</Location>
+                                <Size>136px, 64px</Size>
+                                <Style>
+                                    <BorderStyle>
+                                        <Right>Solid</Right>
+                                    </BorderStyle>
+                                    <BorderWidth>
+                                        <Right>1px</Right>
+                                    </BorderWidth>
+                                    <Font>
+                                        <Size>10px</Size>
+                                    </Font>
+                                    <Padding>
+                                        <Left>3px</Left>
+                                        <Top>3px</Top>
+                                    </Padding>
+                                </Style>
+                            </TextBox>
+                        </Items>
+                    </Footer>
+                </Footers>
+            </Group>
+            <Group Name="group19">
+                <Headers>
+                    <Header Name="groupHeaderSection19">
+                        <Height>0cm</Height>
+                        <Visible>False</Visible>
+                    </Header>
+                </Headers>
+                <Footers>
+                    <Footer Name="groupFooterSection19">
+                        <Height>1.69312cm</Height>
+                        <VisibleExpr>=IIF($TotalLine &lt;= 5 AND $SortOfTax &lt;= 9, True, False)</VisibleExpr>
+                        <Items>
+                            <TextBox Name="textBox55">
+                                <Location>0px, 0px</Location>
+                                <Size>64px, 64px</Size>
+                                <Style>
+                                    <BorderStyle>
+                                        <Left>Solid</Left>
+                                        <Right>Solid</Right>
+                                    </BorderStyle>
+                                    <BorderWidth>
+                                        <Left>1px</Left>
+                                        <Right>1px</Right>
+                                    </BorderWidth>
+                                    <Font>
+                                        <Size>11px</Size>
+                                    </Font>
+                                    <TextAlign>Center</TextAlign>
+                                    <VerticalAlign>Middle</VerticalAlign>
+                                </Style>
+                            </TextBox>
                             <TextBox Name="textBox79">
-                                <Location>352px, 0px</Location>
+                                <Location>64px, 0px</Location>
                                 <Size>88px, 64px</Size>
                                 <Style>
                                     <BorderStyle>
@@ -7265,8 +8429,8 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                                     <VerticalAlign>Middle</VerticalAlign>
                                 </Style>
                             </TextBox>
-                            <TextBox Name="textBox82">
-                                <Location>64px, 0px</Location>
+                            <TextBox Name="textBox90">
+                                <Location>352px, 0px</Location>
                                 <Size>88px, 64px</Size>
                                 <Style>
                                     <BorderStyle>
@@ -7282,16 +8446,14 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                                     <VerticalAlign>Middle</VerticalAlign>
                                 </Style>
                             </TextBox>
-                            <TextBox Name="textBox83">
-                                <Location>0px, 0px</Location>
-                                <Size>64px, 64px</Size>
+                            <TextBox Name="textBox91">
+                                <Location>440px, 0px</Location>
+                                <Size>88px, 64px</Size>
                                 <Style>
                                     <BorderStyle>
-                                        <Left>Solid</Left>
                                         <Right>Solid</Right>
                                     </BorderStyle>
                                     <BorderWidth>
-                                        <Left>1px</Left>
                                         <Right>1px</Right>
                                     </BorderWidth>
                                     <Font>
@@ -7301,23 +8463,41 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                                     <VerticalAlign>Middle</VerticalAlign>
                                 </Style>
                             </TextBox>
-                        </Items>
-                    </Footer>
-                </Footers>
-            </Group>
-            <Group Name="group5">
-                <Headers>
-                    <Header Name="groupHeaderSection5">
-                        <Height>0cm</Height>
-                        <Visible>False</Visible>
-                    </Header>
-                </Headers>
-                <Footers>
-                    <Footer Name="groupFooterSection5">
-                        <Height>1.69312cm</Height>
-                        <VisibleExpr>=IIF($TotalLine &lt;= 4, True, False)</VisibleExpr>
-                        <Items>
-                            <TextBox Name="textBox53">
+                            <TextBox Name="textBox92">
+                                <Location>528px, 0px</Location>
+                                <Size>80px, 64px</Size>
+                                <Style>
+                                    <BorderStyle>
+                                        <Right>Solid</Right>
+                                    </BorderStyle>
+                                    <BorderWidth>
+                                        <Right>1px</Right>
+                                    </BorderWidth>
+                                    <Font>
+                                        <Size>11px</Size>
+                                    </Font>
+                                    <TextAlign>Center</TextAlign>
+                                    <VerticalAlign>Middle</VerticalAlign>
+                                </Style>
+                            </TextBox>
+                            <TextBox Name="textBox93">
+                                <Location>608px, 0px</Location>
+                                <Size>88px, 64px</Size>
+                                <Style>
+                                    <BorderStyle>
+                                        <Right>Solid</Right>
+                                    </BorderStyle>
+                                    <BorderWidth>
+                                        <Right>1px</Right>
+                                    </BorderWidth>
+                                    <Font>
+                                        <Size>11px</Size>
+                                    </Font>
+                                    <TextAlign>Center</TextAlign>
+                                    <VerticalAlign>Middle</VerticalAlign>
+                                </Style>
+                            </TextBox>
+                            <TextBox Name="textBox94">
                                 <Location>152px, 0px</Location>
                                 <Size>136px, 64px</Size>
                                 <Style>
@@ -7336,58 +8516,31 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                                     </Padding>
                                 </Style>
                             </TextBox>
-                            <TextBox Name="textBox68">
-                                <Location>608px, 0px</Location>
-                                <Size>88px, 64px</Size>
-                                <Style>
-                                    <BorderStyle>
-                                        <Right>Solid</Right>
-                                    </BorderStyle>
-                                    <BorderWidth>
-                                        <Right>1px</Right>
-                                    </BorderWidth>
-                                    <Font>
-                                        <Size>11px</Size>
-                                    </Font>
-                                    <TextAlign>Center</TextAlign>
-                                    <VerticalAlign>Middle</VerticalAlign>
-                                </Style>
-                            </TextBox>
-                            <TextBox Name="textBox69">
-                                <Location>528px, 0px</Location>
-                                <Size>80px, 64px</Size>
-                                <Style>
-                                    <BorderStyle>
-                                        <Right>Solid</Right>
-                                    </BorderStyle>
-                                    <BorderWidth>
-                                        <Right>1px</Right>
-                                    </BorderWidth>
-                                    <Font>
-                                        <Size>11px</Size>
-                                    </Font>
-                                    <TextAlign>Center</TextAlign>
-                                    <VerticalAlign>Middle</VerticalAlign>
-                                </Style>
-                            </TextBox>
-                            <TextBox Name="textBox70">
-                                <Location>440px, 0px</Location>
-                                <Size>88px, 64px</Size>
-                                <Style>
-                                    <BorderStyle>
-                                        <Right>Solid</Right>
-                                    </BorderStyle>
-                                    <BorderWidth>
-                                        <Right>1px</Right>
-                                    </BorderWidth>
-                                    <Font>
-                                        <Size>11px</Size>
-                                    </Font>
-                                    <TextAlign>Center</TextAlign>
-                                    <VerticalAlign>Middle</VerticalAlign>
-                                </Style>
-                            </TextBox>
-                            <TextBox Name="textBox71">
+                        </Items>
+                    </Footer>
+                </Footers>
+            </Group>
+            <Group Name="group20">
+                <Grouping>
+                    <GroupExp>
+                        <DataField>ARTran.LineNbr</DataField>
+                    </GroupExp>
+                </Grouping>
+                <Headers>
+                    <Header Name="groupHeaderSection20">
+                        <Height>1.69312cm</Height>
+                        <Variables>
+                            <ReportVariable>
+                                <Name>TotalLine</Name>
+                                <ValueExpr>=$TotalLine + 1</ValueExpr>
+                            </ReportVariable>
+                            <ReportVariable>
+                                <Name>SubTotal</Name>
+                                <ValueExpr>=$SubTotal + [ARTran.CuryTranAmt]</ValueExpr>
+                            </ReportVariable>
+                        </Variables>
+                        <Items>
+                            <TextBox Name="textBox107">
                                 <Location>352px, 0px</Location>
                                 <Size>88px, 64px</Size>
                                 <Style>
@@ -7403,8 +8556,9 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                                     <TextAlign>Center</TextAlign>
                                     <VerticalAlign>Middle</VerticalAlign>
                                 </Style>
+                                <Value>=[SOOrder.ShipVia_description]</Value>
                             </TextBox>
-                            <TextBox Name="textBox72">
+                            <TextBox Name="textBox108">
                                 <Location>288px, 0px</Location>
                                 <Size>64px, 64px</Size>
                                 <Style>
@@ -7420,60 +8574,9 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                                     <TextAlign>Center</TextAlign>
                                     <VerticalAlign>Middle</VerticalAlign>
                                 </Style>
+                                <Value>=[ARTran.Qty]</Value>
                             </TextBox>
-                            <TextBox Name="textBox74">
-                                <Location>64px, 0px</Location>
-                                <Size>88px, 64px</Size>
-                                <Style>
-                                    <BorderStyle>
-                                        <Right>Solid</Right>
-                                    </BorderStyle>
-                                    <BorderWidth>
-                                        <Right>1px</Right>
-                                    </BorderWidth>
-                                    <Font>
-                                        <Size>11px</Size>
-                                    </Font>
-                                    <TextAlign>Center</TextAlign>
-                                    <VerticalAlign>Middle</VerticalAlign>
-                                </Style>
-                            </TextBox>
-                            <TextBox Name="textBox75">
-                                <Location>0px, 0px</Location>
-                                <Size>64px, 64px</Size>
-                                <Style>
-                                    <BorderStyle>
-                                        <Left>Solid</Left>
-                                        <Right>Solid</Right>
-                                    </BorderStyle>
-                                    <BorderWidth>
-                                        <Left>1px</Left>
-                                        <Right>1px</Right>
-                                    </BorderWidth>
-                                    <Font>
-                                        <Size>11px</Size>
-                                    </Font>
-                                    <TextAlign>Center</TextAlign>
-                                    <VerticalAlign>Middle</VerticalAlign>
-                                </Style>
-                            </TextBox>
-                        </Items>
-                    </Footer>
-                </Footers>
-            </Group>
-            <Group Name="group6">
-                <Headers>
-                    <Header Name="groupHeaderSection6">
-                        <Height>0cm</Height>
-                        <Visible>False</Visible>
-                    </Header>
-                </Headers>
-                <Footers>
-                    <Footer Name="groupFooterSection6">
-                        <Height>1.69312cm</Height>
-                        <VisibleExpr>=IIF($TotalLine &lt;= 5, True, False)</VisibleExpr>
-                        <Items>
-                            <TextBox Name="textBox52">
+                            <TextBox Name="textBox109">
                                 <Location>152px, 0px</Location>
                                 <Size>136px, 64px</Size>
                                 <Style>
@@ -7490,94 +8593,11 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                                         <Left>3px</Left>
                                         <Top>3px</Top>
                                     </Padding>
-                                </Style>
-                            </TextBox>
-                            <TextBox Name="textBox60">
-                                <Location>608px, 0px</Location>
-                                <Size>88px, 64px</Size>
-                                <Style>
-                                    <BorderStyle>
-                                        <Right>Solid</Right>
-                                    </BorderStyle>
-                                    <BorderWidth>
-                                        <Right>1px</Right>
-                                    </BorderWidth>
-                                    <Font>
-                                        <Size>11px</Size>
-                                    </Font>
-                                    <TextAlign>Center</TextAlign>
                                     <VerticalAlign>Middle</VerticalAlign>
                                 </Style>
+                                <Value>=[ARTran.InventoryID_description]</Value>
                             </TextBox>
-                            <TextBox Name="textBox61">
-                                <Location>528px, 0px</Location>
-                                <Size>80px, 64px</Size>
-                                <Style>
-                                    <BorderStyle>
-                                        <Right>Solid</Right>
-                                    </BorderStyle>
-                                    <BorderWidth>
-                                        <Right>1px</Right>
-                                    </BorderWidth>
-                                    <Font>
-                                        <Size>11px</Size>
-                                    </Font>
-                                    <TextAlign>Center</TextAlign>
-                                    <VerticalAlign>Middle</VerticalAlign>
-                                </Style>
-                            </TextBox>
-                            <TextBox Name="textBox62">
-                                <Location>440px, 0px</Location>
-                                <Size>88px, 64px</Size>
-                                <Style>
-                                    <BorderStyle>
-                                        <Right>Solid</Right>
-                                    </BorderStyle>
-                                    <BorderWidth>
-                                        <Right>1px</Right>
-                                    </BorderWidth>
-                                    <Font>
-                                        <Size>11px</Size>
-                                    </Font>
-                                    <TextAlign>Center</TextAlign>
-                                    <VerticalAlign>Middle</VerticalAlign>
-                                </Style>
-                            </TextBox>
-                            <TextBox Name="textBox63">
-                                <Location>352px, 0px</Location>
-                                <Size>88px, 64px</Size>
-                                <Style>
-                                    <BorderStyle>
-                                        <Right>Solid</Right>
-                                    </BorderStyle>
-                                    <BorderWidth>
-                                        <Right>1px</Right>
-                                    </BorderWidth>
-                                    <Font>
-                                        <Size>11px</Size>
-                                    </Font>
-                                    <TextAlign>Center</TextAlign>
-                                    <VerticalAlign>Middle</VerticalAlign>
-                                </Style>
-                            </TextBox>
-                            <TextBox Name="textBox64">
-                                <Location>288px, 0px</Location>
-                                <Size>64px, 64px</Size>
-                                <Style>
-                                    <BorderStyle>
-                                        <Right>Solid</Right>
-                                    </BorderStyle>
-                                    <BorderWidth>
-                                        <Right>1px</Right>
-                                    </BorderWidth>
-                                    <Font>
-                                        <Size>11px</Size>
-                                    </Font>
-                                    <TextAlign>Center</TextAlign>
-                                    <VerticalAlign>Middle</VerticalAlign>
-                                </Style>
-                            </TextBox>
-                            <TextBox Name="textBox66">
+                            <TextBox Name="textBox110">
                                 <Location>64px, 0px</Location>
                                 <Size>88px, 64px</Size>
                                 <Style>
@@ -7593,8 +8613,9 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                                     <TextAlign>Center</TextAlign>
                                     <VerticalAlign>Middle</VerticalAlign>
                                 </Style>
+                                <Value>=[ARTran.InventoryID]</Value>
                             </TextBox>
-                            <TextBox Name="textBox67">
+                            <TextBox Name="textBox96">
                                 <Location>0px, 0px</Location>
                                 <Size>64px, 64px</Size>
                                 <Style>
@@ -7612,8 +8633,77 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                                     <TextAlign>Center</TextAlign>
                                     <VerticalAlign>Middle</VerticalAlign>
                                 </Style>
+                                <Value>=[SOShipment.ShipDate]</Value>
+                            </TextBox>
+                            <TextBox Name="textBox97">
+                                <Format>CAD #,##0.00;-CAD #,##0.00</Format>
+                                <Location>608px, 0px</Location>
+                                <Size>88px, 64px</Size>
+                                <Style>
+                                    <BorderStyle>
+                                        <Right>Solid</Right>
+                                    </BorderStyle>
+                                    <BorderWidth>
+                                        <Right>1px</Right>
+                                    </BorderWidth>
+                                    <Font>
+                                        <Size>11px</Size>
+                                    </Font>
+                                    <TextAlign>Center</TextAlign>
+                                    <VerticalAlign>Middle</VerticalAlign>
+                                </Style>
+                                <Value>=[ARTran.CuryTranAmt]</Value>
+                            </TextBox>
+                            <TextBox Name="textBox98">
+                                <Format>CAD #,##0.00;-CAD #,##0.00</Format>
+                                <Location>528px, 0px</Location>
+                                <Size>80px, 64px</Size>
+                                <Style>
+                                    <BorderStyle>
+                                        <Right>Solid</Right>
+                                    </BorderStyle>
+                                    <BorderWidth>
+                                        <Right>1px</Right>
+                                    </BorderWidth>
+                                    <Font>
+                                        <Size>11px</Size>
+                                    </Font>
+                                    <TextAlign>Center</TextAlign>
+                                    <VerticalAlign>Middle</VerticalAlign>
+                                </Style>
+                                <Value>=[ARTran.UnitPrice]</Value>
+                            </TextBox>
+                            <TextBox Name="textBox99">
+                                <Location>440px, 0px</Location>
+                                <Size>88px, 64px</Size>
+                                <Style>
+                                    <BorderStyle>
+                                        <Right>Solid</Right>
+                                    </BorderStyle>
+                                    <BorderWidth>
+                                        <Right>1px</Right>
+                                    </BorderWidth>
+                                    <Font>
+                                        <Size>11px</Size>
+                                    </Font>
+                                    <TextAlign>Center</TextAlign>
+                                    <VerticalAlign>Middle</VerticalAlign>
+                                </Style>
+                                <Value>=[SOShipment.UsrTrackingNbr]</Value>
                             </TextBox>
                         </Items>
+                    </Header>
+                </Headers>
+                <Footers>
+                    <Footer Name="groupFooterSection20">
+                        <Height>0cm</Height>
+                        <Variables>
+                            <ReportVariable>
+                                <Name>SortOfTax</Name>
+                                <ValueExpr>=IIF($CAGST &gt; 0, 1, 0) +#010;IIF($CAQCQST &gt; 0, 1, 0) +#010;IIF($CASKPST &gt; 0, 1, 0) +#010;IIF($CAONHST &gt; 0, 1, 0) +#010;IIF($CAMBPST &gt; 0, 1, 0) +#010;IIF($CABCPST &gt; 0, 1, 0) +#010;IIF($CA15HST &gt; 0, 1, 0) +#010;IIF($AMAZONQST &gt; 0, 1, 0) +#010;IIF($AMAZONPST &gt; 0, 1, 0) +#010;IIF($AMAZONHST &gt; 0, 1, 0) +#010;IIF($AMAZONGST &gt; 0, 1, 0) +#010;IIF($AMAZONCA &gt; 0, 1, 0)</ValueExpr>
+                            </ReportVariable>
+                        </Variables>
+                        <Visible>False</Visible>
                     </Footer>
                 </Footers>
             </Group>

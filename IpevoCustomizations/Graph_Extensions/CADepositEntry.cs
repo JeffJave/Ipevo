@@ -100,6 +100,13 @@ namespace IpevoCustomizations.Graph_Extensions
 
         }
 
+        public virtual void _(Events.RowSelected<CADepositDetail> e, PXRowSelected baseHandler)
+        {
+            baseHandler?.Invoke(e.Cache, e.Args);
+            PXUIFieldAttribute.SetEnabled<CADepositDetail.curyTranAmt>(e.Cache, null, false);
+            PXUIFieldAttribute.SetEnabled<CADepositDetail.curyOrigAmt>(e.Cache, null, false);
+        }
+
         #endregion
 
         #region Method
