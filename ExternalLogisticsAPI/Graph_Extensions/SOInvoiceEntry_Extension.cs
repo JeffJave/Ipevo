@@ -88,7 +88,7 @@ namespace PX.Objects.SO
                 parameters["ToLobAPI"] = "1"; //Controll the ClickToPay icoon
 
                 //Report Processing
-                PX.Reports.Controls.Report _report = PXReportTools.LoadReport("SO606405", null);
+                PX.Reports.Controls.Report _report = PXReportTools.LoadReport("LM606405", null);
                 PXReportTools.InitReportParameters(_report, parameters, PXSettingProvider.Instance.Default);
                 ReportNode reportNode = ReportProcessor.ProcessReport(_report);
 
