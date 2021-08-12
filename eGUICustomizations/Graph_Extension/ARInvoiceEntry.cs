@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Linq;
+using System.Collections;
+using System.Collections.Generic;
 using PX.Common;
 using PX.Data;
 using PX.Data.BQL;
 using PX.Data.BQL.Fluent;
+using PX.Data.WorkflowAPI;
 using PX.Objects.CS;
 using PX.Objects.FS;
 using eGUICustomizations.DAC;
@@ -13,9 +16,30 @@ using static eGUICustomizations.Descriptor.TWNStringList;
 
 namespace PX.Objects.AR
 {
-    public class ARInvoiceEntry_Extension : PXGraphExtension<ARInvoiceEntry>
-    { 
-        #region Action
+    public class ARInvoiceEntry_Extension : PXGraphExtension</*ARInvoiceEntry_Workflow,*/ ARInvoiceEntry>
+    {
+        public const string GUIReportID = "TW601001";
+
+        #region Override Methods
+        //public override void Configure(PXScreenConfiguration configuration)
+        //{
+        //    Configure(configuration.GetScreenConfigurationContext<ARInvoiceEntry, ARInvoice>());
+        //}
+
+        //protected virtual void Configure(WorkflowContext<ARInvoiceEntry, ARInvoice> context)
+        //{
+        //    context.UpdateScreenConfigurationFor(screen =>
+        //    {
+        //        return screen.WithActions(actions =>
+        //        {
+        //            actions.Add<ARInvoiceEntry_Extension>(e => e.printGUIInvoice,
+        //                                                  a => a.InFolder(FolderType.ReportsFolder).PlaceAfter(s => s.printInvoice));
+        //        });
+        //    });
+        //}
+        #endregion
+
+        #region Actions
         public PXAction<PX.Objects.AR.ARInvoice> BuyPlasticBag;
         [PXButton(CommitChanges = true)]
         [PXUIField(DisplayName = "Buy Plastic Bag", Visible = false)]
@@ -35,14 +59,29 @@ namespace PX.Objects.AR
 
             Base.Transactions.Cache.Insert(aRTran);
         }
+
+        //public PXAction<ARInvoice> printGUIInvoice;
+        //[PXButton()]
+        //[PXUIField(DisplayName = "Print GUI Invoice", MapEnableRights = PXCacheRights.Select)]
+        //protected virtual IEnumerable PrintGUIInvoice(PXAdapter adapter)
+        //{
+        //    if (Base.Document.Current != null)
+        //    {
+        //        Dictionary<string, string> parameters = new Dictionary<string, string>
+        //        {
+        //            [nameof(ARInvoice.DocType)] = Base.Document.Current.DocType,
+        //            [nameof(ARInvoice.RefNbr)] = Base.Document.Current.RefNbr
+        //        };
+
+        //        throw new PXReportRequiredException(parameters, GUIReportID, GUIReportID);
+        //    }
+
+        //    return adapter.Get();
+        //}
         #endregion
 
         #region Event Handlers
         public bool activateGUI = TWNGUIValidation.ActivateTWGUI(new PXGraph());
-
-        TWNGUIValidation tWNGUIValidation = new TWNGUIValidation();
-
-        TWNReleaseProcess rp = PXGraph.CreateInstance<TWNReleaseProcess>();
 
         protected void _(Events.RowPersisting<ARInvoice> e, PXRowPersisting InvokeBaseHandler)
         {
@@ -65,8 +104,6 @@ namespace PX.Objects.AR
 
                     regisExt.UsrGUINbr = ARGUINbrAutoNumAttribute.GetNextNumber(e.Cache, e.Row, regisExt.UsrVATOutCode == TWGUIFormatCode.vATOutCode32 ? gUIPreferences.GUI2CopiesNumbering : gUIPreferences.GUI3CopiesNumbering, 
                                                                                 regisExt.UsrGUIDate);
-
-                    //tWNGUIValidation.CheckGUINbrExisted(Base, regisExt.UsrGUINbr, regisExt.UsrVATOutCode);
                 }
             }
         }
@@ -162,6 +199,8 @@ namespace PX.Objects.AR
             }
 
             if (string.IsNullOrEmpty(aRRegisterExt.UsrGUINbr) || !activateGUI || string.IsNullOrEmpty(TX.Tax.PK.Find(Base, taxID).GetExtension<TX.TaxExt>().UsrGUIType) ) { return; }
+
+            TWNReleaseProcess rp = PXGraph.CreateInstance<TWNReleaseProcess>();
 
             // Acuminator disable once PX1043 SavingChangesInEventHandlers [Justification]
             rp.CreateGUITrans(new STWNGUITran()
