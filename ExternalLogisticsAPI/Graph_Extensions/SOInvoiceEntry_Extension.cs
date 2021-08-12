@@ -1,6 +1,7 @@
 ﻿using ExternalLogisticsAPI.DAC;
-using iTextSharp.text;
-using iTextSharp.text.pdf;
+using PdfSharp;
+using PdfSharp.Pdf;
+using PdfSharp.Pdf.IO;
 using PX.Data;
 using PX.Data.BQL;
 using PX.Data.BQL.Fluent;
@@ -33,14 +34,12 @@ namespace PX.Objects.SO
         public override void Initialize()
         {
             base.Initialize();
-            Base.action.AddMenuAction(LumLOBMailPaperInvoice);
-            LumLOBMailPaperInvoice.SetEnabled(false);
-            LumLOBMailPaperInvoice.SetVisible(false);
 
             var curCoutry = (PXSelect<Branch>.Select(Base, PX.Data.Update.PXInstanceHelper.CurrentCompany)).TopFirst;
             if (curCoutry?.CountryID == "US" || curCoutry?.BaseCuryID == "USD")
             {
                 LumLOBMailPaperInvoice.SetVisible(true);
+                Base.action.AddMenuAction(LumLOBMailPaperInvoice);
             }
         }
 
@@ -55,7 +54,7 @@ namespace PX.Objects.SO
             bool needPapperInvoice = (SelectFrom<CSAnswers>.
                                       LeftJoin<Customer>.On<Customer.noteID.IsEqual<CSAnswers.refNoteID>.And<CSAnswers.attributeID.IsEqual<PapperInvoiceAttr>>>.
                                       Where<Customer.bAccountID.IsEqual<ARInvoice.customerID.FromCurrent>>.View.Select(Base).TopFirst?.Value) != null ? true : false;
-            if (aRInvoice.GetExtension<ARInvoiceExt>().UsrLOBSent == true) LumLOBMailPaperInvoice.SetEnabled(false);
+            if (aRInvoice.GetExtension<ARInvoiceExt>()?.UsrLOBSent == true) LumLOBMailPaperInvoice.SetEnabled(false);
             else if (needPapperInvoice && aRInvoice.DocType == "INV") LumLOBMailPaperInvoice.SetEnabled(true);
             else LumLOBMailPaperInvoice.SetEnabled(false);
         }
@@ -64,7 +63,7 @@ namespace PX.Objects.SO
         #region Action
         public PXAction<ARInvoice> LumLOBMailPaperInvoice;
         [PXButton]
-        [PXUIField(DisplayName = "Send Paper Invoice", Enabled = true, MapEnableRights = PXCacheRights.Select)]
+        [PXUIField(DisplayName = "Send Paper Invoice", Enabled = false, Visible = false, MapEnableRights = PXCacheRights.Select)]
         protected virtual IEnumerable lumlOBMailPaperInvoice(PXAdapter adapter)
         {
             if (Base.Document.Current != null)
@@ -86,6 +85,7 @@ namespace PX.Objects.SO
                 Dictionary<string, string> parameters = new Dictionary<string, string>();
                 parameters["RefNbr"] = Base.Document.Current.RefNbr;
                 parameters["DocType"] = Base.Document.Current.DocType;
+                parameters["ToLobAPI"] = "1"; //Controll the ClickToPay icoon
 
                 //Report Processing
                 PX.Reports.Controls.Report _report = PXReportTools.LoadReport("SO606405", null);
@@ -114,21 +114,24 @@ namespace PX.Objects.SO
                 int printTimes = int.TryParse(SelectFrom<CSAnswers>.
                                               LeftJoin<Customer>.On<Customer.noteID.IsEqual<CSAnswers.refNoteID>.And<CSAnswers.attributeID.IsEqual<InvoicePapperPageAttr>>>.
                                               Where<Customer.bAccountID.IsEqual<ARInvoice.customerID.FromCurrent>>.View.Select(Base).TopFirst?.Value, out printTimes) ? printTimes : printTimesDefault;
+                
                 string[] fileArray = new string[printTimes];
-
                 for (int i = 0; i < printTimes; i++)
                 {
                     var fileName = $"Invoice Report {Base.Document.Current.RefNbr}_{i}.pdf";
                     var filePath = Path.Combine(rootBasePath, fileName);
                     //Delete Orig File
-                    if (Directory.Exists(filePath)) Directory.Delete(filePath);
+                    if (File.Exists(filePath)) File.Delete(filePath);
                     System.IO.File.WriteAllBytes(filePath, data);
                     fileArray[i] = filePath;
                 }
 
-                mergePDFFiles(fileArray, rootBasePath, fileBaseName);
+                string outputFilePath = Path.Combine(rootBasePath, fileBaseName);
+                //Check file
+                if (File.Exists(outputFilePath)) File.Delete(Path.Combine(outputFilePath));
+                MergeMultiplePDFIntoSinglePDF(outputFilePath, fileArray);
 
-                PXLongOperation.StartOperation(Base, async () =>
+                PXLongOperation.StartOperation(Base, () =>
                 {
                     using (var httpClient = new HttpClient())
                     {
@@ -161,7 +164,7 @@ namespace PX.Objects.SO
                             multipartContent.Add(new StringContent("insert_blank_page"), "address_placement");
                             request.Content = multipartContent;
 
-                            var response = await httpClient.SendAsync(request);
+                            var response = httpClient.SendAsync(request).GetAwaiter().GetResult();
 
                             if (response.StatusCode == System.Net.HttpStatusCode.OK)
                             {
@@ -170,45 +173,38 @@ namespace PX.Objects.SO
                                 Base.Document.Cache.Update(aRInvoice);
                                 //enable button
                                 LumLOBMailPaperInvoice.SetEnabled(false);
+                                Base.Save.PressButton();
+
+                                //Delete separate files
+                                foreach (var file in fileArray) if (File.Exists(file)) File.Delete(file);
+                                //Delete combine file
+                                if (File.Exists(outputFilePath)) File.Delete(Path.Combine(outputFilePath));
                             }
                         }
                     }
                 });
             }
-            Base.Persist();
             return adapter.Get();
         }
         #endregion
 
         #region Private Method
-        /// <summary> 合併PDF檔(集合) </summary> 
-        /// <param name="fileList">欲合併PDF檔之集合(一筆以上)</param>
-        /// <param name="outMergeFile">合併後的檔名</param> 
-        private void mergePDFFiles(string[] fileList, string rootPath, string outMergeFile)
+        private static void MergeMultiplePDFIntoSinglePDF(string outputFilePath, string[] pdfFiles)
         {
-            outMergeFile = Path.Combine(rootPath, outMergeFile);
-            FileStream fileStream = new FileStream(outMergeFile, FileMode.Create);
-            PdfReader reader;
-            Document document = new Document();
-            PdfWriter writer = PdfWriter.GetInstance(document, fileStream);
-            document.Open();
-            document.SetPageSize(PageSize.LETTER);
-            PdfContentByte cb = writer.DirectContent;
-            PdfImportedPage newPage;
-            for (int i = 0; i < fileList.Length; i++)
+            var size = PageSizeConverter.ToSize(PdfSharp.PageSize.Letter);
+            PdfDocument outputPDFDocument = new PdfDocument();
+            foreach (string pdfFile in pdfFiles)
             {
-                reader = new PdfReader(Path.Combine(rootPath, fileList[i]));
-                int iPageNum = reader.NumberOfPages;
-                for (int j = 1; j <= iPageNum; j++)
+                PdfDocument inputPDFDocument = PdfReader.Open(pdfFile, PdfDocumentOpenMode.Import);
+                outputPDFDocument.Version = inputPDFDocument.Version;
+                foreach (PdfPage page in inputPDFDocument.Pages)
                 {
-                    document.NewPage();
-                    newPage = writer.GetImportedPage(reader, j);
-                    cb.AddTemplate(newPage, 0, 0);
+                    page.Width = size.Width;
+                    page.Height = size.Height;
+                    outputPDFDocument.AddPage(page);
                 }
             }
-            document.Close();
-            writer.Close();
-            fileStream.Close();
+            outputPDFDocument.Save(outputFilePath);
         }
         #endregion
     }
