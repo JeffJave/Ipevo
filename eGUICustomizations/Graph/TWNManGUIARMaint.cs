@@ -111,7 +111,7 @@ namespace eGUICustomizations.Graph
                 {
                     Customer customer = GetCustomer(row.CustomerID);
 
-                    rp.CreateGUITrans(new STWNGUITran()
+                    CreateInstance<TWNReleaseProcess>().CreateGUITrans(new STWNGUITran()
                     {
                         VATCode       = row.VatOutCode,
                         GUINbr        = row.GUINbr,
@@ -140,8 +140,6 @@ namespace eGUICustomizations.Graph
 
         #region Event Handlers
         TWNGUIValidation tWNGUIValidation = new TWNGUIValidation();
-
-        TWNReleaseProcess rp = PXGraph.CreateInstance<TWNReleaseProcess>();
 
         //protected void _(Events.RowDeleting<TWNManualGUIAR> e)
         //{
