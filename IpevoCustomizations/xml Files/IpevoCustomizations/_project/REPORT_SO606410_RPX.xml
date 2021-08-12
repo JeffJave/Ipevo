@@ -6865,7 +6865,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                 </Headers>
                 <Footers>
                     <Footer Name="groupFooterSection1">
-                        <Height>0.84656cm</Height>
+                        <Height>1.26984cm</Height>
                         <Items>
                             <TextBox Name="textBox40">
                                 <Location>392px, 0px</Location>
@@ -6910,7 +6910,52 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                                     <TextAlign>Right</TextAlign>
                                     <VerticalAlign>Middle</VerticalAlign>
                                 </Style>
-                                <Value>=$SubTotal +#010;[ARInvoice.CuryFreightAmt] +#010;$CAGST +#010;$CAQCQST +#010;$CASKPST +#010;$CAONHST +#010;$CAMBPST +#010;$CABCPST +#010;$CA15HST +#010;$AMAZONQST +#010;$AMAZONPST +#010;$AMAZONHST +#010;$AMAZONGST +#010;$AMAZONCA</Value>
+                                <Value>=[ARInvoice.CuryOrigDocAmt]</Value>
+                            </TextBox>
+                            <TextBox Name="textBox75">
+                                <Location>392px, 24px</Location>
+                                <Size>152px, 24px</Size>
+                                <Style>
+                                    <BackColor>Silver</BackColor>
+                                    <BorderStyle>
+                                        <Bottom>Solid</Bottom>
+                                        <Left>Solid</Left>
+                                        <Right>Solid</Right>
+                                    </BorderStyle>
+                                    <BorderWidth>
+                                        <Bottom>1px</Bottom>
+                                        <Left>1px</Left>
+                                        <Right>1px</Right>
+                                    </BorderWidth>
+                                    <Font>
+                                        <Style>Bold</Style>
+                                    </Font>
+                                    <TextAlign>Center</TextAlign>
+                                    <VerticalAlign>Middle</VerticalAlign>
+                                </Style>
+                                <Value>Unpaid Amt</Value>
+                            </TextBox>
+                            <TextBox Name="textBox81">
+                                <Format>CAD #,##0.00;-CAD #,##0.00</Format>
+                                <Location>544px, 24px</Location>
+                                <Size>152px, 24px</Size>
+                                <Style>
+                                    <BackColor>Silver</BackColor>
+                                    <BorderStyle>
+                                        <Bottom>Solid</Bottom>
+                                        <Right>Solid</Right>
+                                    </BorderStyle>
+                                    <BorderWidth>
+                                        <Bottom>1px</Bottom>
+                                        <Right>1px</Right>
+                                    </BorderWidth>
+                                    <Padding>
+                                        <Right>3px</Right>
+                                    </Padding>
+                                    <TextAlign>Right</TextAlign>
+                                    <VerticalAlign>Middle</VerticalAlign>
+                                </Style>
+                                <Value>=[ARInvoice.CuryUnpaidBalance]</Value>
                             </TextBox>
                         </Items>
                     </Footer>
