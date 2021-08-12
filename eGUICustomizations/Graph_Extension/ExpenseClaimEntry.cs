@@ -7,9 +7,13 @@ namespace PX.Objects.EP
 {
     public class ExpenseClaimEntry_Extension : PXGraphExtension<ExpenseClaimEntry>
     {
-        #region Select
+        #region Selects
         public SelectFrom<TWNManualGUIExpense>
                          .Where<TWNManualGUIExpense.refNbr.IsEqual<EPExpenseClaim.refNbr.FromCurrent>>.View manGUIExpense;
+        #endregion
+
+        #region Static Methods
+        public static bool IsActive() => TWNGUIValidation.ActivateTWGUI(new PXGraph());
         #endregion
 
         #region Event Handlers
@@ -23,27 +27,30 @@ namespace PX.Objects.EP
             manGUIExpense.Cache.AllowDelete = manGUIExpense.Cache.AllowInsert = manGUIExpense.Cache.AllowUpdate = !e.Row.Status.Equals(EPExpenseClaimStatus.ReleasedStatus);
         }
 
-        protected void _(Events.RowPersisting<TWNManualGUIExpense> e)
+        protected void _(Events.RowPersisting<EPExpenseClaim> e, PXRowPersisting baseHandler)
         {
-            if (Base.ExpenseClaimCurrent.Current == null) { return; }
+            baseHandler?.Invoke(e.Cache, e.Args);
 
-            tWNGUIValidation.CheckCorrespondingInv(Base, e.Row.GUINbr, e.Row.VATInCode);
-
-            if (tWNGUIValidation.errorOccurred.Equals(true) )
+            if (Base.ExpenseClaimCurrent.Current != null)
             {
-                e.Cache.RaiseExceptionHandling<TWNManualGUIExpense.gUINbr>(e.Row, e.Row.GUINbr, new PXSetPropertyException(tWNGUIValidation.errorMessage, PXErrorLevel.RowError));
-            }
+                decimal taxSum = 0;
 
-            decimal taxSum = 0;
+                foreach (TWNManualGUIExpense row in manGUIExpense.Select())
+                {
+                    tWNGUIValidation.CheckCorrespondingInv(Base, row.GUINbr, row.VATInCode);
 
-            foreach (TWNManualGUIExpense row in manGUIExpense.Select())
-            {
-                taxSum += row.TaxAmt.Value;
-            }
+                    if (tWNGUIValidation.errorOccurred.Equals(true))
+                    {
+                        e.Cache.RaiseExceptionHandling<TWNManualGUIExpense.gUINbr>(e.Row, row.GUINbr, new PXSetPropertyException(tWNGUIValidation.errorMessage, PXErrorLevel.RowError));
+                    }
 
-            if (!taxSum.Equals(Base.ExpenseClaimCurrent.Current.TaxTotal))
-            {
-                throw new PXException(TWMessages.ChkTotalGUIAmt);
+                    taxSum += row.TaxAmt.Value;
+                }
+
+                if (!taxSum.Equals(Base.ExpenseClaimCurrent.Current.TaxTotal))
+                {
+                    throw new PXException(TWMessages.ChkTotalGUIAmt);
+                }
             }
         }
 
@@ -63,20 +70,6 @@ namespace PX.Objects.EP
 
             e.NewValue = row.VendorID == null ? preferences.OurTaxNbr : e.NewValue;
         }
-
-        //protected void _(Events.FieldVerifying<TWNManualGUIExpense, TWNManualGUIExpense.gUINbr> e)
-        //{
-        //    var row = (TWNManualGUIExpense)e.Row;
-
-        //    tWNGUIValidation.CheckGUINbrExisted(Base, (string)e.NewValue, row.VATInCode);
-        //}
-
-        //protected void _(Events.FieldVerifying<TWNManualGUIExpense, TWNManualGUIExpense.taxAmt> e)
-        //{
-        //    var row = (TWNManualGUIExpense)e.Row;
-
-        //    tWNGUIValidation.CheckTaxAmount((decimal)row.NetAmt, (decimal)e.NewValue);
-        //}
         #endregion
     }
 }
