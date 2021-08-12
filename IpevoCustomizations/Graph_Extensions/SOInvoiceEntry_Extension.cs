@@ -1,14 +1,18 @@
 ﻿using PX.Data;
+using PX.Data.BQL;
+using PX.Data.BQL.Fluent;
 using PX.Objects.AR;
+using PX.Objects.CS;
 using PX.Objects.GL;
 using PX.Objects.TX;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
 namespace PX.Objects.SO
 {
-	public class SOInvoiceEntry_Extension : PXGraphExtension<SOInvoiceEntry>
-	{
+    public class SOInvoiceEntry_Extension : PXGraphExtension<SOInvoiceEntry>
+    {
         public override void Initialize()
         {
             base.Initialize();
@@ -46,6 +50,55 @@ namespace PX.Objects.SO
             }
         }
 
+        [PXOverride]
+        public virtual IEnumerable EmailInvoice(PXAdapter adapter, [PXString] string notificationCD = null)
+        {
+            var tenantName = (PXSelect<Branch>.Select(Base, PX.Data.Update.PXInstanceHelper.CurrentCompany)).TopFirst?.BranchCD?.Trim()?.ToUpper();
+            string reportID = tenantName.Contains("US") ? "SO606405" :
+                              tenantName.Contains("UK") ? "SO606415" :
+                              tenantName.Contains("CA") ? "SO606410" :
+                              tenantName.Contains("NL") ? "SO606420" : string.Empty;
+            // Go Process Standard code
+            if (string.IsNullOrEmpty(reportID))
+            {
+                adapter.Arguments.Add("notificationCD", notificationCD ?? "SO INVOICE");
+                Base.notification.PressButton(adapter);
+                foreach (ARInvoice item in adapter.Get().RowCast<ARInvoice>())
+                    yield return item;
+            }
+            else
+            {
+                #region Insert Customer mail setting
+                var doc = Base.Document.Current;
+                if (doc == null)
+                    throw new Exception("Document is null!!");
+                var customerInfo = Customer.PK.Find(Base, doc.CustomerID);
+                if (customerInfo == null)
+                    throw new PXException("Can not find Customer!!");
+                if (SelectFrom<NotificationSource>.Where<NotificationSource.refNoteID.IsEqual<@P.AsGuid>
+                                                         .And<NotificationSource.reportID.IsEqual<@P.AsString>>>.View.Select(Base, customerInfo.NoteID, reportID).Count == 0)
+                    CreateCRMailingSetting(reportID);
+                #endregion
+                // setting report parameter
+                Dictionary<string, string> parameters = new Dictionary<string, string>();
+                parameters["DocType"] = Base.Document.Current.DocType;
+                parameters["RefNbr"] = Base.Document.Current.RefNbr;
+                List<Guid?> attachments = new List<Guid?>();
+
+                // Get File
+                foreach (ARTran item in Base.Transactions.Cache.Cached)
+                {
+                    var order = SOOrder.PK.Find(Base, item.SOOrderType, item.SOOrderNbr);
+                    if (order == null)
+                        continue;
+                    var files = PXNoteAttribute.GetFileNotes(PXGraph.CreateInstance<SOOrderEntry>().Document.Cache, order);
+                    foreach (var file in files)
+                        attachments.Add(file);
+                }
+                Base.Activity.SendNotification(PX.Objects.AR.ARNotificationSource.Customer, "LUM INVOICE", Base.Accessinfo.BranchID, parameters, attachments);
+            }
+        }
+
         #region Action
         public PXAction<ARInvoice> ExportInvoice;
         [PXButton]
@@ -72,7 +125,7 @@ namespace PX.Objects.SO
                 Dictionary<string, string> parameters = new Dictionary<string, string>();
                 parameters["DocType"] = Base.Document.Current.DocType;
                 parameters["RefNbr"] = Base.Document.Current.RefNbr;
-                throw new PXReportRequiredException(parameters, "LM606405", "Report LM606405") { Mode = PXBaseRedirectException.WindowMode.New };
+                throw new PXReportRequiredException(parameters, "SO606405", "Report SO606405") { Mode = PXBaseRedirectException.WindowMode.New };
             }
             return adapter.Get();
         }
@@ -87,7 +140,7 @@ namespace PX.Objects.SO
                 Dictionary<string, string> parameters = new Dictionary<string, string>();
                 parameters["DocType"] = Base.Document.Current.DocType;
                 parameters["RefNbr"] = Base.Document.Current.RefNbr;
-                throw new PXReportRequiredException(parameters, "LM606410", "Report LM606410") { Mode = PXBaseRedirectException.WindowMode.New };
+                throw new PXReportRequiredException(parameters, "SO606410", "Report SO606410") { Mode = PXBaseRedirectException.WindowMode.New };
             }
             return adapter.Get();
         }
@@ -102,7 +155,7 @@ namespace PX.Objects.SO
                 Dictionary<string, string> parameters = new Dictionary<string, string>();
                 parameters["DocType"] = Base.Document.Current.DocType;
                 parameters["RefNbr"] = Base.Document.Current.RefNbr;
-                throw new PXReportRequiredException(parameters, "LM606415", "Report LM606415") { Mode = PXBaseRedirectException.WindowMode.New };
+                throw new PXReportRequiredException(parameters, "SO606415", "Report SO606415") { Mode = PXBaseRedirectException.WindowMode.New };
             }
             return adapter.Get();
         }
@@ -117,7 +170,7 @@ namespace PX.Objects.SO
                 Dictionary<string, string> parameters = new Dictionary<string, string>();
                 parameters["DocType"] = Base.Document.Current.DocType;
                 parameters["RefNbr"] = Base.Document.Current.RefNbr;
-                throw new PXReportRequiredException(parameters, "LM606420", "Report LM606420") { Mode = PXBaseRedirectException.WindowMode.New };
+                throw new PXReportRequiredException(parameters, "SO606420", "Report SO606420") { Mode = PXBaseRedirectException.WindowMode.New };
             }
             return adapter.Get();
         }
@@ -128,6 +181,35 @@ namespace PX.Objects.SO
         [SOInvoiceTax2]
         protected void _(Events.CacheAttached<ARTran.taxCategoryID> e) { }
         #endregion
+
+        #region Function
+
+        public virtual void CreateCRMailingSetting(string lumRptID)
+        {
+            CustomerMaint maint = PXGraph.CreateInstance<CustomerMaint>();
+
+            foreach (NotificationSetup setup in SelectFrom<NotificationSetup>.Where<NotificationSetup.reportID.IsEqual<P.AsString>>.View.Select(Base, lumRptID))
+            {
+                NotificationSource source = maint.NotificationSources.Cache.CreateInstance() as NotificationSource;
+
+                source.SetupID = setup.SetupID;
+
+                source = maint.NotificationSources.Insert(source);
+
+                source.ReportID = setup.ReportID;
+                source.Format = setup.Format;
+                source.Active = setup.Active;
+                source.RecipientsBehavior = setup.RecipientsBehavior;
+
+                maint.NotificationSources.Update(source);
+            }
+
+            maint.CurrentCustomer.Current = Base.customer.Current;
+
+            maint.Actions.PressSave();
+        }
+
+        #endregion
     }
 
     #region Inherited class
@@ -137,7 +219,7 @@ namespace PX.Objects.SO
         {
             TaxRev taxrev = PXResult.Unwrap<TaxRev>(taxrow);
             Tax tax = PXResult.Unwrap<Tax>(taxrow);
-            
+
             bool propagateCustomRate = false;
             var origTaxRate = taxrev.TaxRate;
 

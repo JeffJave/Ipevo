@@ -148,7 +148,7 @@
 							<Actions>
 								<AddNew Enabled="true" />
 								<Upload Enabled="true" />
-							</Actions>
+							</Actions>	
 							<CustomItems>
 								<px:PXToolBarButton Text="Add AR Payment" Key="cmdPO" CommandSourceID="ds" CommandName="AddPayment">
 								</px:PXToolBarButton>

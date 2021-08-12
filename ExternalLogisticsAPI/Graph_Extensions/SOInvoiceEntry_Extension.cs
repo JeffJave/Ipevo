@@ -88,7 +88,7 @@ namespace PX.Objects.SO
                 parameters["DocType"] = Base.Document.Current.DocType;
 
                 //Report Processing
-                PX.Reports.Controls.Report _report = PXReportTools.LoadReport("LM606405", null);
+                PX.Reports.Controls.Report _report = PXReportTools.LoadReport("SO606405", null);
                 PXReportTools.InitReportParameters(_report, parameters, PXSettingProvider.Instance.Default);
                 ReportNode reportNode = ReportProcessor.ProcessReport(_report);
 
@@ -125,7 +125,7 @@ namespace PX.Objects.SO
                     System.IO.File.WriteAllBytes(filePath, data);
                     fileArray[i] = filePath;
                 }
-                
+
                 mergePDFFiles(fileArray, rootBasePath, fileBaseName);
 
                 PXLongOperation.StartOperation(Base, async () =>
@@ -137,7 +137,7 @@ namespace PX.Objects.SO
                             //Setting Authoriztion Information - Default is Test Env.
                             var base64authorization = Convert.ToBase64String(Encoding.ASCII.GetBytes(requestBaseInfo?.AuthCode_Test + ":"));
                             if (requestBaseInfo?.IsProd == "P") base64authorization = Convert.ToBase64String(Encoding.ASCII.GetBytes(requestBaseInfo?.AuthCode_Prod + ":"));
-                            
+
                             request.Headers.TryAddWithoutValidation("Authorization", $"Basic {base64authorization}");
 
                             var multipartContent = new MultipartFormDataContent();
