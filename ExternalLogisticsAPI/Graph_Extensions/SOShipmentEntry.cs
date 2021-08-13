@@ -54,6 +54,8 @@ namespace PX.Objects.SO
                 // Replace ShipTo Info to DCL warehouse
                 Address warehouseAddress = PXSelect<Address, Where<Address.addressID, Equal<Required<Address.addressID>>>>.Select(Base, warehouseInfo?.AddressID);
                 Contact warehouseContact = PXSelect<Contact, Where<Contact.contactID, Equal<Required<Contact.contactID>>>>.Select(Base, warehouseInfo?.ContactID);
+                cr.Shipper = cr.Destination;
+                cr.ShipperContact = cr.DestinationContact;
                 cr.Destination = warehouseAddress;
                 cr.DestinationContact = warehouseContact;
 
