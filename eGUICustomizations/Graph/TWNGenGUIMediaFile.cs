@@ -1,10 +1,7 @@
 using PX.Data;
-using PX.Data.BQL;
-using PX.Data.BQL.Fluent;
 using System;
 using System.IO;
 using System.Text;
-using System.Collections;
 using System.Collections.Generic;
 using PX.Objects.CS;
 using eGUICustomizations.DAC;
@@ -32,18 +29,18 @@ namespace eGUICustomizations.Graph
         public PXSetup<TWNGUIPreferences> gUIPreferSetup;
         #endregion
 
-        #region Delegate Data View
-        public IEnumerable gUITransList()
-        {
-            GUITransFilter filter = Filter.Current;
+        //#region Delegate Data View
+        //public IEnumerable gUITransList()
+        //{
+        //    GUITransFilter filter = Filter.Current;
 
-            foreach (TWNGUITrans row in SelectFrom<TWNGUITrans>.Where<TWNGUITrans.gUIDecPeriod.IsLessEqual<@P.AsDateTime>
-                                                                      .And<TWNGUITrans.gUIDecPeriod.IsGreaterEqual<@P.AsDateTime>>>.View.Select(this, filter.ToDate.Value.AddDays(1).Date.AddSeconds(-1), filter.FromDate))
-            {
-                yield return row;
-            }
-        }
-        #endregion
+        //    foreach (TWNGUITrans row in SelectFrom<TWNGUITrans>.Where<TWNGUITrans.gUIDecPeriod.IsLessEqual<@P.AsDateTime>
+        //                                                              .And<TWNGUITrans.gUIDecPeriod.IsGreaterEqual<@P.AsDateTime>>>.View.Select(this, filter.ToDate.Value.AddDays(1).Date.AddSeconds(-1), filter.FromDate))
+        //    {
+        //        yield return row;
+        //    }
+        //}
+        //#endregion
 
         #region Constructor
         public TWNGenGUIMediaFile()
@@ -69,12 +66,12 @@ namespace eGUICustomizations.Graph
         }
         #endregion
 
-        #region Event Handler
-        protected void _(Events.FieldUpdated<GUITransFilter.toDate> e)
-        {
-            e.Cache.SetValue<GUITransFilter.toDate>(e.Row, DateTime.Parse(e.NewValue.ToString()).AddDays(1).Date.AddSeconds(-1) );
-        }
-        #endregion
+        //#region Event Handler
+        //protected void _(Events.FieldUpdated<GUITransFilter.toDate> e)
+        //{
+        //    e.Cache.SetValue<GUITransFilter.toDate>(e.Row, DateTime.Parse(e.NewValue.ToString()).AddDays(1).Date.AddSeconds(-1) );
+        //}
+        //#endregion
 
         #region Functions
         public void Export(List<TWNGUITrans> tWNGUITrans)
@@ -394,21 +391,21 @@ namespace eGUICustomizations.Graph
 
     #region Filter DAC
     [Serializable]
-    [PXCacheName("GUI Trans Filter DAC")]
+    [PXCacheName("GUI Transaction Filter")]
     public partial class GUITransFilter : PX.Data.IBqlTable
     {
         #region FromDate
-        [PXDBDate(PreserveTime = true)]
+        [PXDBDateAndTime(UseTimeZone = true, PreserveTime = true, DisplayNameDate = "From Date", DisplayNameTime = "From Date Time")]
         [PXDefault(typeof(AccessInfo.businessDate))]
-        [PXUIField(DisplayName = "From Date", Visibility = PXUIVisibility.Visible)]
+        [PXUIField(DisplayName = "From Date", Visibility = PXUIVisibility.Visible, Required = false)]
         public virtual DateTime? FromDate { get; set; }
         public abstract class fromDate : IBqlField { }
         #endregion
 
         #region ToDate
-        [PXDBDate(PreserveTime = true)]
+        [PXDBDateAndTime(UseTimeZone = true, PreserveTime = true, DisplayNameDate = "To Date", DisplayNameTime = "To Date Time")]
         [PXDefault(typeof(AccessInfo.businessDate))]
-        [PXUIField(DisplayName = "To Date", Visibility = PXUIVisibility.Visible)]
+        [PXUIField(DisplayName = "To Date", Visibility = PXUIVisibility.Visible, Required = false)]
         public virtual DateTime? ToDate { get; set; }
         public abstract class toDate : IBqlField { }
         #endregion

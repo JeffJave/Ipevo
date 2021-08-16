@@ -47,14 +47,7 @@ namespace eGUICustomizations.Graph
         }
         #endregion
 
-        #region Event Handler
-        protected void _(Events.FieldUpdated<GUITransFilter.toDate> e)
-        {
-            e.Cache.SetValue<GUITransFilter.toDate>(e.Row, DateTime.Parse(e.NewValue.ToString()).AddDays(1).Date.AddSeconds(-1));
-        }
-        #endregion
-
-        #region Function
+        #region Methods
         public void Export(List<TWNGUITrans> tWNGUITrans)
         {
             try
@@ -141,7 +134,12 @@ namespace eGUICustomizations.Graph
         }
         #endregion
 
-        #region Static Method
+        #region Static Methods
+        /// <summary>
+        /// Get the Taiwanese calendar date format.
+        /// </summary>
+        /// <param name="dateTime"></param>
+        /// <returns></returns>
         public static string GetTWNDate(DateTime dateTime)
         {
             var tWCalendar = new System.Globalization.TaiwanCalendar();

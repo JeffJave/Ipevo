@@ -10,13 +10,16 @@
   </px:PXDataSource>
 </asp:Content>
 <asp:Content ID="cont2" ContentPlaceHolderID="phF" Runat="Server">
-  <px:PXFormView ID="form" runat="server" DataSourceID="ds" DataMember="Filter" Width="100%" Height="" AllowAutoHide="false">
+  <px:PXFormView ID="form" runat="server" DataSourceID="ds" DataMember="Filter" Width="100%" Height="70px" AllowAutoHide="false">
     <Template>
       <px:PXLayoutRule ID="PXLayoutRule1" runat="server" StartRow="True"></px:PXLayoutRule>
       <px:PXLayoutRule runat="server" ID="CstPXLayoutRule1" StartColumn="True" ></px:PXLayoutRule>
-      <px:PXDateTimeEdit CommitChanges="True" runat="server" ID="CstPXDateTimeEdit2" DataField="FromDate" ></px:PXDateTimeEdit>
-      <px:PXLayoutRule runat="server" ID="CstPXLayoutRule5" StartColumn="True" ></px:PXLayoutRule>
-      <px:PXDateTimeEdit CommitChanges="True" runat="server" ID="CstPXDateTimeEdit4" DataField="ToDate" ></px:PXDateTimeEdit></Template>
+	<px:PXLayoutRule runat="server" ID="CstPXLayoutRule6" Merge="True" ></px:PXLayoutRule>
+	<px:PXDateTimeEdit CommitChanges="True" runat="server" ID="CstPXDateTimeEdit3" DataField="FromDate_Date" ></px:PXDateTimeEdit>
+	<px:PXDateTimeEdit CommitChanges="True" runat="server" ID="CstPXDateTimeEdit5" DataField="FromDate_Time" SuppressLabel="True" TimeMode="True" ></px:PXDateTimeEdit>
+	<px:PXLayoutRule runat="server" ID="CstPXLayoutRule7" Merge="True" ></px:PXLayoutRule>
+	<px:PXDateTimeEdit CommitChanges="True" runat="server" ID="CstPXDateTimeEdit9" DataField="ToDate_Date" ></px:PXDateTimeEdit>
+	<px:PXDateTimeEdit CommitChanges="True" runat="server" ID="CstPXDateTimeEdit10" DataField="ToDate_Time" SuppressLabel="True" TimeMode="True" ></px:PXDateTimeEdit></Template>
   </px:PXFormView>
 </asp:Content>
 <asp:Content ID="cont3" ContentPlaceHolderID="phG" Runat="Server">
@@ -30,8 +33,8 @@
         <px:PXGridColumn DataField="GUIFormatcode" Width="70" ></px:PXGridColumn>
         <px:PXGridColumn DataField="GUIControlCode" Width="140" ></px:PXGridColumn>
         <px:PXGridColumn DataField="GUINbr" Width="140" ></px:PXGridColumn>
+        <px:PXGridColumn DisplayFormat="g" DataField="GUIDecPeriod" Width="120" ></px:PXGridColumn>
         <px:PXGridColumn DataField="GUIDate" Width="90" ></px:PXGridColumn>
-        <px:PXGridColumn DataField="GUIDecPeriod" Width="90" ></px:PXGridColumn>
         <px:PXGridColumn DataField="TaxZoneID" Width="120" ></px:PXGridColumn>
         <px:PXGridColumn DataField="TaxCategoryID" Width="120" ></px:PXGridColumn>
         <px:PXGridColumn DataField="TaxID" Width="140" ></px:PXGridColumn>
