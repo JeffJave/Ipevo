@@ -96,6 +96,8 @@ namespace PX.Objects.SO
                         attachments.Add(file);
                 }
                 Base.Activity.SendNotification(PX.Objects.AR.ARNotificationSource.Customer, "LUM INVOICE", Base.Accessinfo.BranchID, parameters, attachments);
+                foreach (ARInvoice item in adapter.Get().RowCast<ARInvoice>())
+                    yield return item;
             }
         }
 

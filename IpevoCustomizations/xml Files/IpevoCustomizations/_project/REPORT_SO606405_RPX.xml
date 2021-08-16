@@ -49,6 +49,21 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                 <DataField>ARTran.InventoryID</DataField>
             </FilterExp>
         </Filters>
+        <MailSettings>
+            <ActivitySource>ARInvoice.NoteID</ActivitySource>
+            <Bcc>
+            </Bcc>
+            <Body>='Dear Customer,#010;#010;This is an automatic email to notify you that you have a new Invoice available on your account.  #010;You will find a copy of'+' '+[ARInvoice.PrintDocType]+' '+'#'+' '+[ARInvoice.RefNbr]+' '+'attached to this email.  #010;#010;If you have any questions, please don’t hesitate to contact us at Email.  #010;#010;Thank you for choosing'+' '+[CompanyContact.FullName]+'.'#010;</Body>
+            <Cc>
+            </Cc>
+            <Format>
+            </Format>
+            <ParentSource>Customer.NoteID</ParentSource>
+            <Subject>=[CompanyContact.FullName]+' '+[ARInvoice.PrintDocType]+' '+'#'+' '+[ARInvoice.RefNbr]</Subject>
+            <TemplateID>
+            </TemplateID>
+            <To>=IsNull([BillingContact.Email],'')</To>
+        </MailSettings>
         <PageSettings>
             <Margins>
                 <Bottom>0.47cm</Bottom>
