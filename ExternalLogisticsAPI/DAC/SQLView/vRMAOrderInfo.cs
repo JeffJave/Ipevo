@@ -98,32 +98,11 @@ namespace ExternalLogisticsAPI
         public abstract class orderQty : PX.Data.BQL.BqlDecimal.Field<orderQty> { }
         #endregion
 
-        #region Taxid
+        #region TaxZoneID
         [PXDBString(30, IsUnicode = true, InputMask = "")]
-        [PXUIField(DisplayName = "Taxid")]
-        public virtual string Taxid { get; set; }
-        public abstract class taxid : PX.Data.BQL.BqlString.Field<taxid> { }
-        #endregion
-
-        #region CuryTaxAmt
-        [PXDBDecimal()]
-        [PXUIField(DisplayName = "Cury Tax Amt")]
-        public virtual Decimal? CuryTaxAmt { get; set; }
-        public abstract class curyTaxAmt : PX.Data.BQL.BqlDecimal.Field<curyTaxAmt> { }
-        #endregion
-
-        #region CuryTaxableAmt
-        [PXDBDecimal()]
-        [PXUIField(DisplayName = "Cury Taxable Amt")]
-        public virtual Decimal? CuryTaxableAmt { get; set; }
-        public abstract class curyTaxableAmt : PX.Data.BQL.BqlDecimal.Field<curyTaxableAmt> { }
-        #endregion
-
-        #region TaxRate
-        [PXDBDecimal()]
-        [PXUIField(DisplayName = "Tax Rate")]
-        public virtual Decimal? TaxRate { get; set; }
-        public abstract class taxRate : PX.Data.BQL.BqlDecimal.Field<taxRate> { }
+        [PXUIField(DisplayName = "TaxZoneID")]
+        public virtual string TaxZoneID { get; set; }
+        public abstract class taxZoneID : PX.Data.BQL.BqlString.Field<taxZoneID> { }
         #endregion
 
         #region Siteid
