@@ -21,10 +21,7 @@ SELECT c.CompanyCD,
 	   item.InventoryCD as InventoryID,
 	   item.Descr as InventoryDescr,
 	   soLine.OrderQty,
-	   soTax.TaxID,
-	   soTax.CuryTaxAmt,
-	   soTax.CuryTaxableAmt,
-	   soTax.TaxRate,
+	   invoice.TaxZoneID,
 	   shipInfo.SiteID,
 	   s.SiteCD as SiteDescr,
 	   billContact.FullName as BillCompany,
@@ -47,16 +44,13 @@ SELECT c.CompanyCD,
 	   shipAddress.CountryID as shipCountryID,
 	   shipAddress.State as shipState,
 	   shipAddress.PostalCode as shipPostalCode,
-	   so.InvoiceNbr
+	   soShip.InvoiceNbr
 FROM SOOrder so
 INNER JOIN SOLine soline on so.OrderType = soline.OrderType 
 						and so.OrderNbr = soline.OrderNbr
 						and so.CompanyID = soline.CompanyID
 INNER JOIN InventoryItem item on soLine.InventoryID = item.InventoryID
 						     and soLine.CompanyID = item.CompanyID
-LEFT JOIN SOTaxTran soTax on so.OrderType = soTax.OrderType
-					     and so.OrderNbr = soTax.OrderNbr
-						 and so.CompanyID = soTax.CompanyID
 LEFT JOIN SOContact billContact on so.BillContactID = billContact.ContactID
 							   and so.CompanyID = billContact.CompanyID
 LEFT JOIN SOAddress billAddress on so.BillAddressID = billAddress.AddressID
@@ -68,6 +62,8 @@ LEFT JOIN SOAddress shipAddress on so.ShipAddressID = shipAddress.AddressID
 LEFT JOIN SOOrderShipment soShip on so.OrderType = soShip.OrderType
 								and so.OrderNbr = soShip.OrderNbr
 								and so.CompanyID = soShip.CompanyID
+LEFT JOIN ARInvoice invoice on soShip.InvoiceNbr = invoice.RefNbr
+						   and soShip.CompanyID = invoice.CompanyID
 LEFT JOIN SOShipment shipInfo on soShip.ShipmentNbr = shipInfo.ShipmentNbr
 							  and soShip.CompanyID = shipInfo.CompanyID
 INNER JOIN INSite s on shipInfo.SiteID = s.SiteID
