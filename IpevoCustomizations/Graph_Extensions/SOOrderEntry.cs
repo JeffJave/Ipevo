@@ -9,6 +9,7 @@ using System.Collections;
 using System.Collections.Generic;
 using IpevoCustomizations.DAC;
 using System.Linq;
+using PX.Objects.AR;
 
 namespace PX.Objects.SO
 {
@@ -115,7 +116,7 @@ namespace PX.Objects.SO
         }
         #endregion
 
-        #region Static Method
+        #region Static Methods
         /// <summary>
         /// If SOShippingAddress.State is within the table FreightNonTaxStates, then put blank into Freight Tax Category.
         /// </summary>
@@ -148,6 +149,29 @@ namespace PX.Objects.SO
             }
 
             return item.TopFirst?.InventoryID;
+        }
+
+        /// <summary>
+        /// Per Peter's email [IPEVO SO Approval Design].
+        /// </summary>
+        /// <param name="customerID"></param>
+        /// <returns></returns>
+        public static decimal? GetCustomerRemainCreditLimit(int? customerID)
+        {
+            if (customerID == null) { return decimal.Zero; }
+
+            CustomerMaint graph = PXGraph.CreateInstance<CustomerMaint>();
+
+            Customer customer = Customer.PK.Find(graph, customerID);
+
+            ARBalances remBal = null;
+
+            //if (customer.SharedCreditChild == true)
+            //{
+                remBal = CustomerMaint.GetCustomerBalances<AR.Override.Customer.sharedCreditCustomerID>(graph, customer.SharedCreditCustomerID);
+            //}
+
+            return customer.CreditLimit - ((remBal?.CurrentBal ?? 0) + (remBal?.UnreleasedBal ?? 0) + (remBal?.TotalOpenOrders ?? 0) + (remBal?.TotalShipped ?? 0) - (remBal?.TotalPrepayments ?? 0));
         }
         #endregion
     }
