@@ -164,14 +164,14 @@ namespace PX.Objects.SO
 
             Customer customer = Customer.PK.Find(graph, customerID);
 
-            ARBalances remBal = null;
+            ARBalances remBal = CustomerMaint.GetCustomerBalances<AR.Override.Customer.sharedCreditCustomerID>(graph, customer?.SharedCreditCustomerID);
 
             //if (customer.SharedCreditChild == true)
             //{
-                remBal = CustomerMaint.GetCustomerBalances<AR.Override.Customer.sharedCreditCustomerID>(graph, customer.SharedCreditCustomerID);
+                //remBal = CustomerMaint.GetCustomerBalances<AR.Override.Customer.sharedCreditCustomerID>(graph, customer?.SharedCreditCustomerID);
             //}
 
-            return customer.CreditLimit - ((remBal?.CurrentBal ?? 0) + (remBal?.UnreleasedBal ?? 0) + (remBal?.TotalOpenOrders ?? 0) + (remBal?.TotalShipped ?? 0) - (remBal?.TotalPrepayments ?? 0));
+            return customer?.CreditLimit - ((remBal?.CurrentBal ?? 0) + (remBal?.UnreleasedBal ?? 0) + (remBal?.TotalOpenOrders ?? 0) + (remBal?.TotalShipped ?? 0) - (remBal?.TotalPrepayments ?? 0));
         }
         #endregion
     }
