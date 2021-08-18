@@ -165,6 +165,7 @@ namespace ExternalLogisticsAPI.Graph
                                               .Where<SOOrderShipment.orderNbr.IsEqual<P.AsString>
                                                     .And<SOOrderShipment.orderType.IsEqual<P.AsString>>>
                                               .View.Select(this, _soOrder.OrderNbr, _soOrder.OrderType).RowCast<SOOrderShipment>()?.FirstOrDefault();
+                        var isAlreadyInvoice = string.IsNullOrEmpty(_soOrderShipment.InvoiceNbr) ? false : true;
                         #region Check SOOrderShipment is Exists
 
                         if (_soOrderShipment == null)
@@ -183,15 +184,19 @@ namespace ExternalLogisticsAPI.Graph
 
                         // Update Shipment
                         var shipmentGraph = PXGraph.CreateInstance<SOShipmentEntry>();
-                        _soShipment.ShipDate =  row.ShipmentDate ?? DateTime.Now;
+                        _soShipment.ShipDate = row.ShipmentDate ?? DateTime.Now;
                         _soShipment.GetExtension<SOShipmentExt>().UsrTrackingNbr = row.TrackingNbr;
                         _soShipment.GetExtension<SOShipmentExt>().UsrCarrier = row.Carrier;
                         shipmentGraph.Document.Update(_soShipment);
                         shipmentGraph.Save.Press();
-                        // Confirm Shipment
-                        shipmentGraph.confirmShipmentAction.Press();
-                        // Prepare Invoice
-                        shipmentGraph.createInvoice.Press();
+                        // no Exists invoice
+                        if (!isAlreadyInvoice)
+                        {
+                            // Confirm Shipment
+                            shipmentGraph.confirmShipmentAction.Press();
+                            // Prepare Invoice
+                            shipmentGraph.createInvoice.Press();
+                        }
                         // Insert Log
                         InsertLog(row, true, string.Empty);
                     }
