@@ -21,10 +21,10 @@ namespace PX.Objects.SO
         [PXUIField(DisplayName = "Remaining Credit Limit", IsReadOnly = true, Enabled = false)]
         public virtual Decimal? UsrRemainingCreditLimit
         {
-            [PXDependsOnFields(typeof(SOOrder.customerID))]
+            [PXDependsOnFields(typeof(SOOrder.customerID), typeof(SOOrder.curyUnpaidBalance))]
             get
             {
-                return SOOrderEntry_Extensions.GetCustomerRemainCreditLimit(Base.CustomerID);
+                return SOOrderEntry_Extensions.GetCustomerRemainCreditLimit(Base.CustomerID, Base.CuryUnpaidBalance);
             }
             set { }
         }
