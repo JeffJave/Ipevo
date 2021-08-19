@@ -112,6 +112,8 @@ namespace PX.Objects.AR
         {
             baseHandler?.Invoke(e.Cache, e.Args);
 
+            if (e.Row == null) { return; }
+
             ARInvoiceState state = Base.GetDocumentState(e.Cache, e.Row);
 
             ARRegisterExt registerExt = PXCache<ARRegister>.GetExtension<ARRegisterExt>(e.Row);
@@ -137,8 +139,8 @@ namespace PX.Objects.AR
             PXUIFieldAttribute.SetEnabled<ARRegisterExt.usrCarrierID>   (e.Cache, e.Row, !statusClosed && taxNbrBlank && registerExt.UsrB2CType == TWNB2CType.MC);
             PXUIFieldAttribute.SetEnabled<ARRegisterExt.usrNPONbr>      (e.Cache, e.Row, !statusClosed && taxNbrBlank && registerExt.UsrB2CType == TWNB2CType.NPO);
             PXUIFieldAttribute.SetEnabled<ARRegisterExt.usrVATOutCode>  (e.Cache, e.Row, string.IsNullOrEmpty(registerExt.UsrGUINbr));
-
             PXUIFieldAttribute.SetEnabled<ARRegisterExt.usrCreditAction>(e.Cache, e.Row, state.DocumentDescrEnabled);
+
             PXUIFieldAttribute.SetVisible<ARRegisterExt.usrGUITitle>(e.Cache, null, activateGUI);
             PXUIFieldAttribute.SetVisible<ARRegisterExt.usrCustomType>(e.Cache, null, activateGUI);
             PXUIFieldAttribute.SetVisible<ARRegisterExt.usrClearingDate>(e.Cache, null, activateGUI);
