@@ -43,27 +43,38 @@ namespace ExternalLogisticsAPI.Graph
                          join item in inventoryItemData on kit.InventoryID equals item.InventoryID
                          join kitItem in inKitRegisterData on new { A = kit.DocType, B = kit.RefNbr } equals new { A = kitItem.DocType, B = kitItem.RefNbr }
                          where item.ItemClassID == filter.ItemClassID
-                         select new { sc = t, kit, kitItem, item };
+                         select new 
+                         { 
+                             PACUnitCost = t.PACUnitCost,
+                             FinPeriodID = t.FinPeriodID,
+                             TranCost = kit.TranCost,
+                             Qty = kit.Qty,
+                             InventoryID = t.InventoryID,
+                             ItemClassID = item.ItemClassID,
+                             SiteID = kit.SiteID,
+                             KitInventoryID = kitItem.KitInventoryID,
+                             ProductSiteid = kitItem.SiteID
+                         };
 
             // Delete temp table data
             PXDatabase.Delete<LUMPacAssemblyAdjCost>();
             this.ImportPACList.Cache.Clear();
 
-            foreach (var row in result.ToList())
+            foreach (var row in result.Distinct().ToList())
             {
                 var data = this.ImportPACList.Insert((LUMPacAssemblyAdjCost)this.ImportPACList.Cache.CreateInstance());
-                data.FinPeriodID = row.sc.FinPeriodID;
-                data.FinPtdCostAssemblyOut = row.kit.TranCost;
-                data.FinPtdQtyAssemblyOut = row.kit.Qty;
-                data.PACUnitCost = row.sc.PACUnitCost;
-                data.InventoryID = row.sc.InventoryID;
-                data.ItemClassID = row.item.ItemClassID;
-                data.PACIssueCost = row.sc.PACUnitCost * row.kit.Qty;
-                data.Siteid = row.kit.SiteID;
+                data.FinPeriodID = row.FinPeriodID;
+                data.FinPtdCostAssemblyOut = row.TranCost;
+                data.FinPtdQtyAssemblyOut = row.Qty;
+                data.PACUnitCost = row.PACUnitCost;
+                data.InventoryID = row.InventoryID;
+                data.ItemClassID = row.ItemClassID;
+                data.PACIssueCost = row.PACUnitCost * row.Qty;
+                data.Siteid = row.SiteID;
                 data.AssemblyAdjAmount = data.FinPtdCostAssemblyOut - data.PACIssueCost;
-                data.ProductInventoryID = row.kitItem.KitInventoryID;
+                data.ProductInventoryID = row.KitInventoryID;
                 data.ProductAdjAmount = data.AssemblyAdjAmount * -1;
-                data.ProductSiteid = row.kitItem.SiteID;
+                data.ProductSiteid = row.ProductSiteid;
             }
             this.Actions.PressSave();
             return adapter.Get();

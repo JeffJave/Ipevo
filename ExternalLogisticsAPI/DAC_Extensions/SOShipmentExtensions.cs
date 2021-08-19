@@ -23,16 +23,16 @@ namespace PX.Objects.SO
 
         #region UsrTrackingNbr
 
-        [PXDBString(100)]
+        [PXDBString(100, IsUnicode = true)]
         [PXUIField(DisplayName = "TrackingNbr.")]
         public string UsrTrackingNbr { get; set; }
-        public abstract class usrTrackingNbr : PX.Data.BQL.BqlString.Field<usrTrackingNbr>{ }
+        public abstract class usrTrackingNbr : PX.Data.BQL.BqlString.Field<usrTrackingNbr> { }
 
         #endregion
 
         #region UsrCarrier
 
-        [PXDBString(100)]
+        [PXDBString(100, IsUnicode = true)]
         [PXUIField(DisplayName = "Carrier.")]
         public string UsrCarrier { get; set; }
         public abstract class usrCarrier : PX.Data.BQL.BqlString.Field<usrCarrier> { }
