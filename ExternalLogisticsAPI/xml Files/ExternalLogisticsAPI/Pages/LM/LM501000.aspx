@@ -18,7 +18,7 @@
 	</px:PXFormView>
 </asp:Content>
 <asp:Content ID="cont3" ContentPlaceHolderID="phG" Runat="Server">
-	<px:PXGrid SyncPosition="True" ID="grid" runat="server" DataSourceID="ds" Width="100%" Height="150px" SkinID="PrimaryInquire" AllowAutoHide="false">
+	<px:PXGrid PreservePageIndex="True" SyncPosition="True" ID="grid" runat="server" DataSourceID="ds" Width="100%" Height="150px" SkinID="PrimaryInquire" AllowAutoHide="false">
 		<Levels>
 			<px:PXGridLevel DataMember="ImportOrderList">
 			    <Columns>
@@ -35,7 +35,8 @@
 			</px:PXGridLevel>
 		</Levels>
 		<AutoSize Container="Window" Enabled="True" MinHeight="150" ></AutoSize>
-		<ActionBar >
+		<ActionBar PagerVisible="Bottom" >
+<PagerSettings Mode="NumericCompact" />
 		</ActionBar>
 	</px:PXGrid>
 </asp:Content>
