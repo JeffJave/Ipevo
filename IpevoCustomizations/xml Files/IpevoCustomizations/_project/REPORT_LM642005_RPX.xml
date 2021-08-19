@@ -3429,11 +3429,11 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                     </ReportVariable>
                     <ReportVariable>
                         <Name>TotalNWQty</Name>
-                        <ValueExpr>=$TotalNWQty + CDec([AttrNETPERCTN.Value]) * CDec([SOPackageDetailEx.UsrCartonQty])</ValueExpr>
+                        <ValueExpr>=$TotalNWQty + #010;IIF([SOPackageDetailEx.CustomRefNbr1] &lt;&gt; null and CDec([SOPackageDetailEx.CustomRefNbr1]) &gt; 0,#010;CDec([AttrNETPERCTN.Value]) * CDec([SOPackageDetailEx.UsrCartonQty]) * CDec([SOPackageDetailEx.CustomRefNbr1]),#010;CDec([AttrNETPERCTN.Value]) * CDec([SOPackageDetailEx.UsrCartonQty]))</ValueExpr>
                     </ReportVariable>
                     <ReportVariable>
                         <Name>TotalGWQty</Name>
-                        <ValueExpr>=$TotalGWQty + CDec([AttrGROSPERCTN.Value]) * CDec([SOPackageDetailEx.UsrCartonQty]) + CDec([@PackageCountNo]) * 15</ValueExpr>
+                        <ValueExpr>=$TotalGWQty + #010;IIF([SOPackageDetailEx.CustomRefNbr1] &lt;&gt; null and CDec([SOPackageDetailEx.CustomRefNbr1]) &gt; 0,#010;CDec([AttrGROSPERCTN.Value]) * CDec([SOPackageDetailEx.UsrCartonQty]) * CDec([SOPackageDetailEx.CustomRefNbr1]),#010;CDec([AttrGROSPERCTN.Value]) * CDec([SOPackageDetailEx.UsrCartonQty]))</ValueExpr>
                     </ReportVariable>
                     <ReportVariable>
                         <Name>TotalMeasurement</Name>
@@ -3484,7 +3484,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                             </Font>
                             <TextAlign>Center</TextAlign>
                         </Style>
-                        <Value>=Round(CDec([AttrNETPERCTN.Value]) * CDec([SOPackageDetailEx.UsrCartonQty]), 2)</Value>
+                        <Value>=IIF([SOPackageDetailEx.CustomRefNbr1] &lt;&gt; null and CDec([SOPackageDetailEx.CustomRefNbr1]) &gt; 0,#010;Round(CDec([AttrNETPERCTN.Value]) * CDec([SOPackageDetailEx.UsrCartonQty]) * CDec([SOPackageDetailEx.CustomRefNbr1]), 2),#010;Round(CDec([AttrNETPERCTN.Value]) * CDec([SOPackageDetailEx.UsrCartonQty]), 2))</Value>
                     </TextBox>
                     <TextBox Name="textBox21">
                         <Location>520px, 64px</Location>
@@ -3495,7 +3495,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                             </Font>
                             <TextAlign>Center</TextAlign>
                         </Style>
-                        <Value>=Round(CDec([AttrGROSPERCTN.Value]) * CDec([SOPackageDetailEx.UsrCartonQty]), 2)</Value>
+                        <Value>=IIF([SOPackageDetailEx.CustomRefNbr1] &lt;&gt; null and CDec([SOPackageDetailEx.CustomRefNbr1]) &gt; 0,#010;Round(CDec([AttrGROSPERCTN.Value]) * CDec([SOPackageDetailEx.UsrCartonQty] * CDec([SOPackageDetailEx.CustomRefNbr1])), 2),#010;Round(CDec([AttrGROSPERCTN.Value]) * CDec([SOPackageDetailEx.UsrCartonQty]), 2))</Value>
                     </TextBox>
                     <TextBox Name="textBox22">
                         <Location>600px, 0px</Location>

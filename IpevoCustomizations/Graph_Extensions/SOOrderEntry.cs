@@ -1,15 +1,15 @@
 ﻿using PX.Data;
 using PX.Data.BQL;
 using PX.Data.BQL.Fluent;
+using PX.Objects.AR;
 using PX.Objects.CS;
 using PX.Objects.GL;
 using PX.Objects.IN;
 using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using IpevoCustomizations.DAC;
-using System.Linq;
-using PX.Objects.AR;
 
 namespace PX.Objects.SO
 {
@@ -155,23 +155,25 @@ namespace PX.Objects.SO
         /// Per Peter's email [IPEVO SO Approval Design].
         /// </summary>
         /// <param name="customerID"></param>
+        /// <param name="soUnpaidBalance"></param>
         /// <returns></returns>
-        public static decimal? GetCustomerRemainCreditLimit(int? customerID)
+        public static decimal? GetCustomerRemainCreditLimit(int? customerID, decimal? soUnpaidBalance)
         {
-            if (customerID == null) { return decimal.Zero; }
+            if (customerID != null)
+            {
+                CustomerMaint graph = PXGraph.CreateInstance<CustomerMaint>();
 
-            CustomerMaint graph = PXGraph.CreateInstance<CustomerMaint>();
+                Customer customer = Customer.PK.Find(graph, customerID);
 
-            Customer customer = Customer.PK.Find(graph, customerID);
+                //if (customer.CreditRule == CreditRuleTypes.CS_CREDIT_LIMIT || customer.CreditRule == CreditRuleTypes.CS_BOTH)
+                //{
+                    ARBalances remBal = CustomerMaint.GetCustomerBalances<AR.Override.Customer.sharedCreditCustomerID>(graph, customer?.SharedCreditCustomerID);
 
-            ARBalances remBal = CustomerMaint.GetCustomerBalances<AR.Override.Customer.sharedCreditCustomerID>(graph, customer?.SharedCreditCustomerID);
+                    return customer?.CreditLimit - ((remBal?.CurrentBal ?? 0) + (remBal?.UnreleasedBal ?? 0) + (remBal?.TotalOpenOrders ?? 0) + (remBal?.TotalShipped ?? 0) - (remBal?.TotalPrepayments ?? 0)) + soUnpaidBalance;
+                //}
+            }
 
-            //if (customer.SharedCreditChild == true)
-            //{
-                //remBal = CustomerMaint.GetCustomerBalances<AR.Override.Customer.sharedCreditCustomerID>(graph, customer?.SharedCreditCustomerID);
-            //}
-
-            return customer?.CreditLimit - ((remBal?.CurrentBal ?? 0) + (remBal?.UnreleasedBal ?? 0) + (remBal?.TotalOpenOrders ?? 0) + (remBal?.TotalShipped ?? 0) - (remBal?.TotalPrepayments ?? 0));
+            return decimal.Zero;
         }
         #endregion
     }
