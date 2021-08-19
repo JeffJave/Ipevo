@@ -105,6 +105,20 @@ namespace ExternalLogisticsAPI
         public abstract class taxZoneID : PX.Data.BQL.BqlString.Field<taxZoneID> { }
         #endregion
 
+        #region CuryTaxAmt
+        [PXDBDecimal()]
+        [PXUIField(DisplayName = "Cury Tax Amt")]
+        public virtual Decimal? CuryTaxAmt { get; set; }
+        public abstract class curyTaxAmt : PX.Data.BQL.BqlDecimal.Field<curyTaxAmt> { }
+        #endregion
+
+        #region TaxRate
+        [PXDBDecimal()]
+        [PXUIField(DisplayName = "Tax Rate")]
+        public virtual Decimal? TaxRate { get; set; }
+        public abstract class taxRate : PX.Data.BQL.BqlDecimal.Field<taxRate> { }
+        #endregion
+
         #region Siteid
         [PXDBInt()]
         [PXUIField(DisplayName = "Siteid")]
