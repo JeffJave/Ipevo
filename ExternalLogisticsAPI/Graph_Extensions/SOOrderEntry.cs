@@ -41,9 +41,16 @@ namespace ExternalLogisticsAPI.Graph_Extensions
         public PXAction<SOOrder> lumGenerateYUSENCAFile;
         public PXAction<SOOrder> lumGenerate3PLUKFile;
 
+        public override void Initialize()
+        {
+            base.Initialize();
+            Base.action.AddMenuAction(createDCLShipment);
+            Base.action.AddMenuAction(lumCallDCLShipemnt);
+        }
+
         /// <summary> 在DCL 產生Shipment(Call API) </summary>
         [PXButton]
-        [PXUIField(DisplayName = "Create Shipment in DCL", Enabled = true, MapEnableRights = PXCacheRights.Select, Visible = false)]
+        [PXUIField(DisplayName = "Create Shipment in DCL", Enabled = true, MapEnableRights = PXCacheRights.Select, Visible = true)]
         protected virtual IEnumerable CreateDCLShipment(PXAdapter adapter)
         {
             List<SOOrder> list = adapter.Get<SOOrder>().ToList();
@@ -83,7 +90,7 @@ namespace ExternalLogisticsAPI.Graph_Extensions
 
         /// <summary> 根據DCL的Shipment資料來產生系統Shipment(逐筆執行) </summary>
         [PXButton]
-        [PXUIField(DisplayName = "Call DCL for Shipment", Enabled = true, MapEnableRights = PXCacheRights.Select, Visible = false)]
+        [PXUIField(DisplayName = "Call DCL for Shipment", Enabled = true, MapEnableRights = PXCacheRights.Select, Visible = true)]
         protected virtual IEnumerable LumCallDCLShipemnt(PXAdapter adapter, [PXDate] DateTime? shipDate, [PXInt] int? siteID, [SOOperation.List] string operation)
         {
             try
@@ -145,6 +152,7 @@ namespace ExternalLogisticsAPI.Graph_Extensions
                 {
                     using (PXTransactionScope sc = new PXTransactionScope())
                     {
+                        adapter.MassProcess = true;
                         // Get Carrier and TrackingNbr
                         var shippingCarrier = dclOrders.orders.FirstOrDefault().shipping_carrier;
                         var packagesInfo = dclOrders.orders.FirstOrDefault().shipments.SelectMany(x => x.packages);
@@ -628,6 +636,30 @@ namespace ExternalLogisticsAPI.Graph_Extensions
 
             return adapter.Get();
         }
+        #endregion
+
+        #region Event
+
+        public virtual void _(Events.RowSelected<SOOrder> e, PXRowSelected baseHandler)
+        {
+            baseHandler?.Invoke(e.Cache, e.Args);
+            var row = e.Row;
+            if (row != null)
+            {
+                // Set Create shipment is DCL
+                if (row.Status == SOOrderStatus.Open && !(row.GetExtension<SOOrderExt>().UsrDCLShipmentCreated ?? false))
+                    Base.action.SetEnabled(nameof(CreateDCLShipment), true);
+                else
+                    Base.action.SetEnabled(nameof(CreateDCLShipment), false);
+
+                // Set Call DCL for Shipment
+                if (row.Status == SOOrderStatus.Open && (row.GetExtension<SOOrderExt>().UsrDCLShipmentCreated ?? false) && row.OrderType != "VC")
+                    Base.action.SetEnabled(nameof(LumCallDCLShipemnt), true);
+                else
+                    Base.action.SetEnabled(nameof(LumCallDCLShipemnt), false);
+            }
+        }
+
         #endregion
 
         #region Method
