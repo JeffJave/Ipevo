@@ -51,17 +51,9 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
         </Filters>
         <MailSettings>
             <ActivitySource>ARInvoice.NoteID</ActivitySource>
-            <Bcc>
-            </Bcc>
             <Body>='Dear Customer,#010;#010;This is an automatic email to notify you that you have a new Invoice available on your account.  #010;You will find a copy of'+' '+[ARInvoice.PrintDocType]+' '+'#'+' '+[ARInvoice.RefNbr]+' '+'attached to this email.  #010;#010;If you have any questions, please don’t hesitate to contact us at Email.  #010;#010;Thank you for choosing'+' '+[CompanyContact.FullName]+'.'#010;</Body>
-            <Cc>
-            </Cc>
-            <Format>
-            </Format>
             <ParentSource>Customer.NoteID</ParentSource>
             <Subject>=[CompanyContact.FullName]+' '+[ARInvoice.PrintDocType]+' '+'#'+' '+[ARInvoice.RefNbr]</Subject>
-            <TemplateID>
-            </TemplateID>
             <To>=IsNull([BillingContact.Email],'')</To>
         </MailSettings>
         <Parameters>
@@ -334,7 +326,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                 <ParentName>ARInvoice</ParentName>
             </ReportRelation>
         </Relations>
-        <SchemaUrl>http://localhost/AcumaticaIPEVO/</SchemaUrl>
+        <SchemaUrl>https://erp.ipevo.com/</SchemaUrl>
         <Tables>
             <ReportTable Name="BAccount">
                 <Fields>
@@ -6073,11 +6065,11 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
         </Tables>
         <Sections>
             <PageHeader Name="pageHeaderSection1">
-                <Height>13.75661cm</Height>
+                <Height>12.91005cm</Height>
                 <Items>
                     <Line Name="line1">
                         <LineStyle>Dotted</LineStyle>
-                        <Location>0px, 440px</Location>
+                        <Location>0px, 408px</Location>
                         <Size>7.25in, 0.08333in</Size>
                     </Line>
                     <TextBox Name="textBox1">
@@ -6093,7 +6085,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                         <Value>IPEVO CORP</Value>
                     </TextBox>
                     <TextBox Name="textBox10">
-                        <Location>576px, 184px</Location>
+                        <Location>576px, 152px</Location>
                         <Size>120px, 24px</Size>
                         <Style>
                             <BorderStyle>
@@ -6110,7 +6102,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                         <Value>=[ARInvoice.DueDate]</Value>
                     </TextBox>
                     <TextBox Name="textBox11">
-                        <Location>80px, 224px</Location>
+                        <Location>80px, 192px</Location>
                         <Size>264px, 24px</Size>
                         <Style>
                             <BackColor>Silver</BackColor>
@@ -6135,7 +6127,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                         <Value>Billing To</Value>
                     </TextBox>
                     <TextBox Name="textBox12">
-                        <Location>80px, 248px</Location>
+                        <Location>80px, 216px</Location>
                         <Size>264px, 104px</Size>
                         <Style>
                             <BorderStyle>
@@ -6159,7 +6151,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                         <Value>=IIf([BillingContact.Attention] &lt;&gt; null, [BillingContact.Attention] + '{br}', '') #010;+IIf([BillingContact.FullName] &lt;&gt; null, [BillingContact.FullName] + '{br}', '')#010;+ '{br}'#010;+IIf([BillingContact.Phone1] &lt;&gt; null,[BillingContact.Phone1] + '{br}', '')#010;+IIf([BillingAddress.AddressLine1] &lt;&gt; null,[BillingAddress.AddressLine1] + '{br}', '')#010;+IIf([BillingAddress.AddressLine2] &lt;&gt; null,[BillingAddress.AddressLine2] + '{br}', '')#010;+IIf([BillingAddress.City] &lt;&gt; null, [BillingAddress.City] + ' ', '')#010;+IIf([BillingAddress.State] &lt;&gt; null, [BillingAddress.State] + ' ', '')#010;+IIf([BillingAddress.PostalCode] &lt;&gt; null, [BillingAddress.PostalCode], '')#010;+IIf([Location.TaxRegistrationID] &lt;&gt; null, '{br}' + [Location.TaxRegistrationID], '')</Value>
                     </TextBox>
                     <TextBox Name="textBox13">
-                        <Location>344px, 224px</Location>
+                        <Location>344px, 192px</Location>
                         <Size>264px, 24px</Size>
                         <Style>
                             <BackColor>Silver</BackColor>
@@ -6182,7 +6174,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                         <Value>Shipping To</Value>
                     </TextBox>
                     <TextBox Name="textBox14">
-                        <Location>344px, 248px</Location>
+                        <Location>344px, 216px</Location>
                         <Size>264px, 104px</Size>
                         <Style>
                             <BorderStyle>
@@ -6204,7 +6196,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                         <Value>=IIf([ShippingContact.Attention] &lt;&gt; null, [ShippingContact.Attention], '') #010;+IIf([SOOrder.CustomerOrderNbr] &lt;&gt; null, '/PO# ' + [SOOrder.CustomerOrderNbr] + '{br}', '')#010;+IIf([ShippingContact.FullName] &lt;&gt; null, [ShippingContact.FullName] + '{br}', '')#010;+ '{br}'#010;+IIf([ShippingContact.Phone1] &lt;&gt; null,[ShippingContact.Phone1] + '{br}', '')#010;+IIf([ShippingAddress.AddressLine1] &lt;&gt; null,[ShippingAddress.AddressLine1] + '{br}', '')#010;+IIf([ShippingAddress.AddressLine2] &lt;&gt; null,[ShippingAddress.AddressLine2] + '{br}', '')#010;+IIf([ShippingAddress.City] &lt;&gt; null, [ShippingAddress.City] + ' ', '')#010;+IIf([ShippingAddress.State] &lt;&gt; null, [ShippingAddress.State] + ' ', '')#010;+IIf([ShippingAddress.PostalCode] &lt;&gt; null, [ShippingAddress.PostalCode], '')</Value>
                     </TextBox>
                     <TextBox Name="textBox15">
-                        <Location>352px, 368px</Location>
+                        <Location>352px, 336px</Location>
                         <Size>104px, 24px</Size>
                         <Style>
                             <BackColor>Silver</BackColor>
@@ -6229,7 +6221,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                         <Value>Due Date</Value>
                     </TextBox>
                     <TextBox Name="textBox16">
-                        <Location>456px, 368px</Location>
+                        <Location>456px, 336px</Location>
                         <Size>128px, 24px</Size>
                         <Style>
                             <BackColor>Silver</BackColor>
@@ -6252,7 +6244,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                         <Value>Amount Due</Value>
                     </TextBox>
                     <TextBox Name="textBox17">
-                        <Location>584px, 368px</Location>
+                        <Location>584px, 336px</Location>
                         <Size>112px, 24px</Size>
                         <Style>
                             <BackColor>Silver</BackColor>
@@ -6275,7 +6267,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                         <Value>Enclosed</Value>
                     </TextBox>
                     <TextBox Name="textBox18">
-                        <Location>352px, 392px</Location>
+                        <Location>352px, 360px</Location>
                         <Size>104px, 24px</Size>
                         <Style>
                             <BorderStyle>
@@ -6295,7 +6287,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                     </TextBox>
                     <TextBox Name="textBox19">
                         <Format>CAD #,##0.00;-CAD #,##0.00</Format>
-                        <Location>456px, 392px</Location>
+                        <Location>456px, 360px</Location>
                         <Size>128px, 24px</Size>
                         <Style>
                             <BorderStyle>
@@ -6323,7 +6315,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
 </Value>
                     </TextBox>
                     <TextBox Name="textBox20">
-                        <Location>584px, 392px</Location>
+                        <Location>584px, 360px</Location>
                         <Size>112px, 24px</Size>
                         <Style>
                             <BorderStyle>
@@ -6339,7 +6331,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                         </Style>
                     </TextBox>
                     <TextBox Name="textBox21">
-                        <Location>0px, 424px</Location>
+                        <Location>0px, 392px</Location>
                         <Size>344px, 0.16667in</Size>
                         <Style>
                             <Color>Silver</Color>
@@ -6347,7 +6339,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                         <Value>Please detach top portion and return with your payment</Value>
                     </TextBox>
                     <TextBox Name="textBox22">
-                        <Location>384px, 448px</Location>
+                        <Location>384px, 416px</Location>
                         <Size>120px, 24px</Size>
                         <Style>
                             <BackColor>Silver</BackColor>
@@ -6372,7 +6364,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                         <Value>Account Manager</Value>
                     </TextBox>
                     <TextBox Name="textBox23">
-                        <Location>504px, 448px</Location>
+                        <Location>504px, 416px</Location>
                         <Size>88px, 24px</Size>
                         <Style>
                             <BackColor>Silver</BackColor>
@@ -6395,7 +6387,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                         <Value>Ship Date</Value>
                     </TextBox>
                     <TextBox Name="textBox24">
-                        <Location>592px, 448px</Location>
+                        <Location>592px, 416px</Location>
                         <Size>104px, 24px</Size>
                         <Style>
                             <BackColor>Silver</BackColor>
@@ -6418,7 +6410,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                         <Value>P.O. Number</Value>
                     </TextBox>
                     <TextBox Name="textBox25">
-                        <Location>384px, 472px</Location>
+                        <Location>384px, 440px</Location>
                         <Size>120px, 24px</Size>
                         <Style>
                             <BorderStyle>
@@ -6435,7 +6427,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                         <Value>David CW Chang</Value>
                     </TextBox>
                     <TextBox Name="textBox26">
-                        <Location>504px, 472px</Location>
+                        <Location>504px, 440px</Location>
                         <Size>88px, 24px</Size>
                         <Style>
                             <BorderStyle>
@@ -6450,7 +6442,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                         <Value>=[SOShipment.ShipDate]</Value>
                     </TextBox>
                     <TextBox Name="textBox27">
-                        <Location>592px, 472px</Location>
+                        <Location>592px, 440px</Location>
                         <Size>104px, 24px</Size>
                         <Style>
                             <BorderStyle>
@@ -6465,7 +6457,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                         <Value>=[SOOrder.CustomerOrderNbr]</Value>
                     </TextBox>
                     <TextBox Name="textBox28">
-                        <Location>0px, 496px</Location>
+                        <Location>0px, 464px</Location>
                         <Size>64px, 24px</Size>
                         <Style>
                             <BackColor>Silver</BackColor>
@@ -6490,7 +6482,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                         <Value>Date</Value>
                     </TextBox>
                     <TextBox Name="textBox29">
-                        <Location>64px, 496px</Location>
+                        <Location>64px, 464px</Location>
                         <Size>88px, 24px</Size>
                         <Style>
                             <BackColor>Silver</BackColor>
@@ -6513,7 +6505,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                         <Value>Product</Value>
                     </TextBox>
                     <TextBox Name="textBox3">
-                        <Location>488px, 112px</Location>
+                        <Location>488px, 80px</Location>
                         <Size>88px, 24px</Size>
                         <Style>
                             <BackColor>Silver</BackColor>
@@ -6538,7 +6530,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                         <Value>Date</Value>
                     </TextBox>
                     <TextBox Name="textBox30">
-                        <Location>152px, 496px</Location>
+                        <Location>152px, 464px</Location>
                         <Size>136px, 24px</Size>
                         <Style>
                             <BackColor>Silver</BackColor>
@@ -6561,7 +6553,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                         <Value>Description</Value>
                     </TextBox>
                     <TextBox Name="textBox31">
-                        <Location>288px, 496px</Location>
+                        <Location>288px, 464px</Location>
                         <Size>64px, 24px</Size>
                         <Style>
                             <BackColor>Silver</BackColor>
@@ -6584,7 +6576,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                         <Value>Qty</Value>
                     </TextBox>
                     <TextBox Name="textBox32">
-                        <Location>352px, 496px</Location>
+                        <Location>352px, 464px</Location>
                         <Size>88px, 24px</Size>
                         <Style>
                             <BackColor>Silver</BackColor>
@@ -6607,7 +6599,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                         <Value>Ship Via</Value>
                     </TextBox>
                     <TextBox Name="textBox33">
-                        <Location>440px, 496px</Location>
+                        <Location>440px, 464px</Location>
                         <Size>88px, 24px</Size>
                         <Style>
                             <BackColor>Silver</BackColor>
@@ -6630,7 +6622,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                         <Value>Tracking #</Value>
                     </TextBox>
                     <TextBox Name="textBox34">
-                        <Location>528px, 496px</Location>
+                        <Location>528px, 464px</Location>
                         <Size>80px, 24px</Size>
                         <Style>
                             <BackColor>Silver</BackColor>
@@ -6653,7 +6645,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                         <Value>Rate</Value>
                     </TextBox>
                     <TextBox Name="textBox35">
-                        <Location>608px, 496px</Location>
+                        <Location>608px, 464px</Location>
                         <Size>88px, 24px</Size>
                         <Style>
                             <BackColor>Silver</BackColor>
@@ -6676,7 +6668,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                         <Value>Amount</Value>
                     </TextBox>
                     <TextBox Name="textBox4">
-                        <Location>576px, 112px</Location>
+                        <Location>576px, 80px</Location>
                         <Size>1.25in, 24px</Size>
                         <Style>
                             <BackColor>Silver</BackColor>
@@ -6700,7 +6692,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                     </TextBox>
                     <TextBox Name="textBox5">
                         <Format>='MM/dd/yyyy'</Format>
-                        <Location>488px, 136px</Location>
+                        <Location>488px, 104px</Location>
                         <Size>88px, 24px</Size>
                         <Style>
                             <BorderStyle>
@@ -6717,7 +6709,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                         <Value>=[ARInvoice.DocDate]</Value>
                     </TextBox>
                     <TextBox Name="textBox6">
-                        <Location>576px, 136px</Location>
+                        <Location>576px, 104px</Location>
                         <Size>120px, 24px</Size>
                         <Style>
                             <BorderStyle>
@@ -6732,7 +6724,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                         <Value>=[ARInvoice.RefNbr]</Value>
                     </TextBox>
                     <TextBox Name="textBox7">
-                        <Location>488px, 160px</Location>
+                        <Location>488px, 128px</Location>
                         <Size>88px, 24px</Size>
                         <Style>
                             <BackColor>Silver</BackColor>
@@ -6757,7 +6749,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                         <Value>Terms</Value>
                     </TextBox>
                     <TextBox Name="textBox8">
-                        <Location>576px, 160px</Location>
+                        <Location>576px, 128px</Location>
                         <Size>120px, 24px</Size>
                         <Style>
                             <BackColor>Silver</BackColor>
@@ -6790,7 +6782,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                         <Value>Mailing Address:#010;IPEVO Corp.#010;Suite 103, 10030 114 St NW#010;Edmonton, AV, T5K 1R3, Canada</Value>
                     </TextBox>
                     <TextBox Name="textBox9">
-                        <Location>488px, 184px</Location>
+                        <Location>488px, 152px</Location>
                         <Size>88px, 24px</Size>
                         <Style>
                             <BorderStyle>
