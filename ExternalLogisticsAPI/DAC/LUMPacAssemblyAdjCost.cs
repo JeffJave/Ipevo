@@ -32,7 +32,7 @@ namespace ExternalLogisticsAPI
         #endregion
 
         #region FinPtdCostAssemblyOut
-        [PXDBDecimal()]
+        [PXDBDecimal(IsKey = true)]
         [PXUIField(DisplayName = "Fin Ptd Cost Assembly Out")]
         public virtual Decimal? FinPtdCostAssemblyOut { get; set; }
         public abstract class finPtdCostAssemblyOut : PX.Data.BQL.BqlDecimal.Field<finPtdCostAssemblyOut> { }

@@ -45,7 +45,11 @@ SELECT c.CompanyCD,
 	   shipAddress.State as shipState,
 	   shipAddress.PostalCode as shipPostalCode,
 	   soShip.InvoiceNbr,
-	   soTax.TaxRate,
+	   CASE WHEN soTax.CuryTaxAmt != 0 and soTax.TaxRate = 0 
+			THEN 
+				soTax.CuryTaxAmt/ soTax.CuryTaxableAmt * 100
+			ELSE 
+				soTax.TaxRate END AS TaxRate,
 	   soTax.CuryTaxAmt
 FROM SOOrder so
 INNER JOIN SOLine soline on so.OrderType = soline.OrderType 

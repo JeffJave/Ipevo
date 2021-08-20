@@ -2,7 +2,7 @@
     <CDATA name="TableSchemaXml"><![CDATA[<table name="LUMPacAssemblyAdjCost">
   <col name="CompanyID" type="Int" default="Zero" />
   <col name="FinPeriodID" type="NVarChar(6)" />
-  <col name="finPtdCostAssemblyOut" type="Decimal(18,6)" nullable="true" />
+  <col name="finPtdCostAssemblyOut" type="Decimal(18,6)" />
   <col name="FinPtdQtyAssemblyOut" type="Decimal(18,6)" nullable="true" />
   <col name="PACUnitCost" type="Decimal(18,6)" nullable="true" />
   <col name="InventoryID" type="Int" />
@@ -23,6 +23,7 @@
   <index name="PK_LUMPacAssemblyAdjCost" clustered="true" primary="true" unique="true">
     <col name="CompanyID" />
     <col name="FinPeriodID" />
+    <col name="finPtdCostAssemblyOut" />
     <col name="InventoryID" />
     <col name="SiteID" />
     <col name="ProductInventoryID" />
