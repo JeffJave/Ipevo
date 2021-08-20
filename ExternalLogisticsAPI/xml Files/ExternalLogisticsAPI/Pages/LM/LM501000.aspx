@@ -24,19 +24,22 @@
 			    <Columns>
 				<px:PXGridColumn AllowCheckAll="True" DataField="Selected" Width="40" Type="CheckBox" TextAlign="Center" CommitChanges="True" ></px:PXGridColumn>
 				<px:PXGridColumn DataField="InvoiceNumber" Width="70" ></px:PXGridColumn>
-				<px:PXGridColumn DataField="OrderID" Width="180" ></px:PXGridColumn>
-				<px:PXGridColumn DataField="CustomerID" Width="180" ></px:PXGridColumn>
+				<px:PXGridColumn DataField="OrderID" Width="80" ></px:PXGridColumn>
+				<px:PXGridColumn DataField="CustomerID" Width="70" ></px:PXGridColumn>
 				<px:PXGridColumn DataField="OrderDate" Width="90" ></px:PXGridColumn>
 				<px:PXGridColumn DataField="OrderStatusID" Width="140" ></px:PXGridColumn>
 				<px:PXGridColumn DataField="OrderAmount" Width="100" ></px:PXGridColumn>
 				<px:PXGridColumn DataField="SalesTaxAmt" Width="100" ></px:PXGridColumn>
 				<px:PXGridColumn DataField="LastUpdated" Width="90" ></px:PXGridColumn>
-				<px:PXGridColumn DataField="BillingEmailID" Width="220" ></px:PXGridColumn></Columns>
+				<px:PXGridColumn DataField="BillingEmailID" Width="220" ></px:PXGridColumn>
+				<px:PXGridColumn DataField="BillingAddress" Width="180" />
+				<px:PXGridColumn DataField="ShipmentAddress" Width="180" />
+				<px:PXGridColumn DataField="OrderQty" Width="100" /></Columns>
 			</px:PXGridLevel>
 		</Levels>
 		<AutoSize Container="Window" Enabled="True" MinHeight="150" ></AutoSize>
 		<ActionBar PagerVisible="Bottom" >
-<PagerSettings Mode="NumericCompact" />
+                     <PagerSettings Mode="NumericCompact" />
 		</ActionBar>
 	</px:PXGrid>
 </asp:Content>

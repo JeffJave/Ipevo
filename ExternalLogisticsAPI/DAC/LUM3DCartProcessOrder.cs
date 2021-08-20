@@ -2,6 +2,7 @@
 using PX.Data;
 using ExternalLogisticsAPI.Descripter;
 using PX.Data.ReferentialIntegrity.Attributes;
+using PX.Objects.IN;
 
 namespace ExternalLogisticsAPI.DAC
 {
@@ -110,6 +111,29 @@ namespace ExternalLogisticsAPI.DAC
         [PXUIField(DisplayName = "Billing Email ID")]
         public virtual string BillingEmailID { get; set; }
         public abstract class billingEmailID : PX.Data.BQL.BqlString.Field<billingEmailID> { }
+        #endregion
+
+        #region BillingAddress
+        [PXDBString(50, IsUnicode = true)]
+        [PXUIField(DisplayName = "Billing Address", Visibility = PXUIVisibility.SelectorVisible)]
+        [PXPersonalDataField]
+        public virtual string BillingAddress { get; set; }
+        public abstract class billingAddress : PX.Data.BQL.BqlString.Field<billingAddress> { }
+        #endregion
+
+        #region ShipmentAddress
+        [PXDBString(50, IsUnicode = true)]
+        [PXUIField(DisplayName = "Shipment Address", Visibility = PXUIVisibility.SelectorVisible)]
+        [PXPersonalDataField]
+        public virtual string ShipmentAddress { get; set; }
+        public abstract class shipmentAddress : PX.Data.BQL.BqlString.Field<shipmentAddress> { }
+        #endregion
+
+        #region OrderQty
+        [PXDBQuantity()]
+        [PXUIField(DisplayName = "Order Qty.")]
+        public virtual decimal? OrderQty { get; set; }
+        public abstract class orderQty : PX.Data.BQL.BqlDecimal.Field<orderQty> { }
         #endregion
 
         #region Processed

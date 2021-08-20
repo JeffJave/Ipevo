@@ -6,6 +6,7 @@ using PX.Objects.CR;
 using PX.Objects.IN;
 using PX.Objects.SO;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -102,19 +103,22 @@ namespace ExternalLogisticsAPI.Descripter
             {
                 LUM3DCartProcessOrder procOrder = new LUM3DCartProcessOrder()
                 {
-                    LineNumber     = i + 1,
-                    ProcessID      = GetProcessID(graph),
-                    OrderID        = arrays[i].OrderID.ToString(),
-                    InvoiceNumber  = arrays[i].InvoiceNumber,
-                    OrderNbr       = string.Format("{0}{1}", arrays[i].InvoiceNumberPrefix, arrays[i].InvoiceNumber),
-                    CustomerID     = arrays[i].CustomerID == 0 ? null : arrays[i].CustomerID.ToString(),
-                    OrderDate      = arrays[i].OrderDate.Date,
-                    OrderStatusID  = arrays[i].OrderStatusID.ToString(),
-                    OrderAmount    = (decimal)arrays[i].OrderAmount,
-                    SalesTaxAmt    = (decimal)(arrays[i].SalesTax + arrays[i].SalesTax2),
-                    LastUpdated    = arrays[i].LastUpdate,
-                    BillingEmailID = arrays[i].BillingEmail,
-                    Processed      = false
+                    LineNumber      = i + 1,
+                    ProcessID       = GetProcessID(graph),
+                    OrderID         = arrays[i].OrderID.ToString(),
+                    InvoiceNumber   = arrays[i].InvoiceNumber,
+                    OrderNbr        = string.Format("{0}{1}", arrays[i].InvoiceNumberPrefix, arrays[i].InvoiceNumber),
+                    CustomerID      = arrays[i].CustomerID == 0 ? null : arrays[i].CustomerID.ToString(),
+                    OrderDate       = arrays[i].OrderDate.Date,
+                    OrderStatusID   = arrays[i].OrderStatusID.ToString(),
+                    OrderAmount     = (decimal)arrays[i].OrderAmount,
+                    SalesTaxAmt     = (decimal)(arrays[i].SalesTax + arrays[i].SalesTax2),
+                    LastUpdated     = arrays[i].LastUpdate,
+                    BillingEmailID  = arrays[i].BillingEmail,
+                    Processed       = false,
+                    BillingAddress  = arrays[i].BillingAddress,
+                    ShipmentAddress = arrays[i].ShipmentList[0].ShipmentAddress,
+                    OrderQty        = (decimal)arrays[i].OrderItemList.ToList().Sum(x => x.ItemQuantity)
                 };
 
                 if (LUM3DCartProcessOrder.UK.Find(graph, procOrder.OrderID, procOrder.InvoiceNumber) == null)
@@ -398,9 +402,7 @@ namespace ExternalLogisticsAPI.Descripter
         /// </summary>
         /// <param name="curSetup"></param>
         /// <param name="orderID"></param>
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-        public static void Update3DCartOrderStatus(LUM3DCartSetup curSetup, int orderID) => GetResponse(curSetup, string.Format("3dCartWebAPI/v2/Orders/{0}", orderID), true);
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+        //public static void Update3DCartOrderStatus(LUM3DCartSetup curSetup, int orderID) => GetResponse(curSetup, string.Format("3dCartWebAPI/v2/Orders/{0}", orderID), true);
     }
 
     #region Entity Classes
