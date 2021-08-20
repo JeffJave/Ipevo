@@ -37,6 +37,7 @@ namespace PX.Objects.SO
                 
                 aRCmd.Join<InnerJoinSingleTable<CSAnswers, On<CSAnswers.refNoteID, Equal<Customer.noteID>, And<CSAnswers.attributeID, Equal<PapperInvoiceAttr>>>>>();
                 aRCmd.WhereAnd<Where<ARInvoice.docType, Equal<INVDocType>>>();
+                aRCmd.WhereAnd<Where<CSAnswers.value, Equal<True>>>();
                 aRCmd.WhereAnd<Where<ARInvoiceExt.usrLOBSent, Equal<False>, Or<ARInvoiceExt.usrLOBSent, IsNull>>>();
             }
             else

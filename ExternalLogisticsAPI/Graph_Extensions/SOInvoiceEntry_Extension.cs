@@ -53,7 +53,7 @@ namespace PX.Objects.SO
             //Type = INV and Attribute clicked
             bool needPapperInvoice = (SelectFrom<CSAnswers>.
                                       LeftJoin<Customer>.On<Customer.noteID.IsEqual<CSAnswers.refNoteID>.And<CSAnswers.attributeID.IsEqual<PapperInvoiceAttr>>>.
-                                      Where<Customer.bAccountID.IsEqual<ARInvoice.customerID.FromCurrent>>.View.Select(Base).TopFirst?.Value) != null ? true : false;
+                                      Where<Customer.bAccountID.IsEqual<ARInvoice.customerID.FromCurrent>>.View.Select(Base).TopFirst?.Value) == "1" ? true : false;
             if (aRInvoice.GetExtension<ARInvoiceExt>()?.UsrLOBSent == true) LumLOBMailPaperInvoice.SetEnabled(false);
             else if (needPapperInvoice && aRInvoice.DocType == "INV") LumLOBMailPaperInvoice.SetEnabled(true);
             else LumLOBMailPaperInvoice.SetEnabled(false);
