@@ -53,6 +53,7 @@ namespace ExternalLogisticsAPI.Graph
                 data.Paccogs = item.Paccogs;
                 data.Siteid = item.Siteid;
                 data.Cogsadj = item.Cogsadj;
+                data.Selected = true;
             }
             this.Actions.PressSave();
             return adapter.Get();

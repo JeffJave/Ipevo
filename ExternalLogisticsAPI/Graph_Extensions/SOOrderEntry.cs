@@ -163,7 +163,7 @@ namespace ExternalLogisticsAPI.Graph_Extensions
 
                         var tempDesc = _soOrder.OrderDesc;
 
-                        Base.CreateShipmentIssue(adapter, shipDate, siteID);
+                        var aa = Base.CreateShipmentIssue(adapter, shipDate, siteID);
                         var processResult = PXProcessing<SOOrder>.GetItemMessage();
                         if (processResult.ErrorLevel != PXErrorLevel.RowInfo)
                             return adapter.Get();
@@ -173,7 +173,7 @@ namespace ExternalLogisticsAPI.Graph_Extensions
 
                         // Find SOShipment
                         var _soOrderShipments =
-                            FbqlSelect<SelectFromBase<SOOrderShipment, TypeArrayOf<IFbqlJoin>.Empty>.Where<BqlChainableConditionBase<TypeArrayOf<IBqlBinary>.FilledWith<And<Compare<SOOrderShipment.orderType, Equal<P.AsString>>>>>.And<BqlOperand<SOOrderShipment.orderNbr, IBqlString>.IsEqual<P.AsString>>>, SOOrderShipment>.View.Select(Base, _soOrder.OrderType, _soOrder.OrderNbr)
+                            FbqlSelect<SelectFromBase<SOOrderShipment, TypeArrayOf<IFbqlJoin>.Empty>.Where<BqlChainableConditionBase<TypeArrayOf<IBqlBinary>.FilledWith<And<Compare<SOOrderShipment.orderType, Equal<P.AsString>>>>>.And<BqlOperand<SOOrderShipment.orderNbr, IBqlString>.IsEqual<P.AsString>>.And<BqlOperand<SOOrderShipment.confirmed,IBqlBool>.IsEqual<False>>>, SOOrderShipment>.View.Select(Base, _soOrder.OrderType, _soOrder.OrderNbr)
                                 .RowCast<SOOrderShipment>();
                         foreach (var refItem in _soOrderShipments)
                         {

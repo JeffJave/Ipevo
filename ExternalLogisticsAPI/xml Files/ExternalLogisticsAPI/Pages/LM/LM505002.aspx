@@ -25,6 +25,8 @@
                 <Columns>
                     <px:PXGridColumn DataField="Selected" Width="40" Type="CheckBox" TextAlign="Center" CommitChanges="True" AllowCheckAll="True"></px:PXGridColumn>
                     <px:PXGridColumn DataField="FinPeriodID"></px:PXGridColumn>
+                    <px:PXGridColumn DataField="RefNbr"></px:PXGridColumn>
+                    <px:PXGridColumn DataField="LineNbr"></px:PXGridColumn>
                     <px:PXGridColumn DataField="Siteid"></px:PXGridColumn>
                     <px:PXGridColumn DataField="InventoryID"></px:PXGridColumn>
                     <px:PXGridColumn DataField="ItemClassID"></px:PXGridColumn>

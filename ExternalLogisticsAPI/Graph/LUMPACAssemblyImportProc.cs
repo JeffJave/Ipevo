@@ -75,6 +75,7 @@ namespace ExternalLogisticsAPI.Graph
                 data.ProductInventoryID = row.KitInventoryID;
                 data.ProductAdjAmount = data.AssemblyAdjAmount * -1;
                 data.ProductSiteid = row.ProductSiteid;
+                data.Selected = true;
             }
             this.Actions.PressSave();
             return adapter.Get();

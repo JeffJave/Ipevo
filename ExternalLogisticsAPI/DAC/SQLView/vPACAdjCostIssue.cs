@@ -14,6 +14,20 @@ namespace ExternalLogisticsAPI
         public abstract class finPeriodID : PX.Data.BQL.BqlString.Field<finPeriodID> { }
         #endregion
 
+        #region RefNbr
+        [PXDBString(15, IsKey = true)]
+        [PXUIField(DisplayName = "RefNbr")]
+        public virtual string RefNbr { get; set; }
+        public abstract class refNbr : PX.Data.BQL.BqlString.Field<refNbr> { }
+        #endregion
+
+        #region LineNbr
+        [PXDBInt(IsKey = true)]
+        [PXUIField(DisplayName = "Fin Period ID")]
+        public virtual int? LineNbr { get; set; }
+        public abstract class lineNbr : PX.Data.BQL.BqlInt.Field<lineNbr> { }
+        #endregion
+
         #region ItemClassID
         [PXDBInt()]
         [PXUIField(DisplayName = "Item Class ID")]

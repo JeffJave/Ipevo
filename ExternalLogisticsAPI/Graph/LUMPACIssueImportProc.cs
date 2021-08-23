@@ -54,6 +54,9 @@ namespace ExternalLogisticsAPI.Graph
                 data.Siteid = item.Siteid;
                 data.IssueAdjAmount = item.IssueAdjAmount;
                 data.ReasonCode = item.ReasonCode;
+                data.RefNbr = item.RefNbr;
+                data.LineNbr = item.LineNbr;
+                data.Selected = true;
             }
             this.Actions.PressSave();
             return adapter.Get();

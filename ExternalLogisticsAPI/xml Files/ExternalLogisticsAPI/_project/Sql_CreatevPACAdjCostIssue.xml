@@ -18,7 +18,9 @@ select cost.CompanyID,
 	   (cost.BaseQty * p.PACUnitCost) as PACIssueCost,
 	   (s.SiteID) as SiteID,
 	   (isnull(cost.TranCost,0) - (cost.BaseQty * p.PACUnitCost)) as IssueAdjAmount,
-	   cost.ReasonCode
+	   cost.ReasonCode,
+	   cost.RefNbr,
+	   cost.LineNbr
 from INTran cost
 left join INSite s on cost.CompanyID = s.CompanyID
 				  and cost.SiteID = s.SiteID
@@ -28,5 +30,8 @@ left join vPACUnitCost p on cost.CompanyID = p.companyid
 						 and cost.InventoryID = p.InventoryID
 						 and cost.FinPeriodID = p.FinPeriodID
 where cost.DocType not in ('R','T','A','P','D')
-  and cost.ReasonCode is not null]]></CDATA>
+  and cost.ReasonCode is not null
+  and NULLIF(cost.SOOrderNbr,'') is null
+  and NULLIF(cost.POReceiptNbr,'') is null
+  and NULLIF(cost.AMProdOrdID,'') is null]]></CDATA>
 </Sql>
