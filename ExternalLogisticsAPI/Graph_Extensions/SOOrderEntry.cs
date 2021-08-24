@@ -231,17 +231,17 @@ namespace ExternalLogisticsAPI.Graph_Extensions
                                 if (soTax != null)
                                 {
                                     // setting Tax
-                                    invoiceEntry.Taxes.SetValueExt<ARTaxTran.curyTaxAmt>(invTax, soTax.CuryTaxAmt);
-                                    invoiceEntry.Taxes.Update(invTax);
-                                    // setting Document
-                                    invoiceEntry.Document.SetValueExt<ARInvoice.curyTaxTotal>(invoiceEntry.Document.Current, soTax.CuryTaxAmt);
-                                    invoiceEntry.Document.SetValueExt<ARInvoice.curyDocBal>(invoiceEntry.Document.Current, balance + (soTax.CuryTaxAmt ?? 0));
-                                    invoiceEntry.Document.Update(invoiceEntry.Document.Current);
-                                    if (adjd != null)
-                                    {
-                                        invoiceEntry.Adjustments.SetValueExt<ARAdjust2.curyAdjdAmt>(adjd, adjd.CuryAdjdAmt + (soTax.CuryTaxAmt ?? 0));
-                                        invoiceEntry.Adjustments.Update(adjd);
-                                    }
+                                    //invoiceEntry.Taxes.SetValueExt<ARTaxTran.curyTaxAmt>(invTax, soTax.CuryTaxAmt);
+                                    //invoiceEntry.Taxes.Update(invTax);
+                                    //// setting Document
+                                    //invoiceEntry.Document.SetValueExt<ARInvoice.curyTaxTotal>(invoiceEntry.Document.Current, soTax.CuryTaxAmt);
+                                    //invoiceEntry.Document.SetValueExt<ARInvoice.curyDocBal>(invoiceEntry.Document.Current, balance + (soTax.CuryTaxAmt ?? 0));
+                                    //invoiceEntry.Document.Update(invoiceEntry.Document.Current);
+                                    //if (adjd != null)
+                                    //{
+                                    //    invoiceEntry.Adjustments.SetValueExt<ARAdjust2.curyAdjdAmt>(adjd, adjd.CuryAdjdAmt + (soTax.CuryTaxAmt ?? 0));
+                                    //    invoiceEntry.Adjustments.Update(adjd);
+                                    //}
                                     // only 3DCart order need to release invoice
                                     if (_soOrder.OrderType == "3D")
                                     {
