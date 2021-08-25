@@ -50,7 +50,8 @@ SELECT c.CompanyCD,
 				soTax.CuryTaxAmt/ soTax.CuryTaxableAmt * 100
 			ELSE 
 				soTax.TaxRate END AS TaxRate,
-	   soTax.CuryTaxAmt
+	   soTax.CuryTaxAmt,
+	   so.CuryID
 FROM SOOrder so
 INNER JOIN SOLine soline on so.OrderType = soline.OrderType 
 						and so.OrderNbr = soline.OrderNbr

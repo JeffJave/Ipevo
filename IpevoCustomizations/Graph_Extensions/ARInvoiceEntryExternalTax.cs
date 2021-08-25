@@ -72,7 +72,7 @@ namespace PX.Objects.AR
 			/// <summary>
 			/// Add the following condition and logic per Jira [IP-23]
 			/// </summary>>
-			string taxCategory = (Base as SOInvoiceEntry).FreightDetails.Current?.TaxCategoryID;
+			string taxCategory = (Base as SOInvoiceEntry)?.FreightDetails.Current?.TaxCategoryID;
 
 			if (invoice.CuryFreightTot > 0 && GL.Branch.PK.Find(Base, Base.Accessinfo.BranchID).CountryID == Country_US && invoice.TaxZoneID == TaxCloud && !string.IsNullOrEmpty(taxCategory))
 			{

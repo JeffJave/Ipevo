@@ -279,5 +279,12 @@ namespace ExternalLogisticsAPI
         public virtual string InvoiceNbr { get; set; }
         public abstract class invoiceNbr : PX.Data.BQL.BqlString.Field<invoiceNbr> { }
         #endregion
+
+        #region CuryID
+        [PXDBString(10, IsUnicode = true, InputMask = "")]
+        [PXUIField(DisplayName = "CuryID")]
+        public virtual string CuryID { get; set; }
+        public abstract class curyID : PX.Data.BQL.BqlString.Field<curyID> { }
+        #endregion
     }
 }
