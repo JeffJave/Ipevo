@@ -116,7 +116,7 @@ namespace ExternalLogisticsAPI.Graph
                         graph.transactions.SetValueExt<INTran.inventoryID>(line, row.InventoryID);
                         graph.transactions.SetValueExt<INTran.siteID>(line, row.Siteid);
                         graph.transactions.SetValueExt<INTran.tranCost>(line, row.AssemblyAdjAmount);
-                        graph.transactions.SetValueExt<INTran.reasonCode>(line, "PACADJ");
+                        graph.transactions.SetValueExt<INTran.reasonCode>(line, "KITASSEMBLY");
                         graph.transactions.SetValueExt<INTran.lotSerialNbr>(line, string.Empty);
                         sum += (row.AssemblyAdjAmount ?? 0);
                     }
