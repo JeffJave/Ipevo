@@ -94,7 +94,14 @@ namespace ExternalLogisticsAPI.Graph
                                 impRow.InvoiceNbr = string.IsNullOrEmpty(orders?.shipments.FirstOrDefault().ship_id) ? null : "8" + orders.shipments.FirstOrDefault()?.ship_id;
                             impRow.OrderDate = DateTime.Parse(orders.ordered_date);
                             impRow.OrderStatusID = orders.order_stage.ToString();
-                            impRow.OrderQty = orders.order_lines.Sum(x => x.quantity);
+                            try
+                            {
+                                impRow.OrderQty = orders.shipments.SelectMany(x => x.packages).SelectMany(x => x.shipped_items).Sum(q => q.quantity);
+                            }
+                            catch (Exception)
+                            {
+                                impRow.OrderQty = 0;
+                            }
                             impRow.OrderAmount = orders.order_subtotal;
                             impRow.PoNumber = orders.po_number;
                             impRow.LastUpdated = DateTime.Parse(orders.modified_at);
@@ -152,7 +159,7 @@ namespace ExternalLogisticsAPI.Graph
                             {
                                 if (impRow == null)
                                     throw new Exception("Cant not mapping API Data");
-                                if(impRow.order_stage != 60)
+                                if (impRow.order_stage != 60)
                                     throw new Exception("Order stage is not equal Fully Shipped");
                                 // Check Data is Exists
                                 var existsLog = LogDatas.Where(x =>
@@ -172,16 +179,16 @@ namespace ExternalLogisticsAPI.Graph
 
                                 newOrder = (SOOrder)graph.Document.Cache.Insert(newOrder);
 
-                                foreach (var line in impRow.order_lines)
+                                foreach (var line in impRow.shipments.SelectMany(x => x.packages).SelectMany(x => x.shipped_items).GroupBy(x => x.item_number).Select(x => new { qty = x.Sum(y => y.quantity),item_number = x.Key}))
                                 {
                                     // SOLine
                                     var newTranc = (SOLine)graph.Transactions.Cache.CreateInstance();
                                     newTranc.InventoryID = inventoryitems
                                         .FirstOrDefault(x => x.InventoryCD.Trim() == line.item_number)?.InventoryID;
                                     newTranc.ManualPrice = true;
-                                    newTranc.OrderQty = (decimal)line.quantity;
-                                    newTranc.OpenQty = (decimal)line.quantity;
-                                    newTranc.CuryUnitPrice = (decimal)line.price;
+                                    newTranc.OrderQty = (decimal)line.qty;
+                                    newTranc.OpenQty = (decimal)line.qty;
+                                    newTranc.CuryUnitPrice = (decimal)impRow.order_lines.Where(x => x.item_number == line.item_number).FirstOrDefault()?.price;
                                     graph.Transactions.Insert(newTranc);
                                 }
                                 graph.Save.Press();

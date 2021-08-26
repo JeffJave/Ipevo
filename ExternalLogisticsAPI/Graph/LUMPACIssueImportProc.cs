@@ -86,7 +86,7 @@ namespace ExternalLogisticsAPI.Graph
                 doc.FinPeriodID = filter.FinPeriod;
                 doc.TranDesc = "PAC Issue Adujstment";
 
-                foreach (var row in impDatas.Where(x => x.Selected ?? false))
+                foreach (var row in impDatas.Where(x => x.Selected ?? true))
                 {
                     if (Math.Round((row.IssueAdjAmount ?? 0), 0) == 0)
                         continue;
