@@ -180,9 +180,9 @@ namespace ExternalLogisticsAPI.Descripter
                 {
                     SOLine line = orderEntry.Transactions.Cache.CreateInstance() as SOLine;
 
-                    line.InventoryID = GetAcuInventoryID(orderEntry, itemList[i].ItemID);
-                    line.OrderQty    = (decimal)itemList[i].ItemQuantity;
-                    line.UnitPrice   = (decimal)itemList[i].ItemUnitPrice;
+                    line.InventoryID   = GetAcuInventoryID(orderEntry, itemList[i].ItemID);
+                    line.OrderQty      = (decimal)itemList[i].ItemQuantity;
+                    line.CuryUnitPrice = (decimal)itemList[i].ItemUnitPrice;
 
                     orderEntry.Transactions.Insert(line);
                 }
@@ -312,11 +312,9 @@ namespace ExternalLogisticsAPI.Descripter
         {
             ARPaymentEntry pymtEntry = PXGraph.CreateInstance<ARPaymentEntry>();
 
-            string paymentType = ARPaymentType.Payment;
-            
             ARPayment payment = new ARPayment()
             {
-                DocType = paymentType
+                DocType = ARPaymentType.Payment
             };
 
             payment = PXCache<ARPayment>.CreateCopy(pymtEntry.Document.Insert(payment));
@@ -341,14 +339,14 @@ namespace ExternalLogisticsAPI.Descripter
             if (payment.CuryOrigDocAmt == 0m)
             {
                 payment.CuryOrigDocAmt = payment.CurySOApplAmt;
-                payment = pymtEntry.Document.Update(payment);
+                pymtEntry.Document.Update(payment);
             }
             pymtEntry.Actions.PressSave();
 
             if (pymtEntry.Actions.Contains("Release"))
             {
                 pymtEntry.releaseFromHold.Press();
-                pymtEntry.Actions["Release"].Press();
+                pymtEntry.release.Press();
             }
         }
 
