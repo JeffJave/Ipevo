@@ -107,7 +107,7 @@ namespace ExternalLogisticsAPI.Graph
                 doc.FinPeriodID = filter.FinPeriod;
                 doc.TranDesc = "PAC Assembly Adujstment";
 
-                foreach (var row in impDatas.Where(x => x.Selected ?? false))
+                foreach (var row in impDatas.Where(x => x.Selected ?? true))
                 {
                     // AssemblyAdjAmount
                     if (Math.Round((row.AssemblyAdjAmount ?? 0), 0) != 0)
@@ -116,7 +116,7 @@ namespace ExternalLogisticsAPI.Graph
                         graph.transactions.SetValueExt<INTran.inventoryID>(line, row.InventoryID);
                         graph.transactions.SetValueExt<INTran.siteID>(line, row.Siteid);
                         graph.transactions.SetValueExt<INTran.tranCost>(line, row.AssemblyAdjAmount);
-                        graph.transactions.SetValueExt<INTran.reasonCode>(line, "PACADJ");
+                        graph.transactions.SetValueExt<INTran.reasonCode>(line, "KITASSEMBLY");
                         graph.transactions.SetValueExt<INTran.lotSerialNbr>(line, string.Empty);
                         sum += (row.AssemblyAdjAmount ?? 0);
                     }
