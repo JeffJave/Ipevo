@@ -767,7 +767,7 @@ namespace ExternalLogisticsAPI.Graph_Extensions
                     terms = string.Empty,
                     fob = string.Empty,
                     custom_field1 = soOrder.OrderNbr,
-                    packing_list_type = 0,
+                    packing_list_type = 198,
                     packing_list_comments = string.Empty,
                     shipping_instructions = $@"1.Please note that use the plastic wrapper to secure all cartons onto the pallets for this order.\r\n
 2.Please contact {shippingContact.FullName}@{shippingContact.Phone1} for delivery.",
