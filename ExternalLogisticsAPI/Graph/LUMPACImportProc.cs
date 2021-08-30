@@ -23,7 +23,7 @@ namespace ExternalLogisticsAPI.Graph
         }
 
         [PXFilterable]
-        public PXFilteredProcessing<LUMPacAdjCost, PACFilter, Where<LUMPacAdjCost.finPeriodID, Equal<Current<PACFilter.finPeriod>>>> ImportPACList;
+        public PXFilteredProcessing<LUMPacCOGSAdjCost, PACFilter, Where<LUMPacCOGSAdjCost.finPeriodID, Equal<Current<PACFilter.finPeriod>>>> ImportPACList;
 
         public PXAction<PACFilter> loadData;
         [PXButton]
@@ -31,28 +31,32 @@ namespace ExternalLogisticsAPI.Graph
         protected virtual IEnumerable LoadData(PXAdapter adapter)
         {
             var filter = this.Filter.Current;
-            var sourceData = SelectFrom<vPACAdjCost>
-                            .Where<vPACAdjCost.finPeriodID.IsEqual<P.AsString>>.View.Select(this, filter.FinPeriod).RowCast<vPACAdjCost>().ToList();
+            var sourceData = SelectFrom<vPACAdjCostCOGS>
+                             .Where<vPACAdjCostCOGS.finPeriodID.IsEqual<P.AsString>>.View.Select(this, filter.FinPeriod).RowCast<vPACAdjCostCOGS>().ToList();
 
             if (filter.ItemClassID.HasValue)
                 sourceData = sourceData.Where(x => x.ItemClassID == filter.ItemClassID.Value).ToList();
 
             // Delete temp table data
-            PXDatabase.Delete<LUMPacAdjCost>();
+            PXDatabase.Delete<LUMPacCOGSAdjCost>();
             this.ImportPACList.Cache.Clear();
 
             foreach (var item in sourceData)
             {
-                var data = this.ImportPACList.Insert((LUMPacAdjCost)this.ImportPACList.Cache.CreateInstance());
+                var data = this.ImportPACList.Insert((LUMPacCOGSAdjCost)this.ImportPACList.Cache.CreateInstance());
                 data.FinPeriodID = item.FinPeriodID;
-                data.Finptdcogs = item.Finptdcogs;
-                data.FinPtdQtySales = item.FinPtdQtySales;
+                data.FinPtdCostIssued = item.FinPtdCostIssued;
+                data.FinPtdQtyIssued = item.FinPtdQtyIssued;
                 data.PACUnitCost = item.PACUnitCost;
                 data.InventoryID = item.InventoryID;
                 data.ItemClassID = item.ItemClassID;
-                data.Paccogs = item.Paccogs;
+                data.PACIssueCost = item.PACIssueCost;
                 data.Siteid = item.Siteid;
-                data.Cogsadj = item.Cogsadj;
+                data.IssueAdjAmount = item.IssueAdjAmount;
+                data.ReasonCode = item.ReasonCode;
+                data.RefNbr = item.RefNbr;
+                data.LineNbr = item.LineNbr;
+                data.SOOrderNbr = item.SOOrderNbr;
                 data.Selected = true;
             }
             this.Actions.PressSave();
@@ -68,7 +72,7 @@ namespace ExternalLogisticsAPI.Graph
             try
             {
                 var filter = this.Filter.Current;
-                var impDatas = this.ImportPACList.Select().RowCast<LUMPacAdjCost>().ToList();
+                var impDatas = this.ImportPACList.Select().RowCast<LUMPacCOGSAdjCost>().ToList();
 
                 if (string.IsNullOrEmpty(filter.FinPeriod))
                     throw new PXException("Period can not be empty!!");
@@ -85,20 +89,21 @@ namespace ExternalLogisticsAPI.Graph
 
                 foreach (var row in impDatas.Where(x => x.Selected ?? true))
                 {
-                    if (Math.Round((row.Cogsadj ?? 0), 0) == 0)
+                    if (Math.Round((row.IssueAdjAmount ?? 0), 0) == 0)
                         continue;
                     var line = graph.transactions.Insert((INTran)graph.transactions.Cache.CreateInstance());
                     graph.transactions.SetValueExt<INTran.inventoryID>(line, row.InventoryID);
                     graph.transactions.SetValueExt<INTran.siteID>(line, row.Siteid);
-                    graph.transactions.SetValueExt<INTran.tranCost>(line, row.Cogsadj);
-                    graph.transactions.SetValueExt<INTran.reasonCode>(line, "PACADJ");
+                    graph.transactions.SetValueExt<INTran.tranCost>(line, row.IssueAdjAmount);
+                    graph.transactions.SetValueExt<INTran.reasonCode>(line, string.IsNullOrEmpty(row.ReasonCode) ? "PACADJ" : row.ReasonCode + "A");
                     graph.transactions.SetValueExt<INTran.lotSerialNbr>(line, string.Empty);
-                    sum += (row.Cogsadj ?? 0);
+                    graph.transactions.SetValueExt<INTran.tranDesc>(line, row.SOOrderNbr);
+                    sum += (row.IssueAdjAmount ?? 0);
                 }
                 doc.TotalCost = sum;
                 graph.Save.Press();
                 // Delete temp table data
-                PXDatabase.Delete<LUMPacAdjCost>();
+                PXDatabase.Delete<LUMPacCOGSAdjCost>();
                 this.ImportPACList.Cache.Clear();
             }
             catch (Exception ex)
@@ -121,7 +126,7 @@ namespace ExternalLogisticsAPI.Graph
         [PXDBInt]
         [PXUIField(DisplayName = "Item Class")]
         [PXDimensionSelector(INItemClass.Dimension, typeof(Search<INItemClass.itemClassID>), typeof(INItemClass.itemClassCD), DescriptionField = typeof(INItemClass.descr), CacheGlobal = true)]
-        public virtual int? ItemClassID { get;set;}
+        public virtual int? ItemClassID { get; set; }
         public abstract class itemClassID : PX.Data.BQL.BqlInt.Field<itemClassID> { }
 
     }

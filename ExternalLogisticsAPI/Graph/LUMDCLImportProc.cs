@@ -175,7 +175,7 @@ namespace ExternalLogisticsAPI.Graph
                                 newOrder.CustomerID = setup.CustomerID;
                                 newOrder.CustomerOrderNbr = string.IsNullOrEmpty(impRow?.shipments.FirstOrDefault().ship_id) ? null : "8" + impRow.shipments.FirstOrDefault()?.ship_id;
                                 newOrder.CustomerRefNbr = impRow.order_number;
-                                newOrder.OrderDesc = $"Order : {impRow.order_number} | Carrier: {impRow.shipping_carrier} | Tacking Number: {impRow.shipments.FirstOrDefault().packages.FirstOrDefault()?.tracking_number}";
+                                newOrder.OrderDesc = $"Po Number : {impRow.po_number} | Carrier: {impRow.shipping_carrier} | Tacking Number: {impRow.shipments.FirstOrDefault().packages.FirstOrDefault()?.tracking_number}";
 
                                 newOrder = (SOOrder)graph.Document.Cache.Insert(newOrder);
 

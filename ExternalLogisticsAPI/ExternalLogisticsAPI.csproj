@@ -19,7 +19,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\..\Bin\</OutputPath>
+    <OutputPath>..\..\..\Bin\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
@@ -86,7 +86,7 @@
     <Compile Include="DAC\LUMMiddleWareSetup.cs" />
     <Compile Include="DAC\LUMP3PLImportProcess.cs" />
     <Compile Include="DAC\LUMP3PLImportProcessLog.cs" />
-    <Compile Include="DAC\LUMPacAdjCost.cs" />
+    <Compile Include="DAC\LUMPacCOGSAdjCost.cs" />
     <Compile Include="DAC\LUMPacAssemblyAdjCost.cs" />
     <Compile Include="DAC\LumPacIssueAdjCost.cs" />
     <Compile Include="DAC\LUMVendCntrlProcessLog.cs" />
@@ -97,7 +97,7 @@
     <Compile Include="DAC\LumYusenCASetup.cs" />
     <Compile Include="DAC\LUMYusenNLSetup.cs" />
     <Compile Include="DAC\SQLView\vRMAOrderInfo.cs" />
-    <Compile Include="DAC\SQLView\vPACAdjCost.cs" />
+    <Compile Include="DAC\SQLView\vPACAdjCostCOGS.cs" />
     <Compile Include="DAC\SQLView\vPACAdjCostAssembly.cs" />
     <Compile Include="DAC\SQLView\vPACAdjCostIssue.cs" />
     <Compile Include="DAC\SQLView\vPACUnitCost.cs" />
