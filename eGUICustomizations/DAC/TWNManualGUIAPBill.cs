@@ -1,7 +1,6 @@
 ﻿using System;
 using PX.Data;
 using PX.Objects.AP;
-using PX.Objects.AR;
 using PX.Objects.CS;
 using PX.Objects.GL;
 using PX.Objects.TX;
@@ -27,17 +26,17 @@ namespace eGUICustomizations.DAC
         [PXDBString(15, IsKey = true, IsUnicode = true)]
         [PXUIField(DisplayName = "Ref Nbr", Visible = false)]
         [PXDBDefault(typeof(APInvoice.refNbr))]
-        [PXParent(typeof(Select<ARInvoice, Where<ARInvoice.docType, Equal<Current<TWNManualGUIAPBill.docType>>,
-                                                 And<ARInvoice.refNbr, Equal<Current<TWNManualGUIAPBill.refNbr>>>>>))]
-        [ARInvoiceType.RefNbr(typeof(Search2<PX.Objects.AR.Standalone.ARRegisterAlias.refNbr, InnerJoinSingleTable<ARInvoice, On<ARInvoice.docType, Equal<PX.Objects.AR.Standalone.ARRegisterAlias.docType>,
-                                                                                                                                 And<ARInvoice.refNbr, Equal<PX.Objects.AR.Standalone.ARRegisterAlias.refNbr>>>,
-                                                                                              InnerJoinSingleTable<Customer, On<PX.Objects.AR.Standalone.ARRegisterAlias.customerID, Equal<Customer.bAccountID>>>>,
-                                                                                              Where<PX.Objects.AR.Standalone.ARRegisterAlias.docType, Equal<Optional<ARInvoice.docType>>,
-                                                                                                    And2<Where<PX.Objects.AR.Standalone.ARRegisterAlias.origModule, Equal<BatchModule.moduleAR>,
-                                                                                                               Or<PX.Objects.AR.Standalone.ARRegisterAlias.origModule, Equal<BatchModule.moduleEP>,
-                                                                                                                  Or<PX.Objects.AR.Standalone.ARRegisterAlias.released, Equal<True>>>>,
-                                                                                                         And<Match<Customer, Current<AccessInfo.userName>>>>>,
-                                                                                              OrderBy<Desc<PX.Objects.AR.Standalone.ARRegisterAlias.refNbr>>>), 
+        [PXParent(typeof(Select<APInvoice, Where<APInvoice.docType, Equal<Current<TWNManualGUIAPBill.docType>>,
+                                                 And<APInvoice.refNbr, Equal<Current<TWNManualGUIAPBill.refNbr>>>>>))]
+        [APInvoiceType.RefNbr(typeof(Search2<PX.Objects.AP.Standalone.APRegisterAlias.refNbr, InnerJoinSingleTable<APInvoice, On<APInvoice.docType, Equal<PX.Objects.AP.Standalone.APRegisterAlias.docType>,
+                                                                                                                                 And<APInvoice.refNbr, Equal<PX.Objects.AP.Standalone.APRegisterAlias.refNbr>>>,
+                                                                                              InnerJoinSingleTable<Vendor, On<PX.Objects.AP.Standalone.APRegisterAlias.vendorID, Equal<Vendor.bAccountID>>>>,
+                                                                                              Where<PX.Objects.AP.Standalone.APRegisterAlias.docType, Equal<Optional<APInvoice.docType>>,
+                                                                                                    And2<Where<PX.Objects.AP.Standalone.APRegisterAlias.origModule, Equal<BatchModule.moduleAR>,
+                                                                                                               Or<PX.Objects.AP.Standalone.APRegisterAlias.origModule, Equal<BatchModule.moduleEP>,
+                                                                                                                  Or<PX.Objects.AP.Standalone.APRegisterAlias.released, Equal<True>>>>,
+                                                                                                         And<Match<Vendor, Current<AccessInfo.userName>>>>>,
+                                                                                              OrderBy<Desc<PX.Objects.AP.Standalone.APRegisterAlias.refNbr>>>), 
                                ValidateValue = false)]
         public virtual string RefNbr { get; set; }
         public abstract class refNbr : PX.Data.BQL.BqlString.Field<refNbr> { }

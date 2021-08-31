@@ -69,28 +69,7 @@ namespace PX.Objects.AR
 
 			bool applyRetainage = Base.ARSetup.Current?.RetainTaxes != true && invoice.IsOriginalRetainageDocument();
 
-			/// <summary>
-			/// Add the following condition and logic per Jira [IP-23]
-			/// </summary>>
-			string taxCategory = (Base as SOInvoiceEntry)?.FreightDetails.Current?.TaxCategoryID;
-
-			if (invoice.CuryFreightTot > 0 && GL.Branch.PK.Find(Base, Base.Accessinfo.BranchID).CountryID == Country_US && invoice.TaxZoneID == TaxCloud && !string.IsNullOrEmpty(taxCategory))
-			{
-				var line = new TaxCartItem();
-				line.Index = short.MinValue;
-				line.Quantity = 1;
-				line.UOM = "EA";
-				line.Amount = sign * invoice.CuryFreightTot.GetValueOrDefault();
-				line.Description = PXMessages.LocalizeNoPrefix(SO.Messages.FreightDesc);
-				line.DestinationAddress = request.DestinationAddress;
-				line.OriginAddress = request.OriginAddress;
-				line.ItemCode = "N/A";
-				line.Discounted = false;
-				line.TaxCode = taxCategory;
-
-				request.CartItems.Add(line);
-			}
-
+			decimal totalAmount = 0m;
 			foreach (PXResult<ARTran, InventoryItem, Account> res in select.View.SelectMultiBound(new object[] { invoice }))
 			{
 				ARTran tran = (ARTran)res;
@@ -115,8 +94,40 @@ namespace PX.Objects.AR
 				if (tran.OrigInvoiceDate != null)
 					taxDate = tran.OrigInvoiceDate;
 
+				///<remarks> According to Jira [Ip-42] to do the special logic. </remarks>
+				if (tran.SOOrderType == "RA" && invoice.CuryLineTotal > 0 && tran.LineType != SOLineType.Freight)
+				{
+					totalAmount  += line.Amount;
+					line.Amount	  = totalAmount;
+					line.Quantity = 1;
+														// (-1) Exclude freight records in recurring conditions.
+					if (tran.LineNbr != invoice.LineCntr - 1) { continue; }
+				}
+
 				request.CartItems.Add(line);
 			}
+
+			/// <summary>
+			/// Add the following condition and logic per Jira [IP-23]
+			string taxCategory = (Base as SOInvoiceEntry)?.FreightDetails.Current?.TaxCategoryID;
+
+			if (invoice.CuryFreightTot > 0 && GL.Branch.PK.Find(Base, Base.Accessinfo.BranchID).CountryID == Country_US && invoice.TaxZoneID == TaxCloud && !string.IsNullOrEmpty(taxCategory))
+			{
+				var line = new TaxCartItem();
+				line.Index = short.MinValue;
+				line.Quantity = 1;
+				line.UOM = "EA";
+				line.Amount = sign * invoice.CuryFreightTot.GetValueOrDefault();
+				line.Description = PXMessages.LocalizeNoPrefix(SO.Messages.FreightDesc);
+				line.DestinationAddress = request.DestinationAddress;
+				line.OriginAddress = request.OriginAddress;
+				line.ItemCode = "N/A";
+				line.Discounted = false;
+				line.TaxCode = taxCategory;
+
+				request.CartItems.Add(line);
+			}
+			/// </summary>>
 
 			if (applyRetainage)
 			{
