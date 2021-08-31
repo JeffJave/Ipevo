@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" MasterPageFile="~/MasterPages/FormDetail.master" AutoEventWireup="true" ValidateRequest="false" CodeFile="LM505000.aspx.cs" Inherits="Pages_LM505000" Title="Untitled Page" %>
+﻿<%@ Page Language="C#" MasterPageFile="~/MasterPages/FormDetail.master" AutoEventWireup="true" ValidateRequest="false" CodeFile="LM505002.aspx.cs" Inherits="Pages_LM505002" Title="Untitled Page" %>
 
 <%@ MasterType VirtualPath="~/MasterPages/FormDetail.master" %>
 
@@ -25,14 +25,18 @@
                 <Columns>
                     <px:PXGridColumn DataField="Selected" Width="40" Type="CheckBox" TextAlign="Center" CommitChanges="True" AllowCheckAll="True"></px:PXGridColumn>
                     <px:PXGridColumn DataField="FinPeriodID"></px:PXGridColumn>
+                    <px:PXGridColumn DataField="RefNbr"></px:PXGridColumn>
+                    <px:PXGridColumn DataField="SOOrderNbr"></px:PXGridColumn>
+                    <px:PXGridColumn DataField="LineNbr"></px:PXGridColumn>
                     <px:PXGridColumn DataField="Siteid"></px:PXGridColumn>
                     <px:PXGridColumn DataField="InventoryID"></px:PXGridColumn>
                     <px:PXGridColumn DataField="ItemClassID"></px:PXGridColumn>
-                    <px:PXGridColumn DataField="FinPtdQtySales"></px:PXGridColumn>
-                    <px:PXGridColumn DataField="Finptdcogs"></px:PXGridColumn>
+                    <px:PXGridColumn DataField="ReasonCode"></px:PXGridColumn>
+                    <px:PXGridColumn DataField="FinPtdQtyIssued"></px:PXGridColumn>
+                    <px:PXGridColumn DataField="FinPtdCostIssued"></px:PXGridColumn>
                     <px:PXGridColumn DataField="PACUnitCost"></px:PXGridColumn>
-                    <px:PXGridColumn DataField="Paccogs"></px:PXGridColumn>
-                    <px:PXGridColumn DataField="Cogsadj"></px:PXGridColumn>
+                    <px:PXGridColumn DataField="PACIssueCost"></px:PXGridColumn>
+                    <px:PXGridColumn DataField="IssueAdjAmount"></px:PXGridColumn>
                 </Columns>
             </px:PXGridLevel>
         </Levels>

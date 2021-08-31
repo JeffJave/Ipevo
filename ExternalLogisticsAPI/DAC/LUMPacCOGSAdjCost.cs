@@ -12,14 +12,13 @@ using PX.Objects.IN;
 namespace ExternalLogisticsAPI
 {
     [Serializable]
-    [PXCacheName("LUMPacAdjCost")]
-    public class LUMPacAdjCost : IBqlTable
+    [PXCacheName("LUMPacCOGSAdjCost")]
+    public class LUMPacCOGSAdjCost : IBqlTable
     {
-
         public static class FK
         {
-            public class InventoryItem : PX.Objects.IN.InventoryItem.PK.ForeignKeyOf<LUMPacAdjCost>.By<inventoryID> { }
-            public class Site : INSite.PK.ForeignKeyOf<LUMPacAdjCost>.By<siteid> { }
+            public class InventoryItem : PX.Objects.IN.InventoryItem.PK.ForeignKeyOf<LUMPacCOGSAdjCost>.By<inventoryID> { }
+            public class Site : INSite.PK.ForeignKeyOf<LUMPacCOGSAdjCost>.By<siteid> { }
         }
 
         #region Selected
@@ -31,28 +30,42 @@ namespace ExternalLogisticsAPI
 
         #region FinPeriodID
         [PXDBString(6, IsUnicode = true, InputMask = "", IsKey = true)]
-        [PXUIField(DisplayName = "Period")]
+        [PXUIField(DisplayName = "Fin Period ID")]
         public virtual string FinPeriodID { get; set; }
         public abstract class finPeriodID : PX.Data.BQL.BqlString.Field<finPeriodID> { }
         #endregion
 
-        #region Finptdcogs
-        [PXDBDecimal()]
-        [PXUIField(DisplayName = "COGS(F)")]
-        public virtual Decimal? Finptdcogs { get; set; }
-        public abstract class finptdcogs : PX.Data.BQL.BqlDecimal.Field<finptdcogs> { }
+        #region RefNbr
+        [PXDBString(15, IsKey = true)]
+        [PXUIField(DisplayName = "RefNbr")]
+        public virtual string RefNbr { get; set; }
+        public abstract class refNbr : PX.Data.BQL.BqlString.Field<refNbr> { }
         #endregion
 
-        #region FinPtdQtySales
+        #region LineNbr
+        [PXDBInt(IsKey = true)]
+        [PXUIField(DisplayName = "Fin Period ID")]
+        public virtual int? LineNbr { get; set; }
+        public abstract class lineNbr : PX.Data.BQL.BqlInt.Field<lineNbr> { }
+        #endregion
+
+        #region FinPtdCostIssued
         [PXDBDecimal()]
-        [PXUIField(DisplayName = "Qty Sales(E)")]
-        public virtual Decimal? FinPtdQtySales { get; set; }
-        public abstract class finPtdQtySales : PX.Data.BQL.BqlDecimal.Field<finPtdQtySales> { }
+        [PXUIField(DisplayName = "Fin Ptd Cost Issued")]
+        public virtual Decimal? FinPtdCostIssued { get; set; }
+        public abstract class finPtdCostIssued : PX.Data.BQL.BqlDecimal.Field<finPtdCostIssued> { }
+        #endregion
+
+        #region FinPtdQtyIssued
+        [PXDBDecimal()]
+        [PXUIField(DisplayName = "Fin Ptd Qty Issued")]
+        public virtual Decimal? FinPtdQtyIssued { get; set; }
+        public abstract class finPtdQtyIssued : PX.Data.BQL.BqlDecimal.Field<finPtdQtyIssued> { }
         #endregion
 
         #region PACUnitCost
         [PXDBDecimal()]
-        [PXUIField(DisplayName = "PAC Unit Cost(=O/N)")]
+        [PXUIField(DisplayName = "PACUnit Cost")]
         public virtual Decimal? PACUnitCost { get; set; }
         public abstract class pACUnitCost : PX.Data.BQL.BqlDecimal.Field<pACUnitCost> { }
         #endregion
@@ -72,26 +85,40 @@ namespace ExternalLogisticsAPI
         public abstract class itemClassID : PX.Data.BQL.BqlInt.Field<itemClassID> { }
         #endregion
 
-        #region Paccogs
+        #region PACIssueCost
         [PXDBDecimal()]
-        [PXUIField(DisplayName = "PAC COGS (Q=PxE)")]
-        public virtual Decimal? Paccogs { get; set; }
-        public abstract class paccogs : PX.Data.BQL.BqlDecimal.Field<paccogs> { }
+        [PXUIField(DisplayName = "PACIssue Cost")]
+        public virtual Decimal? PACIssueCost { get; set; }
+        public abstract class pACIssueCost : PX.Data.BQL.BqlDecimal.Field<pACIssueCost> { }
         #endregion
 
         #region Siteid
-        [PX.Objects.IN.Site(DisplayName = "Warehouse ID", DescriptionField = typeof(INSite.descr),IsKey = true)]
+        [PX.Objects.IN.Site(DisplayName = "Warehouse ID", DescriptionField = typeof(INSite.descr), IsKey = true)]
         [PXUIField(DisplayName = "Warehouse")]
         [PXForeignReference(typeof(FK.Site))]
         public virtual int? Siteid { get; set; }
         public abstract class siteid : PX.Data.BQL.BqlInt.Field<siteid> { }
         #endregion
 
-        #region Cogsadj
+        #region IssueAdjAmount
         [PXDBDecimal()]
-        [PXUIField(DisplayName = "COGS ADJ Amount(COGS-PAC COGS)")]
-        public virtual Decimal? Cogsadj { get; set; }
-        public abstract class cogsadj : PX.Data.BQL.BqlDecimal.Field<cogsadj> { }
+        [PXUIField(DisplayName = "Issue Adj Amount")]
+        public virtual Decimal? IssueAdjAmount { get; set; }
+        public abstract class issueAdjAmount : PX.Data.BQL.BqlDecimal.Field<issueAdjAmount> { }
+        #endregion
+
+        #region ReasonCode
+        [PXDBString(PX.Objects.CS.ReasonCode.reasonCodeID.Length, IsUnicode = true)]
+        [PXUIField(DisplayName = "Reason Code")]
+        public virtual String ReasonCode { get; set; }
+        public abstract class reasonCode : PX.Data.BQL.BqlString.Field<reasonCode> { }
+        #endregion
+
+        #region SOOrderNbr
+        [PXDBString(100, IsUnicode = true)]
+        [PXUIField(DisplayName = "SO OrderNbr")]
+        public virtual String SOOrderNbr { get; set; }
+        public abstract class sOOrderNbr : PX.Data.BQL.BqlString.Field<sOOrderNbr> { }
         #endregion
 
         #region CreatedByID
