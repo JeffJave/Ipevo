@@ -23,19 +23,21 @@ namespace PX.Objects.IN
                 var decimalPlace = SelectFrom<Organization>
                                .InnerJoin<CurrencyList>.On<Organization.baseCuryID.IsEqual<CurrencyList.curyID>>
                                .View.Select(Base).RowCast<CurrencyList>().FirstOrDefault()?.DecimalPlaces;
+                // 固定四捨五入到小數2位數
+                decimalPlace = 2;
                 var itemInfo = SelectFrom<INItemCost>.Where<INItemCost.inventoryID.IsEqual<P.AsInt>>.View.Select(Base, docRow.KitInventoryID).RowCast<INItemCost>().FirstOrDefault();
                 // Order by UnitCost find Max Price
                 var trans = Base.Components.Select().RowCast<INComponentTran>().ToList().OrderBy(x => x.UnitCost);
                 if (decimalPlace != null && itemInfo != null && trans != null)
                 {
                     // 組件成本
-                    var itemCost = Math.Round((decimal)(itemInfo?.AvgCost * docRow?.Qty), (int)decimalPlace);
+                    var itemCost = (decimal)(itemInfo?.AvgCost * docRow?.Qty);
                     var totalComponentsCost = trans.Sum(x => x?.UnitCost * x?.Qty);
                     var adjCost = itemCost - totalComponentsCost;
                     decimal alreadyAjdCost = 0;
                     for (int i = 0; i < trans.Count() - 1; i++)
                     {
-                        decimal newValue = trans.ElementAt(i).UnitCost.Value + Math.Round((decimal)(trans.ElementAt(i).UnitCost.Value * trans.ElementAt(i).Qty.Value / totalComponentsCost * adjCost / docRow?.Qty.Value), (int)decimalPlace);
+                        decimal newValue = Math.Round((decimal)(trans.ElementAt(i).UnitCost.Value + (trans.ElementAt(i).UnitCost.Value * trans.ElementAt(i).Qty.Value / totalComponentsCost * adjCost / docRow?.Qty.Value)), (int)decimalPlace);
                         alreadyAjdCost += newValue * trans.ElementAt(i).Qty.Value;
                         Base.Components.SetValueExt<INComponentTran.unitCost>(trans.ElementAt(i), (decimal)newValue);
                     }

@@ -10,6 +10,7 @@ using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using IpevoCustomizations.DAC;
+using PX.Objects.CM;
 
 namespace PX.Objects.SO
 {
@@ -33,6 +34,54 @@ namespace PX.Objects.SO
                 Base.report.AddMenuAction(PrepaymentRequest);
             }
         }
+
+        public delegate void PersistDelegate();
+
+        [PXOverride]
+        public void Persist(PersistDelegate baseMethod)
+        {
+            var doc = Base.Document.Current;
+            var transDatas = Base.Transactions.Select().RowCast<SOLine>();
+            var curCoutry = (PXSelect<Branch>.Select(Base, PX.Data.Update.PXInstanceHelper.CurrentCompany)).TopFirst;
+            foreach (SOLine row in transDatas)
+            {
+                var itemData = InventoryItem.PK.Find(Base, row.InventoryID);
+                decimal? rate = 0;
+                if (row != null && itemData != null && doc != null)
+                {
+                    var itemClass = INItemClass.PK.Find(Base, itemData.ItemClassID);
+                    #region Set MSRP Discount Rate
+                    var curyInfoData = PX.Objects.CM.CurrencyInfo.PK.Find(Base, doc.CuryInfoID);
+                    if (curyInfoData == null)
+                    {
+                        var baseCuryID = SelectFrom<PX.Data.PXAccess.Organization>.View.Select(Base).RowCast<PX.Data.PXAccess.Organization>().FirstOrDefault().BaseCuryID;
+                        var curyRate = SelectFrom<CurrencyRate>
+                                       .Where<CurrencyRate.fromCuryID.IsEqual<P.AsString>
+                                              .And<CurrencyRate.toCuryID.IsEqual<P.AsString>>>
+                                       .View.Select(Base, doc.CuryID, baseCuryID).RowCast<CurrencyRate>().OrderByDescending(x => x.CuryEffDate).FirstOrDefault();
+                        rate = curyRate?.CuryRate ?? 1;
+                    }
+                    else
+                        rate = curyInfoData?.CuryRate;
+                    var newValue = itemData?.RecPrice == 0 || itemClass.ItemClassCD.ToUpper().Trim() == "NONSTOCK"
+                                   ? 0
+                                   : (itemData?.RecPrice - row.CuryLineAmt / row.OrderQty * rate) / itemData?.RecPrice;
+                    Base.Transactions.SetValueExt<SOLineExtension.usrMSRPDiscountRate>(row, newValue);
+                    #endregion
+
+                    #region Set Account & subAccount only for TW Tenant
+                    if (curCoutry?.BranchCD.Trim() == "IPEVOTW" && itemClass.ItemClassCD.ToUpper().Trim() == "NONSTOCK")
+                    {
+                        Base.Transactions.SetValueExt<SOLine.salesAcctID>(row, itemData.SalesAcctID);
+                        Base.Transactions.SetValueExt<SOLine.salesSubID>(row, itemData.SalesSubID);
+                    }
+                    #endregion
+                }
+            }
+
+            baseMethod();
+        }
+
         #endregion
 
         #region Actions
@@ -114,6 +163,7 @@ namespace PX.Objects.SO
             }
 
         }
+
         #endregion
 
         #region Static Methods
@@ -167,9 +217,9 @@ namespace PX.Objects.SO
 
                 //if (customer.CreditRule == CreditRuleTypes.CS_CREDIT_LIMIT || customer.CreditRule == CreditRuleTypes.CS_BOTH)
                 //{
-                    ARBalances remBal = CustomerMaint.GetCustomerBalances<AR.Override.Customer.sharedCreditCustomerID>(graph, customer?.SharedCreditCustomerID);
+                ARBalances remBal = CustomerMaint.GetCustomerBalances<AR.Override.Customer.sharedCreditCustomerID>(graph, customer?.SharedCreditCustomerID);
 
-                    return customer?.CreditLimit - ((remBal?.CurrentBal ?? 0) + (remBal?.UnreleasedBal ?? 0) + (remBal?.TotalOpenOrders ?? 0) + (remBal?.TotalShipped ?? 0) - (remBal?.TotalPrepayments ?? 0)) + soUnpaidBalance;
+                return customer?.CreditLimit - ((remBal?.CurrentBal ?? 0) + (remBal?.UnreleasedBal ?? 0) + (remBal?.TotalOpenOrders ?? 0) + (remBal?.TotalShipped ?? 0) - (remBal?.TotalPrepayments ?? 0)) + soUnpaidBalance;
                 //}
             }
 
