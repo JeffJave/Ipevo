@@ -63,4 +63,15 @@
             </AddItem>
         </Children>
     </PXFormView>
+    <PXGridLevel DataMember="Transactions" ParentId="phG_tab_Items#0_grid_Levels#0" TypeFullName="PX.Web.UI.PXGridLevel">
+        <Children Key="Columns">
+            <AddItem>
+                <PXGridColumn TypeFullName="PX.Web.UI.PXGridColumn">
+                    <Prop Key="DataField" Value="UsrMSRPDiscountRate" />
+                    <Prop Key="Width" Value="100" />
+                </PXGridColumn>
+            </AddItem>
+            <PXGridColumn DataField="DiscPct" OriginalIndex="34" />
+        </Children>
+    </PXGridLevel>
 </Page>
