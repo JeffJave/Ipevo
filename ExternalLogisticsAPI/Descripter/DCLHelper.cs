@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 using APILibrary;
 using APILibrary.Model;
 using ExternalLogisticsAPI.DAC;
+using PX.Data;
+using PX.Data.BQL;
+using PX.Data.BQL.Fluent;
 
 namespace ExternalLogisticsAPI.Descripter
 {
@@ -67,5 +70,19 @@ namespace ExternalLogisticsAPI.Descripter
             var caller = new APICaller(config);
             return caller.CallApi(metadataShipemt);
         }
+
+        /// <summary> Get Correct InventoryCD  </summary>
+        public static string GetCorrectInventoryCD(int? _inventoryID)
+        {
+            var itemData = PX.Objects.IN.InventoryItem.PK.Find(new PX.Data.PXGraph(), _inventoryID);
+            var xrefData = SelectFrom<PX.Objects.IN.INItemXRef>
+                           .Where<PX.Objects.IN.INItemXRef.inventoryID.IsEqual<P.AsInt>>
+                           .View.Select(new PX.Data.PXGraph(), _inventoryID).RowCast<PX.Objects.IN.INItemXRef>().FirstOrDefault();
+            if (xrefData != null && xrefData.AlternateType == "GLBL" & !string.IsNullOrEmpty(xrefData.AlternateID))
+                return xrefData.AlternateID;
+            else
+                return itemData.InventoryCD;
+        }
+
     }
 }
