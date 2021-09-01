@@ -692,7 +692,7 @@ namespace ExternalLogisticsAPI.Graph_Extensions
                 APILibrary.Model.Line dclItem = new APILibrary.Model.Line()
                 {
                     line_number = count++,
-                    item_number = inventory.InventoryCD == "5-884-4-01-02" ? "5-884-4-01-00" : inventory.InventoryCD,
+                    item_number = DCLHelper.GetCorrectInventoryCD(inventory.InventoryID),
                     description = inventory.Descr,
                     quantity = (int)item?.OrderQty,
                     price = (double?)item.UnitPrice

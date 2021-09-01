@@ -6,6 +6,7 @@ using System.Text;
 using APILibrary;
 using APILibrary.Model;
 using ExternalLogisticsAPI.DAC;
+using ExternalLogisticsAPI.Descripter;
 using PX.CarrierService;
 using PX.Data;
 using PX.Data.BQL;
@@ -409,7 +410,7 @@ namespace PX.Objects.SO
 
             foreach (var item in soLines)
             {
-                var _cd = inventoryItems.Where(x => x.InventoryID == item.InventoryID).FirstOrDefault()?.InventoryCD;
+                var _cd = DCLHelper.GetCorrectInventoryCD(item.InventoryID);
                 line = string.Empty;
                 // CustomerCode
                 line += $"\"IPEVOMAN\";";
@@ -534,7 +535,7 @@ namespace PX.Objects.SO
                     line += $"{FillUpLen(10, "YS_OR_V01")}";
                     line += $"{FillUpLen(3, "ORA")}";
                     line += $"{FillUpLen(10, item?.LineNbr.ToString())}";
-                    line += $"{FillUpLen(20, inventoryItems?.FirstOrDefault(x => x.InventoryID == item?.InventoryID).InventoryCD)}";
+                    line += $"{FillUpLen(20, DCLHelper.GetCorrectInventoryCD(item.InventoryID))}";
                     line += $"{FillUpLen(11, item?.ShippedQty?.ToString())}";
                     line += $"{FillUpLen(25, " ")}";
                     line += $"{FillUpLen(25, " ")}";
@@ -640,7 +641,7 @@ namespace PX.Objects.SO
                     line += $"{FillUpLen(10, "YS_OR_V01")}";
                     line += $"{FillUpLen(3, "ORA")}";
                     line += $"{FillUpLen(10, item?.LineNbr.ToString())}";
-                    line += $"{FillUpLen(20, inventoryItems?.FirstOrDefault(x => x.InventoryID == item?.InventoryID).InventoryCD)}";
+                    line += $"{FillUpLen(20, DCLHelper.GetCorrectInventoryCD(item.InventoryID))}";
                     line += $"{FillUpLen(11, item?.OpenQty?.ToString())}";
                     line += $"{FillUpLen(25, " ")}";
                     line += $"{FillUpLen(25, " ")}";

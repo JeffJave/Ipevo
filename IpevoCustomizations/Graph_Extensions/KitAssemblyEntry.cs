@@ -37,14 +37,14 @@ namespace PX.Objects.IN
                     decimal alreadyAjdCost = 0;
                     for (int i = 0; i < trans.Count() - 1; i++)
                     {
-                        decimal newValue = Math.Round((decimal)(trans.ElementAt(i).UnitCost.Value + (trans.ElementAt(i).UnitCost.Value * trans.ElementAt(i).Qty.Value / totalComponentsCost * adjCost / docRow?.Qty.Value)), (int)decimalPlace);
+                        if (trans.ElementAt(i).Qty == 0)
+                            continue;
+                        decimal newValue = Math.Round((decimal)(trans.ElementAt(i).UnitCost.Value + (trans.ElementAt(i).UnitCost.Value * trans.ElementAt(i).Qty.Value / totalComponentsCost * adjCost / trans.ElementAt(i).Qty.Value)), (int)decimalPlace);
                         alreadyAjdCost += newValue * trans.ElementAt(i).Qty.Value;
                         Base.Components.SetValueExt<INComponentTran.unitCost>(trans.ElementAt(i), (decimal)newValue);
                     }
-
-                    //if (Math.Round(calcResult * (double)trans.ElementAt(lastIdx)?.Qty, (int)decimalPlace) != result)
-                    //    throw new PXException("The disassembly will create unbalance inventory value, please modify the unit cost manually");
-                    Base.Components.SetValueExt<INComponentTran.unitCost>(trans.LastOrDefault(), Math.Round((decimal)((itemCost - alreadyAjdCost) / docRow.Qty), (int)decimalPlace));
+                    if (trans.LastOrDefault().Qty != 0)
+                        Base.Components.SetValueExt<INComponentTran.unitCost>(trans.LastOrDefault(), Math.Round((decimal)((itemCost - alreadyAjdCost) / trans.LastOrDefault().Qty), (int)decimalPlace));
                 }
             }
             baseHandler();
