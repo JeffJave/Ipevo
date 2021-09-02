@@ -18,9 +18,9 @@ namespace eGUICustomizations.Descriptor
         public const string CNIsNotFound   = "The Original GUI Number Cannot Be Found For Credit Note.";
         public const string ManHasReleased = "Manual GUI Transaction Has Been Released.";
         public const string GUINbrIsMandat = "GUI Number Cannot Be Empty.";
-        public const string ChkTotalGUIAmt = "Total GUI Tax Amout Must Equal Tax Total.";
+        public const string ChkTotalGUIAmt = "GUI Total Tax Amount Must Be Equal To Invoice Tax Total.";
         public const string CfmMegOnDelete = "Are You Sure To Void GUI Number?";
-        public const string NoInvTaxDtls   = "No Tax Details, Please Double Check.";
+        public const string NoInvTaxDtls   = "Since GUI Number Isn't Blank, But Tax Details Is Empty, Please Double Check.";
         public const string DeleteInfo     = "Deleted By {0}";
         public const string TaxNbrLenNot8  = "Tax ID Number Must Be 8 Characters.";
         public const string TaxNbrWarning  = "Tax ID Number Might Be Wrong, Please Check Again.";
@@ -29,7 +29,7 @@ namespace eGUICustomizations.Descriptor
         public const string FmtCodeIncort  = "The GUI <{0}> Format Code Isn't [31] Or [35].";
         public const string GUINbrLength   = "The Length Of GUI Number Need To Be 10 Characters";
         public const string GUINbrMini     = "The Minimum Length Of GUI Number Is 10.";
-        public const string DefPrinter     = "Please Define Default Printer.";
+        public const string DefPrinter     = "Please Define Default Printer In User Profile.";
         public const string RemainAmt      = "The Remaining Amount Isn't Enough to Settle.";
         public const string CRACIsNone     = "Please Select Credit Action When The VAT Out Code Is 33/34.";
         public const string RemindHeader   = "Reminder Header";
