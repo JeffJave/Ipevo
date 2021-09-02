@@ -221,7 +221,6 @@ namespace PX.Objects.AR
                 TaxAmount = 0,
                 AcctCD = Base.customer.Current.AcctCD,
                 AcctName = Base.customer.Current.AcctName,
-                DeductionCode = string.Empty,
                 Remark = string.Format(TWMessages.DeleteInfo, Base.Accessinfo.UserName),
                 OrderNbr = e.Row.RefNbr
             });
