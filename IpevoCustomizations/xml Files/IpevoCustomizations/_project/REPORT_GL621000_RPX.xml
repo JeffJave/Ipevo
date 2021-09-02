@@ -46,30 +46,6 @@
                 <DataField>@LedgerID</DataField>
             </FilterExp>
             <FilterExp>
-                <Condition>GreaterOrEqual</Condition>
-                <DataField>Batch.FinPeriodID</DataField>
-                <OpenBraces>1</OpenBraces>
-                <Operator>Or</Operator>
-                <Value>@PeriodFrom</Value>
-            </FilterExp>
-            <FilterExp>
-                <CloseBraces>1</CloseBraces>
-                <Condition>IsNull</Condition>
-                <DataField>@PeriodFrom</DataField>
-            </FilterExp>
-            <FilterExp>
-                <Condition>LessOrEqual</Condition>
-                <DataField>Batch.FinPeriodID</DataField>
-                <OpenBraces>1</OpenBraces>
-                <Operator>Or</Operator>
-                <Value>@PeriodTo</Value>
-            </FilterExp>
-            <FilterExp>
-                <CloseBraces>1</CloseBraces>
-                <Condition>IsNull</Condition>
-                <DataField>@PeriodTo</DataField>
-            </FilterExp>
-            <FilterExp>
                 <Condition>BelongsTo</Condition>
                 <DataField>Batch.BranchID</DataField>
                 <OpenBraces>1</OpenBraces>
@@ -102,6 +78,65 @@
                 <CloseBraces>1</CloseBraces>
                 <Condition>IsNull</Condition>
                 <DataField>@LastModifiedBy</DataField>
+            </FilterExp>
+            <FilterExp>
+                <DataField>@isBasedOnDate</DataField>
+                <OpenBraces>2</OpenBraces>
+                <Value>False</Value>
+            </FilterExp>
+            <FilterExp>
+                <Condition>GreaterOrEqual</Condition>
+                <DataField>Batch.FinPeriodID</DataField>
+                <OpenBraces>1</OpenBraces>
+                <Operator>Or</Operator>
+                <Value>@PeriodFrom</Value>
+            </FilterExp>
+            <FilterExp>
+                <CloseBraces>1</CloseBraces>
+                <Condition>IsNull</Condition>
+                <DataField>@PeriodFrom</DataField>
+            </FilterExp>
+            <FilterExp>
+                <Condition>LessOrEqual</Condition>
+                <DataField>Batch.FinPeriodID</DataField>
+                <OpenBraces>1</OpenBraces>
+                <Operator>Or</Operator>
+                <Value>@PeriodTo</Value>
+            </FilterExp>
+            <FilterExp>
+                <CloseBraces>2</CloseBraces>
+                <Condition>IsNull</Condition>
+                <DataField>@PeriodTo</DataField>
+                <Operator>Or</Operator>
+            </FilterExp>
+            <FilterExp>
+                <DataField>@isBasedOnDate</DataField>
+                <OpenBraces>1</OpenBraces>
+                <Value>True</Value>
+            </FilterExp>
+            <FilterExp>
+                <Condition>GreaterOrEqual</Condition>
+                <DataField>Batch.DateEntered</DataField>
+                <OpenBraces>1</OpenBraces>
+                <Operator>Or</Operator>
+                <Value>@DateFrom</Value>
+            </FilterExp>
+            <FilterExp>
+                <CloseBraces>1</CloseBraces>
+                <Condition>IsNull</Condition>
+                <DataField>@DateFrom</DataField>
+            </FilterExp>
+            <FilterExp>
+                <Condition>LessOrEqual</Condition>
+                <DataField>Batch.DateEntered</DataField>
+                <OpenBraces>1</OpenBraces>
+                <Operator>Or</Operator>
+                <Value>@DateTo</Value>
+            </FilterExp>
+            <FilterExp>
+                <CloseBraces>3</CloseBraces>
+                <Condition>IsNull</Condition>
+                <DataField>@DateTo</DataField>
             </FilterExp>
         </Filters>
         <GridSize>4px, 4px</GridSize>
@@ -161,6 +196,7 @@
                 <ViewName>=Report.GetFieldSchema('Users.Username')</ViewName>
             </ReportParameter>
             <ReportParameter>
+                <ColumnSpan>2</ColumnSpan>
                 <DefaultValue>True</DefaultValue>
                 <Name>Unposted</Name>
                 <Prompt>Include Unposted Transactions</Prompt>
@@ -173,6 +209,30 @@
                 <Name>FeaturesSetActive</Name>
                 <Type>Integer</Type>
                 <Visible>False</Visible>
+            </ReportParameter>
+            <ReportParameter>
+                <ColumnSpan>2</ColumnSpan>
+                <DefaultValue>False</DefaultValue>
+                <Name>isBasedOnDate</Name>
+                <Nullable>True</Nullable>
+                <Prompt>Search based on date</Prompt>
+                <Type>Boolean</Type>
+            </ReportParameter>
+            <ReportParameter>
+                <ColumnSpan>2</ColumnSpan>
+                <DefaultValue>=Report.GetDefExt('Batch.DateEntered')</DefaultValue>
+                <Name>DateFrom</Name>
+                <Nullable>True</Nullable>
+                <Prompt>Date From</Prompt>
+                <Type>DateTime</Type>
+            </ReportParameter>
+            <ReportParameter>
+                <ColumnSpan>2</ColumnSpan>
+                <DefaultValue>=Report.GetDefExt('Batch.DateEntered')</DefaultValue>
+                <Name>DateTo</Name>
+                <Nullable>True</Nullable>
+                <Prompt>Date To</Prompt>
+                <Type>DateTime</Type>
             </ReportParameter>
         </Parameters>
         <Relations>
@@ -832,6 +892,7 @@
                         </Style>
                         <StyleName>Normal</StyleName>
                         <Value>=[GLTran.CuryDebitAmt]</Value>
+                        <VisibleExpr>=IIF([GLTran.CuryID] = 'TWD' , False, True)</VisibleExpr>
                     </TextBox>
                     <TextBox Name="textBox44">
                         <Excel>
@@ -845,6 +906,35 @@
                         </Style>
                         <StyleName>Normal</StyleName>
                         <Value>=[GLTran.CuryCreditAmt]</Value>
+                        <VisibleExpr>IIF([GLTran.CuryID] = 'TWD' , False, True)</VisibleExpr>
+                    </TextBox>
+                    <TextBox Name="textBox65">
+                        <Excel>
+                            <column>9</column>
+                        </Excel>
+                        <Format>='N2'</Format>
+                        <Location>788px, 0px</Location>
+                        <Size>116px, 14px</Size>
+                        <Style>
+                            <TextAlign>Right</TextAlign>
+                        </Style>
+                        <StyleName>Normal</StyleName>
+                        <Value>=[GLTran.CuryDebitAmt]</Value>
+                        <VisibleExpr>=IIF([GLTran.CuryID] = 'TWD' or [GLTran.CuryID] = Null, True, False)</VisibleExpr>
+                    </TextBox>
+                    <TextBox Name="textBox66">
+                        <Excel>
+                            <column>10</column>
+                        </Excel>
+                        <Format>='N2'</Format>
+                        <Location>904px, 0px</Location>
+                        <Size>116px, 14px</Size>
+                        <Style>
+                            <TextAlign>Right</TextAlign>
+                        </Style>
+                        <StyleName>Normal</StyleName>
+                        <Value>=[GLTran.CuryCreditAmt]</Value>
+                        <VisibleExpr>=IIF([GLTran.CuryID] = 'TWD' or [GLTran.CuryID] = Null, True, False)</VisibleExpr>
                     </TextBox>
                 </Items>
             </Detail>
@@ -873,7 +963,7 @@
                             <column>3</column>
                         </Excel>
                         <Location>116px, 4px</Location>
-                        <Size>88px, 14px</Size>
+                        <Size>92px, 14px</Size>
                         <StyleName>Heading 1</StyleName>
                         <Value>Batch Number</Value>
                     </TextBox>
@@ -941,8 +1031,8 @@
                         <Excel>
                             <column>4</column>
                         </Excel>
-                        <Location>204px, 4px</Location>
-                        <Size>72px, 14px</Size>
+                        <Location>208px, 4px</Location>
+                        <Size>68px, 14px</Size>
                         <StyleName>Heading 1</StyleName>
                         <Value>Date</Value>
                     </TextBox>
@@ -1301,8 +1391,8 @@
                                 <Excel>
                                     <column>4</column>
                                 </Excel>
-                                <Location>204px, 4px</Location>
-                                <Size>72px, 14px</Size>
+                                <Location>208px, 4px</Location>
+                                <Size>68px, 14px</Size>
                                 <StyleName>Heading 1</StyleName>
                                 <Value>=[Batch.DateEntered]</Value>
                             </TextBox>
@@ -1379,7 +1469,7 @@
                                 </Excel>
                                 <Location>116px, 4px</Location>
                                 <NavigateMethod>Server</NavigateMethod>
-                                <Size>88px, 14px</Size>
+                                <Size>92px, 14px</Size>
                                 <StyleName>Heading 1</StyleName>
                                 <Value>=[Batch.BatchNbr]</Value>
                             </TextBox>
