@@ -7,7 +7,6 @@ using PX.Objects.GL;
 using PX.Objects.TX;
 using eGUICustomizations.DAC;
 using eGUICustomizations.Descriptor;
-using static eGUICustomizations.Descriptor.TWNStringList;
 
 namespace eGUICustomizations.Graph_Release
 {
@@ -137,7 +136,8 @@ namespace eGUICustomizations.Graph_Release
             row.GUIStatus     = sGUITran.GUIStatus;
             row.Branch        = GetBranchCD(sGUITran.BranchID);
             row.GUIDirection  = sGUITran.GUIDirection;
-            row.GUIDate       = row.GUIDecPeriod = sGUITran.GUIDate;
+            row.GUIDate       = sGUITran.GUIDate;
+            row.GUIDecPeriod  = sGUITran.GUIDecPeriod;
             row.GUITitle      = sGUITran.GUITitle;
             row.TaxZoneID     = sGUITran.TaxZoneID;
             row.TaxCategoryID = sGUITran.TaxCategoryID;
@@ -168,17 +168,6 @@ namespace eGUICustomizations.Graph_Release
         #endregion
 
         #region Static Method
-        public static void UpdateGUIStatus(string gUINbr)
-        {
-            PXUpdate<Set<TWNGUITrans.gUIStatus, Required<TWNGUITrans.gUIStatus>>,
-                     TWNGUITrans,
-                     Where<TWNGUITrans.gUIStatus, Equal<TWNGUIStatus.used>,
-                           And<TWNGUITrans.gUIDirection, Equal<TWNGUIDirection.issue>,
-                               And<TWNGUITrans.sequenceNo, Equal<Zero>,
-                                   And<TWNGUITrans.gUINbr, Equal<Required<TWNGUITrans.gUINbr>>>>>>>
-                                   .Update(new PXGraph(), TWNGUIStatus.Voided, gUINbr);
-        }
-
         /// <summary>
         /// Add the following update logic per spec [GUI enhancement].
         /// </summary>
@@ -234,6 +223,7 @@ namespace eGUICustomizations.Graph_Release
         public bool B2CPrinted;
 
         public DateTime? GUIDate;
+        public DateTime? GUIDecPeriod;
 
         public decimal? NetAmount;
         public decimal? TaxAmount;

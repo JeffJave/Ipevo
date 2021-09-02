@@ -24,8 +24,7 @@ namespace PX.Objects.AP
         {
             baseMethod();
 
-            APRegister    doc = Base.APDocument.Current;
-            APRegisterExt docExt = PXCache<APRegister>.GetExtension<APRegisterExt>(doc);
+            APRegister doc = Base.APDocument.Current;
 
             // Check for document and released flag
             if (TWNGUIValidation.ActivateTWGUI(Base) == true &&
@@ -41,13 +40,13 @@ namespace PX.Objects.AP
 
                     if (Tax.PK.Find(Base, row.TaxID).GetExtension<TaxExt>().UsrTWNGUI != true) { continue; }
 
-                    Vendor vendor = Vendor.PK.Find(Base, row.VendorID);
-
                     using (PXTransactionScope ts = new PXTransactionScope())
                     {
                         TWNReleaseProcess rp = PXGraph.CreateInstance<TWNReleaseProcess>();
 
                         TWNGUITrans tWNGUITrans = rp.InitAndCheckOnAP(row.GUINbr, row.VATInCode);
+
+                        Vendor vendor = Vendor.PK.Find(Base, row.VendorID);
 
                         rp.CreateGUITrans(new STWNGUITran()
                         {    
@@ -57,6 +56,7 @@ namespace PX.Objects.AP
                             BranchID      = Base.APTran_TranType_RefNbr.Current.BranchID,
                             GUIDirection  = TWNGUIDirection.Receipt,
                             GUIDate       = row.GUIDate,
+                            GUIDecPeriod  = doc.DocDate,
                             GUITitle      = vendor?.AcctName,
                             TaxZoneID     = row.TaxZoneID,
                             TaxCategoryID = row.TaxCategoryID,
@@ -98,40 +98,6 @@ namespace PX.Objects.AP
             // Triggering after save events.
             ViewGUITrans.Cache.Persisted(false);
         }
-
-        //public delegate List<APRegister> ReleaseInvoiceDelegate(JournalEntry je, ref APRegister doc, 
-        //                                                        PXResult<APInvoice, CurrencyInfo, Terms, Vendor> res, 
-        //                                                        bool isPrebooking, out List<INRegister> inDocs);
-        //[PXOverride]
-        //public List<APRegister> ReleaseInvoice(JournalEntry je, ref APRegister doc,
-        //                                       PXResult<APInvoice, CurrencyInfo, Terms, Vendor> res,
-        //                                       bool isPrebooking, out List<INRegister> inDocs,
-        //                                       ReleaseInvoiceDelegate baseMethod)
-        //{
-        //    var ret = baseMethod(je, ref doc, res, isPrebooking, out inDocs);
-
-        //    if (Base.APTaxTran_TranType_RefNbr.Current != null)
-        //    {
-        //        Tax tax = SelectTax(Base, Base.APTran_TranType_RefNbr.Current.TaxID);
-
-        //        foreach (GLTran gLTran in je.GLTranModuleBatNbr.Cache.Inserted)
-        //        {
-        //            if (tax != null && (tax.PurchTaxAcctID.Equals(gLTran.AccountID) || tax.SalesTaxAcctID.Equals(gLTran.AccountID) ))
-        //            {
-        //                gLTran.TranDesc = string.Format("{0} / {1}", PXCache<APRegister>.GetExtension<APRegisterExt>(doc).UsrVATInCode,
-        //                                                             PXCache<APRegister>.GetExtension<APRegisterExt>(doc).UsrGUINbr);
-        //            }
-
-        //            //if (gLTran.ProjectID == ProjectDefaultAttribute.NonProject())
-        //            //{
-        //            //    gLTran.ProjectID = doc.ProjectID;
-        //            //    gLTran.TaskID    = Base.APTran_TranType_RefNbr.Current.TaskID;
-        //            //}
-        //        }
-        //    }
-
-        //    return ret;
-        //}
         #endregion
 
         #region Static Methods
