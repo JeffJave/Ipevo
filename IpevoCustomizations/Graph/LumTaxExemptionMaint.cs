@@ -32,8 +32,8 @@ namespace IpevoCustomizations.Graph
         [PXUIField(DisplayName = "LOAD FILE", Enabled = true, MapEnableRights = PXCacheRights.Select)]
         protected virtual IEnumerable LumLoadFile(PXAdapter adapter)
         {
-            //var dirPath = @"C:\Storage\TaxExemptionCcertificate\";
-            var dirPath = @"D:\uploadTest\";
+            var dirPath = @"C:\Storage\TaxExemptionCcertificate\";
+            //var dirPath = @"D:\uploadTest\";
             var driInfo = new System.IO.DirectoryInfo(dirPath);
             System.IO.FileInfo[] Files = driInfo.GetFiles("*.pdf"); //Getting Text files
             var customerData = SelectFrom<Customer>.View.Select(this).RowCast<Customer>().ToList();
