@@ -45,7 +45,7 @@ namespace PX.Objects.SO
             if (doc != null)
             {
                 var customerData = Customer.PK.Find(Base, doc.CustomerID);
-                var sumTaxableAmt = Base.Taxes.Select().RowCast<SOTaxTran>().Sum(x => x.CuryTaxableAmt);
+                var sumTaxableAmt = Base.Taxes.Select().RowCast<SOTaxTran>().FirstOrDefault().CuryTaxableAmt;
                 var sumTaxAmt = Base.Taxes.Select().RowCast<SOTaxTran>().Sum(x => x.CuryTaxAmt);
                 if (customerData != null && customerData.AcctCD.Trim().ToUpper() != "SELLERCENTRA")
                     Base.Document.Cache.SetValueExt(doc, "AttributeTAXRATE", sumTaxableAmt != 0 && sumTaxAmt != 0 ? sumTaxAmt / sumTaxableAmt : 0);
