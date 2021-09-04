@@ -19,15 +19,7 @@ namespace PX.Objects.SO
         #region UsrRemainingCreditLimit
         [PXBaseCury()]
         [PXUIField(DisplayName = "Remaining Credit Limit", IsReadOnly = true, Enabled = false)]
-        public virtual Decimal? UsrRemainingCreditLimit
-        {
-            [PXDependsOnFields(typeof(SOOrder.customerID), typeof(SOOrder.curyUnpaidBalance))]
-            get
-            {
-                return SOOrderEntry_Extensions.GetCustomerRemainCreditLimit(Base.CustomerID, Base.CuryUnpaidBalance);
-            }
-            set { }
-        }
+        public virtual Decimal? UsrRemainingCreditLimit { get; set; }
         public abstract class usrRemainingCreditLimit : PX.Data.BQL.BqlDecimal.Field<usrRemainingCreditLimit> { }
         #endregion
     }

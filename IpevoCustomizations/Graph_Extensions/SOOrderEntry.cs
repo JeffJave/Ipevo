@@ -2,6 +2,7 @@
 using PX.Data.BQL;
 using PX.Data.BQL.Fluent;
 using PX.Objects.AR;
+using PX.Objects.CM;
 using PX.Objects.CS;
 using PX.Objects.GL;
 using PX.Objects.IN;
@@ -10,7 +11,6 @@ using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using IpevoCustomizations.DAC;
-using PX.Objects.CM;
 
 namespace PX.Objects.SO
 {
@@ -152,6 +152,20 @@ namespace PX.Objects.SO
             }
         }
 
+        protected void _(Events.FieldSelecting<SOOrderExt.usrRemainingCreditLimit> e)
+        {
+            var row = e.Row as SOOrder;
+
+            if (row != null && row.CustomerID != null && e.ReturnValue == null)
+            {
+                Customer customer = Customer.PK.Find(Base, row.CustomerID);
+
+                ARBalances remBal = CustomerMaint.GetCustomerBalances<AR.Override.Customer.sharedCreditCustomerID>(Base, customer?.SharedCreditCustomerID);
+
+                e.ReturnValue = customer?.CreditLimit - ((remBal?.CurrentBal ?? 0) + (remBal?.UnreleasedBal ?? 0) + (remBal?.TotalOpenOrders ?? 0) + (remBal?.TotalShipped ?? 0) - (remBal?.TotalPrepayments ?? 0)) + row.UnpaidBalance;
+            }
+        }
+
         protected void _(Events.FieldUpdated<SOLine.inventoryID> e, PXFieldUpdated baeHandler)
         {
             baeHandler?.Invoke(e.Cache, e.Args);
@@ -171,9 +185,7 @@ namespace PX.Objects.SO
                 Base.Document.Cache.SetValueExt<SOOrder.taxZoneID>(Base.Document.Current, "TAXEXEMPT");
                 Base.Document.Cache.MarkUpdated(Base.Document.Current);
             }
-
         }
-
         #endregion
 
         #region Static Methods
@@ -209,31 +221,6 @@ namespace PX.Objects.SO
             }
 
             return item.TopFirst?.InventoryID;
-        }
-
-        /// <summary>
-        /// Per Peter's email [IPEVO SO Approval Design].
-        /// </summary>
-        /// <param name="customerID"></param>
-        /// <param name="soUnpaidBalance"></param>
-        /// <returns></returns>
-        public static decimal? GetCustomerRemainCreditLimit(int? customerID, decimal? soUnpaidBalance)
-        {
-            if (customerID != null)
-            {
-                CustomerMaint graph = PXGraph.CreateInstance<CustomerMaint>();
-
-                Customer customer = Customer.PK.Find(graph, customerID);
-
-                //if (customer.CreditRule == CreditRuleTypes.CS_CREDIT_LIMIT || customer.CreditRule == CreditRuleTypes.CS_BOTH)
-                //{
-                ARBalances remBal = CustomerMaint.GetCustomerBalances<AR.Override.Customer.sharedCreditCustomerID>(graph, customer?.SharedCreditCustomerID);
-
-                return customer?.CreditLimit - ((remBal?.CurrentBal ?? 0) + (remBal?.UnreleasedBal ?? 0) + (remBal?.TotalOpenOrders ?? 0) + (remBal?.TotalShipped ?? 0) - (remBal?.TotalPrepayments ?? 0)) + soUnpaidBalance;
-                //}
-            }
-
-            return decimal.Zero;
         }
         #endregion
     }
