@@ -45,11 +45,7 @@ SELECT c.CompanyCD,
 	   shipAddress.State as shipState,
 	   shipAddress.PostalCode as shipPostalCode,
 	   soShip.InvoiceNbr,
-	   CASE WHEN soTax.CuryTaxAmt != 0 and soTax.CuryTaxableAmt != 0 
-			THEN 
-				soTax.CuryTaxAmt/ soTax.CuryTaxableAmt
-			ELSE 
-				0 END AS TaxRate,
+	   ISNULL(soKvExt.ValueString,0) as TaxRate,
 	   soTax.CuryTaxAmt,
 	   so.CuryID
 FROM SOOrder so
@@ -73,11 +69,14 @@ LEFT JOIN ARInvoice invoice on soShip.InvoiceNbr = invoice.RefNbr
 						   and soShip.CompanyID = invoice.CompanyID
 LEFT JOIN SOShipment shipInfo on soShip.ShipmentNbr = shipInfo.ShipmentNbr
 							  and soShip.CompanyID = shipInfo.CompanyID
+LEFT JOIN SOOrderKvExt soKvExt on so.NoteID = soKvExt.RecordID
+							  and soKvExt.FieldName = 'AttributeTAXRATE'
+							  and so.CompanyID = soKvExt.CompanyID
 LEFT JOIN (SELECT CompanyID, OrderType, OrderNbr,SUM(CuryTaxAmt) as CuryTaxAmt, MAX(CuryTaxableAmt) as CuryTaxableAmt
 		   FROM SOTaxTran 
 		   GROUP BY CompanyID, OrderNbr, OrderType) soTax on so.OrderType = soTax.OrderType
-						 and so.OrderNbr = soTax.OrderNbr
-						 and so.CompanyID = soTax.CompanyID
+													     and so.OrderNbr = soTax.OrderNbr
+														 and so.CompanyID = soTax.CompanyID
 INNER JOIN INSite s on shipInfo.SiteID = s.SiteID
 				   and shipInfo.CompanyID = s.CompanyID
 INNER JOIN Company c on so.CompanyID = c.CompanyID

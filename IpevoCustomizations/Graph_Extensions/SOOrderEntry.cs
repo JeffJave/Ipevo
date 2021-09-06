@@ -48,7 +48,7 @@ namespace PX.Objects.SO
                 var sumTaxableAmt = Base.Taxes.Select().RowCast<SOTaxTran>().FirstOrDefault()?.CuryTaxableAmt;
                 var sumTaxAmt = Base.Taxes.Select().RowCast<SOTaxTran>().Sum(x => x?.CuryTaxAmt ?? 0);
                 if (customerData != null && customerData.AcctCD.Trim().ToUpper() != "SELLERCENTRA")
-                    Base.Document.Cache.SetValueExt(doc, "AttributeTAXRATE", (sumTaxableAmt == 0 || sumTaxAmt == 0 || sumTaxableAmt == null ) ? 0 : sumTaxAmt / sumTaxableAmt);
+                    Base.Document.Cache.SetValueExt(doc, "AttributeTAXRATE", (sumTaxableAmt == 0 || sumTaxAmt == 0 || sumTaxableAmt == null ) ? 0 : Math.Round((decimal)(sumTaxAmt / sumTaxableAmt),5));
             }
 
             var transDatas = Base.Transactions.Select().RowCast<SOLine>();
