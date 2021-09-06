@@ -45,10 +45,10 @@ namespace PX.Objects.SO
             if (doc != null)
             {
                 var customerData = Customer.PK.Find(Base, doc.CustomerID);
-                var sumTaxableAmt = Base.Taxes.Select().RowCast<SOTaxTran>().FirstOrDefault().CuryTaxableAmt;
-                var sumTaxAmt = Base.Taxes.Select().RowCast<SOTaxTran>().Sum(x => x.CuryTaxAmt);
+                var sumTaxableAmt = Base.Taxes.Select().RowCast<SOTaxTran>().FirstOrDefault()?.CuryTaxableAmt;
+                var sumTaxAmt = Base.Taxes.Select().RowCast<SOTaxTran>().Sum(x => x?.CuryTaxAmt ?? 0);
                 if (customerData != null && customerData.AcctCD.Trim().ToUpper() != "SELLERCENTRA")
-                    Base.Document.Cache.SetValueExt(doc, "AttributeTAXRATE", sumTaxableAmt != 0 && sumTaxAmt != 0 ? sumTaxAmt / sumTaxableAmt : 0);
+                    Base.Document.Cache.SetValueExt(doc, "AttributeTAXRATE", (sumTaxableAmt == 0 || sumTaxAmt == 0 || sumTaxableAmt == null ) ? 0 : sumTaxAmt / sumTaxableAmt);
             }
 
             var transDatas = Base.Transactions.Select().RowCast<SOLine>();
@@ -80,7 +80,7 @@ namespace PX.Objects.SO
                     #endregion
 
                     #region Set Account & subAccount only for TW Tenant
-                    if (curCoutry?.BranchCD.Trim() == "IPEVOTW" && itemClass.ItemClassCD.ToUpper().Trim() == "NONSTOCK")
+                    if (curCoutry?.BranchCD.Trim() == "IPEVOTW" && itemClass?.ItemClassCD.ToUpper().Trim() == "NONSTOCK")
                     {
                         Base.Transactions.SetValueExt<SOLine.salesAcctID>(row, itemData.SalesAcctID);
                         Base.Transactions.SetValueExt<SOLine.salesSubID>(row, itemData.SalesSubID);
