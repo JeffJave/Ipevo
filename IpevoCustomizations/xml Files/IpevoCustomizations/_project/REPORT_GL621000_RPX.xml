@@ -260,8 +260,19 @@
                 </Links>
                 <ParentName>Batch</ParentName>
             </ReportRelation>
+            <ReportRelation>
+                <ChildAlias>revierInfo</ChildAlias>
+                <ChildName>Users</ChildName>
+                <Links>
+                    <RelationRow>
+                        <ChildField>revierInfo.PKID</ChildField>
+                        <ParentField>Batch.UsrReviewer</ParentField>
+                    </RelationRow>
+                </Links>
+                <ParentName>Batch</ParentName>
+            </ReportRelation>
         </Relations>
-        <SchemaUrl>http://localhost/AcumaticaIPEVO/</SchemaUrl>
+        <SchemaUrl>http://localhost/IPEVEO</SchemaUrl>
         <Sorting>
             <SortExp>
                 <DataField>GLTran.LineNbr</DataField>
@@ -520,8 +531,242 @@
                 </Fields>
                 <FullName>PX.Objects.GL.Ledger</FullName>
             </ReportTable>
+            <ReportTable Name="Users">
+                <Fields>
+                    <ReportField Name="ActivationID">
+                    </ReportField>
+                    <ReportField Name="AllowedSessions">
+                        <DataType>Int32</DataType>
+                    </ReportField>
+                    <ReportField Name="AllowPasswordRecovery">
+                        <DataType>Boolean</DataType>
+                    </ReportField>
+                    <ReportField Name="ApplicationName">
+                    </ReportField>
+                    <ReportField Name="chkServiceManagement">
+                        <DataType>Boolean</DataType>
+                    </ReportField>
+                    <ReportField Name="Comment">
+                    </ReportField>
+                    <ReportField Name="ConfirmPassword">
+                    </ReportField>
+                    <ReportField Name="ContactID">
+                        <DataType>Int32</DataType>
+                    </ReportField>
+                    <ReportField Name="CreationDate">
+                        <DataType>DateTime</DataType>
+                    </ReportField>
+                    <ReportField Name="CreationDate_Day">
+                    </ReportField>
+                    <ReportField Name="CreationDate_Hour">
+                    </ReportField>
+                    <ReportField Name="CreationDate_Month">
+                    </ReportField>
+                    <ReportField Name="CreationDate_Quarter">
+                    </ReportField>
+                    <ReportField Name="DisplayName">
+                    </ReportField>
+                    <ReportField Name="Domain">
+                    </ReportField>
+                    <ReportField Name="Email">
+                    </ReportField>
+                    <ReportField Name="EntityTypeID">
+                        <DataType>Int32</DataType>
+                    </ReportField>
+                    <ReportField Name="ExtRef">
+                    </ReportField>
+                    <ReportField Name="FailedPasswordAnswerAttemptCount">
+                        <DataType>Int32</DataType>
+                    </ReportField>
+                    <ReportField Name="FailedPasswordAnswerAttemptWindowStart">
+                        <DataType>DateTime</DataType>
+                    </ReportField>
+                    <ReportField Name="FailedPasswordAnswerAttemptWindowStart_Day">
+                    </ReportField>
+                    <ReportField Name="FailedPasswordAnswerAttemptWindowStart_Hour">
+                    </ReportField>
+                    <ReportField Name="FailedPasswordAnswerAttemptWindowStart_Month">
+                    </ReportField>
+                    <ReportField Name="FailedPasswordAnswerAttemptWindowStart_Quarter">
+                    </ReportField>
+                    <ReportField Name="FailedPasswordAttemptCount">
+                        <DataType>Int32</DataType>
+                    </ReportField>
+                    <ReportField Name="FailedPasswordAttemptWindowStart">
+                        <DataType>DateTime</DataType>
+                    </ReportField>
+                    <ReportField Name="FailedPasswordAttemptWindowStart_Day">
+                    </ReportField>
+                    <ReportField Name="FailedPasswordAttemptWindowStart_Hour">
+                    </ReportField>
+                    <ReportField Name="FailedPasswordAttemptWindowStart_Month">
+                    </ReportField>
+                    <ReportField Name="FailedPasswordAttemptWindowStart_Quarter">
+                    </ReportField>
+                    <ReportField Name="FirstName">
+                    </ReportField>
+                    <ReportField Name="FullName">
+                    </ReportField>
+                    <ReportField Name="GeneratePassword">
+                        <DataType>Boolean</DataType>
+                    </ReportField>
+                    <ReportField Name="GroupMask">
+                        <DataType>Object</DataType>
+                    </ReportField>
+                    <ReportField Name="Guest">
+                        <DataType>Boolean</DataType>
+                    </ReportField>
+                    <ReportField Name="Included">
+                        <DataType>Boolean</DataType>
+                    </ReportField>
+                    <ReportField Name="IsADUser">
+                        <DataType>Boolean</DataType>
+                    </ReportField>
+                    <ReportField Name="IsApproved">
+                        <DataType>Boolean</DataType>
+                    </ReportField>
+                    <ReportField Name="IsAssigned">
+                        <DataType>Boolean</DataType>
+                    </ReportField>
+                    <ReportField Name="IsHidden">
+                        <DataType>Boolean</DataType>
+                    </ReportField>
+                    <ReportField Name="IsLockedOut">
+                        <DataType>Boolean</DataType>
+                    </ReportField>
+                    <ReportField Name="IsOnLine">
+                        <DataType>Boolean</DataType>
+                    </ReportField>
+                    <ReportField Name="IsPendingActivation">
+                        <DataType>Boolean</DataType>
+                    </ReportField>
+                    <ReportField Name="LastActivityDate">
+                        <DataType>DateTime</DataType>
+                    </ReportField>
+                    <ReportField Name="LastActivityDate_Day">
+                    </ReportField>
+                    <ReportField Name="LastActivityDate_Hour">
+                    </ReportField>
+                    <ReportField Name="LastActivityDate_Month">
+                    </ReportField>
+                    <ReportField Name="LastActivityDate_Quarter">
+                    </ReportField>
+                    <ReportField Name="LastLockedOutDate">
+                        <DataType>DateTime</DataType>
+                    </ReportField>
+                    <ReportField Name="LastLockedOutDate_Day">
+                    </ReportField>
+                    <ReportField Name="LastLockedOutDate_Hour">
+                    </ReportField>
+                    <ReportField Name="LastLockedOutDate_Month">
+                    </ReportField>
+                    <ReportField Name="LastLockedOutDate_Quarter">
+                    </ReportField>
+                    <ReportField Name="LastLoginDate">
+                        <DataType>DateTime</DataType>
+                    </ReportField>
+                    <ReportField Name="LastLoginDate_Day">
+                    </ReportField>
+                    <ReportField Name="LastLoginDate_Hour">
+                    </ReportField>
+                    <ReportField Name="LastLoginDate_Month">
+                    </ReportField>
+                    <ReportField Name="LastLoginDate_Quarter">
+                    </ReportField>
+                    <ReportField Name="LastName">
+                    </ReportField>
+                    <ReportField Name="LastPasswordChangedDate">
+                        <DataType>DateTime</DataType>
+                    </ReportField>
+                    <ReportField Name="LastPasswordChangedDate_Day">
+                    </ReportField>
+                    <ReportField Name="LastPasswordChangedDate_Hour">
+                    </ReportField>
+                    <ReportField Name="LastPasswordChangedDate_Month">
+                    </ReportField>
+                    <ReportField Name="LastPasswordChangedDate_Quarter">
+                    </ReportField>
+                    <ReportField Name="LockedOutDate">
+                        <DataType>DateTime</DataType>
+                    </ReportField>
+                    <ReportField Name="LockedOutDate_Day">
+                    </ReportField>
+                    <ReportField Name="LockedOutDate_Hour">
+                    </ReportField>
+                    <ReportField Name="LockedOutDate_Month">
+                    </ReportField>
+                    <ReportField Name="LockedOutDate_Quarter">
+                    </ReportField>
+                    <ReportField Name="LoginTypeID">
+                        <DataType>Int32</DataType>
+                    </ReportField>
+                    <ReportField Name="MultiFactorOverride">
+                        <DataType>Boolean</DataType>
+                    </ReportField>
+                    <ReportField Name="MultiFactorType">
+                        <DataType>Int32</DataType>
+                    </ReportField>
+                    <ReportField Name="NewPassword">
+                    </ReportField>
+                    <ReportField Name="NoteActivity">
+                    </ReportField>
+                    <ReportField Name="NoteFiles">
+                    </ReportField>
+                    <ReportField Name="NoteID">
+                        <DataType>Object</DataType>
+                    </ReportField>
+                    <ReportField Name="NoteImages">
+                    </ReportField>
+                    <ReportField Name="NoteText">
+                    </ReportField>
+                    <ReportField Name="OldPassword">
+                    </ReportField>
+                    <ReportField Name="OverrideADRoles">
+                        <DataType>Boolean</DataType>
+                    </ReportField>
+                    <ReportField Name="Password">
+                    </ReportField>
+                    <ReportField Name="PasswordAnswer">
+                    </ReportField>
+                    <ReportField Name="PasswordChangeable">
+                        <DataType>Boolean</DataType>
+                    </ReportField>
+                    <ReportField Name="PasswordChangeOnNextLogin">
+                        <DataType>Boolean</DataType>
+                    </ReportField>
+                    <ReportField Name="PasswordNeverExpires">
+                        <DataType>Boolean</DataType>
+                    </ReportField>
+                    <ReportField Name="PasswordQuestion">
+                    </ReportField>
+                    <ReportField Name="Phone">
+                    </ReportField>
+                    <ReportField Name="PKID">
+                        <DataType>Object</DataType>
+                    </ReportField>
+                    <ReportField Name="PseudonymizationStatus">
+                        <DataType>Int32</DataType>
+                    </ReportField>
+                    <ReportField Name="RecoveryLink">
+                    </ReportField>
+                    <ReportField Name="Source">
+                        <DataType>Int32</DataType>
+                    </ReportField>
+                    <ReportField Name="State">
+                    </ReportField>
+                    <ReportField Name="TwoFactorCode">
+                    </ReportField>
+                    <ReportField Name="Username">
+                    </ReportField>
+                </Fields>
+                <FullName>PX.SM.Users</FullName>
+            </ReportTable>
             <ReportTable Name="Batch">
                 <Fields>
+                    <ReportField Name="AMBatNbr">
+                    </ReportField>
+                    <ReportField Name="AMDocType">
+                    </ReportField>
                     <ReportField Name="AutoReverse">
                         <DataType>Boolean</DataType>
                     </ReportField>
@@ -538,12 +783,16 @@
                     </ReportField>
                     <ReportField Name="BranchID_description">
                     </ReportField>
+                    <ReportField Name="BranchID_Segment1">
+                    </ReportField>
                     <ReportField Name="ControlTotal">
                         <DataType>Decimal</DataType>
                     </ReportField>
                     <ReportField Name="CreatedByID">
                     </ReportField>
-                    <ReportField Name="CreatedByID_Creator_username">
+                    <ReportField Name="CreatedByID_Creator_displayName">
+                    </ReportField>
+                    <ReportField Name="CreatedByID_Creator_Username">
                     </ReportField>
                     <ReportField Name="CreatedByID_description">
                     </ReportField>
@@ -551,6 +800,17 @@
                     </ReportField>
                     <ReportField Name="CreatedDateTime">
                         <DataType>DateTime</DataType>
+                    </ReportField>
+                    <ReportField Name="CreatedDateTime_Day">
+                    </ReportField>
+                    <ReportField Name="CreatedDateTime_Hour">
+                    </ReportField>
+                    <ReportField Name="CreatedDateTime_Month">
+                    </ReportField>
+                    <ReportField Name="CreatedDateTime_Quarter">
+                    </ReportField>
+                    <ReportField Name="CreateTaxTrans">
+                        <DataType>Boolean</DataType>
                     </ReportField>
                     <ReportField Name="CreditTotal">
                         <DataType>Decimal</DataType>
@@ -578,6 +838,14 @@
                     <ReportField Name="DateEntered">
                         <DataType>DateTime</DataType>
                     </ReportField>
+                    <ReportField Name="DateEntered_Day">
+                    </ReportField>
+                    <ReportField Name="DateEntered_Hour">
+                    </ReportField>
+                    <ReportField Name="DateEntered_Month">
+                    </ReportField>
+                    <ReportField Name="DateEntered_Quarter">
+                    </ReportField>
                     <ReportField Name="DebitTotal">
                         <DataType>Decimal</DataType>
                     </ReportField>
@@ -588,6 +856,9 @@
                     </ReportField>
                     <ReportField Name="FinPeriodID">
                     </ReportField>
+                    <ReportField Name="HasRamainingAmount">
+                        <DataType>Boolean</DataType>
+                    </ReportField>
                     <ReportField Name="Hold">
                         <DataType>Boolean</DataType>
                     </ReportField>
@@ -595,17 +866,31 @@
                     </ReportField>
                     <ReportField Name="LastModifiedByID_description">
                     </ReportField>
-                    <ReportField Name="LastModifiedByID_Modifier_username">
+                    <ReportField Name="LastModifiedByID_Modifier_displayName">
+                    </ReportField>
+                    <ReportField Name="LastModifiedByID_Modifier_Username">
                     </ReportField>
                     <ReportField Name="LastModifiedByScreenID">
                     </ReportField>
                     <ReportField Name="LastModifiedDateTime">
                         <DataType>DateTime</DataType>
                     </ReportField>
+                    <ReportField Name="LastModifiedDateTime_Day">
+                    </ReportField>
+                    <ReportField Name="LastModifiedDateTime_Hour">
+                    </ReportField>
+                    <ReportField Name="LastModifiedDateTime_Month">
+                    </ReportField>
+                    <ReportField Name="LastModifiedDateTime_Quarter">
+                    </ReportField>
                     <ReportField Name="LedgerID">
                     </ReportField>
+                    <ReportField Name="LedgerID_description">
+                    </ReportField>
+                    <ReportField Name="LedgerID_Ledger_descr">
+                    </ReportField>
                     <ReportField Name="LineCntr">
-                        <DataType>Int16</DataType>
+                        <DataType>Int32</DataType>
                     </ReportField>
                     <ReportField Name="Module">
                     </ReportField>
@@ -614,7 +899,7 @@
                     <ReportField Name="NoteFiles">
                     </ReportField>
                     <ReportField Name="NoteID">
-                        <DataType>Int64</DataType>
+                        <DataType>Object</DataType>
                     </ReportField>
                     <ReportField Name="NoteImages">
                     </ReportField>
@@ -629,10 +914,19 @@
                     <ReportField Name="Posted">
                         <DataType>Boolean</DataType>
                     </ReportField>
+                    <ReportField Name="PostErrorCount">
+                        <DataType>Int32</DataType>
+                    </ReportField>
                     <ReportField Name="RefNbr">
                     </ReportField>
                     <ReportField Name="Released">
                         <DataType>Boolean</DataType>
+                    </ReportField>
+                    <ReportField Name="RequirePost">
+                        <DataType>Boolean</DataType>
+                    </ReportField>
+                    <ReportField Name="ReverseCount">
+                        <DataType>Int32</DataType>
                     </ReportField>
                     <ReportField Name="Scheduled">
                         <DataType>Boolean</DataType>
@@ -642,11 +936,33 @@
                     <ReportField Name="Selected">
                         <DataType>Boolean</DataType>
                     </ReportField>
+                    <ReportField Name="SkipTaxValidation">
+                        <DataType>Boolean</DataType>
+                    </ReportField>
                     <ReportField Name="Status">
                     </ReportField>
                     <ReportField Name="TranPeriodID">
                     </ReportField>
                     <ReportField Name="tstamp">
+                    </ReportField>
+                    <ReportField Name="UsrDisplayPostedBy">
+                    </ReportField>
+                    <ReportField Name="UsrDisplayReviewer">
+                        <DataType>Object</DataType>
+                    </ReportField>
+                    <ReportField Name="UsrReviewer">
+                        <DataType>Object</DataType>
+                    </ReportField>
+                    <ReportField Name="UsrReviewOn">
+                        <DataType>DateTime</DataType>
+                    </ReportField>
+                    <ReportField Name="UsrReviewOn_Day">
+                    </ReportField>
+                    <ReportField Name="UsrReviewOn_Hour">
+                    </ReportField>
+                    <ReportField Name="UsrReviewOn_Month">
+                    </ReportField>
+                    <ReportField Name="UsrReviewOn_Quarter">
                     </ReportField>
                     <ReportField Name="Voided">
                         <DataType>Boolean</DataType>
@@ -795,8 +1111,39 @@
                 </Items>
             </Detail>
             <PageFooter Name="pageFooterSection1">
-                <Height>7.99999px</Height>
-                <Visible>False</Visible>
+                <Height>56px</Height>
+                <Items>
+                    <TextBox Name="textBox67">
+                        <Location>8px, 20px</Location>
+                        <Size>148px, 20px</Size>
+                        <Style>
+                            <Font>
+                                <Name>Microsoft YaHei UI</Name>
+                            </Font>
+                        </Style>
+                        <Value>='核准:' + ' ' +#010;IIF([Batch.Status] = 'P', [Batch.LastModifiedByID_Modifier_Username], '')</Value>
+                    </TextBox>
+                    <TextBox Name="textBox68">
+                        <Location>424px, 20px</Location>
+                        <Size>124px, 20px</Size>
+                        <Style>
+                            <Font>
+                                <Name>Microsoft YaHei UI</Name>
+                            </Font>
+                        </Style>
+                        <Value>='覆核:'+ ' ' +#010;IIF([Batch.Status] = 'U',[Batch.LastModifiedByID_Modifier_Username],IIF([Batch.Status] = 'P',[revierInfo.Username],''))</Value>
+                    </TextBox>
+                    <TextBox Name="textBox69">
+                        <Location>832px, 20px</Location>
+                        <Size>124px, 20px</Size>
+                        <Style>
+                            <Font>
+                                <Name>Microsoft YaHei UI</Name>
+                            </Font>
+                        </Style>
+                        <Value>='製票:'+ ' ' + [Batch.CreatedByID_Creator_Username]</Value>
+                    </TextBox>
+                </Items>
             </PageFooter>
             <ReportFooter Name="reportFooterSection1">
                 <Height>35.99996px</Height>
