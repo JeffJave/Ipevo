@@ -113,10 +113,10 @@ namespace ExternalLogisticsAPI
         #endregion
 
         #region TaxRate
-        [PXDBDecimal()]
+        [PXDBString()]
         [PXUIField(DisplayName = "Tax Rate")]
-        public virtual Decimal? TaxRate { get; set; }
-        public abstract class taxRate : PX.Data.BQL.BqlDecimal.Field<taxRate> { }
+        public virtual string TaxRate { get; set; }
+        public abstract class taxRate : PX.Data.BQL.BqlString.Field<taxRate> { }
         #endregion
 
         #region Siteid

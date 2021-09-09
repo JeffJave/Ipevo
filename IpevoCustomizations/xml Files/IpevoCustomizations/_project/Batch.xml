@@ -1,0 +1,4 @@
+﻿<Table TableName="Batch">
+    <Column TableName="Batch" ColumnName="UsrReviewer" ColumnType="guid" AllowNull="True" DecimalPrecision="0" DecimalLength="0" IsNewColumn="True" IsUnicode="True" />
+    <Column TableName="Batch" ColumnName="UsrReviewOn" ColumnType="date" AllowNull="True" DecimalPrecision="0" DecimalLength="0" IsNewColumn="True" IsUnicode="True" />
+</Table>
