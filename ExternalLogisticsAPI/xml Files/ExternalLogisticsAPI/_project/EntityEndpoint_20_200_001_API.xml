@@ -1,0 +1,351 @@
+﻿<EntityEndpoint>
+    <Endpoint xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="API" version="20.200.001" systemContractVersion="4" xmlns="http://www.acumatica.com/entity/maintenance/5.31">
+        <ExtendsEndpoint name="Default" version="20.200.001" />
+        <TopLevelEntity name="SalesOrder" screen="SO301000">
+            <Fields>
+                <Field name="PremiumFreightPrice" type="DecimalValue" />
+                <Field name="ShipmentinDCL" type="BooleanValue" />
+            </Fields>
+            <Mappings>
+                <Mapping field="PremiumFreightPrice">
+                    <To object="CurrentDocument: 11" field="CuryPremiumFreightAmt" />
+                </Mapping>
+                <Mapping field="ShipmentinDCL">
+                    <To object="Document" field="UsrDCLShipmentCreated" />
+                </Mapping>
+                <Mapping field="Details">
+                    <Mapping field="FreightTax">
+                        <To object="Transactions" field="UsrFreightTaxAmt" />
+                    </Mapping>
+                    <Mapping field="FreightPSTTax">
+                        <To object="Transactions" field="UsrFrtPSTTaxAmt" />
+                    </Mapping>
+                    <Mapping field="FreightQSTTax">
+                        <To object="Transactions" field="UsrFrtQSTTaxAmt" />
+                    </Mapping>
+                    <Mapping field="GiftWrapGSTTax">
+                        <To object="Transactions" field="UsrGWGSTTaxAmt" />
+                    </Mapping>
+                    <Mapping field="GiftWrapHSTTax">
+                        <To object="Transactions" field="UsrGWHSTTaxAmt" />
+                    </Mapping>
+                    <Mapping field="GiftWrapPSTTax">
+                        <To object="Transactions" field="UsrGWPSTTaxAmt" />
+                    </Mapping>
+                    <Mapping field="GiftWrapQSTTax">
+                        <To object="Transactions" field="UsrGWQSTTaxAmt" />
+                    </Mapping>
+                    <Mapping field="ItemGSTTax">
+                        <To object="Transactions" field="UsrItemGSTTaxAmt" />
+                    </Mapping>
+                    <Mapping field="ItemHSTTax">
+                        <To object="Transactions" field="UsrItemHSTTaxAmt" />
+                    </Mapping>
+                    <Mapping field="ItemPSTTax">
+                        <To object="Transactions" field="UsrItemPSTTaxAmt" />
+                    </Mapping>
+                    <Mapping field="ItemQSTTax">
+                        <To object="Transactions" field="UsrItemQSTTaxAmt" />
+                    </Mapping>
+                    <Mapping field="FulfillmentCenter">
+                        <To object="Transactions" field="UsrFulfillmentCenter" />
+                    </Mapping>
+                    <Mapping field="GiftwrapTax">
+                        <To object="Transactions" field="UsrGiftwrapTaxAmt" />
+                    </Mapping>
+                    <Mapping field="ItemTax">
+                        <To object="Transactions" field="UsrItemTaxAmt" />
+                    </Mapping>
+                    <Mapping field="ShipFromCountry">
+                        <To object="Transactions" field="UsrShipFromCountryID" />
+                    </Mapping>
+                    <Mapping field="ShipFromState">
+                        <To object="Transactions" field="UsrShipFromState" />
+                    </Mapping>
+                    <Mapping field="AmazonWHTax">
+                        <To object="Transactions" field="UsrAmazWHTaxAmt" />
+                    </Mapping>
+                    <Mapping field="FreightGSTTax">
+                        <To object="Transactions" field="UsrFrtGSTTaxAmt" />
+                    </Mapping>
+                    <Mapping field="FreightHSTTax">
+                        <To object="Transactions" field="UsrFrtHSTTaxAmt" />
+                    </Mapping>
+                </Mapping>
+            </Mappings>
+        </TopLevelEntity>
+        <Detail name="SalesOrderDetail">
+            <Fields>
+                <Field name="AmazonWHTax" type="DecimalValue" />
+                <Field name="FreightGSTTax" type="DecimalValue" />
+                <Field name="FreightHSTTax" type="DecimalValue" />
+                <Field name="FreightPSTTax" type="DecimalValue" />
+                <Field name="FreightQSTTax" type="DecimalValue" />
+                <Field name="FreightTax" type="DecimalValue" />
+                <Field name="FulfillmentCenter" type="StringValue" />
+                <Field name="GiftWrapGSTTax" type="DecimalValue" />
+                <Field name="GiftWrapHSTTax" type="DecimalValue" />
+                <Field name="GiftWrapPSTTax" type="DecimalValue" />
+                <Field name="GiftWrapQSTTax" type="DecimalValue" />
+                <Field name="GiftwrapTax" type="DecimalValue" />
+                <Field name="ItemGSTTax" type="DecimalValue" />
+                <Field name="ItemHSTTax" type="DecimalValue" />
+                <Field name="ItemPSTTax" type="DecimalValue" />
+                <Field name="ItemQSTTax" type="DecimalValue" />
+                <Field name="ItemTax" type="DecimalValue" />
+                <Field name="ShipFromCountry" type="StringValue" />
+                <Field name="ShipFromState" type="StringValue" />
+            </Fields>
+        </Detail>
+        <Detail name="FinanceCharges">
+            <Fields>
+                <Field name="Amount" type="DecimalValue" />
+                <Field name="EntryType" type="StringValue" />
+            </Fields>
+        </Detail>
+        <TopLevelEntity name="Payment" screen="AR302000">
+            <Fields>
+                <Field name="FinanceCharges" type="FinanceCharges[]" />
+            </Fields>
+            <Mappings>
+                <Mapping field="FinanceCharges">
+                    <Mapping field="Amount">
+                        <To object="PaymentCharges" field="CuryTranAmt" />
+                    </Mapping>
+                    <Mapping field="EntryType">
+                        <To object="PaymentCharges" field="EntryTypeID" />
+                    </Mapping>
+                </Mapping>
+            </Mappings>
+        </TopLevelEntity>
+        <Detail name="SalesInvoiceTaxDetail" />
+        <TopLevelEntity name="SalesInvoice" screen="SO303000">
+            <Fields>
+                <Field name="RMAOrderInfo" type="RMAOrderInfo" />
+            </Fields>
+        </TopLevelEntity>
+        <TopLevelEntity name="RMAOrderInfo" screen="GI000958">
+            <Fields>
+                <Field name="Cpanel" type="StringValue" />
+                <Field name="Result" type="RMAInfomation[]" />
+            </Fields>
+            <Mappings>
+                <Mapping field="Cpanel">
+                    <To object="Filter" field="Cpanel" />
+                </Mapping>
+                <Mapping field="Result">
+                    <Mapping field="CompanyCD">
+                        <To object="Results" field="t_companyCD" />
+                    </Mapping>
+                    <Mapping field="OrderNbr">
+                        <To object="Results" field="t_orderNbr" />
+                    </Mapping>
+                    <Mapping field="OrderQty">
+                        <To object="Results" field="t_orderQty" />
+                    </Mapping>
+                    <Mapping field="OrderType">
+                        <To object="Results" field="t_orderType" />
+                    </Mapping>
+                    <Mapping field="ShipDate">
+                        <To object="Results" field="t_shipDate" />
+                    </Mapping>
+                    <Mapping field="ShipmentNbr">
+                        <To object="Results" field="t_shipmentNbr" />
+                    </Mapping>
+                    <Mapping field="SiteDescr">
+                        <To object="Results" field="t_siteDescr" />
+                    </Mapping>
+                    <Mapping field="CustomerName">
+                        <To object="Results" field="t_customerName" />
+                    </Mapping>
+                    <Mapping field="BillAddr1">
+                        <To object="Results" field="t_billAddr1" />
+                    </Mapping>
+                    <Mapping field="BillAddr2">
+                        <To object="Results" field="t_billAddr2" />
+                    </Mapping>
+                    <Mapping field="BillAttention">
+                        <To object="Results" field="t_billAttention" />
+                    </Mapping>
+                    <Mapping field="BillCity">
+                        <To object="Results" field="t_billCity" />
+                    </Mapping>
+                    <Mapping field="BillCompany">
+                        <To object="Results" field="t_billCompany" />
+                    </Mapping>
+                    <Mapping field="BillCountry">
+                        <To object="Results" field="t_billCountry" />
+                    </Mapping>
+                    <Mapping field="BillEmail">
+                        <To object="Results" field="t_billEmail" />
+                    </Mapping>
+                    <Mapping field="BillPhone">
+                        <To object="Results" field="t_billPhone" />
+                    </Mapping>
+                    <Mapping field="BillPostalCode">
+                        <To object="Results" field="t_billPostalCode" />
+                    </Mapping>
+                    <Mapping field="BillState">
+                        <To object="Results" field="t_billState" />
+                    </Mapping>
+                    <Mapping field="InvoiceNbr">
+                        <To object="Results" field="t_invoiceNbr" />
+                    </Mapping>
+                    <Mapping field="CustomerID">
+                        <To object="Results" field="t_customerID" />
+                    </Mapping>
+                    <Mapping field="ShipAddr1">
+                        <To object="Results" field="t_shipAddr1" />
+                    </Mapping>
+                    <Mapping field="ShipAddr2">
+                        <To object="Results" field="t_shipAddr2" />
+                    </Mapping>
+                    <Mapping field="ShipAttention">
+                        <To object="Results" field="t_shipAttention" />
+                    </Mapping>
+                    <Mapping field="ShipCity">
+                        <To object="Results" field="t_shipCity" />
+                    </Mapping>
+                    <Mapping field="ShipCompany">
+                        <To object="Results" field="t_shipCompany" />
+                    </Mapping>
+                    <Mapping field="ShipCountryID">
+                        <To object="Results" field="t_shipCountryID" />
+                    </Mapping>
+                    <Mapping field="ShipEmail">
+                        <To object="Results" field="t_shipEmail" />
+                    </Mapping>
+                    <Mapping field="ShipPhone">
+                        <To object="Results" field="t_shipPhone" />
+                    </Mapping>
+                    <Mapping field="ShipPostalCode">
+                        <To object="Results" field="t_shipPostalCode" />
+                    </Mapping>
+                    <Mapping field="ShipState">
+                        <To object="Results" field="t_shipState" />
+                    </Mapping>
+                    <Mapping field="CustomerOrderNbr">
+                        <To object="Results" field="t_customerOrderNbr" />
+                    </Mapping>
+                    <Mapping field="Siteid">
+                        <To object="Results" field="t_siteid" />
+                    </Mapping>
+                    <Mapping field="TaxZoneID">
+                        <To object="Results" field="t_taxZoneID" />
+                    </Mapping>
+                    <Mapping field="CuryTaxAmt">
+                        <To object="Results" field="t_curyTaxAmt" />
+                    </Mapping>
+                    <Mapping field="TaxRate">
+                        <To object="Results" field="t_taxRate" />
+                    </Mapping>
+                    <Mapping field="CuryID">
+                        <To object="Results" field="t_curyID" />
+                    </Mapping>
+                    <Mapping field="CustomerRefNbr">
+                        <To object="Results" field="t_customerRefNbr" />
+                    </Mapping>
+                    <Mapping field="Email">
+                        <To object="Results" field="t_email" />
+                    </Mapping>
+                    <Mapping field="InventoryDescr">
+                        <To object="Results" field="t_inventoryDescr" />
+                    </Mapping>
+                    <Mapping field="InventoryID">
+                        <To object="Results" field="t_inventoryID" />
+                    </Mapping>
+                    <Mapping field="OrderDesc">
+                        <To object="Results" field="t_orderDesc" />
+                    </Mapping>
+                </Mapping>
+            </Mappings>
+        </TopLevelEntity>
+        <Detail name="RMAInfomation">
+            <Fields>
+                <Field name="BillAddr1" type="StringValue" />
+                <Field name="BillAddr2" type="StringValue" />
+                <Field name="BillAttention" type="StringValue" />
+                <Field name="BillCity" type="StringValue" />
+                <Field name="BillCompany" type="StringValue" />
+                <Field name="BillCountry" type="StringValue" />
+                <Field name="BillEmail" type="StringValue" />
+                <Field name="BillPhone" type="StringValue" />
+                <Field name="BillPostalCode" type="StringValue" />
+                <Field name="BillState" type="StringValue" />
+                <Field name="CompanyCD" type="StringValue" />
+                <Field name="CuryID" type="StringValue" />
+                <Field name="CuryTaxAmt" type="DecimalValue" />
+                <Field name="CustomerID" type="StringValue" />
+                <Field name="CustomerName" type="StringValue" />
+                <Field name="CustomerOrderNbr" type="StringValue" />
+                <Field name="CustomerRefNbr" type="StringValue" />
+                <Field name="Email" type="StringValue" />
+                <Field name="InventoryDescr" type="StringValue" />
+                <Field name="InventoryID" type="StringValue" />
+                <Field name="InvoiceNbr" type="StringValue" />
+                <Field name="OrderDesc" type="StringValue" />
+                <Field name="OrderNbr" type="StringValue" />
+                <Field name="OrderQty" type="DecimalValue" />
+                <Field name="OrderType" type="StringValue" />
+                <Field name="ShipAddr1" type="StringValue" />
+                <Field name="ShipAddr2" type="StringValue" />
+                <Field name="ShipAttention" type="StringValue" />
+                <Field name="ShipCity" type="StringValue" />
+                <Field name="ShipCompany" type="StringValue" />
+                <Field name="ShipCountryID" type="StringValue" />
+                <Field name="ShipDate" type="DateTimeValue" />
+                <Field name="ShipEmail" type="StringValue" />
+                <Field name="ShipmentNbr" type="StringValue" />
+                <Field name="ShipPhone" type="StringValue" />
+                <Field name="ShipPostalCode" type="StringValue" />
+                <Field name="ShipState" type="StringValue" />
+                <Field name="SiteDescr" type="StringValue" />
+                <Field name="Siteid" type="IntValue" />
+                <Field name="TaxRate" type="DecimalValue" />
+                <Field name="TaxZoneID" type="StringValue" />
+            </Fields>
+        </Detail>
+        <TopLevelEntity name="AmazonInterface" screen="LM501010">
+            <Fields>
+                <Field name="Branch" type="StringValue" />
+                <Field name="Data1" type="StringValue" />
+                <Field name="Data2" type="StringValue" />
+                <Field name="Marketplace" type="StringValue" />
+                <Field name="OrderNbr" type="StringValue" />
+                <Field name="OrderType" type="StringValue" />
+                <Field name="SequenceNo" type="IntValue" />
+                <Field name="WriteToAcumatica_1" type="BooleanValue" />
+                <Field name="WriteToAcumatica_2" type="BooleanValue" />
+            </Fields>
+            <Mappings>
+                <Mapping field="WriteToAcumatica_1">
+                    <To object="AMZInterfaceAPI" field="Write2Acumatica1" />
+                </Mapping>
+                <Mapping field="WriteToAcumatica_2">
+                    <To object="AMZInterfaceAPI" field="Write2Acumatica2" />
+                </Mapping>
+                <Mapping field="Branch">
+                    <To object="AMZInterfaceAPI" field="BranchID" />
+                </Mapping>
+                <Mapping field="OrderType">
+                    <To object="AMZInterfaceAPI" field="OrderType" />
+                </Mapping>
+                <Mapping field="Data1">
+                    <To object="AMZInterfaceAPI" field="Data1" />
+                </Mapping>
+                <Mapping field="Data2">
+                    <To object="AMZInterfaceAPI" field="Data2" />
+                </Mapping>
+                <Mapping field="Marketplace">
+                    <To object="AMZInterfaceAPI" field="Marketplace" />
+                </Mapping>
+                <Mapping field="OrderNbr">
+                    <To object="AMZInterfaceAPI" field="OrderNbr" />
+                </Mapping>
+                <Mapping field="SequenceNo">
+                    <To object="AMZInterfaceAPI" field="SequenceNo" />
+                </Mapping>
+            </Mappings>
+        </TopLevelEntity>
+    </Endpoint>
+</EntityEndpoint>

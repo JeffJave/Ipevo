@@ -1,0 +1,32 @@
+﻿<Sql TableName="LUMAmazonInterfaceAPI" TableSchemaXml="#CDATA">
+    <CDATA name="TableSchemaXml"><![CDATA[<table name="LUMAmazonInterfaceAPI">
+  <col name="CompanyID" type="Int" default="Zero" />
+  <col name="OrderType" type="Int" />
+  <col name="OrderNbr" type="NVarChar(30)" />
+  <col name="SequenceNo" type="Int" />
+  <col name="BranchID" type="Int" nullable="true" />
+  <col name="Marketplace" type="NVarChar(10)" nullable="true" />
+  <col name="Data1" type="NVarChar(MAX)" nullable="true" />
+  <col name="Data2" type="NVarChar(MAX)" nullable="true" />
+  <col name="Write2Acumatica1" type="Bit" nullable="true" />
+  <col name="Write2Acumatica2" type="Bit" nullable="true" />
+  <col name="CreatedByID" type="UniqueIdentifier" />
+  <col name="CreatedByScreenID" type="Char(8)" />
+  <col name="CreatedDateTime" type="DateTime" />
+  <col name="LastModifiedByID" type="UniqueIdentifier" />
+  <col name="LastModifiedByScreenID" type="Char(8)" />
+  <col name="LastModifiedDateTime" type="DateTime" />
+  <col name="tstamp" type="Timestamp" />
+  <col name="NoteID" type="UniqueIdentifier" nullable="true" />
+  <index name="LUMAmazonInterfaceAPI_NoteID" unique="true">
+    <col name="NoteID" />
+    <col name="CompanyID" />
+  </index>
+  <index name="PK_LUMAmazonInterfaceAPI_1" clustered="true" primary="true" unique="true">
+    <col name="CompanyID" />
+    <col name="OrderType" />
+    <col name="OrderNbr" />
+    <col name="SequenceNo" />
+  </index>
+</table>]]></CDATA>
+</Sql>
