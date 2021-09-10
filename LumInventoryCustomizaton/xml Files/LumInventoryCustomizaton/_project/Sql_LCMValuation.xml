@@ -1,83 +1,20 @@
-﻿<Sql TableName="LCMValuation" CustomScript="#CDATA">
-    <CDATA name="CustomScript"><![CDATA[IF EXISTS
-(
-	SELECT *
-	FROM SYS.views
-	WHERE name = 'LCMValuation' AND SCHEMA_ID = SCHEMA_ID('dbo')
-)
-DROP VIEW [dbo].[LCMValuation]
-GO
-CREATE VIEW LCMValuation AS
-select 
-	INItemCostHist.CostSiteID,
-	INSite.SiteCD,
-	INItemCostHist.InventoryID,
-	INItemCostHist.FinPeriodID,
-	INItemCostHist.FinYtdCost,
-	INItemCostHist.FinYtdQty,
-	UnitCost = (CASE
-		WHEN INItemCostHist.FinYtdQty > 0
-			THEN (INItemCostHist.FinYtdCost / INItemCostHist.FinYtdQty)
-			ELSE 0
-		END),
-	LastSalesPrice = (select top 1 UnitPrice from ARTran
-						where ARTran.CompanyID = INItemCostHist.CompanyID and
-							  ARTran.InventoryID = INItemCostHist.InventoryID and
-							  ARTran.SiteID = INItemCostHist.SiteID and
-							  ARTran.TranType = 'INV' and
-							  ARTran.UnitPrice > 0
-						order by ARTran.CreatedDateTime desc),
-	LastSalesDate = (select top 1 CreatedDateTime from ARTran
-						where ARTran.CompanyID = INItemCostHist.CompanyID and
-							  ARTran.InventoryID = INItemCostHist.InventoryID and
-							  ARTran.SiteID = INItemCostHist.SiteID and
-							  ARTran.TranType = 'INV' and
-							  ARTran.UnitPrice > 0
-						order by ARTran.CreatedDateTime desc),
-	NetRealizableValue = (INItemCostHist.FinYtdQty * (select top 1 UnitPrice from ARTran
-														where ARTran.CompanyID = INItemCostHist.CompanyID and
-															  ARTran.InventoryID = INItemCostHist.InventoryID and
-															  ARTran.SiteID = INItemCostHist.SiteID and
-															  ARTran.TranType = 'INV' and
-															  ARTran.UnitPrice > 0
-														order by ARTran.CreatedDateTime desc)),
-	IsValuationLoss = (CASE
-						WHEN (INItemCostHist.FinYtdQty * (select top 1 UnitPrice from ARTran 
-														where ARTran.CompanyID = INItemCostHist.CompanyID and
-															  ARTran.InventoryID = INItemCostHist.InventoryID and
-															  ARTran.SiteID = INItemCostHist.SiteID and
-															  ARTran.TranType = 'INV' and
-															  ARTran.UnitPrice > 0
-														order by ARTran.CreatedDateTime desc)) < INItemCostHist.FinYtdCost
-							THEN 1
-							ELSE 0
-						END),
-	ValuationLoss = (CASE
-						WHEN (INItemCostHist.FinYtdQty * (select top 1 UnitPrice from ARTran 
-														where ARTran.CompanyID = INItemCostHist.CompanyID and
-															  ARTran.InventoryID = INItemCostHist.InventoryID and
-															  ARTran.SiteID = INItemCostHist.SiteID and
-															  ARTran.TranType = 'INV' and
-															  ARTran.UnitPrice > 0
-														order by ARTran.CreatedDateTime desc)) < INItemCostHist.FinYtdCost
-							THEN (INItemCostHist.FinYtdCost - (INItemCostHist.FinYtdQty * (select top 1 UnitPrice from ARTran
-														where ARTran.CompanyID = INItemCostHist.CompanyID and
-															  ARTran.InventoryID = INItemCostHist.InventoryID and
-															  ARTran.SiteID = INItemCostHist.SiteID and
-															  ARTran.TranType = 'INV' and
-															  ARTran.UnitPrice > 0
-														order by ARTran.CreatedDateTime desc)))
-							ELSE 0
-						END),
-	LastPurchasePrice = (select LastCost from INItemStats 
-											where INItemStats.CompanyID = INItemCostHist.CompanyID and
-												  INItemStats.InventoryID = INItemCostHist.InventoryID and
-												  INItemStats.SiteID = INItemCostHist.SiteID),
-	LastPurchaseDate = (select LastCostDate from INItemStats 
-											where INItemStats.CompanyID = INItemCostHist.CompanyID and
-												  INItemStats.InventoryID = INItemCostHist.InventoryID and
-												  INItemStats.SiteID = INItemCostHist.SiteID),
-	INItemCostHist.CompanyID
-from INItemCostHist
-left join INSite on INSite.CompanyID = INItemCostHist.CompanyID and INSite.SiteID = INItemCostHist.SiteID]]></CDATA>
+﻿<Sql TableName="LCMValuation" TableSchemaXml="#CDATA">
+    <CDATA name="TableSchemaXml"><![CDATA[<table name="LCMValuation">
+  <col name="ID" type="Int" identity="true" />
+  <col name="CompanyID" type="Int" nullable="true" default="Zero" />
+  <col name="InventoryID" type="Int" />
+  <col name="FinPeriodID" type="Char(6)" />
+  <col name="FinYtdCost" type="Decimal(19,6)" nullable="true" />
+  <col name="FinYtdQty" type="Decimal(19,6)" nullable="true" />
+  <col name="UnitCost" type="Decimal(19,6)" nullable="true" />
+  <col name="LastSalesPrice" type="Decimal(19,6)" nullable="true" />
+  <col name="LastSalesDate" type="DateTime" nullable="true" />
+  <col name="IsValuationLoss" type="Int" nullable="true" />
+  <col name="ValuationLoss" type="Decimal(19,6)" nullable="true" />
+  <col name="LastReceiptPrice" type="Decimal(19,6)" nullable="true" />
+  <col name="LastReceiptDate" type="DateTime" nullable="true" />
+  <index name="PK_LCMValuation" clustered="true" primary="true" unique="true">
+    <col name="ID" />
+  </index>
+</table>]]></CDATA>
 </Sql>

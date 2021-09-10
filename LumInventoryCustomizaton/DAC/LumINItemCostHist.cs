@@ -58,7 +58,7 @@ namespace LumInventoryCustomizaton.DAC
         public virtual string ItemClassDescr { get; set; }
         public abstract class itemClassDescr : PX.Data.BQL.BqlString.Field<itemClassDescr> { }
         #endregion
-
+        /*
         #region WareHouseID_SiteID
         [PXDBInt()]
         [PXUIField(DisplayName = "Ware House ID")]
@@ -79,7 +79,7 @@ namespace LumInventoryCustomizaton.DAC
         public virtual string WareHouse_SiteID_Descr { get; set; }
         public abstract class wareHouse_SiteID_Descr : PX.Data.BQL.BqlString.Field<wareHouse_SiteID_Descr> { }
         #endregion
-
+        */
         #region EndingQty_FinYtdQty
         [PXDBDecimal()]
         [PXUIField(DisplayName = "Ending Qty")]
@@ -190,6 +190,34 @@ namespace LumInventoryCustomizaton.DAC
         [PXUIField(DisplayName = "Condition Period")]
         public virtual string ConditionPeriod { get; set; }
         public abstract class conditionPeriod : PX.Data.BQL.BqlString.Field<conditionPeriod> { }
+        #endregion
+
+        #region LastSalesDate
+        [PXDBDate()]
+        [PXUIField(DisplayName = "Last Sales Date")]
+        public virtual DateTime? LastSalesDate { get; set; }
+        public abstract class lastSalesDate : PX.Data.BQL.BqlDateTime.Field<lastSalesDate> { }
+        #endregion
+
+        #region LastSalesDoc
+        [PXDBString(256, IsUnicode = true, InputMask = "")]
+        [PXUIField(DisplayName = "Last Sales Document")]
+        public virtual string LastSalesDoc { get; set; }
+        public abstract class lastSalesDoc : PX.Data.BQL.BqlString.Field<lastSalesDoc> { }
+        #endregion
+
+        #region LastReceiptDate
+        [PXDBDate()]
+        [PXUIField(DisplayName = "Last Receipt Date")]
+        public virtual DateTime? LastReceiptDate { get; set; }
+        public abstract class lastReceiptDate : PX.Data.BQL.BqlDateTime.Field<lastReceiptDate> { }
+        #endregion
+
+        #region LastReceiptDoc
+        [PXDBString(256, IsUnicode = true, InputMask = "")]
+        [PXUIField(DisplayName = "Last Receipt Document")]
+        public virtual string LastReceiptDoc { get; set; }
+        public abstract class lastReceiptDoc : PX.Data.BQL.BqlString.Field<lastReceiptDoc> { }
         #endregion
     }
 }
