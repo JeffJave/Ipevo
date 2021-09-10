@@ -24,7 +24,10 @@
 			<px:PXGridLevel DataMember="DetailsView">
 			    <Columns>
 				<px:PXGridColumn DataField="InventoryID" Width="70" ></px:PXGridColumn>
-				<px:PXGridColumn DataField="WareHouseID_SiteCD" Width="140" ></px:PXGridColumn>
+				<px:PXGridColumn DataField="LastSalesDate" Width="90" ></px:PXGridColumn>
+				<px:PXGridColumn DataField="LastSalesDoc" Width="280" ></px:PXGridColumn>
+				<px:PXGridColumn DataField="LastReceiptDate" Width="90" ></px:PXGridColumn>
+				<px:PXGridColumn DataField="LastReceiptDoc" Width="280" ></px:PXGridColumn>
 				<px:PXGridColumn DataField="EndingQty_FinYtdQty" Width="100" ></px:PXGridColumn>
 				<px:PXGridColumn TextField="" DataField="PeriodQtyWithin30D" Width="100" ></px:PXGridColumn>
 				<px:PXGridColumn DataField="PeriodQtyFrom30Dto60D" Width="100" ></px:PXGridColumn>
@@ -42,7 +45,6 @@
 				<px:PXGridColumn DataField="ItemDescr" Width="280" ></px:PXGridColumn>
 				<px:PXGridColumn DataField="ItemClassCD" Width="140" ></px:PXGridColumn>
 				<px:PXGridColumn DataField="ItemClassDescr" Width="280" ></px:PXGridColumn>
-				<px:PXGridColumn DataField="WareHouse_SiteID_Descr" Width="250" ></px:PXGridColumn>
 				<px:PXGridColumn DataField="LastActivityPeriod" Width="70" ></px:PXGridColumn></Columns>
 			</px:PXGridLevel>
 		</Levels>

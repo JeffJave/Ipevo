@@ -14,7 +14,7 @@ namespace LumInventoryCustomizaton.Graph
     public class LCMValuationMaint : PXGraph<LCMValuationMaint>
     {
         public PXFilter<LCMValuationFilter> MasterViewFilter;
-        public SelectFrom<LCMValuation>.View DetailsView;
+        public SelectFrom<LCMValuation>.Where<LCMValuation.finPeriodID.IsEqual<LCMValuationFilter.finPeriodID.FromCurrent>>.View DetailsView;
 
         public LCMValuationMaint()
         {
@@ -36,22 +36,54 @@ namespace LumInventoryCustomizaton.Graph
             #endregion
         }
         #endregion
-        
+
+        /*
         protected virtual void LCMValuationFilter_FinPeriodID_FieldDefaulting(PXCache sender, PXFieldDefaultingEventArgs e)
         {
             e.NewValue = ((DateTime)Accessinfo.BusinessDate).AddMonths(-1).ToString("MMyyyy");
             detailsView();
         }
-        
+        */
+
         #region Delegate DataView
         public IEnumerable detailsView()
         {
             //var lastFinPeriod = DateTime.Now.AddMonths(-1).ToString("yyyyMM");
+            /*
+            var filterFinPeriodID = MasterViewFilter.Current?.FinPeriodID;
+            if (filterFinPeriodID == null)
+                filterFinPeriodID = ((DateTime)Accessinfo.BusinessDate).AddMonths(-1).ToString("yyyyMM");
+            */
+            List<object> result = new List<object>();
+            var currentSearchPeriod = ((LCMValuationFilter)this.Caches[typeof(LCMValuationFilter)].Current)?.FinPeriodID;
+            if (currentSearchPeriod != null)
+            {
+                var pars = new List<PXSPParameter>();
+                PXSPParameter period = new PXSPInParameter("@period", PXDbType.Int, currentSearchPeriod);
+                PXSPParameter companyID = new PXSPInParameter("@companyID", PXDbType.Int, PX.Data.Update.PXInstanceHelper.CurrentCompany);
+                pars.Add(period);
+                pars.Add(companyID);
 
-            var filter = MasterViewFilter.Current?.FinPeriodID;
-            if (filter == null)
-                filter = ((DateTime)Accessinfo.BusinessDate).AddMonths(-1).ToString("yyyyMM");
+                using (new PXConnectionScope())
+                {
+                    using (PXTransactionScope ts = new PXTransactionScope())
+                    {
+                        PXDatabase.Execute("SP_LCMValuation", pars.ToArray());
+                        ts.Complete();
+                    }
+                }
 
+                PXView select = new PXView(this, true, DetailsView.View.BqlSelect);
+                int totalrow = 0;
+                int startrow = PXView.StartRow;
+                result = select.Select(PXView.Currents, PXView.Parameters, PXView.Searches, PXView.SortColumns, PXView.Descendings, PXView.Filters, ref startrow, PXView.MaximumRows, ref totalrow);
+                PXView.StartRow = 0;
+                return result;
+
+            }
+            return result;
+            
+            /*
             PXSelectBase<LCMValuation> command = new SelectFrom<LCMValuation>.View.ReadOnly(this);
 
             var result = new PXDelegateResult();
@@ -62,6 +94,7 @@ namespace LumInventoryCustomizaton.Graph
             }
 
             return result;
+            */
         }
         #endregion
     }
