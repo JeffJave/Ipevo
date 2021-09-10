@@ -1115,7 +1115,7 @@
                 <Items>
                     <TextBox Name="textBox67">
                         <Location>8px, 20px</Location>
-                        <Size>148px, 20px</Size>
+                        <Size>232px, 20px</Size>
                         <Style>
                             <Font>
                                 <Name>Microsoft YaHei UI</Name>
@@ -1125,7 +1125,7 @@
                     </TextBox>
                     <TextBox Name="textBox68">
                         <Location>424px, 20px</Location>
-                        <Size>124px, 20px</Size>
+                        <Size>252px, 20px</Size>
                         <Style>
                             <Font>
                                 <Name>Microsoft YaHei UI</Name>
@@ -1134,8 +1134,8 @@
                         <Value>='覆核:'+ ' ' +#010;IIF([Batch.Status] = 'U',[Batch.LastModifiedByID_Modifier_Username],IIF([Batch.Status] = 'P',[revierInfo.Username],''))</Value>
                     </TextBox>
                     <TextBox Name="textBox69">
-                        <Location>832px, 20px</Location>
-                        <Size>124px, 20px</Size>
+                        <Location>816px, 20px</Location>
+                        <Size>208px, 20px</Size>
                         <Style>
                             <Font>
                                 <Name>Microsoft YaHei UI</Name>
