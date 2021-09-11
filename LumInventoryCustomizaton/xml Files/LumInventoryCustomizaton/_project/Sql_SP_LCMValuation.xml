@@ -18,11 +18,11 @@ BEGIN
 	--Truncate table
 	TRUNCATE TABLE [dbo].[LCMValuation]
 
-	INSERT INTO [dbo].[LCMValuation] ([InventoryID], [FinPeriodID])
+	INSERT INTO [dbo].[LCMValuation] ([InventoryID], [FinPeriodID], [ConditionPeriod])
 	(
-		select InventoryID, FinPeriodID from INItemCostHist
-		where CompanyID = @companyID and FinPeriodID = @period
-		group by CompanyID, InventoryID, FinPeriodID
+		select distinct(InventoryID), MAX(FinPeriodID), @period from INItemCostHist
+		where CompanyID = @companyID and FinPeriodID <= FORMAT(DATEADD(MONTH, -0, CONVERT(datetime, CONCAT(@period, '01'))),'yyyyMM')
+		group by CompanyID, InventoryID
 	)
 
 	--Declare outside loop variables
@@ -39,16 +39,31 @@ BEGIN
 	BEGIN
 
 		--Declare inside loop variables
-		DECLARE @INVENTORYID int
+		DECLARE @INVENTORYID int, @FinPeriodID int
 		SET @INVENTORYID = (SELECT InventoryID FROM LCMValuation WHERE ID = @i)
+		SET @FinPeriodID = (SELECT FinPeriodID FROM LCMValuation WHERE ID = @i)
 
-		SET @FinYtdCost = (select SUM(FinYtdCost) from INItemCostHist
-							where CompanyID = @companyID and InventoryID = @INVENTORYID and FinPeriodID = @period
-							group by InventoryID, CompanyID, FinPeriodID)
+		SET @FinYtdCost = (select SUM(main.FinYtdCost)
+							from INItemCostHist main
+							inner join
+								(
+									select CompanyID, InventoryID, SiteID, MAX(FinPeriodID) as FinPeriodID from INItemCostHist
+									where CompanyID = @companyID and InventoryID = @INVENTORYID and FinPeriodID <= @FinPeriodID
+									group by CompanyID, InventoryID, SiteID
+								) sub
+							on main.CompanyID = sub.CompanyID and main.InventoryID = sub.InventoryID and main.SiteID = sub.SiteID and main.FinPeriodID = sub.FinPeriodID
+							group by main.InventoryID, main.CompanyID)
 
-		SET @FinYtdQty = (select SUM(FinYtdQty) from INItemCostHist
-							where CompanyID = @companyID and InventoryID = @INVENTORYID and FinPeriodID = @period
-							group by InventoryID, CompanyID, FinPeriodID)
+		SET @FinYtdQty = (select SUM(main.FinYtdQty)
+							from INItemCostHist main
+							inner join
+								(
+									select CompanyID, InventoryID, SiteID, MAX(FinPeriodID) as FinPeriodID from INItemCostHist
+									where CompanyID = @companyID and InventoryID = @INVENTORYID and FinPeriodID <= @FinPeriodID
+									group by CompanyID, InventoryID, SiteID
+								) sub
+							on main.CompanyID = sub.CompanyID and main.InventoryID = sub.InventoryID and main.SiteID = sub.SiteID and main.FinPeriodID = sub.FinPeriodID
+							group by main.InventoryID, main.CompanyID)
 
 		SET @UnitCost = (CASE
 			WHEN @FinYtdQty > 0
@@ -59,14 +74,14 @@ BEGIN
 		SET @LastSalesPrice = (select top 1 UnitPrice from INTran
 							where INTran.CompanyID = @companyID and
 								  INTran.InventoryID = @INVENTORYID and
-								  INTran.FinPeriodID <= @period and
+								  INTran.FinPeriodID <= @FinPeriodID and
 								  INTran.TranType = 'INV'
 							order by INTran.TranDate desc)
 		
 		SET @LastSalesDate = (select top 1 TranDate from INTran
 							where INTran.CompanyID = @companyID and
 								  INTran.InventoryID = @INVENTORYID and
-								  INTran.FinPeriodID <= @period and
+								  INTran.FinPeriodID <= @FinPeriodID and
 								  INTran.TranType = 'INV'
 							order by INTran.TranDate desc)
 		
@@ -74,7 +89,7 @@ BEGIN
 							WHEN (@FinYtdQty * (select top 1 UnitPrice from INTran 
 													where INTran.CompanyID = @companyID and
 														  INTran.InventoryID = @INVENTORYID and
-														  INTran.FinPeriodID = @period and
+														  INTran.FinPeriodID = @FinPeriodID and
 														  INTran.TranType = 'INV' and
 														  INTran.UnitPrice > 0
 													order by INTran.TranDate desc)) < @FinYtdCost
@@ -86,14 +101,14 @@ BEGIN
 							WHEN (@FinYtdQty * (select top 1 UnitPrice from INTran 
 															where INTran.CompanyID = @companyID and
 																  INTran.InventoryID = @INVENTORYID and
-																  INTran.FinPeriodID = @period and
+																  INTran.FinPeriodID = @FinPeriodID and
 																  INTran.TranType = 'INV' and
 																  INTran.UnitPrice > 0
 															order by INTran.TranDate desc)) < @FinYtdCost
 								THEN (@FinYtdCost - (@FinYtdQty * (select top 1 UnitPrice from INTran
 															where INTran.CompanyID = @companyID and
 																  INTran.InventoryID = @INVENTORYID and
-																  INTran.FinPeriodID = @period and
+																  INTran.FinPeriodID = @FinPeriodID and
 																  INTran.TranType = 'INV' and
 																  INTran.UnitPrice > 0
 															order by INTran.TranDate desc)))
@@ -103,14 +118,14 @@ BEGIN
 		SET @LastReceiptPrice = (select top 1 UnitCost from INTran 
 												where INTran.CompanyID = @companyID and
 													  INTran.InventoryID = @INVENTORYID and
-													  INTran.FinPeriodID <= @period and
+													  INTran.FinPeriodID <= @FinPeriodID and
 													  (INTran.TranType = 'ASY' or INTran.TranType = 'RCP')
 												order by INTran.TranDate desc)
 		
 		SET @LastReceiptDate = (select top 1 TranDate from INTran 
 												where INTran.CompanyID = @companyID and
 													  INTran.InventoryID = @INVENTORYID and
-													  INTran.FinPeriodID <= @period and
+													  INTran.FinPeriodID <= @FinPeriodID and
 													  (INTran.TranType = 'ASY' or INTran.TranType = 'RCP')
 												order by INTran.TranDate desc)
 		--update 
