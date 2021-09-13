@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ExternalLogisticsAPI.DAC
+namespace ExternalLogisticsAPI
 {
     [Serializable]
     [PXCacheName("LUMPacUnitCostHistory")]
