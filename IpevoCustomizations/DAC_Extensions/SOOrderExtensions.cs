@@ -7,9 +7,15 @@ namespace PX.Objects.SO
     public class SOOrderExt : PXCacheExtension<PX.Objects.SO.SOOrder>
     {
         // Jira IP-13
+        #region UsrSubTot
+        [PXDecimal()]
+        [PXDefault(TypeCode.Decimal, "0.0")]
+        public virtual decimal? UsrSubTot { get; set; }
+        public abstract class usrSubTot : PX.Data.BQL.BqlDecimal.Field<usrSubTot> { }
+        #endregion
+
         #region UsrCurySubTot
-        //[PXDecimal()]
-        [PXCurrency(typeof(SOOrder.curyInfoID), typeof(SOOrderExt.usrCurySubTot))]
+        [PXCurrency(typeof(SOOrder.curyInfoID), typeof(usrSubTot))]
         [PXUIField(DisplayName = "Sub Total", IsReadOnly = true)]
         [PXFormula(typeof(Add<SOOrder.curyMiscTot, SOOrder.curyLineTotal>))]
         public virtual decimal? UsrCurySubTot { get; set; }
