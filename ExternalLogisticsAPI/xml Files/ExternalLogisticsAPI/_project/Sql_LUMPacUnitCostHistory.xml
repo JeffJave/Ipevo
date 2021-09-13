@@ -1,0 +1,38 @@
+﻿<Sql TableName="LUMPacUnitCostHistory" TableSchemaXml="#CDATA">
+    <CDATA name="TableSchemaXml"><![CDATA[<table name="LUMPacUnitCostHistory">
+  <col name="CompanyID" type="Int" default="Zero" />
+  <col name="FinperiodID" type="NVarChar(10)" />
+  <col name="InventoryID" type="Int" />
+  <col name="ItemClassID" type="Int" />
+  <col name="PACUnitCost" type="Decimal(18,8)" />
+  <col name="FinBegCost" type="Decimal(25,6)" nullable="true" />
+  <col name="FinBegQty" type="Decimal(25,6)" nullable="true" />
+  <col name="FinptdCOGS" type="Decimal(25,6)" nullable="true" />
+  <col name="FinPtdCOGSCredits" type="Decimal(25,6)" nullable="true" />
+  <col name="FinPtdCostAdjusted" type="Decimal(25,6)" nullable="true" />
+  <col name="FinPtdCostAssemblyIn" type="Decimal(25,6)" nullable="true" />
+  <col name="FinPtdCostAssemblyOut" type="Decimal(25,6)" nullable="true" />
+  <col name="FinPtdCostIssued" type="Decimal(25,6)" nullable="true" />
+  <col name="FinPtdCostReceived" type="Decimal(25,6)" nullable="true" />
+  <col name="FinPtdCostTransferIn" type="Decimal(25,6)" nullable="true" />
+  <col name="FinPtdCostTransferOut" type="Decimal(25,6)" nullable="true" />
+  <col name="FinPtdQtyAdjusted" type="Decimal(25,6)" nullable="true" />
+  <col name="FinPtdQtyAssemblyIn" type="Decimal(25,6)" nullable="true" />
+  <col name="FinPtdQtyAssemblyOut" type="Decimal(25,6)" nullable="true" />
+  <col name="FinPtdQtyIssued" type="Decimal(25,6)" nullable="true" />
+  <col name="FinPtdQtyReceived" type="Decimal(25,6)" nullable="true" />
+  <col name="FinPtdQtySales" type="Decimal(25,6)" nullable="true" />
+  <col name="FinPtdQtyTransferIn" type="Decimal(25,6)" nullable="true" />
+  <col name="FinPtdQtyTransferOut" type="Decimal(25,6)" nullable="true" />
+  <col name="FinYtdCost" type="Decimal(25,6)" nullable="true" />
+  <col name="FinYtdQty" type="Decimal(25,6)" nullable="true" />
+  <col name="TotalCostIN" type="Decimal(25,6)" nullable="true" />
+  <col name="TotalQtyIn" type="Decimal(25,6)" nullable="true" />
+  <col name="FinPtdCreditMemos" type="Decimal(25,6)" nullable="true" />
+  <index name="PK_LUMPacUnitCostHistory" clustered="true" primary="true" unique="true">
+    <col name="CompanyID" />
+    <col name="InventoryID" />
+    <col name="FinperiodID" />
+  </index>
+</table>]]></CDATA>
+</Sql>
