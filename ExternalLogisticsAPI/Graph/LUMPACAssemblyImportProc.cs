@@ -36,7 +36,7 @@ namespace ExternalLogisticsAPI.Graph
             var pacData = SelectFrom<vPACUnitCost>.View.Select(new PXGraph()).RowCast<vPACUnitCost>().ToList();
             var inComponentTranData = SelectFrom<INComponentTran>
                                       .Where<INComponentTran.finPeriodID.IsEqual<P.AsString>>.View.Select(new PXGraph(), filter.FinPeriod).RowCast<INComponentTran>().ToList();
-            var inKitRegisterData = SelectFrom<INKitRegister>.View.Select(new PXGraph()).RowCast<INKitRegister>().ToList();
+            var inKitRegisterData = SelectFrom<INKitRegister>.Where<INKitRegister.docType.IsEqual<P.AsString>>.View.Select(new PXGraph(),"P").RowCast<INKitRegister>().ToList();
             var inventoryItemData = SelectFrom<InventoryItem>.View.Select(new PXGraph()).RowCast<InventoryItem>().ToList();
             var result = from kit in inComponentTranData 
                          join t in pacData on new { A = kit.InventoryID, B = kit.FinPeriodID } equals new { A = t.InventoryID, B = t.FinPeriodID }

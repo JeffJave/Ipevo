@@ -33,9 +33,15 @@ namespace ExternalLogisticsAPI.Graph
             var filter = this.Filter.Current;
             var sourceData = SelectFrom<vPACAdjCostIssue>
                              .Where<vPACAdjCostIssue.finPeriodID.IsEqual<P.AsString>>.View.Select(this, filter.FinPeriod).RowCast<vPACAdjCostIssue>().ToList();
+            var histData = SelectFrom<LUMPacUnitCostHistory>
+                           .Where< LUMPacUnitCostHistory.finPeriodID.IsEqual<P.AsString>>
+                           .View.Select(this,filter.FinPeriod).RowCast< LUMPacUnitCostHistory >().ToList();
 
             if(filter.ItemClassID.HasValue)
                 sourceData = sourceData.Where(x => x.ItemClassID == filter.ItemClassID.Value).ToList();
+
+            if (histData.Count == 0)
+                throw new PXException("Data is not found in PAC Unit Cost History, please process ‘Save PAC Unit Cost History’ again");
 
             // Delete temp table data
             PXDatabase.Delete<LumPacIssueAdjCost>();

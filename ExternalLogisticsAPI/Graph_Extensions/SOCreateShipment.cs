@@ -26,8 +26,6 @@ namespace PX.Objects.SO
         public SelectFrom<LUMVendCntrlSetup>.View DCLSetup;
 
         #region Override Mehtod
-
-        public delegate IEnumerable OrdersDeletage();
         public delegate void AddCommonFiltersDelegate(SOOrderFilter filter, PXSelectBase<SOOrder> cmd);
 
         [PXOverride]
@@ -45,6 +43,10 @@ namespace PX.Objects.SO
                     cmd.WhereAnd<Where<SOOrder.status, Equal<SOOrderStatus.open>>>();
                     cmd.WhereAnd<Where<SOOrderExt.usrDCLShipmentCreated, Equal<True>>>();
                     cmd.WhereAnd<Where<SOOrder.orderType, NotEqual<SotypeVCAttr>>>();
+                    break;
+                case "SO301000$lumCreateShipmentforFBA": // copy from standard create shipment qry
+                    cmd = BuildCommandCreateShipment(filter);
+                    baseMethod.Invoke(filter, cmd);
                     break;
                 case "SO301000$lumGenerate3PLUKFile":
                     cmd.Join<InnerJoin<vSOSiteMapping, On<SOOrder.orderType, Equal<vSOSiteMapping.orderType>, And<SOOrder.orderNbr, Equal<vSOSiteMapping.orderNbr>>>>>();
@@ -73,56 +75,48 @@ namespace PX.Objects.SO
             }
         }
 
-        //[PXOverride]
-        //public virtual IEnumerable orders(OrdersDeletage baseMethod)
-        //{
-        //    var filterResult = baseMethod.Invoke();
-        //    switch (Base.Filter.Current.Action)
-        //    {
-        //        // Filter Data By DCL order_number
-        //        case "SO301000$lumCallDCLShipemnt":
-        //            List<string> lstOrderNumbers = new List<string>();
-        //            // Combine Query String
-        //            foreach (SOOrder item in filterResult)
-        //            {
-        //                if (!string.IsNullOrEmpty(item.CustomerRefNbr))
-        //                    lstOrderNumbers.Add(item.CustomerRefNbr);
-        //            }
 
-        //            // Get DCL SO. Data
-        //            var dclOrders = JsonConvert.DeserializeObject<OrderResponse>(
-        //                DCLHelper.CallDCLToGetSOByOrderNumbers(
-        //                    this.DCLSetup.Select().RowCast<LUMVendCntrlSetup>().FirstOrDefault(),
-        //                    string.Join(",", lstOrderNumbers.ToArray())).ContentResult);
+        protected virtual PXSelectBase<SOOrder> BuildCommandCreateShipment(SOOrderFilter filter)
+        {
+            PXSelectBase<SOOrder> cmd = new PXSelectJoinGroupBy<SOOrder,
+                InnerJoin<SOOrderType, On<SOOrderType.orderType, Equal<SOOrder.orderType>>,
+                LeftJoin<Carrier, On<SOOrder.shipVia, Equal<Carrier.carrierID>>,
+                InnerJoin<SOShipmentPlan,
+                    On<SOOrder.orderType, Equal<SOShipmentPlan.orderType>,
+                        And<SOOrder.orderNbr, Equal<SOShipmentPlan.orderNbr>>>,
+                InnerJoin<INSite, On<INSite.siteID, Equal<SOShipmentPlan.siteID>>,
+                LeftJoin<SOOrderShipment,
+                    On<SOOrderShipment.orderType, Equal<SOShipmentPlan.orderType>,
+                        And<SOOrderShipment.orderNbr, Equal<SOShipmentPlan.orderNbr>,
+                        And<SOOrderShipment.siteID, Equal<SOShipmentPlan.siteID>,
+                        And<SOOrderShipment.confirmed, Equal<boolFalse>>>>>,
+                LeftJoinSingleTable<Customer, On<SOOrder.customerID, Equal<Customer.bAccountID>>>>>>>>,
+                Where<SOShipmentPlan.inclQtySOBackOrdered, Equal<short0>, And<SOOrderShipment.shipmentNbr, IsNull,
+                    And2<Where<Customer.bAccountID, IsNull, Or<Match<Customer, Current<AccessInfo.userName>>>>,
+                    And<Match<INSite, Current<AccessInfo.userName>>>>>>,
+                Aggregate<
+                    GroupBy<SOOrder.orderType,
+                    GroupBy<SOOrder.orderNbr,
+                    GroupBy<SOOrder.approved>>>>>(Base);
 
-        //            if (dclOrders.orders != null)
-        //            {
-        //                foreach (SOOrder item in filterResult)
-        //                {
-        //                    /*
-        //                     *
-        //                     *
-        //                     *Debug mode  DCL.order_number = SO.CustomerRefNbr
-        //                     *Release mode DCL.order_nu,ber = SO.orderNumber
-        //                     *
-        //                     *
-        //                     *
-        //                     */
-        //                    if (dclOrders.orders.Any(x =>
-        //                        x.order_number == item.CustomerRefNbr &&
-        //                        !string.IsNullOrEmpty(x.shipping_carrier) &&
-        //                        x.shipments.Any(s =>
-        //                            s.packages.Any(p => !string.IsNullOrEmpty(p.tracking_number)))))
-        //                        yield return item;
-        //                }
-        //            }
-        //            break;
-        //        default:
-        //            foreach (var item in filterResult)
-        //                yield return item;
-        //            break;
-        //    }
-        //}
+            if (filter.SiteID != null)
+                cmd.WhereAnd<Where<SOShipmentPlan.siteID, Equal<Current<SOOrderFilter.siteID>>>>();
+
+            if (filter.DateSel == "S")
+            {
+                if (filter.EndDate != null)
+                    cmd.WhereAnd<Where<SOShipmentPlan.planDate, LessEqual<Current<SOOrderFilter.endDate>>>>();
+
+                if (filter.StartDate != null)
+                {
+                    cmd.WhereAnd<Where<SOShipmentPlan.planDate, GreaterEqual<Current<SOOrderFilter.startDate>>>>();
+                }
+
+                filter.DateSel = string.Empty;
+            }
+
+            return cmd;
+        }
 
         #endregion
 

@@ -40,6 +40,7 @@ namespace ExternalLogisticsAPI.Graph_Extensions
         public PXAction<SOOrder> lumGererateYUSENNLFile;
         public PXAction<SOOrder> lumGenerateYUSENCAFile;
         public PXAction<SOOrder> lumGenerate3PLUKFile;
+        public PXAction<SOOrder> lumCreateShipmentforFBA;
 
         public override void Initialize()
         {
@@ -173,7 +174,7 @@ namespace ExternalLogisticsAPI.Graph_Extensions
 
                         // Find SOShipment
                         var _soOrderShipments =
-                            FbqlSelect<SelectFromBase<SOOrderShipment, TypeArrayOf<IFbqlJoin>.Empty>.Where<BqlChainableConditionBase<TypeArrayOf<IBqlBinary>.FilledWith<And<Compare<SOOrderShipment.orderType, Equal<P.AsString>>>>>.And<BqlOperand<SOOrderShipment.orderNbr, IBqlString>.IsEqual<P.AsString>>.And<BqlOperand<SOOrderShipment.confirmed,IBqlBool>.IsEqual<False>>>, SOOrderShipment>.View.Select(Base, _soOrder.OrderType, _soOrder.OrderNbr)
+                            FbqlSelect<SelectFromBase<SOOrderShipment, TypeArrayOf<IFbqlJoin>.Empty>.Where<BqlChainableConditionBase<TypeArrayOf<IBqlBinary>.FilledWith<And<Compare<SOOrderShipment.orderType, Equal<P.AsString>>>>>.And<BqlOperand<SOOrderShipment.orderNbr, IBqlString>.IsEqual<P.AsString>>.And<BqlOperand<SOOrderShipment.confirmed, IBqlBool>.IsEqual<False>>>, SOOrderShipment>.View.Select(Base, _soOrder.OrderType, _soOrder.OrderNbr)
                                 .RowCast<SOOrderShipment>();
                         foreach (var refItem in _soOrderShipments)
                         {
@@ -266,6 +267,13 @@ namespace ExternalLogisticsAPI.Graph_Extensions
                 PXProcessing.SetError<SOOrder>(e.Message);
             }
 
+            return adapter.Get();
+        }
+
+        [PXButton]
+        [PXUIField(DisplayName = "Create Shipment for FBA", Enabled = true, MapEnableRights = PXCacheRights.Select, Visible = true)]
+        protected virtual IEnumerable LumCreateShipmentforFBA(PXAdapter adapter)
+        {
             return adapter.Get();
         }
 
