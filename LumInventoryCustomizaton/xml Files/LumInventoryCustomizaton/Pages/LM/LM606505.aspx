@@ -24,13 +24,14 @@
 			<px:PXGridLevel DataMember="DetailsView">
 			    <Columns>
 				<px:PXGridColumn DataField="FinPeriodID" Width="72" ></px:PXGridColumn>
+				<px:PXGridColumn DataField="ConditionPeriod" Width="72" />
 				<px:PXGridColumn DataField="InventoryID" Width="70" ></px:PXGridColumn>
 				<px:PXGridColumn DataField="UnitCost" Width="100" ></px:PXGridColumn>
 				<px:PXGridColumn DataField="ValuationLoss" Width="100" ></px:PXGridColumn>
 				<px:PXGridColumn DataField="LastSalesPrice" Width="100" ></px:PXGridColumn>
 				<px:PXGridColumn DataField="LastSalesDate" Width="90" ></px:PXGridColumn>
-				<px:PXGridColumn DataField="LastReceiptPrice" Width="100" />
-				<px:PXGridColumn DataField="LastReceiptDate" Width="90" />
+				<px:PXGridColumn DataField="LastReceiptPrice" Width="100" ></px:PXGridColumn>
+				<px:PXGridColumn DataField="LastReceiptDate" Width="90" ></px:PXGridColumn>
 				<px:PXGridColumn DataField="IsValuationLoss" Width="70" ></px:PXGridColumn>
 				<px:PXGridColumn DataField="FinYtdQty" Width="100" ></px:PXGridColumn>
 				<px:PXGridColumn DataField="FinYtdCost" Width="100" ></px:PXGridColumn></Columns>

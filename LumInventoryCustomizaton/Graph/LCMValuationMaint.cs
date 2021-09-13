@@ -14,7 +14,7 @@ namespace LumInventoryCustomizaton.Graph
     public class LCMValuationMaint : PXGraph<LCMValuationMaint>
     {
         public PXFilter<LCMValuationFilter> MasterViewFilter;
-        public SelectFrom<LCMValuation>.Where<LCMValuation.finPeriodID.IsEqual<LCMValuationFilter.finPeriodID.FromCurrent>>.View DetailsView;
+        public SelectFrom<LCMValuation>.Where<LCMValuation.conditionPeriod.IsEqual<LCMValuationFilter.finPeriodID.FromCurrent>>.OrderBy<Asc<LCMValuation.inventoryID>>.View DetailsView;
 
         public LCMValuationMaint()
         {

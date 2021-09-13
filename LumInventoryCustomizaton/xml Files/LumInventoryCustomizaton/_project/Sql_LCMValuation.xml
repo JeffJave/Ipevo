@@ -4,6 +4,7 @@
   <col name="CompanyID" type="Int" nullable="true" default="Zero" />
   <col name="InventoryID" type="Int" />
   <col name="FinPeriodID" type="Char(6)" />
+  <col name="ConditionPeriod" type="Char(6)" />
   <col name="FinYtdCost" type="Decimal(19,6)" nullable="true" />
   <col name="FinYtdQty" type="Decimal(19,6)" nullable="true" />
   <col name="UnitCost" type="Decimal(19,6)" nullable="true" />
@@ -13,8 +14,5 @@
   <col name="ValuationLoss" type="Decimal(19,6)" nullable="true" />
   <col name="LastReceiptPrice" type="Decimal(19,6)" nullable="true" />
   <col name="LastReceiptDate" type="DateTime" nullable="true" />
-  <index name="PK_LCMValuation" clustered="true" primary="true" unique="true">
-    <col name="ID" />
-  </index>
 </table>]]></CDATA>
 </Sql>

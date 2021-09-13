@@ -29,9 +29,16 @@ namespace LumInventoryCustomizaton.DAC
 
         #region FinPeriodID
         [PXDBString(6, IsFixed = true, InputMask = "")]
-        [PXUIField(DisplayName = "Fin Period ID")]
+        [PXUIField(DisplayName = "Fin Period ID", Visible = false)]
         public virtual string FinPeriodID { get; set; }
         public abstract class finPeriodID : PX.Data.BQL.BqlString.Field<finPeriodID> { }
+        #endregion
+
+        #region ConditionPeriod
+        [PXDBString(6, IsFixed = true, InputMask = "")]
+        [PXUIField(DisplayName = "Condition Period", Visible = false)]
+        public virtual string ConditionPeriod { get; set; }
+        public abstract class conditionPeriod : PX.Data.BQL.BqlString.Field<conditionPeriod> { }
         #endregion
 
         #region FinYtdCost
