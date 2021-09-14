@@ -68,6 +68,7 @@
     <Compile Include="DAC\LumTaxExemptionCcertificate.cs" />
     <Compile Include="DAC\LumTaxExemptionCcertificateLog.cs" />
     <Compile Include="DAC_Extensions\ARInvoiceExtension.cs" />
+    <Compile Include="DAC_Extensions\BatchExtension.cs" />
     <Compile Include="DAC_Extensions\PaymentInfo.cs" />
     <Compile Include="DAC_Extensions\SOLineExtension.cs" />
     <Compile Include="DAC_Extensions\SOOrderExtensions.cs" />
@@ -80,7 +81,9 @@
     <Compile Include="Graph_Extensions\APPaymentEntryExt.cs" />
     <Compile Include="Graph_Extensions\APPayBills_Extension.cs" />
     <Compile Include="Graph_Extensions\ARInvoiceEntryExternalTax.cs" />
+    <Compile Include="Graph_Extensions\BatchPostEntry.cs" />
     <Compile Include="Graph_Extensions\CADepositEntry.cs" />
+    <Compile Include="Graph_Extensions\JournalEntry.cs" />
     <Compile Include="Graph_Extensions\KitAssemblyEntry.cs" />
     <Compile Include="Graph_Extensions\SOInvoiceEntry_Extension.cs" />
     <Compile Include="DAC_Extensions\SOShipLineExt.cs" />

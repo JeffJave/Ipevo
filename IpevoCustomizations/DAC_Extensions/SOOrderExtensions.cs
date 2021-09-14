@@ -9,7 +9,7 @@ namespace PX.Objects.SO
         // Jira IP-13
         #region UsrSubTot
         [PXDecimal()]
-        [PXDefault(TypeCode.Decimal, "0.0")]
+        [PXDefault(TypeCode.Decimal, "0.0", PersistingCheck = PXPersistingCheck.Nothing)]
         public virtual decimal? UsrSubTot { get; set; }
         public abstract class usrSubTot : PX.Data.BQL.BqlDecimal.Field<usrSubTot> { }
         #endregion
