@@ -74,6 +74,13 @@ namespace ExternalLogisticsAPI
         public abstract class pACIssueCost : PX.Data.BQL.BqlDecimal.Field<pACIssueCost> { }
         #endregion
 
+        #region KitRefNbr
+        [PXDBString(15, IsUnicode = true, IsKey = true)]
+        [PXUIField(DisplayName = "Kit Ref Nbr.")]
+        public virtual string KitRefNbr { get; set; }
+        public abstract class kitRefNbr : PX.Data.BQL.BqlString.Field<kitRefNbr> { }
+        #endregion
+
         #region Siteid
         [PX.Objects.IN.Site(DisplayName = "Warehouse ID", DescriptionField = typeof(INSite.descr), IsKey = true)]
         [PXUIField(DisplayName = "Warehouse")]

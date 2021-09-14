@@ -35,6 +35,7 @@
                     <px:PXGridColumn DataField="AssemblyAdjAmount"></px:PXGridColumn>
                     <px:PXGridColumn DataField="ProductInventoryID"></px:PXGridColumn>
                     <px:PXGridColumn DataField="ProductAdjAmount"></px:PXGridColumn>
+                    <px:PXGridColumn DataField="KitRefNbr"></px:PXGridColumn>
                 </Columns>
             </px:PXGridLevel>
         </Levels>
