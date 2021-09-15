@@ -5689,6 +5689,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                                     </Padding>
                                 </Style>
                                 <Value>=[AttrITEMDESEN.Value]</Value>
+                                <VisibleExpr>=IIF([InventoryItem.ItemType] = 'N', False, True)</VisibleExpr>
                             </TextBox>
                             <TextBox Name="textBox31">
                                 <Location>0px, 20px</Location>
@@ -5703,6 +5704,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                                     <VerticalAlign>Middle</VerticalAlign>
                                 </Style>
                                 <Value>Part No.:</Value>
+                                <VisibleExpr>=IIF([InventoryItem.ItemType] = 'N', False, True)</VisibleExpr>
                             </TextBox>
                             <TextBox Name="textBox32">
                                 <Location>0px, 36px</Location>
@@ -5717,6 +5719,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                                     <VerticalAlign>Middle</VerticalAlign>
                                 </Style>
                                 <Value>Model No.:</Value>
+                                <VisibleExpr>=IIF([InventoryItem.ItemType] = 'N', False, True)</VisibleExpr>
                             </TextBox>
                             <TextBox Name="textBox33">
                                 <Location>0px, 52px</Location>
@@ -5731,6 +5734,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                                     <VerticalAlign>Middle</VerticalAlign>
                                 </Style>
                                 <Value>Country Of Origin: </Value>
+                                <VisibleExpr>=IIF([InventoryItem.ItemType] = 'N', False, True)</VisibleExpr>
                             </TextBox>
                             <TextBox Name="textBox34">
                                 <Location>0px, 68px</Location>
@@ -5771,6 +5775,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                                     <VerticalAlign>Middle</VerticalAlign>
                                 </Style>
                                 <Value>=[InventoryItem.CountryOfOrigin]</Value>
+                                <VisibleExpr>=IIF([InventoryItem.ItemType] = 'N', False, True)</VisibleExpr>
                             </TextBox>
                             <TextBox Name="textBox37">
                                 <Location>72px, 36px</Location>
@@ -5782,6 +5787,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                                     <VerticalAlign>Middle</VerticalAlign>
                                 </Style>
                                 <Value>=[AttrMODELNO.Value]</Value>
+                                <VisibleExpr>=IIF([InventoryItem.ItemType] = 'N', False, True)</VisibleExpr>
                             </TextBox>
                             <TextBox Name="textBox38">
                                 <Location>56px, 20px</Location>
@@ -5793,6 +5799,22 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                                     <VerticalAlign>Middle</VerticalAlign>
                                 </Style>
                                 <Value>=[ARTran.InventoryID]</Value>
+                                <VisibleExpr>=IIF([InventoryItem.ItemType] = 'N', False, True)</VisibleExpr>
+                            </TextBox>
+                            <TextBox Name="textBox69">
+                                <Location>0px, 20px</Location>
+                                <Size>312px, 16px</Size>
+                                <Style>
+                                    <Font>
+                                        <Name>Microsoft JhengHei</Name>
+                                    </Font>
+                                    <Padding>
+                                        <Left>4px</Left>
+                                    </Padding>
+                                    <VerticalAlign>Middle</VerticalAlign>
+                                </Style>
+                                <Value>=[ARTran.InventoryID]</Value>
+                                <VisibleExpr>=IIF([InventoryItem.ItemType] = 'N', True, False)</VisibleExpr>
                             </TextBox>
                         </Items>
                     </Panel>

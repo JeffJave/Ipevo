@@ -51,17 +51,9 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
         </Filters>
         <MailSettings>
             <ActivitySource>ARInvoice.NoteID</ActivitySource>
-            <Bcc>
-            </Bcc>
             <Body>='Dear Customer,#010;#010;This is an automatic email to notify you that you have a new Invoice available on your account.  #010;You will find a copy of'+' '+[ARInvoice.PrintDocType]+' '+'#'+' '+[ARInvoice.RefNbr]+' '+'attached to this email.  #010;#010;If you have any questions, please don’t hesitate to contact us at Email.  #010;#010;Thank you for choosing'+' '+[CompanyContact.FullName]+'.'#010;</Body>
-            <Cc>
-            </Cc>
-            <Format>
-            </Format>
             <ParentSource>Customer.NoteID</ParentSource>
             <Subject>=[CompanyContact.FullName]+' '+[ARInvoice.PrintDocType]+' '+'#'+' '+[ARInvoice.RefNbr]</Subject>
-            <TemplateID>
-            </TemplateID>
             <To>=IsNull([BillingContact.Email],'')</To>
         </MailSettings>
         <Parameters>
@@ -6072,8 +6064,10 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
             </ReportTable>
         </Tables>
         <Sections>
-            <PageHeader Name="pageHeaderSection1">
+            <PageHeader Name="pageHeaderSection1 - DEB2C 19% VAT">
                 <Height>9.73545cm</Height>
+                <Visible>False</Visible>
+                <VisibleExpr>=IIF($DEB2C &gt; 0, True, False)</VisibleExpr>
                 <Items>
                     <TextBox Name="textBox1">
                         <Location>16px, 0px</Location>
@@ -6765,6 +6759,1231 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                 <Height>0cm</Height>
                 <Visible>False</Visible>
             </PageFooter>
+            <PageHeader Name="pageHeaderSection2 - FRB2C 20% VAT">
+                <Height>9.73545cm</Height>
+                <Visible>False</Visible>
+                <VisibleExpr>=IIF($FRB2C &gt; 0, True, False)</VisibleExpr>
+                <Items>
+                    <TextBox Name="textBox107">
+                        <Location>576px, 40px</Location>
+                        <Size>120px, 24px</Size>
+                        <Style>
+                            <BackColor>Silver</BackColor>
+                            <BorderStyle>
+                                <Bottom>Solid</Bottom>
+                                <Right>Solid</Right>
+                                <Top>Solid</Top>
+                            </BorderStyle>
+                            <BorderWidth>
+                                <Bottom>1px</Bottom>
+                                <Right>1px</Right>
+                                <Top>1px</Top>
+                            </BorderWidth>
+                            <Font>
+                                <Style>Bold</Style>
+                            </Font>
+                            <TextAlign>Center</TextAlign>
+                            <VerticalAlign>Middle</VerticalAlign>
+                        </Style>
+                        <Value>Invoice Receipt #</Value>
+                    </TextBox>
+                    <TextBox Name="textBox119">
+                        <Location>16px, 0px</Location>
+                        <Size>184px, 32px</Size>
+                        <Style>
+                            <Font>
+                                <Size>26px</Size>
+                                <Style>Bold</Style>
+                            </Font>
+                            <VerticalAlign>Middle</VerticalAlign>
+                        </Style>
+                        <Value>IPEVO B.V.</Value>
+                    </TextBox>
+                    <TextBox Name="textBox19">
+                        <Location>488px, 112px</Location>
+                        <Size>88px, 24px</Size>
+                        <Style>
+                            <BorderStyle>
+                                <Bottom>Solid</Bottom>
+                                <Left>Solid</Left>
+                                <Right>Solid</Right>
+                            </BorderStyle>
+                            <BorderWidth>
+                                <Bottom>1px</Bottom>
+                                <Left>1px</Left>
+                                <Right>1px</Right>
+                            </BorderWidth>
+                            <TextAlign>Center</TextAlign>
+                            <VerticalAlign>Middle</VerticalAlign>
+                        </Style>
+                        <Value>=[ARInvoice.TermsID]</Value>
+                    </TextBox>
+                    <TextBox Name="textBox20">
+                        <Location>488px, 24px</Location>
+                        <Size>208px, 16px</Size>
+                        <Value>='Invoice # ' + [ARInvoice.RefNbr]</Value>
+                    </TextBox>
+                    <TextBox Name="textBox21">
+                        <Location>576px, 64px</Location>
+                        <Size>120px, 24px</Size>
+                        <Style>
+                            <BorderStyle>
+                                <Right>Solid</Right>
+                            </BorderStyle>
+                            <BorderWidth>
+                                <Right>1px</Right>
+                            </BorderWidth>
+                            <TextAlign>Center</TextAlign>
+                            <VerticalAlign>Middle</VerticalAlign>
+                        </Style>
+                        <Value>=[ARInvoice.InvoiceNbr]</Value>
+                    </TextBox>
+                    <TextBox Name="textBox32">
+                        <Format>='MM/dd/yyyy'</Format>
+                        <Location>488px, 64px</Location>
+                        <Size>88px, 24px</Size>
+                        <Style>
+                            <BorderStyle>
+                                <Left>Solid</Left>
+                                <Right>Solid</Right>
+                            </BorderStyle>
+                            <BorderWidth>
+                                <Left>1px</Left>
+                                <Right>1px</Right>
+                            </BorderWidth>
+                            <TextAlign>Center</TextAlign>
+                            <VerticalAlign>Middle</VerticalAlign>
+                        </Style>
+                        <Value>=[ARInvoice.DocDate]</Value>
+                    </TextBox>
+                    <TextBox Name="textBox42">
+                        <Location>488px, 88px</Location>
+                        <Size>88px, 24px</Size>
+                        <Style>
+                            <BackColor>Silver</BackColor>
+                            <BorderStyle>
+                                <Bottom>Solid</Bottom>
+                                <Left>Solid</Left>
+                                <Right>Solid</Right>
+                                <Top>Solid</Top>
+                            </BorderStyle>
+                            <BorderWidth>
+                                <Bottom>1px</Bottom>
+                                <Left>1px</Left>
+                                <Right>1px</Right>
+                                <Top>1px</Top>
+                            </BorderWidth>
+                            <Font>
+                                <Style>Bold</Style>
+                            </Font>
+                            <TextAlign>Center</TextAlign>
+                            <VerticalAlign>Middle</VerticalAlign>
+                        </Style>
+                        <Value>Terms</Value>
+                    </TextBox>
+                    <TextBox Name="textBox43">
+                        <Location>568px, 344px</Location>
+                        <Size>128px, 24px</Size>
+                        <Style>
+                            <BackColor>Silver</BackColor>
+                            <BorderStyle>
+                                <Bottom>Solid</Bottom>
+                                <Right>Solid</Right>
+                                <Top>Solid</Top>
+                            </BorderStyle>
+                            <BorderWidth>
+                                <Bottom>1px</Bottom>
+                                <Right>1px</Right>
+                                <Top>1px</Top>
+                            </BorderWidth>
+                            <Font>
+                                <Style>Bold</Style>
+                            </Font>
+                            <TextAlign>Center</TextAlign>
+                            <VerticalAlign>Middle</VerticalAlign>
+                        </Style>
+                        <Value>Total Amount</Value>
+                    </TextBox>
+                    <TextBox Name="textBox44">
+                        <Location>464px, 344px</Location>
+                        <Size>104px, 24px</Size>
+                        <Style>
+                            <BackColor>Silver</BackColor>
+                            <BorderStyle>
+                                <Bottom>Solid</Bottom>
+                                <Right>Solid</Right>
+                                <Top>Solid</Top>
+                            </BorderStyle>
+                            <BorderWidth>
+                                <Bottom>1px</Bottom>
+                                <Right>1px</Right>
+                                <Top>1px</Top>
+                            </BorderWidth>
+                            <Font>
+                                <Style>Bold</Style>
+                            </Font>
+                            <TextAlign>Center</TextAlign>
+                            <VerticalAlign>Middle</VerticalAlign>
+                        </Style>
+                        <Value>Amount</Value>
+                    </TextBox>
+                    <TextBox Name="textBox45">
+                        <Location>312px, 344px</Location>
+                        <Size>88px, 24px</Size>
+                        <Style>
+                            <BackColor>Silver</BackColor>
+                            <BorderStyle>
+                                <Bottom>Solid</Bottom>
+                                <Right>Solid</Right>
+                                <Top>Solid</Top>
+                            </BorderStyle>
+                            <BorderWidth>
+                                <Bottom>1px</Bottom>
+                                <Right>1px</Right>
+                                <Top>1px</Top>
+                            </BorderWidth>
+                            <Font>
+                                <Style>Bold</Style>
+                            </Font>
+                            <TextAlign>Center</TextAlign>
+                            <VerticalAlign>Middle</VerticalAlign>
+                        </Style>
+                        <Value>Tracking #</Value>
+                    </TextBox>
+                    <TextBox Name="textBox46">
+                        <Location>400px, 344px</Location>
+                        <Size>64px, 24px</Size>
+                        <Style>
+                            <BackColor>Silver</BackColor>
+                            <BorderStyle>
+                                <Bottom>Solid</Bottom>
+                                <Right>Solid</Right>
+                                <Top>Solid</Top>
+                            </BorderStyle>
+                            <BorderWidth>
+                                <Bottom>1px</Bottom>
+                                <Right>1px</Right>
+                                <Top>1px</Top>
+                            </BorderWidth>
+                            <Font>
+                                <Style>Bold</Style>
+                            </Font>
+                            <TextAlign>Center</TextAlign>
+                            <VerticalAlign>Middle</VerticalAlign>
+                        </Style>
+                        <Value>Qty</Value>
+                    </TextBox>
+                    <TextBox Name="textBox47">
+                        <Location>152px, 344px</Location>
+                        <Size>160px, 24px</Size>
+                        <Style>
+                            <BackColor>Silver</BackColor>
+                            <BorderStyle>
+                                <Bottom>Solid</Bottom>
+                                <Right>Solid</Right>
+                                <Top>Solid</Top>
+                            </BorderStyle>
+                            <BorderWidth>
+                                <Bottom>1px</Bottom>
+                                <Right>1px</Right>
+                                <Top>1px</Top>
+                            </BorderWidth>
+                            <Font>
+                                <Style>Bold</Style>
+                            </Font>
+                            <TextAlign>Center</TextAlign>
+                            <VerticalAlign>Middle</VerticalAlign>
+                        </Style>
+                        <Value>Description</Value>
+                    </TextBox>
+                    <TextBox Name="textBox48">
+                        <Location>576px, 88px</Location>
+                        <Size>120px, 24px</Size>
+                        <Style>
+                            <BackColor>Silver</BackColor>
+                            <BorderStyle>
+                                <Bottom>Solid</Bottom>
+                                <Right>Solid</Right>
+                                <Top>Solid</Top>
+                            </BorderStyle>
+                            <BorderWidth>
+                                <Bottom>1px</Bottom>
+                                <Right>1px</Right>
+                                <Top>1px</Top>
+                            </BorderWidth>
+                            <Font>
+                                <Style>Bold</Style>
+                            </Font>
+                            <TextAlign>Center</TextAlign>
+                            <VerticalAlign>Middle</VerticalAlign>
+                        </Style>
+                        <Value>Due Date</Value>
+                    </TextBox>
+                    <TextBox Name="textBox49">
+                        <Location>64px, 344px</Location>
+                        <Size>88px, 24px</Size>
+                        <Style>
+                            <BackColor>Silver</BackColor>
+                            <BorderStyle>
+                                <Bottom>Solid</Bottom>
+                                <Right>Solid</Right>
+                                <Top>Solid</Top>
+                            </BorderStyle>
+                            <BorderWidth>
+                                <Bottom>1px</Bottom>
+                                <Right>1px</Right>
+                                <Top>1px</Top>
+                            </BorderWidth>
+                            <Font>
+                                <Style>Bold</Style>
+                            </Font>
+                            <TextAlign>Center</TextAlign>
+                            <VerticalAlign>Middle</VerticalAlign>
+                        </Style>
+                        <Value>Product</Value>
+                    </TextBox>
+                    <TextBox Name="textBox55">
+                        <Location>0px, 344px</Location>
+                        <Size>64px, 24px</Size>
+                        <Style>
+                            <BackColor>Silver</BackColor>
+                            <BorderStyle>
+                                <Bottom>Solid</Bottom>
+                                <Left>Solid</Left>
+                                <Right>Solid</Right>
+                                <Top>Solid</Top>
+                            </BorderStyle>
+                            <BorderWidth>
+                                <Bottom>1px</Bottom>
+                                <Left>1px</Left>
+                                <Right>1px</Right>
+                                <Top>1px</Top>
+                            </BorderWidth>
+                            <Font>
+                                <Style>Bold</Style>
+                            </Font>
+                            <TextAlign>Center</TextAlign>
+                            <VerticalAlign>Middle</VerticalAlign>
+                        </Style>
+                        <Value>Date</Value>
+                    </TextBox>
+                    <TextBox Name="textBox58">
+                        <Location>592px, 320px</Location>
+                        <Size>104px, 24px</Size>
+                        <Style>
+                            <BorderStyle>
+                                <Right>Solid</Right>
+                            </BorderStyle>
+                            <BorderWidth>
+                                <Right>1px</Right>
+                            </BorderWidth>
+                            <TextAlign>Center</TextAlign>
+                            <VerticalAlign>Middle</VerticalAlign>
+                        </Style>
+                        <Value>=[SOShipment.ShipVia]</Value>
+                    </TextBox>
+                    <TextBox Name="textBox66">
+                        <Location>504px, 320px</Location>
+                        <Size>88px, 24px</Size>
+                        <Style>
+                            <BorderStyle>
+                                <Right>Solid</Right>
+                            </BorderStyle>
+                            <BorderWidth>
+                                <Right>1px</Right>
+                            </BorderWidth>
+                            <TextAlign>Center</TextAlign>
+                            <VerticalAlign>Middle</VerticalAlign>
+                        </Style>
+                        <Value>=[SOShipment.ShipDate]</Value>
+                    </TextBox>
+                    <TextBox Name="textBox75">
+                        <Location>384px, 320px</Location>
+                        <Size>120px, 24px</Size>
+                        <Style>
+                            <BorderStyle>
+                                <Right>Solid</Right>
+                            </BorderStyle>
+                            <BorderWidth>
+                                <Right>1px</Right>
+                            </BorderWidth>
+                            <TextAlign>Center</TextAlign>
+                            <VerticalAlign>Middle</VerticalAlign>
+                        </Style>
+                        <Value>John Lee</Value>
+                    </TextBox>
+                    <TextBox Name="textBox79">
+                        <Location>592px, 296px</Location>
+                        <Size>104px, 24px</Size>
+                        <Style>
+                            <BackColor>Silver</BackColor>
+                            <BorderStyle>
+                                <Bottom>Solid</Bottom>
+                                <Right>Solid</Right>
+                                <Top>Solid</Top>
+                            </BorderStyle>
+                            <BorderWidth>
+                                <Bottom>1px</Bottom>
+                                <Right>1px</Right>
+                                <Top>1px</Top>
+                            </BorderWidth>
+                            <Font>
+                                <Style>Bold</Style>
+                            </Font>
+                            <TextAlign>Center</TextAlign>
+                            <VerticalAlign>Middle</VerticalAlign>
+                        </Style>
+                        <Value>Ship Via</Value>
+                    </TextBox>
+                    <TextBox Name="textBox80">
+                        <Location>504px, 296px</Location>
+                        <Size>88px, 24px</Size>
+                        <Style>
+                            <BackColor>Silver</BackColor>
+                            <BorderStyle>
+                                <Bottom>Solid</Bottom>
+                                <Right>Solid</Right>
+                                <Top>Solid</Top>
+                            </BorderStyle>
+                            <BorderWidth>
+                                <Bottom>1px</Bottom>
+                                <Right>1px</Right>
+                                <Top>1px</Top>
+                            </BorderWidth>
+                            <Font>
+                                <Style>Bold</Style>
+                            </Font>
+                            <TextAlign>Center</TextAlign>
+                            <VerticalAlign>Middle</VerticalAlign>
+                        </Style>
+                        <Value>Ship Date</Value>
+                    </TextBox>
+                    <TextBox Name="textBox81">
+                        <Location>384px, 296px</Location>
+                        <Size>120px, 24px</Size>
+                        <Style>
+                            <BackColor>Silver</BackColor>
+                            <BorderStyle>
+                                <Bottom>Solid</Bottom>
+                                <Right>Solid</Right>
+                                <Top>Solid</Top>
+                            </BorderStyle>
+                            <BorderWidth>
+                                <Bottom>1px</Bottom>
+                                <Right>1px</Right>
+                                <Top>1px</Top>
+                            </BorderWidth>
+                            <Font>
+                                <Style>Bold</Style>
+                            </Font>
+                            <TextAlign>Center</TextAlign>
+                            <VerticalAlign>Middle</VerticalAlign>
+                        </Style>
+                        <Value>Account Manager</Value>
+                    </TextBox>
+                    <TextBox Name="textBox82">
+                        <Location>16px, 40px</Location>
+                        <Size>184px, 96px</Size>
+                        <Style>
+                            <Font>
+                                <Size>12px</Size>
+                            </Font>
+                        </Style>
+                        <Value>Beursplein 37#010;3011AA Rotterdam#010;the Netherland#010;#010;VAT number FR05891566994#010;sales-germany@ipevo.com
+</Value>
+                    </TextBox>
+                    <TextBox Name="textBox83">
+                        <Location>280px, 320px</Location>
+                        <Size>104px, 24px</Size>
+                        <Style>
+                            <BorderStyle>
+                                <Left>Solid</Left>
+                                <Right>Solid</Right>
+                            </BorderStyle>
+                            <BorderWidth>
+                                <Left>1px</Left>
+                                <Right>1px</Right>
+                            </BorderWidth>
+                            <TextAlign>Center</TextAlign>
+                            <VerticalAlign>Middle</VerticalAlign>
+                        </Style>
+                        <Value>=[ARInvoice.DocDate]</Value>
+                    </TextBox>
+                    <TextBox Name="textBox88">
+                        <Location>576px, 112px</Location>
+                        <Size>120px, 24px</Size>
+                        <Style>
+                            <BorderStyle>
+                                <Bottom>Solid</Bottom>
+                                <Right>Solid</Right>
+                            </BorderStyle>
+                            <BorderWidth>
+                                <Bottom>1px</Bottom>
+                                <Right>1px</Right>
+                            </BorderWidth>
+                            <TextAlign>Center</TextAlign>
+                            <VerticalAlign>Middle</VerticalAlign>
+                        </Style>
+                        <Value>=[ARInvoice.DueDate]</Value>
+                    </TextBox>
+                    <TextBox Name="textBox89">
+                        <Location>488px, 40px</Location>
+                        <Size>88px, 24px</Size>
+                        <Style>
+                            <BackColor>Silver</BackColor>
+                            <BorderStyle>
+                                <Bottom>Solid</Bottom>
+                                <Left>Solid</Left>
+                                <Right>Solid</Right>
+                                <Top>Solid</Top>
+                            </BorderStyle>
+                            <BorderWidth>
+                                <Bottom>1px</Bottom>
+                                <Left>1px</Left>
+                                <Right>1px</Right>
+                                <Top>1px</Top>
+                            </BorderWidth>
+                            <Font>
+                                <Style>Bold</Style>
+                            </Font>
+                            <TextAlign>Center</TextAlign>
+                            <VerticalAlign>Middle</VerticalAlign>
+                        </Style>
+                        <Value>Date</Value>
+                    </TextBox>
+                    <TextBox Name="textBox90">
+                        <Location>280px, 296px</Location>
+                        <Size>104px, 24px</Size>
+                        <Style>
+                            <BackColor>Silver</BackColor>
+                            <BorderStyle>
+                                <Bottom>Solid</Bottom>
+                                <Left>Solid</Left>
+                                <Right>Solid</Right>
+                                <Top>Solid</Top>
+                            </BorderStyle>
+                            <BorderWidth>
+                                <Bottom>1px</Bottom>
+                                <Left>1px</Left>
+                                <Right>1px</Right>
+                                <Top>1px</Top>
+                            </BorderWidth>
+                            <Font>
+                                <Style>Bold</Style>
+                            </Font>
+                            <TextAlign>Center</TextAlign>
+                            <VerticalAlign>Middle</VerticalAlign>
+                        </Style>
+                        <Value>Due Date</Value>
+                    </TextBox>
+                    <TextBox Name="textBox91">
+                        <Location>344px, 176px</Location>
+                        <Size>264px, 104px</Size>
+                        <Style>
+                            <BorderStyle>
+                                <Bottom>Solid</Bottom>
+                                <Right>Solid</Right>
+                            </BorderStyle>
+                            <BorderWidth>
+                                <Bottom>1px</Bottom>
+                                <Right>1px</Right>
+                            </BorderWidth>
+                            <Font>
+                                <Size>11px</Size>
+                            </Font>
+                            <Padding>
+                                <Left>3px</Left>
+                                <Top>3px</Top>
+                            </Padding>
+                        </Style>
+                        <Value>=IIf([ShippingContact.Attention] &lt;&gt; null, [ShippingContact.Attention], '') #010;+IIf([SOOrder.CustomerOrderNbr] &lt;&gt; null, '/PO# ' + [SOOrder.CustomerOrderNbr] + '{br}', '')#010;+IIf([ShippingContact.FullName] &lt;&gt; null, [ShippingContact.FullName] + '{br}', '')#010;+ '{br}'#010;+IIf([ShippingContact.Phone1] &lt;&gt; null,[ShippingContact.Phone1] + '{br}', '')#010;+IIf([ShippingAddress.AddressLine1] &lt;&gt; null,[ShippingAddress.AddressLine1] + '{br}', '')#010;+IIf([ShippingAddress.AddressLine2] &lt;&gt; null,[ShippingAddress.AddressLine2] + '{br}', '')#010;+IIf([ShippingAddress.City] &lt;&gt; null, [ShippingAddress.City] + ' ', '')#010;+IIf([ShippingAddress.State] &lt;&gt; null, [ShippingAddress.State] + ' ', '')#010;+IIf([ShippingAddress.PostalCode] &lt;&gt; null, [ShippingAddress.PostalCode], '')</Value>
+                    </TextBox>
+                    <TextBox Name="textBox92">
+                        <Location>344px, 152px</Location>
+                        <Size>264px, 24px</Size>
+                        <Style>
+                            <BackColor>Silver</BackColor>
+                            <BorderStyle>
+                                <Bottom>Solid</Bottom>
+                                <Right>Solid</Right>
+                                <Top>Solid</Top>
+                            </BorderStyle>
+                            <BorderWidth>
+                                <Bottom>1px</Bottom>
+                                <Right>1px</Right>
+                                <Top>1px</Top>
+                            </BorderWidth>
+                            <Font>
+                                <Style>Bold</Style>
+                            </Font>
+                            <TextAlign>Center</TextAlign>
+                            <VerticalAlign>Middle</VerticalAlign>
+                        </Style>
+                        <Value>Shipping To</Value>
+                    </TextBox>
+                    <TextBox Name="textBox93">
+                        <Location>80px, 176px</Location>
+                        <Size>264px, 104px</Size>
+                        <Style>
+                            <BorderStyle>
+                                <Bottom>Solid</Bottom>
+                                <Left>Solid</Left>
+                                <Right>Solid</Right>
+                            </BorderStyle>
+                            <BorderWidth>
+                                <Bottom>1px</Bottom>
+                                <Left>1px</Left>
+                                <Right>1px</Right>
+                            </BorderWidth>
+                            <Font>
+                                <Size>11px</Size>
+                            </Font>
+                            <Padding>
+                                <Left>3px</Left>
+                                <Top>3px</Top>
+                            </Padding>
+                        </Style>
+                        <Value>=IIf([BillingContact.Attention] &lt;&gt; null, [BillingContact.Attention] + '{br}', '') #010;+IIf([BillingContact.FullName] &lt;&gt; null, [BillingContact.FullName] + '{br}', '')#010;+ '{br}'#010;+IIf([BillingContact.Phone1] &lt;&gt; null,[BillingContact.Phone1] + '{br}', '')#010;+IIf([BillingAddress.AddressLine1] &lt;&gt; null,[BillingAddress.AddressLine1] + '{br}', '')#010;+IIf([BillingAddress.AddressLine2] &lt;&gt; null,[BillingAddress.AddressLine2] + '{br}', '')#010;+IIf([BillingAddress.City] &lt;&gt; null, [BillingAddress.City] + ' ', '')#010;+IIf([BillingAddress.State] &lt;&gt; null, [BillingAddress.State] + ' ', '')#010;+IIf([BillingAddress.PostalCode] &lt;&gt; null, [BillingAddress.PostalCode], '')#010;+IIf([Location.TaxRegistrationID] &lt;&gt; null, '{br}' + [Location.TaxRegistrationID], '')</Value>
+                    </TextBox>
+                    <TextBox Name="textBox94">
+                        <Location>80px, 152px</Location>
+                        <Size>264px, 24px</Size>
+                        <Style>
+                            <BackColor>Silver</BackColor>
+                            <BorderStyle>
+                                <Bottom>Solid</Bottom>
+                                <Left>Solid</Left>
+                                <Right>Solid</Right>
+                                <Top>Solid</Top>
+                            </BorderStyle>
+                            <BorderWidth>
+                                <Bottom>1px</Bottom>
+                                <Left>1px</Left>
+                                <Right>1px</Right>
+                                <Top>1px</Top>
+                            </BorderWidth>
+                            <Font>
+                                <Style>Bold</Style>
+                            </Font>
+                            <TextAlign>Center</TextAlign>
+                            <VerticalAlign>Middle</VerticalAlign>
+                        </Style>
+                        <Value>Billing To</Value>
+                    </TextBox>
+                </Items>
+            </PageHeader>
+            <PageHeader Name="pageHeaderSection3 - Others 21% VAT">
+                <Height>9.73545cm</Height>
+                <VisibleExpr>=IIF($FRB2C &gt; 0 Or $DEB2C &gt; 0, False, True)</VisibleExpr>
+                <Items>
+                    <TextBox Name="textBox120">
+                        <Location>488px, 112px</Location>
+                        <Size>88px, 24px</Size>
+                        <Style>
+                            <BorderStyle>
+                                <Bottom>Solid</Bottom>
+                                <Left>Solid</Left>
+                                <Right>Solid</Right>
+                            </BorderStyle>
+                            <BorderWidth>
+                                <Bottom>1px</Bottom>
+                                <Left>1px</Left>
+                                <Right>1px</Right>
+                            </BorderWidth>
+                            <TextAlign>Center</TextAlign>
+                            <VerticalAlign>Middle</VerticalAlign>
+                        </Style>
+                        <Value>=[ARInvoice.TermsID]</Value>
+                    </TextBox>
+                    <TextBox Name="textBox121">
+                        <Location>488px, 24px</Location>
+                        <Size>208px, 16px</Size>
+                        <Value>='Invoice # ' + [ARInvoice.RefNbr]</Value>
+                    </TextBox>
+                    <TextBox Name="textBox122">
+                        <Location>576px, 64px</Location>
+                        <Size>120px, 24px</Size>
+                        <Style>
+                            <BorderStyle>
+                                <Right>Solid</Right>
+                            </BorderStyle>
+                            <BorderWidth>
+                                <Right>1px</Right>
+                            </BorderWidth>
+                            <TextAlign>Center</TextAlign>
+                            <VerticalAlign>Middle</VerticalAlign>
+                        </Style>
+                        <Value>=[ARInvoice.InvoiceNbr]</Value>
+                    </TextBox>
+                    <TextBox Name="textBox123">
+                        <Format>='MM/dd/yyyy'</Format>
+                        <Location>488px, 64px</Location>
+                        <Size>88px, 24px</Size>
+                        <Style>
+                            <BorderStyle>
+                                <Left>Solid</Left>
+                                <Right>Solid</Right>
+                            </BorderStyle>
+                            <BorderWidth>
+                                <Left>1px</Left>
+                                <Right>1px</Right>
+                            </BorderWidth>
+                            <TextAlign>Center</TextAlign>
+                            <VerticalAlign>Middle</VerticalAlign>
+                        </Style>
+                        <Value>=[ARInvoice.DocDate]</Value>
+                    </TextBox>
+                    <TextBox Name="textBox124">
+                        <Location>488px, 88px</Location>
+                        <Size>88px, 24px</Size>
+                        <Style>
+                            <BackColor>Silver</BackColor>
+                            <BorderStyle>
+                                <Bottom>Solid</Bottom>
+                                <Left>Solid</Left>
+                                <Right>Solid</Right>
+                                <Top>Solid</Top>
+                            </BorderStyle>
+                            <BorderWidth>
+                                <Bottom>1px</Bottom>
+                                <Left>1px</Left>
+                                <Right>1px</Right>
+                                <Top>1px</Top>
+                            </BorderWidth>
+                            <Font>
+                                <Style>Bold</Style>
+                            </Font>
+                            <TextAlign>Center</TextAlign>
+                            <VerticalAlign>Middle</VerticalAlign>
+                        </Style>
+                        <Value>Terms</Value>
+                    </TextBox>
+                    <TextBox Name="textBox125">
+                        <Location>568px, 344px</Location>
+                        <Size>128px, 24px</Size>
+                        <Style>
+                            <BackColor>Silver</BackColor>
+                            <BorderStyle>
+                                <Bottom>Solid</Bottom>
+                                <Right>Solid</Right>
+                                <Top>Solid</Top>
+                            </BorderStyle>
+                            <BorderWidth>
+                                <Bottom>1px</Bottom>
+                                <Right>1px</Right>
+                                <Top>1px</Top>
+                            </BorderWidth>
+                            <Font>
+                                <Style>Bold</Style>
+                            </Font>
+                            <TextAlign>Center</TextAlign>
+                            <VerticalAlign>Middle</VerticalAlign>
+                        </Style>
+                        <Value>Total Amount</Value>
+                    </TextBox>
+                    <TextBox Name="textBox126">
+                        <Location>464px, 344px</Location>
+                        <Size>104px, 24px</Size>
+                        <Style>
+                            <BackColor>Silver</BackColor>
+                            <BorderStyle>
+                                <Bottom>Solid</Bottom>
+                                <Right>Solid</Right>
+                                <Top>Solid</Top>
+                            </BorderStyle>
+                            <BorderWidth>
+                                <Bottom>1px</Bottom>
+                                <Right>1px</Right>
+                                <Top>1px</Top>
+                            </BorderWidth>
+                            <Font>
+                                <Style>Bold</Style>
+                            </Font>
+                            <TextAlign>Center</TextAlign>
+                            <VerticalAlign>Middle</VerticalAlign>
+                        </Style>
+                        <Value>Amount</Value>
+                    </TextBox>
+                    <TextBox Name="textBox127">
+                        <Location>312px, 344px</Location>
+                        <Size>88px, 24px</Size>
+                        <Style>
+                            <BackColor>Silver</BackColor>
+                            <BorderStyle>
+                                <Bottom>Solid</Bottom>
+                                <Right>Solid</Right>
+                                <Top>Solid</Top>
+                            </BorderStyle>
+                            <BorderWidth>
+                                <Bottom>1px</Bottom>
+                                <Right>1px</Right>
+                                <Top>1px</Top>
+                            </BorderWidth>
+                            <Font>
+                                <Style>Bold</Style>
+                            </Font>
+                            <TextAlign>Center</TextAlign>
+                            <VerticalAlign>Middle</VerticalAlign>
+                        </Style>
+                        <Value>Tracking #</Value>
+                    </TextBox>
+                    <TextBox Name="textBox128">
+                        <Location>400px, 344px</Location>
+                        <Size>64px, 24px</Size>
+                        <Style>
+                            <BackColor>Silver</BackColor>
+                            <BorderStyle>
+                                <Bottom>Solid</Bottom>
+                                <Right>Solid</Right>
+                                <Top>Solid</Top>
+                            </BorderStyle>
+                            <BorderWidth>
+                                <Bottom>1px</Bottom>
+                                <Right>1px</Right>
+                                <Top>1px</Top>
+                            </BorderWidth>
+                            <Font>
+                                <Style>Bold</Style>
+                            </Font>
+                            <TextAlign>Center</TextAlign>
+                            <VerticalAlign>Middle</VerticalAlign>
+                        </Style>
+                        <Value>Qty</Value>
+                    </TextBox>
+                    <TextBox Name="textBox129">
+                        <Location>152px, 344px</Location>
+                        <Size>160px, 24px</Size>
+                        <Style>
+                            <BackColor>Silver</BackColor>
+                            <BorderStyle>
+                                <Bottom>Solid</Bottom>
+                                <Right>Solid</Right>
+                                <Top>Solid</Top>
+                            </BorderStyle>
+                            <BorderWidth>
+                                <Bottom>1px</Bottom>
+                                <Right>1px</Right>
+                                <Top>1px</Top>
+                            </BorderWidth>
+                            <Font>
+                                <Style>Bold</Style>
+                            </Font>
+                            <TextAlign>Center</TextAlign>
+                            <VerticalAlign>Middle</VerticalAlign>
+                        </Style>
+                        <Value>Description</Value>
+                    </TextBox>
+                    <TextBox Name="textBox130">
+                        <Location>576px, 88px</Location>
+                        <Size>120px, 24px</Size>
+                        <Style>
+                            <BackColor>Silver</BackColor>
+                            <BorderStyle>
+                                <Bottom>Solid</Bottom>
+                                <Right>Solid</Right>
+                                <Top>Solid</Top>
+                            </BorderStyle>
+                            <BorderWidth>
+                                <Bottom>1px</Bottom>
+                                <Right>1px</Right>
+                                <Top>1px</Top>
+                            </BorderWidth>
+                            <Font>
+                                <Style>Bold</Style>
+                            </Font>
+                            <TextAlign>Center</TextAlign>
+                            <VerticalAlign>Middle</VerticalAlign>
+                        </Style>
+                        <Value>Due Date</Value>
+                    </TextBox>
+                    <TextBox Name="textBox131">
+                        <Location>64px, 344px</Location>
+                        <Size>88px, 24px</Size>
+                        <Style>
+                            <BackColor>Silver</BackColor>
+                            <BorderStyle>
+                                <Bottom>Solid</Bottom>
+                                <Right>Solid</Right>
+                                <Top>Solid</Top>
+                            </BorderStyle>
+                            <BorderWidth>
+                                <Bottom>1px</Bottom>
+                                <Right>1px</Right>
+                                <Top>1px</Top>
+                            </BorderWidth>
+                            <Font>
+                                <Style>Bold</Style>
+                            </Font>
+                            <TextAlign>Center</TextAlign>
+                            <VerticalAlign>Middle</VerticalAlign>
+                        </Style>
+                        <Value>Product</Value>
+                    </TextBox>
+                    <TextBox Name="textBox132">
+                        <Location>0px, 344px</Location>
+                        <Size>64px, 24px</Size>
+                        <Style>
+                            <BackColor>Silver</BackColor>
+                            <BorderStyle>
+                                <Bottom>Solid</Bottom>
+                                <Left>Solid</Left>
+                                <Right>Solid</Right>
+                                <Top>Solid</Top>
+                            </BorderStyle>
+                            <BorderWidth>
+                                <Bottom>1px</Bottom>
+                                <Left>1px</Left>
+                                <Right>1px</Right>
+                                <Top>1px</Top>
+                            </BorderWidth>
+                            <Font>
+                                <Style>Bold</Style>
+                            </Font>
+                            <TextAlign>Center</TextAlign>
+                            <VerticalAlign>Middle</VerticalAlign>
+                        </Style>
+                        <Value>Date</Value>
+                    </TextBox>
+                    <TextBox Name="textBox133">
+                        <Location>592px, 320px</Location>
+                        <Size>104px, 24px</Size>
+                        <Style>
+                            <BorderStyle>
+                                <Right>Solid</Right>
+                            </BorderStyle>
+                            <BorderWidth>
+                                <Right>1px</Right>
+                            </BorderWidth>
+                            <TextAlign>Center</TextAlign>
+                            <VerticalAlign>Middle</VerticalAlign>
+                        </Style>
+                        <Value>=[SOShipment.ShipVia]</Value>
+                    </TextBox>
+                    <TextBox Name="textBox134">
+                        <Location>504px, 320px</Location>
+                        <Size>88px, 24px</Size>
+                        <Style>
+                            <BorderStyle>
+                                <Right>Solid</Right>
+                            </BorderStyle>
+                            <BorderWidth>
+                                <Right>1px</Right>
+                            </BorderWidth>
+                            <TextAlign>Center</TextAlign>
+                            <VerticalAlign>Middle</VerticalAlign>
+                        </Style>
+                        <Value>=[SOShipment.ShipDate]</Value>
+                    </TextBox>
+                    <TextBox Name="textBox135">
+                        <Location>384px, 320px</Location>
+                        <Size>120px, 24px</Size>
+                        <Style>
+                            <BorderStyle>
+                                <Right>Solid</Right>
+                            </BorderStyle>
+                            <BorderWidth>
+                                <Right>1px</Right>
+                            </BorderWidth>
+                            <TextAlign>Center</TextAlign>
+                            <VerticalAlign>Middle</VerticalAlign>
+                        </Style>
+                        <Value>John Lee</Value>
+                    </TextBox>
+                    <TextBox Name="textBox136">
+                        <Location>592px, 296px</Location>
+                        <Size>104px, 24px</Size>
+                        <Style>
+                            <BackColor>Silver</BackColor>
+                            <BorderStyle>
+                                <Bottom>Solid</Bottom>
+                                <Right>Solid</Right>
+                                <Top>Solid</Top>
+                            </BorderStyle>
+                            <BorderWidth>
+                                <Bottom>1px</Bottom>
+                                <Right>1px</Right>
+                                <Top>1px</Top>
+                            </BorderWidth>
+                            <Font>
+                                <Style>Bold</Style>
+                            </Font>
+                            <TextAlign>Center</TextAlign>
+                            <VerticalAlign>Middle</VerticalAlign>
+                        </Style>
+                        <Value>Ship Via</Value>
+                    </TextBox>
+                    <TextBox Name="textBox137">
+                        <Location>504px, 296px</Location>
+                        <Size>88px, 24px</Size>
+                        <Style>
+                            <BackColor>Silver</BackColor>
+                            <BorderStyle>
+                                <Bottom>Solid</Bottom>
+                                <Right>Solid</Right>
+                                <Top>Solid</Top>
+                            </BorderStyle>
+                            <BorderWidth>
+                                <Bottom>1px</Bottom>
+                                <Right>1px</Right>
+                                <Top>1px</Top>
+                            </BorderWidth>
+                            <Font>
+                                <Style>Bold</Style>
+                            </Font>
+                            <TextAlign>Center</TextAlign>
+                            <VerticalAlign>Middle</VerticalAlign>
+                        </Style>
+                        <Value>Ship Date</Value>
+                    </TextBox>
+                    <TextBox Name="textBox138">
+                        <Location>384px, 296px</Location>
+                        <Size>120px, 24px</Size>
+                        <Style>
+                            <BackColor>Silver</BackColor>
+                            <BorderStyle>
+                                <Bottom>Solid</Bottom>
+                                <Right>Solid</Right>
+                                <Top>Solid</Top>
+                            </BorderStyle>
+                            <BorderWidth>
+                                <Bottom>1px</Bottom>
+                                <Right>1px</Right>
+                                <Top>1px</Top>
+                            </BorderWidth>
+                            <Font>
+                                <Style>Bold</Style>
+                            </Font>
+                            <TextAlign>Center</TextAlign>
+                            <VerticalAlign>Middle</VerticalAlign>
+                        </Style>
+                        <Value>Account Manager</Value>
+                    </TextBox>
+                    <TextBox Name="textBox139">
+                        <Location>16px, 40px</Location>
+                        <Size>184px, 96px</Size>
+                        <Style>
+                            <Font>
+                                <Size>12px</Size>
+                            </Font>
+                        </Style>
+                        <Value>Beursplein 37#010;3011AA Rotterdam#010;the Netherland#010;#010;VAT number NL858433552B01#010;sales-germany@ipevo.com
+</Value>
+                    </TextBox>
+                    <TextBox Name="textBox140">
+                        <Location>280px, 320px</Location>
+                        <Size>104px, 24px</Size>
+                        <Style>
+                            <BorderStyle>
+                                <Left>Solid</Left>
+                                <Right>Solid</Right>
+                            </BorderStyle>
+                            <BorderWidth>
+                                <Left>1px</Left>
+                                <Right>1px</Right>
+                            </BorderWidth>
+                            <TextAlign>Center</TextAlign>
+                            <VerticalAlign>Middle</VerticalAlign>
+                        </Style>
+                        <Value>=[ARInvoice.DocDate]</Value>
+                    </TextBox>
+                    <TextBox Name="textBox141">
+                        <Location>576px, 112px</Location>
+                        <Size>120px, 24px</Size>
+                        <Style>
+                            <BorderStyle>
+                                <Bottom>Solid</Bottom>
+                                <Right>Solid</Right>
+                            </BorderStyle>
+                            <BorderWidth>
+                                <Bottom>1px</Bottom>
+                                <Right>1px</Right>
+                            </BorderWidth>
+                            <TextAlign>Center</TextAlign>
+                            <VerticalAlign>Middle</VerticalAlign>
+                        </Style>
+                        <Value>=[ARInvoice.DueDate]</Value>
+                    </TextBox>
+                    <TextBox Name="textBox142">
+                        <Location>488px, 40px</Location>
+                        <Size>88px, 24px</Size>
+                        <Style>
+                            <BackColor>Silver</BackColor>
+                            <BorderStyle>
+                                <Bottom>Solid</Bottom>
+                                <Left>Solid</Left>
+                                <Right>Solid</Right>
+                                <Top>Solid</Top>
+                            </BorderStyle>
+                            <BorderWidth>
+                                <Bottom>1px</Bottom>
+                                <Left>1px</Left>
+                                <Right>1px</Right>
+                                <Top>1px</Top>
+                            </BorderWidth>
+                            <Font>
+                                <Style>Bold</Style>
+                            </Font>
+                            <TextAlign>Center</TextAlign>
+                            <VerticalAlign>Middle</VerticalAlign>
+                        </Style>
+                        <Value>Date</Value>
+                    </TextBox>
+                    <TextBox Name="textBox143">
+                        <Location>280px, 296px</Location>
+                        <Size>104px, 24px</Size>
+                        <Style>
+                            <BackColor>Silver</BackColor>
+                            <BorderStyle>
+                                <Bottom>Solid</Bottom>
+                                <Left>Solid</Left>
+                                <Right>Solid</Right>
+                                <Top>Solid</Top>
+                            </BorderStyle>
+                            <BorderWidth>
+                                <Bottom>1px</Bottom>
+                                <Left>1px</Left>
+                                <Right>1px</Right>
+                                <Top>1px</Top>
+                            </BorderWidth>
+                            <Font>
+                                <Style>Bold</Style>
+                            </Font>
+                            <TextAlign>Center</TextAlign>
+                            <VerticalAlign>Middle</VerticalAlign>
+                        </Style>
+                        <Value>Due Date</Value>
+                    </TextBox>
+                    <TextBox Name="textBox144">
+                        <Location>344px, 176px</Location>
+                        <Size>264px, 104px</Size>
+                        <Style>
+                            <BorderStyle>
+                                <Bottom>Solid</Bottom>
+                                <Right>Solid</Right>
+                            </BorderStyle>
+                            <BorderWidth>
+                                <Bottom>1px</Bottom>
+                                <Right>1px</Right>
+                            </BorderWidth>
+                            <Font>
+                                <Size>11px</Size>
+                            </Font>
+                            <Padding>
+                                <Left>3px</Left>
+                                <Top>3px</Top>
+                            </Padding>
+                        </Style>
+                        <Value>=IIf([ShippingContact.Attention] &lt;&gt; null, [ShippingContact.Attention], '') #010;+IIf([SOOrder.CustomerOrderNbr] &lt;&gt; null, '/PO# ' + [SOOrder.CustomerOrderNbr] + '{br}', '')#010;+IIf([ShippingContact.FullName] &lt;&gt; null, [ShippingContact.FullName] + '{br}', '')#010;+ '{br}'#010;+IIf([ShippingContact.Phone1] &lt;&gt; null,[ShippingContact.Phone1] + '{br}', '')#010;+IIf([ShippingAddress.AddressLine1] &lt;&gt; null,[ShippingAddress.AddressLine1] + '{br}', '')#010;+IIf([ShippingAddress.AddressLine2] &lt;&gt; null,[ShippingAddress.AddressLine2] + '{br}', '')#010;+IIf([ShippingAddress.City] &lt;&gt; null, [ShippingAddress.City] + ' ', '')#010;+IIf([ShippingAddress.State] &lt;&gt; null, [ShippingAddress.State] + ' ', '')#010;+IIf([ShippingAddress.PostalCode] &lt;&gt; null, [ShippingAddress.PostalCode], '')</Value>
+                    </TextBox>
+                    <TextBox Name="textBox145">
+                        <Location>344px, 152px</Location>
+                        <Size>264px, 24px</Size>
+                        <Style>
+                            <BackColor>Silver</BackColor>
+                            <BorderStyle>
+                                <Bottom>Solid</Bottom>
+                                <Right>Solid</Right>
+                                <Top>Solid</Top>
+                            </BorderStyle>
+                            <BorderWidth>
+                                <Bottom>1px</Bottom>
+                                <Right>1px</Right>
+                                <Top>1px</Top>
+                            </BorderWidth>
+                            <Font>
+                                <Style>Bold</Style>
+                            </Font>
+                            <TextAlign>Center</TextAlign>
+                            <VerticalAlign>Middle</VerticalAlign>
+                        </Style>
+                        <Value>Shipping To</Value>
+                    </TextBox>
+                    <TextBox Name="textBox146">
+                        <Location>80px, 176px</Location>
+                        <Size>264px, 104px</Size>
+                        <Style>
+                            <BorderStyle>
+                                <Bottom>Solid</Bottom>
+                                <Left>Solid</Left>
+                                <Right>Solid</Right>
+                            </BorderStyle>
+                            <BorderWidth>
+                                <Bottom>1px</Bottom>
+                                <Left>1px</Left>
+                                <Right>1px</Right>
+                            </BorderWidth>
+                            <Font>
+                                <Size>11px</Size>
+                            </Font>
+                            <Padding>
+                                <Left>3px</Left>
+                                <Top>3px</Top>
+                            </Padding>
+                        </Style>
+                        <Value>=IIf([BillingContact.Attention] &lt;&gt; null, [BillingContact.Attention] + '{br}', '') #010;+IIf([BillingContact.FullName] &lt;&gt; null, [BillingContact.FullName] + '{br}', '')#010;+ '{br}'#010;+IIf([BillingContact.Phone1] &lt;&gt; null,[BillingContact.Phone1] + '{br}', '')#010;+IIf([BillingAddress.AddressLine1] &lt;&gt; null,[BillingAddress.AddressLine1] + '{br}', '')#010;+IIf([BillingAddress.AddressLine2] &lt;&gt; null,[BillingAddress.AddressLine2] + '{br}', '')#010;+IIf([BillingAddress.City] &lt;&gt; null, [BillingAddress.City] + ' ', '')#010;+IIf([BillingAddress.State] &lt;&gt; null, [BillingAddress.State] + ' ', '')#010;+IIf([BillingAddress.PostalCode] &lt;&gt; null, [BillingAddress.PostalCode], '')#010;+IIf([Location.TaxRegistrationID] &lt;&gt; null, '{br}' + [Location.TaxRegistrationID], '')</Value>
+                    </TextBox>
+                    <TextBox Name="textBox147">
+                        <Location>80px, 152px</Location>
+                        <Size>264px, 24px</Size>
+                        <Style>
+                            <BackColor>Silver</BackColor>
+                            <BorderStyle>
+                                <Bottom>Solid</Bottom>
+                                <Left>Solid</Left>
+                                <Right>Solid</Right>
+                                <Top>Solid</Top>
+                            </BorderStyle>
+                            <BorderWidth>
+                                <Bottom>1px</Bottom>
+                                <Left>1px</Left>
+                                <Right>1px</Right>
+                                <Top>1px</Top>
+                            </BorderWidth>
+                            <Font>
+                                <Style>Bold</Style>
+                            </Font>
+                            <TextAlign>Center</TextAlign>
+                            <VerticalAlign>Middle</VerticalAlign>
+                        </Style>
+                        <Value>Billing To</Value>
+                    </TextBox>
+                    <TextBox Name="textBox148">
+                        <Location>576px, 40px</Location>
+                        <Size>120px, 24px</Size>
+                        <Style>
+                            <BackColor>Silver</BackColor>
+                            <BorderStyle>
+                                <Bottom>Solid</Bottom>
+                                <Right>Solid</Right>
+                                <Top>Solid</Top>
+                            </BorderStyle>
+                            <BorderWidth>
+                                <Bottom>1px</Bottom>
+                                <Right>1px</Right>
+                                <Top>1px</Top>
+                            </BorderWidth>
+                            <Font>
+                                <Style>Bold</Style>
+                            </Font>
+                            <TextAlign>Center</TextAlign>
+                            <VerticalAlign>Middle</VerticalAlign>
+                        </Style>
+                        <Value>Invoice Receipt #</Value>
+                    </TextBox>
+                    <TextBox Name="textBox149">
+                        <Location>16px, 0px</Location>
+                        <Size>184px, 32px</Size>
+                        <Style>
+                            <Font>
+                                <Size>26px</Size>
+                                <Style>Bold</Style>
+                            </Font>
+                            <VerticalAlign>Middle</VerticalAlign>
+                        </Style>
+                        <Value>IPEVO B.V.</Value>
+                    </TextBox>
+                </Items>
+            </PageHeader>
         </Sections>
         <Items />
         <Groups>
@@ -7190,7 +8409,6 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                 <Footers>
                     <Footer Name="groupFooterSection8">
                         <Height>0.63492cm</Height>
-                        <VisibleExpr>=IIF($OTB2C &gt; 0, True, False)</VisibleExpr>
                         <Items>
                             <TextBox Name="textBox105">
                                 <Format>€ #,##0.00;-€ #,##0.00</Format>
@@ -7230,7 +8448,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                                     <TextAlign>Center</TextAlign>
                                     <VerticalAlign>Middle</VerticalAlign>
                                 </Style>
-                                <Value>21% VAT Tax</Value>
+                                <Value>21% VAT Tax - B2C</Value>
                             </TextBox>
                         </Items>
                     </Footer>
@@ -7246,7 +8464,6 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                 <Footers>
                     <Footer Name="groupFooterSection9">
                         <Height>0.63492cm</Height>
-                        <VisibleExpr>=IIF($OTB2B &gt; 0, True, False)</VisibleExpr>
                         <Items>
                             <TextBox Name="textBox103">
                                 <Format>€ #,##0.00;-€ #,##0.00</Format>
@@ -7286,7 +8503,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                                     <TextAlign>Center</TextAlign>
                                     <VerticalAlign>Middle</VerticalAlign>
                                 </Style>
-                                <Value>-</Value>
+                                <Value>21% VAT Tax - B2B</Value>
                             </TextBox>
                         </Items>
                     </Footer>
@@ -7302,7 +8519,6 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                 <Footers>
                     <Footer Name="groupFooterSection10">
                         <Height>0.63492cm</Height>
-                        <VisibleExpr>=IIF($NL &gt; 0, True, False)</VisibleExpr>
                         <Items>
                             <TextBox Name="textBox101">
                                 <Format>€ #,##0.00;-€ #,##0.00</Format>
@@ -7342,7 +8558,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                                     <TextAlign>Center</TextAlign>
                                     <VerticalAlign>Middle</VerticalAlign>
                                 </Style>
-                                <Value>21% VAT Tax</Value>
+                                <Value>21% VAT Tax - NL</Value>
                             </TextBox>
                         </Items>
                     </Footer>
@@ -7358,7 +8574,6 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                 <Footers>
                     <Footer Name="groupFooterSection11">
                         <Height>0.63492cm</Height>
-                        <VisibleExpr>=IIF($FRB2C &gt; 0, True, False)</VisibleExpr>
                         <Items>
                             <TextBox Name="textBox100">
                                 <Location>392px, 0px</Location>
@@ -7414,7 +8629,6 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                 <Footers>
                     <Footer Name="groupFooterSection12">
                         <Height>0.63492cm</Height>
-                        <VisibleExpr>=IIF($DEB2C &gt; 0, True, False)</VisibleExpr>
                         <Items>
                             <TextBox Name="textBox71">
                                 <Format>€ #,##0.00;-€ #,##0.00</Format>
@@ -7632,7 +8846,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                 <Footers>
                     <Footer Name="groupFooterSection15">
                         <Height>1.69312cm</Height>
-                        <VisibleExpr>=IIF($TotalLine &lt;= 1 AND $SortOfTax &lt;= 1, True, False)</VisibleExpr>
+                        <VisibleExpr>=IIF($TotalLine &lt;= 1 AND $SortOfTax &lt;= 5, True, False)</VisibleExpr>
                         <Items>
                             <TextBox Name="textBox63">
                                 <Location>0px, 0px</Location>
@@ -7771,7 +8985,8 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                 <Footers>
                     <Footer Name="groupFooterSection16">
                         <Height>1.69312cm</Height>
-                        <VisibleExpr>=IIF($TotalLine &lt;= 2 AND $SortOfTax &lt;= 3, True, False)</VisibleExpr>
+                        <Visible>False</Visible>
+                        <VisibleExpr>=IIF($TotalLine &lt;= 2 AND $SortOfTax &lt;= 7, True, False)</VisibleExpr>
                         <Items>
                             <TextBox Name="textBox52">
                                 <Location>0px, 0px</Location>
@@ -7909,8 +9124,9 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                 </Headers>
                 <Footers>
                     <Footer Name="groupFooterSection17">
-                        <Height>1.69312cm</Height>
-                        <VisibleExpr>=IIF($TotalLine &lt;= 3 AND $SortOfTax &lt;= 5, True, False)</VisibleExpr>
+                        <Height>0in</Height>
+                        <Visible>False</Visible>
+                        <VisibleExpr>=IIF($TotalLine &lt;= 3 AND $SortOfTax &lt;= 9, True, False)</VisibleExpr>
                         <Items>
                             <TextBox Name="textBox50">
                                 <Location>0px, 0px</Location>
@@ -8048,133 +9264,9 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                 </Headers>
                 <Footers>
                     <Footer Name="groupFooterSection18">
-                        <Height>1.69312cm</Height>
+                        <Height>0in</Height>
+                        <Visible>False</Visible>
                         <VisibleExpr>=IIF($TotalLine &lt;= 4 AND $SortOfTax &lt;= 7, True, False)</VisibleExpr>
-                        <Items>
-                            <TextBox Name="textBox42">
-                                <Location>0px, 0px</Location>
-                                <Size>64px, 64px</Size>
-                                <Style>
-                                    <BorderStyle>
-                                        <Left>Solid</Left>
-                                        <Right>Solid</Right>
-                                    </BorderStyle>
-                                    <BorderWidth>
-                                        <Left>1px</Left>
-                                        <Right>1px</Right>
-                                    </BorderWidth>
-                                    <Font>
-                                        <Size>11px</Size>
-                                    </Font>
-                                    <TextAlign>Center</TextAlign>
-                                    <VerticalAlign>Middle</VerticalAlign>
-                                </Style>
-                            </TextBox>
-                            <TextBox Name="textBox43">
-                                <Location>64px, 0px</Location>
-                                <Size>88px, 64px</Size>
-                                <Style>
-                                    <BorderStyle>
-                                        <Right>Solid</Right>
-                                    </BorderStyle>
-                                    <BorderWidth>
-                                        <Right>1px</Right>
-                                    </BorderWidth>
-                                    <Font>
-                                        <Size>11px</Size>
-                                    </Font>
-                                    <TextAlign>Center</TextAlign>
-                                    <VerticalAlign>Middle</VerticalAlign>
-                                </Style>
-                            </TextBox>
-                            <TextBox Name="textBox44">
-                                <Location>400px, 0px</Location>
-                                <Size>64px, 64px</Size>
-                                <Style>
-                                    <BorderStyle>
-                                        <Right>Solid</Right>
-                                    </BorderStyle>
-                                    <BorderWidth>
-                                        <Right>1px</Right>
-                                    </BorderWidth>
-                                    <Font>
-                                        <Size>11px</Size>
-                                    </Font>
-                                    <TextAlign>Center</TextAlign>
-                                    <VerticalAlign>Middle</VerticalAlign>
-                                </Style>
-                            </TextBox>
-                            <TextBox Name="textBox46">
-                                <Location>312px, 0px</Location>
-                                <Size>88px, 64px</Size>
-                                <Style>
-                                    <BorderStyle>
-                                        <Right>Solid</Right>
-                                    </BorderStyle>
-                                    <BorderWidth>
-                                        <Right>1px</Right>
-                                    </BorderWidth>
-                                    <Font>
-                                        <Size>11px</Size>
-                                    </Font>
-                                    <TextAlign>Center</TextAlign>
-                                    <VerticalAlign>Middle</VerticalAlign>
-                                </Style>
-                            </TextBox>
-                            <TextBox Name="textBox47">
-                                <Location>464px, 0px</Location>
-                                <Size>104px, 64px</Size>
-                                <Style>
-                                    <BorderStyle>
-                                        <Right>Solid</Right>
-                                    </BorderStyle>
-                                    <BorderWidth>
-                                        <Right>1px</Right>
-                                    </BorderWidth>
-                                    <Font>
-                                        <Size>11px</Size>
-                                    </Font>
-                                    <TextAlign>Center</TextAlign>
-                                    <VerticalAlign>Middle</VerticalAlign>
-                                </Style>
-                            </TextBox>
-                            <TextBox Name="textBox48">
-                                <Location>568px, 0px</Location>
-                                <Size>128px, 64px</Size>
-                                <Style>
-                                    <BorderStyle>
-                                        <Right>Solid</Right>
-                                    </BorderStyle>
-                                    <BorderWidth>
-                                        <Right>1px</Right>
-                                    </BorderWidth>
-                                    <Font>
-                                        <Size>11px</Size>
-                                    </Font>
-                                    <TextAlign>Center</TextAlign>
-                                    <VerticalAlign>Middle</VerticalAlign>
-                                </Style>
-                            </TextBox>
-                            <TextBox Name="textBox49">
-                                <Location>152px, 0px</Location>
-                                <Size>160px, 64px</Size>
-                                <Style>
-                                    <BorderStyle>
-                                        <Right>Solid</Right>
-                                    </BorderStyle>
-                                    <BorderWidth>
-                                        <Right>1px</Right>
-                                    </BorderWidth>
-                                    <Font>
-                                        <Size>10px</Size>
-                                    </Font>
-                                    <Padding>
-                                        <Left>3px</Left>
-                                        <Top>3px</Top>
-                                    </Padding>
-                                </Style>
-                            </TextBox>
-                        </Items>
                     </Footer>
                 </Footers>
             </Group>
@@ -8187,133 +9279,9 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                 </Headers>
                 <Footers>
                     <Footer Name="groupFooterSection19">
-                        <Height>1.69312cm</Height>
+                        <Height>0in</Height>
+                        <Visible>False</Visible>
                         <VisibleExpr>=IIF($TotalLine &lt;= 5 AND $SortOfTax &lt;= 9, True, False)</VisibleExpr>
-                        <Items>
-                            <TextBox Name="textBox55">
-                                <Location>0px, 0px</Location>
-                                <Size>64px, 64px</Size>
-                                <Style>
-                                    <BorderStyle>
-                                        <Left>Solid</Left>
-                                        <Right>Solid</Right>
-                                    </BorderStyle>
-                                    <BorderWidth>
-                                        <Left>1px</Left>
-                                        <Right>1px</Right>
-                                    </BorderWidth>
-                                    <Font>
-                                        <Size>11px</Size>
-                                    </Font>
-                                    <TextAlign>Center</TextAlign>
-                                    <VerticalAlign>Middle</VerticalAlign>
-                                </Style>
-                            </TextBox>
-                            <TextBox Name="textBox79">
-                                <Location>64px, 0px</Location>
-                                <Size>88px, 64px</Size>
-                                <Style>
-                                    <BorderStyle>
-                                        <Right>Solid</Right>
-                                    </BorderStyle>
-                                    <BorderWidth>
-                                        <Right>1px</Right>
-                                    </BorderWidth>
-                                    <Font>
-                                        <Size>11px</Size>
-                                    </Font>
-                                    <TextAlign>Center</TextAlign>
-                                    <VerticalAlign>Middle</VerticalAlign>
-                                </Style>
-                            </TextBox>
-                            <TextBox Name="textBox80">
-                                <Location>400px, 0px</Location>
-                                <Size>64px, 64px</Size>
-                                <Style>
-                                    <BorderStyle>
-                                        <Right>Solid</Right>
-                                    </BorderStyle>
-                                    <BorderWidth>
-                                        <Right>1px</Right>
-                                    </BorderWidth>
-                                    <Font>
-                                        <Size>11px</Size>
-                                    </Font>
-                                    <TextAlign>Center</TextAlign>
-                                    <VerticalAlign>Middle</VerticalAlign>
-                                </Style>
-                            </TextBox>
-                            <TextBox Name="textBox91">
-                                <Location>312px, 0px</Location>
-                                <Size>88px, 64px</Size>
-                                <Style>
-                                    <BorderStyle>
-                                        <Right>Solid</Right>
-                                    </BorderStyle>
-                                    <BorderWidth>
-                                        <Right>1px</Right>
-                                    </BorderWidth>
-                                    <Font>
-                                        <Size>11px</Size>
-                                    </Font>
-                                    <TextAlign>Center</TextAlign>
-                                    <VerticalAlign>Middle</VerticalAlign>
-                                </Style>
-                            </TextBox>
-                            <TextBox Name="textBox92">
-                                <Location>464px, 0px</Location>
-                                <Size>104px, 64px</Size>
-                                <Style>
-                                    <BorderStyle>
-                                        <Right>Solid</Right>
-                                    </BorderStyle>
-                                    <BorderWidth>
-                                        <Right>1px</Right>
-                                    </BorderWidth>
-                                    <Font>
-                                        <Size>11px</Size>
-                                    </Font>
-                                    <TextAlign>Center</TextAlign>
-                                    <VerticalAlign>Middle</VerticalAlign>
-                                </Style>
-                            </TextBox>
-                            <TextBox Name="textBox93">
-                                <Location>568px, 0px</Location>
-                                <Size>128px, 64px</Size>
-                                <Style>
-                                    <BorderStyle>
-                                        <Right>Solid</Right>
-                                    </BorderStyle>
-                                    <BorderWidth>
-                                        <Right>1px</Right>
-                                    </BorderWidth>
-                                    <Font>
-                                        <Size>11px</Size>
-                                    </Font>
-                                    <TextAlign>Center</TextAlign>
-                                    <VerticalAlign>Middle</VerticalAlign>
-                                </Style>
-                            </TextBox>
-                            <TextBox Name="textBox94">
-                                <Location>152px, 0px</Location>
-                                <Size>160px, 64px</Size>
-                                <Style>
-                                    <BorderStyle>
-                                        <Right>Solid</Right>
-                                    </BorderStyle>
-                                    <BorderWidth>
-                                        <Right>1px</Right>
-                                    </BorderWidth>
-                                    <Font>
-                                        <Size>10px</Size>
-                                    </Font>
-                                    <Padding>
-                                        <Left>3px</Left>
-                                        <Top>3px</Top>
-                                    </Padding>
-                                </Style>
-                            </TextBox>
-                        </Items>
                     </Footer>
                 </Footers>
             </Group>
