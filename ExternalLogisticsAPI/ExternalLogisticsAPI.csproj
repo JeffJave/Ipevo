@@ -90,6 +90,7 @@
     <Compile Include="DAC\LUMPacCOGSAdjCost.cs" />
     <Compile Include="DAC\LUMPacAssemblyAdjCost.cs" />
     <Compile Include="DAC\LumPacIssueAdjCost.cs" />
+    <Compile Include="DAC\LUMPacUnitCostHistory.cs" />
     <Compile Include="DAC\LUMVendCntrlProcessLog.cs" />
     <Compile Include="DAC\LUMVendCntrlProcessOrder.cs" />
     <Compile Include="DAC\LUMVendCntrlSetup.cs" />
@@ -135,7 +136,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CSharp">
+      <Version>4.7.0</Version>
+    </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

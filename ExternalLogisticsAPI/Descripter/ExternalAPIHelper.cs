@@ -240,7 +240,7 @@ namespace ExternalLogisticsAPI.Descripter
                     switch (root.item[i].charge[j].type)
                     {
                         case (int)AMZChargeType.Discount:
-                            line.CuryDiscAmt += Math.Abs((decimal)root.item[i].charge[j].amount);
+                            line.CuryDiscAmt = (line.CuryDiscAmt ?? 0m) + Math.Abs((decimal)root.item[i].charge[j].amount);
                             break;
                         case (int)AMZChargeType.Shipping_Tax:
                             lineExt.UsrFreightTaxAmt = (decimal)root.item[i].charge[j].amount;
@@ -538,6 +538,7 @@ namespace ExternalLogisticsAPI.Descripter
             payment.ExtRefNbr          = order.CustomerRefNbr ?? order.CustomerOrderNbr;
             payment.DocDesc            = order.OrderNbr;
             payment.AdjDate            = (hasAMZFee == true && root.paymentReleaseDate != null) ? DateTime.Parse(root.paymentReleaseDate) : order.OrderDate;
+            payment.CashAccountID      = order.CashAccountID;
 
             payment = pymtEntry.Document.Update(payment);
 

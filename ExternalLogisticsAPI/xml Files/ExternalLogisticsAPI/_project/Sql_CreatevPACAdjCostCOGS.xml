@@ -13,25 +13,25 @@ select cost.CompanyID,
 	   i.ItemClassID,
 	 　isnull(cost.TranCost,0) as FinPtdCostIssued,
 	   cost.BaseQty as FinPtdQtyIssued,
-	   hist.PACUnitCost as PACUnitCost,
+	   p.PACUnitCost as PACUnitCost,
 	   cost.InventoryID as InventoryID,
-	   (cost.BaseQty * hist.PACUnitCost) as PACIssueCost,
+	   (cost.BaseQty * p.PACUnitCost) as PACIssueCost,
 	   (s.SiteID) as SiteID,
-	   (isnull(cost.TranCost,0) - (cost.BaseQty * hist.PACUnitCost)) as IssueAdjAmount,
+	   (isnull(cost.TranCost,0) - (cost.BaseQty * p.PACUnitCost)) as IssueAdjAmount,
 	   cost.ReasonCode,
 	   cost.RefNbr,
 	   cost.LineNbr,
 	   cost.SOOrderNbr
 from INTran cost
-inner join lumpacunitcosthistory hist on cost.FinPeriodID = hist.FinperiodID
-									 and cost.InventoryID = hist.InventoryID
-									 and cost.CompanyID = hist.CompanyID
 left join INSite s on cost.CompanyID = s.CompanyID
 				  and cost.SiteID = s.SiteID
 inner join InventoryItem i on cost.CompanyID = i.CompanyID
 						  and cost.InventoryID = i.InventoryID
 inner join INItemClass c on i.ItemClassID = c.ItemClassID
 						and i.CompanyID = c.CompanyID
+left join vPACUnitCost p on cost.CompanyID = p.companyid
+						 and cost.InventoryID = p.InventoryID
+						 and cost.FinPeriodID = p.FinPeriodID
 where NULLIF(cost.SOOrderNbr, '') is not null
   and cost.COGSAcctID is not null
   and (cost.TranType = 'INV' OR cost.TranType = 'III')

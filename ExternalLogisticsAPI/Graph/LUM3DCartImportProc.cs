@@ -56,7 +56,7 @@ namespace ExternalLogisticsAPI
             {
                 if (curFilter != null)
                 {
-                    ThreeDCartHelper.PrepareRecords(curSetup, curFilter.EndDate);
+                    ExternalAPIHelper.PrepareRecords(curSetup, curFilter.EndDate);
                 }
             });
 
@@ -98,7 +98,7 @@ namespace ExternalLogisticsAPI
 
                         for (int i = 0; i < list.Count; i++)
                         {
-                            ThreeDCartHelper.ImportRecords(curSetup, list[i]);
+                            ExternalAPIHelper.ImportRecords(curSetup, list[i]);
                             UpdateProcessed(list[i]);
                         }
                     }

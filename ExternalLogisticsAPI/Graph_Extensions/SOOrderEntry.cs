@@ -558,7 +558,7 @@ namespace ExternalLogisticsAPI.Graph_Extensions
                     BillingState = address.State
                 };
 
-                order.ContactID = ThreeDCartHelper.CreateSOContact(order.CustomerID, myArray);
+                order.ContactID = ExternalAPIHelper.CreateSOContact(order.CustomerID, myArray);
 
                 Base.CurrentDocument.Cache.MarkUpdated(order);
                 Base.Save.Press();

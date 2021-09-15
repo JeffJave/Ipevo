@@ -1,4 +1,5 @@
 ﻿<Table TableName="SOOrder">
     <Column TableName="SOOrder" ColumnName="UsrDCLShipmentCreated" ColumnType="bool" AllowNull="True" DecimalPrecision="0" DecimalLength="0" IsNewColumn="True" IsUnicode="True" />
     <Column TableName="SOOrder" ColumnName="UsrSendToMiddleware" ColumnType="bool" AllowNull="True" DecimalPrecision="0" DecimalLength="0" IsNewColumn="True" IsUnicode="True" />
+    <Column TableName="SOOrder" ColumnName="UsrAPIOrderType" ColumnType="int" AllowNull="True" DecimalPrecision="0" DecimalLength="0" IsNewColumn="True" IsUnicode="True" />
 </Table>

@@ -21,12 +21,13 @@
 		<Levels>
 			<px:PXGridLevel DataMember="AMZInterfaceAPI">
 			    <Columns>
+				<px:PXGridColumn AllowCheckAll="True" DataField="Selected" Width="40" Type="CheckBox" TextAlign="Center" CommitChanges="True" ></px:PXGridColumn>
 				<px:PXGridColumn DataField="BranchID" Width="70" ></px:PXGridColumn>
-				<px:PXGridColumn DataField="OrderType" Width="150" ></px:PXGridColumn>
+				<px:PXGridColumn DataField="OrderType" Width="250" ></px:PXGridColumn>
 				<px:PXGridColumn DataField="OrderNbr" Width="160" ></px:PXGridColumn>
 				<px:PXGridColumn DataField="SequenceNo" Width="100" ></px:PXGridColumn>
-				<px:PXGridColumn DataField="Marketplace" Width="120" ></px:PXGridColumn>
-				<px:PXGridColumn DataField="Data1" Width="250" ></px:PXGridColumn>
+				<px:PXGridColumn DataField="Marketplace" Width="100" ></px:PXGridColumn>
+				<px:PXGridColumn DataField="Data1" Width="450" ></px:PXGridColumn>
 				<px:PXGridColumn DataField="Data2" Width="250" ></px:PXGridColumn>
 				<px:PXGridColumn Type="CheckBox" DataField="Write2Acumatica1" Width="100" ></px:PXGridColumn>
 				<px:PXGridColumn Type="CheckBox" DataField="Write2Acumatica2" Width="100" ></px:PXGridColumn>
@@ -34,7 +35,7 @@
 				<RowTemplate>
 					<px:PXSegmentMask AllowEdit="True" runat="server" ID="CstPXSegmentMask4" DataField="BranchID" ></px:PXSegmentMask>
                 </RowTemplate>
-            </px:PXGridLevel>
+			</px:PXGridLevel>
 		</Levels>
 		<AutoSize Container="Window" Enabled="True" MinHeight="150" ></AutoSize>
 		<ActionBar >

@@ -11,7 +11,7 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using ExternalLogisticsAPI.DAC;
-using ExternalLogisticsAPI.Descripter
+using ExternalLogisticsAPI.Descripter;
 
 namespace ExternalLogisticsAPI.Graph
 {
@@ -209,7 +209,7 @@ namespace ExternalLogisticsAPI.Graph
                         ///</remarks>
 
                         order.CuryTaxTotal   = UpdateSOTaxAmount(orderEntry, root);
-                        order.CuryOrderTotal = hasAMZFee == true ? (order.CuryOrderTotal + order.CuryTaxTotal) : order.CuryOrderTotal;
+                        order.CuryOrderTotal = hasAMZFee == false ? (order.CuryOrderTotal + order.CuryTaxTotal) : order.CuryOrderTotal;
 
                         UpdateSOUserDefineFields(orderEntry.Document.Cache, root);
 
@@ -218,7 +218,7 @@ namespace ExternalLogisticsAPI.Graph
                         if (CurrencyInfo.PK.Find(this, order.CuryInfoID).CuryRate != 1)
                         {
                             orderEntry.Document.Cache.SetValueExt<SOOrder.cashAccountID>(order, SpecifyCashAccountID(currency));
-                            orderEntry.Document.Update(order);
+                            orderEntry.Document.Cache.MarkUpdated(order);
                             orderEntry.Save.Press();
                         }
 
@@ -231,7 +231,7 @@ namespace ExternalLogisticsAPI.Graph
                         graph.AMZInterfaceAPI.Update(list[i]);
                         graph.Save.Press();
                     }
-                    catch (PXException ex)
+                    catch (Exception ex)
                     {
                         PXProcessing.SetError<LUMAmazonInterfaceAPI>(ex.Message);
                         throw;
