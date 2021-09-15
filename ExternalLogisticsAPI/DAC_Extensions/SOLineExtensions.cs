@@ -152,5 +152,19 @@ namespace PX.Objects.SO
         public virtual decimal? UsrFrtHSTTaxAmt { get; set; }
         public abstract class usrFrtHSTTaxAmt : PX.Data.BQL.BqlDecimal.Field<usrFrtHSTTaxAmt> { }
         #endregion
+
+        #region UsrCarrier
+        [PXDBString(10, IsUnicode = true)]
+        [PXUIField(DisplayName = "Carrier")]
+        public virtual string UsrCarrier { get; set; }
+        public abstract class usrCarrier : PX.Data.BQL.BqlString.Field<usrCarrier> { }
+        #endregion
+
+        #region UsrTrackingNbr
+        [PXDBString(30, IsUnicode = true)]
+        [PXUIField(DisplayName = "Tacking Nbr.")]
+        public virtual string UsrTrackingNbr { get; set; }
+        public abstract class usrTrackingNbr : PX.Data.BQL.BqlString.Field<usrTrackingNbr> { }
+        #endregion
     }
 }

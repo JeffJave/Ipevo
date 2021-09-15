@@ -107,10 +107,12 @@
     <Compile Include="DAC_Extensions\ARInvoiceExt.cs" />
     <Compile Include="DAC_Extensions\SOOrderExtensions.cs" />
     <Compile Include="DAC_Extensions\SOShipmentExtensions.cs" />
+    <Compile Include="DAC_Extensions\StateExtensions.cs" />
+    <Compile Include="Descripter\AmazonFeeType.cs" />
     <Compile Include="Descripter\AmazonOrderType.cs" />
     <Compile Include="Descripter\DCLHelper.cs" />
+    <Compile Include="Descripter\ExternalAPIHelper.cs" />
     <Compile Include="Descripter\MidlleWareHelper.cs" />
-    <Compile Include="Descripter\ThreeDCartHelper.cs" />
     <Compile Include="Descripter\ThreeDCartOrderStatus.cs" />
     <Compile Include="Graph\LUM3DCartImportProc.cs" />
     <Compile Include="Graph\LUMAmzInterfaceAPIMaint.cs" />
@@ -119,6 +121,7 @@
     <Compile Include="Graph\LUMPACAssemblyImportProc.cs" />
     <Compile Include="Graph\LUMPACImportProc.cs" />
     <Compile Include="Graph\LUMPACIssueImportProc.cs" />
+    <Compile Include="Graph\LUMPACUnitCostHistoryProc.cs" />
     <Compile Include="Graph\LUMSalesChanelSetup.cs" />
     <Compile Include="Graph\LUMWarehouseImportProc.cs" />
     <Compile Include="Graph_Extensions\QuoteMaint.cs" />
@@ -132,6 +135,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -9,6 +9,14 @@ namespace ExternalLogisticsAPI.DAC
     [PXCacheName("Amazon Interface API")]
     public class LUMAmazonInterfaceAPI : IBqlTable
     {
+        #region Selected
+        [PXBool()]
+        [PXDefault(false, PersistingCheck = PXPersistingCheck.Nothing)]
+        [PXUIField(DisplayName = "Selected")]
+        public virtual bool? Selected { get; set; }
+        public abstract class selected : PX.Data.BQL.BqlBool.Field<selected> { }
+        #endregion
+
         #region OrderType
         [PXDBInt(IsKey = true)]
         [PXUIField(DisplayName = "Order Type")]
@@ -28,7 +36,7 @@ namespace ExternalLogisticsAPI.DAC
 
         #region SequenceNo
         [PXDBInt(IsKey = true)]
-        [PXUIField(DisplayName = "Sequence No")]
+        [PXUIField(DisplayName = "Sequence No", Visible = false)]
         [PXDefault(0)]
         public virtual int? SequenceNo { get; set; }
         public abstract class sequenceNo : PX.Data.BQL.BqlInt.Field<sequenceNo> { }
@@ -57,7 +65,7 @@ namespace ExternalLogisticsAPI.DAC
 
         #region Data2
         [PXDBString(IsUnicode = true, InputMask = "")]
-        [PXUIField(DisplayName = "Data 2")]
+        [PXUIField(DisplayName = "Data 2", Visible = false)]
         public virtual string Data2 { get; set; }
         public abstract class data2 : PX.Data.BQL.BqlString.Field<data2> { }
         #endregion
@@ -71,7 +79,7 @@ namespace ExternalLogisticsAPI.DAC
 
         #region Write2Acumatica2
         [PXDBBool()]
-        [PXUIField(DisplayName = "Write To Acumatica_2")]
+        [PXUIField(DisplayName = "Write To Acumatica_2", Visible = false)]
         public virtual bool? Write2Acumatica2 { get; set; }
         public abstract class write2Acumatica2 : PX.Data.BQL.BqlBool.Field<write2Acumatica2> { }
         #endregion

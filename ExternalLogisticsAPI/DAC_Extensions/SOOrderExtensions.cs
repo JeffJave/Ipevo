@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using PX.Data;
+﻿using PX.Data;
+using ExternalLogisticsAPI.Descripter;
 
 namespace PX.Objects.SO
 {
@@ -29,6 +25,14 @@ namespace PX.Objects.SO
         public abstract class usrSendToMiddleware :
             PX.Data.BQL.BqlBool.Field<usrSendToMiddleware>{ }
 
+        #endregion
+
+        #region UsrAPIOrderType
+        [PXDBInt]
+        [PXUIField(DisplayName = "API Order Type", IsReadOnly = true)]
+        [AmazonOrderType.List]
+        public virtual int? UsrAPIOrderType { get; set; }
+        public abstract class usrAPIOrderType : PX.Data.BQL.BqlInt.Field<usrAPIOrderType> { }
         #endregion
     }
 }
