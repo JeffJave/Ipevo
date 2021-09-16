@@ -217,16 +217,18 @@ namespace ExternalLogisticsAPI.Graph
 
                         CurrencyInfo curyInfo = CurrencyInfo.PK.Find(this, order.CuryInfoID);
 
-                        if (curyInfo.CuryRate != 1)
+                        if (curyInfo.CuryRate != 1 && country == "UK")
                         {
-                            orderEntry.Document.Cache.SetValueExt<SOOrder.cashAccountID>(order, SpecifyCashAccountID(currency));
+                            orderEntry.Document.Cache.SetValueExt<SOOrder.cashAccountID>(order, SelectFrom<CashAccount>.Where<CashAccount.cashAccountCD.IsEqual<@P.AsString>
+                                                                                                                              .And<CashAccount.curyID.IsEqual<@P.AsString>>>.View
+                                                                                                .SelectSingleBound(this, null, (currency == "EUR") ? "EURAMAZON" : "GBPAMAZON", currency).TopFirst?.CashAccountID);
                             orderEntry.Document.Cache.MarkUpdated(order);
                             orderEntry.Save.Press();
                         }
 
                         if (noAMZFee == false || hasAMZFee == true)
                         {
-                            ExternalAPIHelper.CreatePaymentProcess(order, root, curyInfo.RecipRate);
+                            ExternalAPIHelper.CreatePaymentProcess(order, root, curyInfo.CuryMultDiv == CuryMultDivType.Div ? curyInfo.RecipRate : curyInfo.CuryRate);
                         }
 
                         graph.AMZInterfaceAPI.Cache.SetValue<LUMAmazonInterfaceAPI.write2Acumatica1>(list[i], true);
@@ -305,39 +307,6 @@ namespace ExternalLogisticsAPI.Graph
             }
 
             return totalTax;
-        }
-
-        protected virtual int? SpecifyCashAccountID(string currencyID)
-        {
-            string cashAcctCD = null;
-
-            switch (currencyID)
-            {
-                //case "MXN":
-                //    cashAcctCD = "MXNAMAZON";
-                //    break;
-                //case "CAD":
-                //    cashAcctCD = "CADAMAZON";
-                //    break;
-                //case "PLN":
-                //    cashAcctCD = "PLNAMAZON";
-                //    break;
-                //case "SEK":
-                //    cashAcctCD = "SEKAMAZON";
-                //    break;
-                case "GBP":
-                    cashAcctCD = "GBPAMAZON";
-                    break;
-                //case "USD":
-                //    cashAcctCD = "USDAMAZON";
-                //    break;
-                case "EUR":
-                    cashAcctCD = "EURAMAZON";
-                    break;
-            }
-
-            return SelectFrom<CashAccount>.Where<CashAccount.cashAccountCD.IsEqual<@P.AsString>
-                                                 .And<CashAccount.curyID.IsEqual<@P.AsString>>>.View.SelectSingleBound(this, null, cashAcctCD, currencyID).TopFirst?.CashAccountID;
         }
         #endregion
     }

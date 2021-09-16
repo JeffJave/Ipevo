@@ -560,7 +560,7 @@ namespace ExternalLogisticsAPI.Descripter
                         ARPaymentChargeTran chargeTran = pymtEntry.PaymentCharges.Cache.CreateInstance() as ARPaymentChargeTran;
 
                         chargeTran.EntryTypeID = LUMAmzInterfaceAPIMaint.GetAcumaticaPymtEntryType(root.item[i].fee[j].name);
-                        chargeTran.CuryTranAmt = (decimal)Math.Abs(root.item[i].fee[j].amount);
+                        chargeTran.CuryTranAmt = Math.Round((decimal)Math.Abs(root.item[i].fee[j].amount) * recipRate.Value, 4);
 
                         pymtEntry.PaymentCharges.Insert(chargeTran);
                     }
