@@ -76,5 +76,9 @@
             <StateActionFields />
             <StateActionParams />
         </Action>
+        <Action IsActive="True" ActionName="lumPrepareInvoiceforAmazon" ActionType="G" MassProcessingScreen="SO503000" BatchMode="True" MenuFolderType="19" WindowMode="S">
+            <StateActionFields />
+            <StateActionParams />
+        </Action>
     </Actions>
 </Automation>

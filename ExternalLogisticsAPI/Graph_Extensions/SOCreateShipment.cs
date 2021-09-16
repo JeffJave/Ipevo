@@ -45,8 +45,7 @@ namespace PX.Objects.SO
                     cmd.WhereAnd<Where<SOOrder.orderType, NotEqual<SotypeVCAttr>>>();
                     break;
                 case "SO301000$lumCreateShipmentforFBA": // copy from standard create shipment qry
-                    cmd = BuildCommandCreateShipment(filter);
-                    baseMethod.Invoke(filter, cmd);
+                    cmd.WhereAnd<Where<SOOrder.status, Equal<SOOrderStatus.open>>>();
                     break;
                 case "SO301000$lumGenerate3PLUKFile":
                     cmd.Join<InnerJoin<vSOSiteMapping, On<SOOrder.orderType, Equal<vSOSiteMapping.orderType>, And<SOOrder.orderNbr, Equal<vSOSiteMapping.orderNbr>>>>>();

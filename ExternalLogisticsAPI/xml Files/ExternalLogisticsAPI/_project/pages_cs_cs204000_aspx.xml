@@ -1,0 +1,12 @@
+﻿<Page path="~/pages/cs/cs204000.aspx" pageSource="rVdNb+M2ED1ngf0PhIrcWtvJNi0QyEVTOU4MxFnDcpNFLwUtMRYbWlRJyh976G/vDCXZkmw59m5yiUwOH2fmDYeP7vnvZERnjDzQeJbCR9fxfnDIkGrDFE70uYCx/9rbEd3uSzXvMUO5aM3tsENuUiNvFyw2z1yxNOk6RqXMIU9U8JAaNmb/pkybrvNChYZxT4Y5sudfdn7udDotqpNVK9AOGcQRU9zoroO7/V0YOGTCDa74Mzb4EVq/HXL+28cPHz+4EEfm4mSdMPLElUmpGFETHeE8Qriw/7UnYwMxkEGv6wTwfYGe2qGRoAG7lyJkCieTqOc7RKUxhZh8phYAAyBnbrK6Hn3pUUN9maqAWaRQb0x1Zgr+aT7FYCY2Tc88REcvOp1zCBMCeKRzmBx9aX2e/sMCo1ue3/JkGhu1HlIeG4eMFJ9TtX7ibAlJzKasC2euR4WY0uDVk/M5jUNtRwvX/Noswf/ceBHwz3ThULa/Txfw3T68PjPtc6XBK99QZR7Z8k5JLIIMLANw2/v8ctu1jCEV7RIXTdRcNlPTb2YGyceUWZgX+LHDzNaTgjrfrJGprz/xOGSra3KBtVhhDNcM2XzK1JYK4tHEcBlvRoifzpGxnKQJmycCTkY5uQ90LVMzTgWre2Xz6kmRzuMiqxi9ksLnX8G5oQMHeMqEzv0a1mjzmYAyksrGzcLcpUFvb/h9zkS48RuN8HSP2YtiOiL5/hX4CVuZ25CbHL7HdKC4Df/QBhUzxCOlv71+34Qh+KDzriLVSKQzHh8Oo3lNJQQvYsHrH3JV7AQRfwYoxUOWIxzcZJ95jn88wWO5PIXd3XS9gV85lfbHTpHmabKUnFRhPSWTnlzG1Qrbwg2ZiWR4RL3tLjmx+nKcMZuxVXLEhoXhyXQdSCfMG/ZuybRop6SyYUFDIr+hkk5vRe9ZrCOpDRVWRJyY2Fqp/MUTBAF58HoonRWzI/DeLr2a4ab03jNLhaJrP8iAiu+8MQqwPb32Rgi5xCQUbpTiLC1DbLL7hxkcQirwsqYqiPbdwD2u4a5cZ2b3Vv6UD2umLsoXaq4qitv+WE3xqVlT3DVrijto+hZiBh9H6Il7xmcRWFxcdZLVMfLCf8X7Cu9LVK26JC3sOYeBPghZkNMgZm3edT4z6P2I6gwkJZ0OEL3rXP6C+JkEeWAL4L9MOoZiR/dJmnyzzB5Upm0B+fIyQDax046wcvKwLjs2cls4fiSX9xyJ7WdPg/YxiFlYOdynq++Fsw4Wh/HdUB9lPKErOhUVhY+gKPEhr7nk2G2Q1RawHx1PNVZB1gVz/F+v9vhcVuFWh1eYc0F1VMXoN8nRSjPxh7vdppayWufclMgbl1pJtzUgZaXRDJPN1zAq6i+IXsvUHYAqWR2msOZjlbvmDap2WwZ3KXMzskjR8ooms+3q7eoJz99kpR7gojxAuix18MrEs/8MXUkuHXIbY5hhwfaQx6U2tnniNbw88R1J8NLG0LJn/eFX4ZmLvT6rYyizoVzweFY9fKV49rT3/wE=">
+    <PXGridLevel DataMember="CountryStates" ParentId="phG_grid_Levels#0" TypeFullName="PX.Web.UI.PXGridLevel">
+        <Children Key="Columns">
+            <AddItem>
+                <PXGridColumn TypeFullName="PX.Web.UI.PXGridColumn">
+                    <Prop Key="DataField" Value="UsrFreightFactor" />
+                    <Prop Key="Width" Value="100" />
+                </PXGridColumn>
+            </AddItem>
+        </Children>
+    </PXGridLevel>
+</Page>

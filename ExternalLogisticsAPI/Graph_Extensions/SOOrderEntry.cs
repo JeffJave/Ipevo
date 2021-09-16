@@ -8,6 +8,7 @@ using APILibrary;
 using APILibrary.Model;
 using APILibrary.Model.Interface;
 using ExternalLogisticsAPI.DAC;
+using ExternalLogisticsAPI.DAC_Extensions;
 using ExternalLogisticsAPI.Descripter;
 using Newtonsoft.Json;
 using PX.Common;
@@ -42,12 +43,66 @@ namespace ExternalLogisticsAPI.Graph_Extensions
         public PXAction<SOOrder> lumGenerate3PLUKFile;
         public PXAction<SOOrder> lumCreateShipmentforFBA;
 
+        #region Overrid
+
         public override void Initialize()
         {
             base.Initialize();
             Base.action.AddMenuAction(createDCLShipment);
             Base.action.AddMenuAction(lumCallDCLShipemnt);
         }
+
+        #endregion
+
+        #region Delegate
+
+        public delegate IEnumerable CalculateFreightDelegate(PXAdapter adapter);
+
+        [PXOverride]
+        public virtual IEnumerable CalculateFreight(PXAdapter adapter, CalculateFreightDelegate baseMethod)
+        {
+            var doc = Base.CurrentDocument.Current;
+            if (doc.ShipVia == "UPSFREIGHT")
+            {
+                decimal freight = 0;
+                var pluginSetup = SelectFrom<CarrierPluginDetail>
+                                  .Where<CarrierPluginDetail.carrierPluginID.IsEqual<P.AsString>>
+                                  .View.Select(Base, "UPS").RowCast<CarrierPluginDetail>().ToList();
+                var statInfo = SelectFrom<State>
+                                           .Where<State.countryID.IsEqual<P.AsString>
+                                                   .And<State.stateID.IsEqual<P.AsString>>>
+                                           .View.Select(Base, Base.Shipping_Address.Current.CountryID, Base.Shipping_Address.Current.State).RowCast<State>().FirstOrDefault();
+                decimal freightFactor = statInfo == null ? 1 : statInfo.GetExtension<StateExtension>().UsrFreightFactor ?? 1;
+                foreach (var item in Base.Transactions.Select().RowCast<SOLine>())
+                {
+                    var itemInfo = InventoryItem.PK.Find(Base, item.InventoryID);
+                    var lineWeight = itemInfo.BaseItemWeight * item.OrderQty;
+                    var warehouseInfo = INSite.PK.Find(Base, item.SiteID);
+                    var warehouseAddress = SelectFrom<Address>.Where<Address.addressID.IsEqual<P.AsInt>>.View.Select(Base, warehouseInfo.AddressID).RowCast<Address>().FirstOrDefault();
+                    // combine entity
+                    var requestModel = CombineUPSFreightEntity(lineWeight ?? 0, warehouseAddress);
+                    // call api & get response
+                    var upsResult = UPSHelper.GetUPSFreightResult(pluginSetup, requestModel);
+                    if (upsResult.StatusCode != System.Net.HttpStatusCode.OK)
+                        throw new PXException($"UPS API Status error is : {upsResult.ContentResult}");
+                    try
+                    {
+                        var response = APIHelper.GetObjectFromString<APILibrary.Model.UPS.Response.FreightRateResponseRoot>(upsResult.ContentResult);
+                        freight += decimal.Parse(response.FreightRateResponse.TotalShipmentCharge.MonetaryValue);
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new PXException(ex.Message);
+                    }
+
+                }
+                LumSetFreightCost(freight * freightFactor);
+            }
+            else
+                return baseMethod(adapter);
+            return adapter.Get();
+        }
+        #endregion
 
         /// <summary> 在DCL 產生Shipment(Call API) </summary>
         [PXButton]
@@ -164,7 +219,7 @@ namespace ExternalLogisticsAPI.Graph_Extensions
 
                         var tempDesc = _soOrder.OrderDesc;
 
-                        var aa = Base.CreateShipmentIssue(adapter, shipDate, siteID);
+                        Base.CreateShipmentIssue(adapter, shipDate, siteID);
                         var processResult = PXProcessing<SOOrder>.GetItemMessage();
                         if (processResult.ErrorLevel != PXErrorLevel.RowInfo)
                             return adapter.Get();
@@ -271,9 +326,34 @@ namespace ExternalLogisticsAPI.Graph_Extensions
         }
 
         [PXButton]
-        [PXUIField(DisplayName = "Create Shipment for FBA", Enabled = true, MapEnableRights = PXCacheRights.Select, Visible = true)]
-        protected virtual IEnumerable LumCreateShipmentforFBA(PXAdapter adapter)
+        [PXUIField(DisplayName = "Create Shipment for FBA", Enabled = true, MapEnableRights = PXCacheRights.Select, Visible = false)]
+        protected virtual IEnumerable LumCreateShipmentforFBA(PXAdapter adapter, [PXDate] DateTime? shipDate, [PXInt] int? siteID, [SOOperation.List] string operation)
         {
+            var _soOrder = adapter.Get<SOOrder>().ToList()[0];
+            Base.CreateShipmentIssue(adapter, _soOrder.RequestDate, siteID);
+            var processResult = PXProcessing<SOOrder>.GetItemMessage();
+            if (processResult.ErrorLevel != PXErrorLevel.RowInfo)
+                return adapter.Get();
+
+            // Create SOShipment Graph
+            var graph = PXGraph.CreateInstance<SOShipmentEntry>();
+
+            // Find SOShipment
+            var _soOrderShipments =
+                FbqlSelect<SelectFromBase<SOOrderShipment, TypeArrayOf<IFbqlJoin>.Empty>.Where<BqlChainableConditionBase<TypeArrayOf<IBqlBinary>.FilledWith<And<Compare<SOOrderShipment.orderType, Equal<P.AsString>>>>>.And<BqlOperand<SOOrderShipment.orderNbr, IBqlString>.IsEqual<P.AsString>>.And<BqlOperand<SOOrderShipment.confirmed, IBqlBool>.IsEqual<False>>>, SOOrderShipment>.View.Select(Base, _soOrder.OrderType, _soOrder.OrderNbr)
+                    .RowCast<SOOrderShipment>();
+            foreach (var refItem in _soOrderShipments)
+            {
+                // Create new Adapter
+                var newAdapter = new PXAdapter(graph.Document) { Searches = new Object[] { refItem.ShipmentNbr } };
+                // Select Current Shipment
+                var _soShipment = newAdapter.Get<SOShipment>().ToList()[0];
+                // Remove Hold
+                graph.releaseFromHold.PressButton(newAdapter);
+                // Confirm Shipment
+                graph.confirmShipmentAction.PressButton(newAdapter);
+            }
+
             return adapter.Get();
         }
 
@@ -790,6 +870,145 @@ namespace ExternalLogisticsAPI.Graph_Extensions
             return SelectFrom<PX.Objects.CR.BAccount>.Where<PX.Objects.CR.BAccount.bAccountID.IsEqual<P.AsInt>>
                 .View.SelectSingleBound(Base, null, baccountId)
                 .RowCast<PX.Objects.CR.BAccount>().FirstOrDefault()?.AcctCD;
+        }
+
+        /// <summary> Set Freight Cost(Copy from Standard) </summary>
+        public virtual void LumSetFreightCost(decimal baseCost)
+        {
+            SOOrder copy = (SOOrder)Base.Document.Cache.CreateCopy(Base.Document.Current);
+
+            if (Base.soordertype.Current != null && Base.soordertype.Current.CalculateFreight == false)
+            {
+                copy.FreightCost = 0;
+                PX.Objects.CM.PXCurrencyAttribute.CuryConvCury<SOOrder.curyFreightCost>(Base.Document.Cache, copy);
+            }
+            else
+            {
+                copy.FreightCost = baseCost;
+                PX.Objects.CM.PXCurrencyAttribute.CuryConvCury<SOOrder.curyFreightCost>(Base.Document.Cache, copy);
+                if (copy.OverrideFreightAmount != true)
+                {
+                    PXResultset<SOLine> res = Base.Transactions.Select();
+                    FreightCalculator fc = Base.CreateFreightCalculator();
+                    fc.ApplyFreightTerms<SOOrder, SOOrder.curyFreightAmt>(Base.Document.Cache, copy, res.Count);
+                }
+            }
+
+            copy.FreightCostIsValid = true;
+            Base.Document.Update(copy);
+        }
+
+        public APILibrary.Model.UPS.Request.FreightRateRequestRoot CombineUPSFreightEntity(decimal weight, Address warehouseAddress)
+        {
+            var doc = Base.CurrentDocument.Current;
+            var totalWeight = weight + Math.Ceiling(weight / 558) * 33;
+            var shipContact = Base.Shipping_Contact.Current;
+            var shipAddress = Base.Shipping_Address.Current;
+            var model = new APILibrary.Model.UPS.Request.FreightRateRequestRoot()
+            {
+                FreightRateRequest = new APILibrary.Model.UPS.Request.FreightRateRequest()
+                {
+                    ShipFrom = new APILibrary.Model.UPS.Request.ShipFrom()
+                    {
+                        Name = "IPEVO US Shiper",
+                        Address = new APILibrary.Model.UPS.Request.Address()
+                        {
+                            AddressLine = warehouseAddress.AddressLine1,
+                            City = warehouseAddress.City,
+                            StateProvinceCode = warehouseAddress.State,
+                            PostalCode = warehouseAddress.PostalCode,
+                            CountryCode = warehouseAddress.CountryID,
+                            ResidentialAddressIndicator = ""
+                        },
+                        AttentionName = "test shipper",
+                        Phone = new APILibrary.Model.UPS.Request.Phone()
+                        {
+                            Number = "4444444444",
+                            Extension = "4444"
+                        },
+                        EMailAddress = "gcc0htq@ups.com",
+                    },
+                    ShipperNumber = "1W9061",
+                    ShipTo = new APILibrary.Model.UPS.Request.ShipTo()
+                    {
+                        Name = shipContact?.FullName,
+                        Address = new APILibrary.Model.UPS.Request.Address()
+                        {
+                            AddressLine = shipAddress?.AddressLine1,
+                            City = shipAddress?.City,
+                            StateProvinceCode = shipAddress?.State,
+                            PostalCode = shipAddress?.PostalCode,
+                            CountryCode = shipAddress?.CountryID
+                        },
+                        AttentionName = "Dilbert",
+                        Phone = new APILibrary.Model.UPS.Request.Phone()
+                        {
+                            Number = shipContact?.Phone1
+                        }
+                    },
+                    PaymentInformation = new APILibrary.Model.UPS.Request.PaymentInformation()
+                    {
+                        Payer = new APILibrary.Model.UPS.Request.Payer()
+                        {
+                            Name = "IPEVO Inc.",
+                            Address = new APILibrary.Model.UPS.Request.Address()
+                            {
+                                AddressLine = "440 N. Wolfe Roa",
+                                City = "Sunnyvale",
+                                StateProvinceCode = "CA",
+                                PostalCode = "9408594085",
+                                CountryCode = "US"
+                            },
+                            ShipperNumber = "1W9061",
+                            AccountType = "1",
+                            AttentionName = "Test Shipper",
+                            Phone = new APILibrary.Model.UPS.Request.Phone()
+                            {
+                                Number = "4444444444",
+                                Extension = "4444",
+                            },
+                            EMailAddress = "gcc0htq@ups.com"
+                        },
+                        ShipmentBillingOption = new APILibrary.Model.UPS.Request.ShipmentBillingOption()
+                        {
+                            Code = "10"
+                        }
+                    },
+                    Service = new APILibrary.Model.UPS.Request.Service()
+                    {
+                        Code = "308"
+                    },
+                    Commodity = new APILibrary.Model.UPS.Request.Commodity()
+                    {
+                        Description = "FRS-Freight",
+                        Weight = new APILibrary.Model.UPS.Request.Weight()
+                        {
+                            UnitOfMeasurement = new APILibrary.Model.UPS.Request.UnitOfMeasurement() { Code = "LBS" },
+                            Value = Math.Round(totalWeight,2).ToString()
+                        },
+                        Dimensions = new APILibrary.Model.UPS.Request.Dimensions()
+                        {
+                            UnitOfMeasurement = new APILibrary.Model.UPS.Request.UnitOfMeasurement()
+                            {
+                                Code = "IN",
+                                Description = " "
+                            },
+                            Length = "10",
+                            Width = "10",
+                            Height = "10",
+                        },
+                        NumberOfPieces = "1",
+                        FreightClass = "60",
+                        PackagingType = new APILibrary.Model.UPS.Request.PackagingType() { Code = "PLT" },
+                    },
+                    DensityEligibleIndicator = "",
+                    AlternateRateOptions = new APILibrary.Model.UPS.Request.AlternateRateOptions() { Code = "3" },
+                    PickupRequest = new APILibrary.Model.UPS.Request.PickupRequest() { PickupDate = DateTime.Now.ToString("yyyMMdd") },
+                    GFPOptions = new APILibrary.Model.UPS.Request.GFPOptions() { GPFAccesorialRateIndicator = "" },
+                    TimeInTransitIndicator = ""
+                }
+            };
+            return model;
         }
 
         #endregion

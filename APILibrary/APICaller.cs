@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -36,7 +37,7 @@ namespace APILibrary
 
                 // Get Result
                 HttpResponseMessage _response = client.SendAsync(_request).GetAwaiter().GetResult();
-                
+
                 // Return Result
                 return new LumAPIResultModel()
                 {
@@ -60,6 +61,38 @@ namespace APILibrary
                 // Setting Request
                 HttpRequestMessage _request =
                     new HttpRequestMessage(this.config.RequestMethod, this.config.RequestUrl);
+
+                // Setting Parameter
+                if (parameterObj != null)
+                    _request.Content = new StringContent(JsonConvert.SerializeObject(parameterObj), Encoding.UTF8,
+                        "application/json");
+
+                // Get Result
+                HttpResponseMessage _response = client.SendAsync(_request).GetAwaiter().GetResult();
+
+                // Return Result
+                return new LumAPIResultModel()
+                {
+                    StatusCode = _response.StatusCode,
+                    Content = _response.Content,
+                    ContentResult = _response.Content.ReadAsStringAsync().Result
+                };
+            }
+        }
+
+        public LumAPIResultModel CallApi<T>(T parameterObj, string userName, string pwd, string token) where T : class
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                // Setting Header
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                // Setting Request
+                HttpRequestMessage _request =
+                    new HttpRequestMessage(this.config.RequestMethod, this.config.RequestUrl);
+                //_request.Headers.Add("Content-Type", "application/json");
+                _request.Headers.Add("UserName", userName);
+                _request.Headers.Add("Password", pwd);
+                _request.Headers.Add("AccessLicenseNumber", token);
 
                 // Setting Parameter
                 if (parameterObj != null)

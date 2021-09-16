@@ -35,6 +35,7 @@ namespace PX.Objects.SO
         public PXAction<SOShipment> lumGererateYUSENNLFile;
         public PXAction<SOShipment> lumGenerateYUSENCAFile;
         public PXAction<SOShipment> lumGenerate3PLUKFile;
+        public PXAction<SOShipment> lumPrepareInvoiceforAmazon;
 
         [PXButton]
         [PXUIField(DisplayName = "Print Fedex Label", MapEnableRights = PXCacheRights.Select, MapViewRights = PXCacheRights.Select)]
@@ -294,6 +295,13 @@ namespace PX.Objects.SO
             if (string.IsNullOrEmpty(url))
                 throw new PXException("Can not find Tracking URL");
             throw new PXRedirectToUrlException(url, PXBaseRedirectException.WindowMode.NewWindow, "Tracking URL");
+        }
+
+        [PXButton]
+        [PXUIField(DisplayName = "Prepare Invoice for Amazon", MapEnableRights = PXCacheRights.Select, MapViewRights = PXCacheRights.Select)]
+        protected virtual IEnumerable LumPrepareInvoiceforAmazon(PXAdapter adapter)
+        {
+            return adapter.Get();
         }
 
         #endregion
