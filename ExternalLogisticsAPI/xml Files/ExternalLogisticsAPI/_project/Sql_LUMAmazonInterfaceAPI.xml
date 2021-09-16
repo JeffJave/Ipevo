@@ -10,6 +10,7 @@
   <col name="Data2" type="NVarChar(MAX)" nullable="true" />
   <col name="Write2Acumatica1" type="Bit" nullable="true" />
   <col name="Write2Acumatica2" type="Bit" nullable="true" />
+  <col name="Remark" type="NVarChar(MAX)" nullable="true" />
   <col name="CreatedByID" type="UniqueIdentifier" />
   <col name="CreatedByScreenID" type="Char(8)" />
   <col name="CreatedDateTime" type="DateTime" />

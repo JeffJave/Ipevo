@@ -31,7 +31,7 @@
 				<px:PXGridColumn DataField="Data2" Width="250" ></px:PXGridColumn>
 				<px:PXGridColumn Type="CheckBox" DataField="Write2Acumatica1" Width="100" ></px:PXGridColumn>
 				<px:PXGridColumn Type="CheckBox" DataField="Write2Acumatica2" Width="100" ></px:PXGridColumn>
-				</Columns>
+				<px:PXGridColumn DataField="Remark" Width="70" ></px:PXGridColumn></Columns>
 				<RowTemplate>
 					<px:PXSegmentMask AllowEdit="True" runat="server" ID="CstPXSegmentMask4" DataField="BranchID" ></px:PXSegmentMask>
                 </RowTemplate>
@@ -40,5 +40,6 @@
 		<AutoSize Container="Window" Enabled="True" MinHeight="150" ></AutoSize>
 		<ActionBar >
 		</ActionBar>
-	</px:PXGrid>
+	
+		<Mode AllowUpload="True" /></px:PXGrid>
 </asp:Content>

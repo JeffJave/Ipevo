@@ -215,7 +215,9 @@ namespace ExternalLogisticsAPI.Graph
 
                         orderEntry.Save.Press();
 
-                        if (CurrencyInfo.PK.Find(this, order.CuryInfoID).CuryRate != 1)
+                        CurrencyInfo curyInfo = CurrencyInfo.PK.Find(this, order.CuryInfoID);
+
+                        if (curyInfo.CuryRate != 1)
                         {
                             orderEntry.Document.Cache.SetValueExt<SOOrder.cashAccountID>(order, SpecifyCashAccountID(currency));
                             orderEntry.Document.Cache.MarkUpdated(order);
@@ -224,7 +226,7 @@ namespace ExternalLogisticsAPI.Graph
 
                         if (noAMZFee == false || hasAMZFee == true)
                         {
-                            ExternalAPIHelper.CreatePaymentProcess(order, root);
+                            ExternalAPIHelper.CreatePaymentProcess(order, root, curyInfo.RecipRate);
                         }
 
                         graph.AMZInterfaceAPI.Cache.SetValue<LUMAmazonInterfaceAPI.write2Acumatica1>(list[i], true);
@@ -311,24 +313,24 @@ namespace ExternalLogisticsAPI.Graph
 
             switch (currencyID)
             {
-                case "MXN":
-                    cashAcctCD = "MXNAMAZON";
-                    break;
-                case "CAD":
-                    cashAcctCD = "CADAMAZON";
-                    break;
-                case "PLN":
-                    cashAcctCD = "PLNAMAZON";
-                    break;
-                case "SEK":
-                    cashAcctCD = "SEKAMAZON";
-                    break;
+                //case "MXN":
+                //    cashAcctCD = "MXNAMAZON";
+                //    break;
+                //case "CAD":
+                //    cashAcctCD = "CADAMAZON";
+                //    break;
+                //case "PLN":
+                //    cashAcctCD = "PLNAMAZON";
+                //    break;
+                //case "SEK":
+                //    cashAcctCD = "SEKAMAZON";
+                //    break;
                 case "GBP":
                     cashAcctCD = "GBPAMAZON";
                     break;
-                case "USD":
-                    cashAcctCD = "USDAMAZON";
-                    break;
+                //case "USD":
+                //    cashAcctCD = "USDAMAZON";
+                //    break;
                 case "EUR":
                     cashAcctCD = "EURAMAZON";
                     break;

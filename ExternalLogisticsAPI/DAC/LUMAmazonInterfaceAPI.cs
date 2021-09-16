@@ -27,7 +27,7 @@ namespace ExternalLogisticsAPI.DAC
         #endregion
 
         #region OrderNbr
-        [PXDBString(30, IsKey = true, IsUnicode = true, InputMask = "")]
+        [PXDBString(30, IsKey = true, IsUnicode = true)]
         [PXUIField(DisplayName = "Order Nbr.")]
         [PXDefault()]
         public virtual string OrderNbr { get; set; }
@@ -50,21 +50,21 @@ namespace ExternalLogisticsAPI.DAC
         #endregion
 
         #region Marketplace
-        [PXDBString(10, IsUnicode = true, InputMask = "")]
+        [PXDBString(10, IsUnicode = true)]
         [PXUIField(DisplayName = "Marketplace")]
         public virtual string Marketplace { get; set; }
         public abstract class marketplace : PX.Data.BQL.BqlString.Field<marketplace> { }
         #endregion
 
         #region Data1
-        [PXDBString(IsUnicode = true, InputMask = "")]
+        [PXDBString(IsUnicode = true)]
         [PXUIField(DisplayName = "Data 1")]
         public virtual string Data1 { get; set; }
         public abstract class data1 : PX.Data.BQL.BqlString.Field<data1> { }
         #endregion
 
         #region Data2
-        [PXDBString(IsUnicode = true, InputMask = "")]
+        [PXDBString(IsUnicode = true)]
         [PXUIField(DisplayName = "Data 2", Visible = false)]
         public virtual string Data2 { get; set; }
         public abstract class data2 : PX.Data.BQL.BqlString.Field<data2> { }
@@ -82,6 +82,13 @@ namespace ExternalLogisticsAPI.DAC
         [PXUIField(DisplayName = "Write To Acumatica_2", Visible = false)]
         public virtual bool? Write2Acumatica2 { get; set; }
         public abstract class write2Acumatica2 : PX.Data.BQL.BqlBool.Field<write2Acumatica2> { }
+        #endregion
+
+        #region Remark
+        [PXDBString(IsUnicode = true)]
+        [PXUIField(DisplayName = "Remark")]
+        public virtual string Remark { get; set; }
+        public abstract class remark : PX.Data.BQL.BqlString.Field<remark> { }
         #endregion
 
         #region CreatedByID

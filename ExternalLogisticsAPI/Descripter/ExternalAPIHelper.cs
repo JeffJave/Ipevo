@@ -376,12 +376,12 @@ namespace ExternalLogisticsAPI.Descripter
         /// </summary>
         public static void UpdateSOContactAddress(SOOrderEntry orderEntry, object obj)
         {
-            dynamic root = obj as APILibrary.Model.Amazon_Middleware.Root;
+            var root = obj as APILibrary.Model.Amazon_Middleware.Root;
 
-            if (root == null)
-            {
-                root = obj as APILibrary.Model.Amazon_Middleware.Root2;
-            }
+            //if (root == null)
+            //{
+            //    root = obj as APILibrary.Model.Amazon_Middleware.Root2;
+            //}
 
             SOBillingContact billContact = orderEntry.Billing_Contact.Select();
             SOBillingAddress billAddress = orderEntry.Billing_Address.Select();
@@ -393,7 +393,8 @@ namespace ExternalLogisticsAPI.Descripter
             orderEntry.Billing_Contact.Update(billContact);
 
             billAddress.OverrideAddress = true;
-            billAddress.AddressLine1    = root.bill_address;
+            billAddress.AddressLine1    = (root.bill_address.Length <= 50) ? root.bill_address : root.bill_address.Substring(0, 50);
+            billAddress.AddressLine2    = (root.bill_address.Length <= 50) ? null : root.bill_address.Substring(51);
             billAddress.City            = root.bill_city;
             billAddress.CountryID       = string.IsNullOrEmpty(root.bill_country) ? billAddress.CountryID : root.bill_country;
             billAddress.PostalCode      = root.bill_postal_code;
@@ -410,7 +411,8 @@ namespace ExternalLogisticsAPI.Descripter
             orderEntry.Shipping_Contact.Update(shipContact);
 
             shipAddress.OverrideAddress = true;
-            shipAddress.AddressLine1    = root.ship_address;
+            shipAddress.AddressLine1    = (root.ship_address.Length <= 50) ? root.ship_address : root.ship_address.Substring(0, 50);
+            shipAddress.AddressLine2    = (root.ship_address.Length <= 50) ? null : root.ship_address.Substring(51);
             shipAddress.City            = root.ship_city;
             shipAddress.CountryID       = root.ship_country;
             shipAddress.PostalCode      = root.ship_postal_code;
@@ -508,7 +510,7 @@ namespace ExternalLogisticsAPI.Descripter
         /// <summary>
         /// Manually create AR payment and related to specified sales order from AMZ interface.
         /// </summary>
-        public static void CreatePaymentProcess(SOOrder order, object obj)
+        public static void CreatePaymentProcess(SOOrder order, object obj, decimal? recipRate)
         {
             dynamic root = obj as APILibrary.Model.Amazon_Middleware.Root;
 
@@ -536,9 +538,8 @@ namespace ExternalLogisticsAPI.Descripter
             payment.PMInstanceID       = order.PMInstanceID;
             payment.CuryOrigDocAmt     = 0m;
             payment.ExtRefNbr          = order.CustomerRefNbr ?? order.CustomerOrderNbr;
-            payment.DocDesc            = order.OrderNbr;
+            payment.DocDesc            = $"{order.CuryID} EX-Rate = {recipRate}";
             payment.AdjDate            = (hasAMZFee == true && root.paymentReleaseDate != null) ? DateTime.Parse(root.paymentReleaseDate) : order.OrderDate;
-            payment.CashAccountID      = order.CashAccountID;
 
             payment = pymtEntry.Document.Update(payment);
 
