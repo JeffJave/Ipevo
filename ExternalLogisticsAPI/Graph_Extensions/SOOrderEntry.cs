@@ -68,10 +68,11 @@ namespace ExternalLogisticsAPI.Graph_Extensions
                 var pluginSetup = SelectFrom<CarrierPluginDetail>
                                   .Where<CarrierPluginDetail.carrierPluginID.IsEqual<P.AsString>>
                                   .View.Select(Base, "UPS").RowCast<CarrierPluginDetail>().ToList();
+                var ShipToAddress = Base.Shipping_Address == null ? Base.Shipping_Address.Select().RowCast<SOShippingAddress>().FirstOrDefault() : Base.Shipping_Address.Current;
                 var statInfo = SelectFrom<State>
                                            .Where<State.countryID.IsEqual<P.AsString>
                                                    .And<State.stateID.IsEqual<P.AsString>>>
-                                           .View.Select(Base, Base.Shipping_Address.Current.CountryID, Base.Shipping_Address.Current.State).RowCast<State>().FirstOrDefault();
+                                           .View.Select(Base, ShipToAddress.CountryID, ShipToAddress.State).RowCast<State>().FirstOrDefault();
                 decimal freightFactor = statInfo == null ? 1 : statInfo.GetExtension<StateExtension>().UsrFreightFactor ?? 1;
                 foreach (var item in Base.Transactions.Select().RowCast<SOLine>())
                 {
@@ -902,8 +903,8 @@ namespace ExternalLogisticsAPI.Graph_Extensions
         {
             var doc = Base.CurrentDocument.Current;
             var totalWeight = weight + Math.Ceiling(weight / 558) * 33;
-            var shipContact = Base.Shipping_Contact.Current;
-            var shipAddress = Base.Shipping_Address.Current;
+            var shipContact = Base.Shipping_Contact == null ? Base.Shipping_Contact.Select().RowCast<SOShippingContact>().FirstOrDefault() : Base.Shipping_Contact.Current;
+            var shipAddress = Base.Shipping_Address == null ? Base.Shipping_Address.Select().RowCast<SOShippingAddress>().FirstOrDefault() : Base.Shipping_Address.Current;
             var model = new APILibrary.Model.UPS.Request.FreightRateRequestRoot()
             {
                 FreightRateRequest = new APILibrary.Model.UPS.Request.FreightRateRequest()
