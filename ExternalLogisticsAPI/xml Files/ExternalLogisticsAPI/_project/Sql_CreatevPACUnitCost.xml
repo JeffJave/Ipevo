@@ -11,10 +11,10 @@ CREATE VIEW vPACUnitCost AS
 select  t.companyid, 
 		t.InventoryID,
 		t.FinPeriodID, 
-		case when SUM(t.[FinPtdQtyReceived]) + SUM(t.[FinPtdQtyCreditMemos]) + SUM(t.[FinPtdQtyAssemblyIn]) + SUM(t.[FinBegQty]) + SUM(t.[FinPtdQtyAdjusted]) = 0 
+		case when SUM(t.[FinPtdQtyReceived])  + SUM(t.[FinPtdQtyAssemblyIn]) + SUM(t.[FinBegQty]) + SUM(t.[FinPtdQtyAdjusted]) = 0 
 				then 0
 	     else 
-				(SUM(t.[FinBegCost]) + SUM(t.[FinPtdCOGSCredits]) + SUM(t.[FinPtdCostAdjusted]) + SUM(t.[FinPtdCostAssemblyIn]) + SUM(t.[FinPtdCostReceived]) + SUM(t.[FinPtdCreditMemos])) /  (SUM(t.[FinPtdQtyReceived]) + SUM(t.[FinPtdQtyCreditMemos]) + SUM(t.[FinPtdQtyAssemblyIn]) + SUM(t.[FinBegQty]) + SUM(t.[FinPtdQtyAdjusted])) end as PACUnitCost
+				(SUM(t.[FinBegCost]) + SUM(t.[FinPtdCOGSCredits]) + SUM(t.[FinPtdCostAdjusted]) + SUM(t.[FinPtdCostAssemblyIn]) + SUM(t.[FinPtdCostReceived])) /  (SUM(t.[FinPtdQtyReceived]) + SUM(t.[FinPtdQtyCreditMemos]) + SUM(t.[FinPtdQtyAssemblyIn]) + SUM(t.[FinBegQty]) + SUM(t.[FinPtdQtyAdjusted])) end as PACUnitCost
 from INItemCostHist t 
 group by t.CompanyID,t.InventoryID,t.FinPeriodID]]></CDATA>
 </Sql>

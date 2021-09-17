@@ -42,6 +42,7 @@ namespace ExternalLogisticsAPI.Graph_Extensions
         public PXAction<SOOrder> lumGenerateYUSENCAFile;
         public PXAction<SOOrder> lumGenerate3PLUKFile;
         public PXAction<SOOrder> lumCreateShipmentforFBA;
+        public PXAction<SOOrder> lumPrepareInvoiceforAmazon;
 
         #region Overrid
 
@@ -58,6 +59,7 @@ namespace ExternalLogisticsAPI.Graph_Extensions
 
         public delegate IEnumerable CalculateFreightDelegate(PXAdapter adapter);
 
+        /// <summary> 重新計算運費(UPS Freight) </summary>
         [PXOverride]
         public virtual IEnumerable CalculateFreight(PXAdapter adapter, CalculateFreightDelegate baseMethod)
         {
@@ -355,6 +357,63 @@ namespace ExternalLogisticsAPI.Graph_Extensions
                 graph.confirmShipmentAction.PressButton(newAdapter);
             }
 
+            return adapter.Get();
+        }
+
+        [PXButton]
+        [PXUIField(DisplayName = "Prepare Invoice for Amazon", MapEnableRights = PXCacheRights.Select, MapViewRights = PXCacheRights.Select, Visible = false)]
+        protected virtual IEnumerable LumPrepareInvoiceforAmazon(PXAdapter adapter)
+        {
+            var so = adapter.Get<SOOrder>().ToList()[0];
+            var soline = Base.Transactions.Select().RowCast<SOLine>().ToList().FirstOrDefault();
+            var soTaxInfo = Base.Taxes.Select().RowCast<SOTaxTran>().ToList().FirstOrDefault();
+            Base.prepareInvoice.PressButton(adapter);
+            var soshipInfo = Base.shipmentlist.Select().ToList().FirstOrDefault().GetItem<SOOrderShipment>();
+            SOInvoiceEntry ie = PXGraph.CreateInstance<SOInvoiceEntry>();
+            if (!string.IsNullOrEmpty(soshipInfo.InvoiceType) && !string.IsNullOrEmpty(soshipInfo.InvoiceNbr))
+            {
+                ie.Document.Current = ie.Document.Search<ARInvoice.docType, ARInvoice.refNbr>(soshipInfo.InvoiceType, soshipInfo.InvoiceNbr, soshipInfo.InvoiceType);
+                if (ie.Document.Current != null)
+                {
+                    //get SO attribute
+                    var attrPAYMENTREL = (Base.Document.Cache.GetValueExt(so, PX.Objects.CS.Messages.Attribute + "PAYMENTREL") as PXFieldState).Value;
+                    var attrTAXRATE = (Base.Document.Cache.GetValueExt(so, PX.Objects.CS.Messages.Attribute + "TAXRATE") as PXFieldState).Value;
+                    var attrMKTPLACE = (Base.Document.Cache.GetValueExt(so, PX.Objects.CS.Messages.Attribute + "MKTPLACE") as PXFieldState).Value;
+                    // set DocDate
+                    ie.Document.Current.DocDate = so.RequestDate;
+                    // set due data
+
+                    if (attrPAYMENTREL != null)
+                        ie.Document.Current.DueDate = Convert.ToDateTime(attrPAYMENTREL);
+                    // set Attribute
+                    ie.Document.Cache.SetValueExt(ie.Document.Current, PX.Objects.CS.Messages.Attribute + "SHIPFROM", soline?.GetExtension<SOLineExt>().UsrShipFromCountryID);
+                    ie.Document.Cache.SetValueExt(ie.Document.Current, PX.Objects.CS.Messages.Attribute + "SITEID", INSite.PK.Find(Base, soline?.SiteID).SiteCD);
+                    ie.Document.Cache.SetValueExt(ie.Document.Current, PX.Objects.CS.Messages.Attribute + "TAXRATE", attrTAXRATE);
+                    ie.Document.Cache.SetValueExt(ie.Document.Current, PX.Objects.CS.Messages.Attribute + "MKTPLACE", attrMKTPLACE);
+                    // set taxAmt
+                    var inoviceTax = ie.Taxes.Select().RowCast<ARTaxTran>().ToList().FirstOrDefault();
+                    if (soTaxInfo != null && soTaxInfo.TaxID == "AMAZONCA" && inoviceTax != null)
+                    {
+                        ie.Taxes.Cache.SetValueExt<ARTaxTran.taxAmt>(inoviceTax, (decimal)0);
+                        ie.Taxes.Cache.SetValueExt<ARTaxTran.curyTaxAmt>(inoviceTax, (decimal)0);
+                        ie.Document.Cache.SetValue<ARInvoice.taxTotal>(ie.Document.Current, (decimal)0);
+                        ie.Document.Cache.SetValue<ARInvoice.curyTaxTotal>(ie.Document.Current, (decimal)0);
+                    }
+                    else if (inoviceTax != null)
+                    {
+                        ie.Taxes.Cache.SetValueExt<ARTaxTran.taxAmt>(inoviceTax, soTaxInfo.CuryTaxAmt);
+                        ie.Taxes.Cache.SetValueExt<ARTaxTran.curyTaxAmt>(inoviceTax, soTaxInfo.CuryTaxAmt);
+                        ie.Document.Cache.SetValueExt<ARInvoice.taxTotal>(ie.Document.Current, soTaxInfo.CuryTaxAmt);
+                        ie.Document.Cache.SetValueExt<ARInvoice.curyTaxTotal>(ie.Document.Current, soTaxInfo.CuryTaxAmt);
+                        ie.Document.Cache.SetValueExt<ARInvoice.docBal>(ie.Document.Current, ie.Document.Current.CuryDocBal + soTaxInfo.CuryTaxAmt);
+                        ie.Document.Cache.SetValueExt<ARInvoice.curyDocBal>(ie.Document.Current,ie.Document.Current.CuryDocBal + soTaxInfo.CuryTaxAmt);
+                    }
+                    ie.Document.Cache.MarkUpdated(ie.Document.Current);
+                    ie.Taxes.Cache.MarkUpdated(inoviceTax);
+                    // save data
+                    ie.Actions.PressSave();
+                }
+            }
             return adapter.Get();
         }
 
@@ -985,7 +1044,7 @@ namespace ExternalLogisticsAPI.Graph_Extensions
                         Weight = new APILibrary.Model.UPS.Request.Weight()
                         {
                             UnitOfMeasurement = new APILibrary.Model.UPS.Request.UnitOfMeasurement() { Code = "LBS" },
-                            Value = Math.Round(totalWeight,2).ToString()
+                            Value = Math.Round(totalWeight, 2).ToString()
                         },
                         Dimensions = new APILibrary.Model.UPS.Request.Dimensions()
                         {
