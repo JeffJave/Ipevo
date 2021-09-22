@@ -105,8 +105,15 @@ namespace IpevoCustomizations
         public abstract class inventoryID : PX.Data.BQL.BqlInt.Field<inventoryID> { }
         #endregion
 
+        #region InventoryCD
+        [PXDBString(100, IsUnicode = true, InputMask = "")]
+        [PXUIField(DisplayName = "InventoryCD")]
+        public virtual string InventoryCD { get; set; }
+        public abstract class inventoryCD : PX.Data.BQL.BqlString.Field<inventoryCD> { }
+        #endregion
+
         #region InventoryDescr
-        [PXDBString(30, IsUnicode = true, InputMask = "")]
+        [PXDBString(100, IsUnicode = true, InputMask = "")]
         [PXUIField(DisplayName = "Inventory Descr")]
         public virtual string InventoryDescr { get; set; }
         public abstract class inventoryDescr : PX.Data.BQL.BqlString.Field<inventoryDescr> { }

@@ -21,7 +21,8 @@ SELECT arCompany.CompanyCD,
 	   i.ItemClassID,
 	   class.ItemClassCD as ItemClassDescr,
 	   t.InventoryID,
-	   i.InventoryCD　as InventoryDescr,
+	   i.InventoryCD　as InventoryCD,
+	   i.Descr as InventoryDescr,
 	   c.CustomerClassID,
 	   cstClass.Descr as CustomerClassDescr,
 	   t.CustomerID,
@@ -57,10 +58,10 @@ LEFT JOIN ARAddress address ON t.CompanyID = address.CompanyID
 						   AND invoice.ShipAddressID = address.AddressID
 INNER JOIN Company invoiceBranch ON invoice.CompanyID = invoiceBranch.CompanyID
 INNER JOIN Company arCompany ON t.CompanyID = arCompany.CompanyID
-LEFT JOIN vLumCurrencyRateQuery rate ON rate.CompanyID = 4
-									AND rate.ToCuryID = 'TWD'
+LEFT JOIN vLumCurrencyRateQuery rate ON rate.CompanyID = 2
+									AND rate.ToCuryID = 'USD'
 									AND rate.CuryRateType = 'SPOT'
-									AND t.TranDate between rate.CuryEffDate and rate.EndCuryEffDate
+									AND t.TranDate between rate.CuryEffDate　and rate.EndCuryEffDate
 									AND b.BaseCuryID = rate.FromCuryID
 WHERE t.CompanyID > 0]]></CDATA>
 </Sql>

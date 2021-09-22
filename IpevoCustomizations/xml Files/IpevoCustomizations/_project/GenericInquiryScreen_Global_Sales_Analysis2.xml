@@ -144,6 +144,7 @@
                     <GISort LineNbr="2" IsActive="1" DataFieldName="t.sOOrderNbr" SortOrder="A" />
                     <GISort LineNbr="1" IsActive="1" DataFieldName="t.tranDate" SortOrder="A" />
                     <GITable Alias="t" Name="IpevoCustomizations.vGlobalSalesAnalysis">
+                        <GIResult LineNbr="31" SortOrder="10" IsActive="1" Field="inventoryCD" Caption="Account Group/Item" IsVisible="1" DefaultNav="1" QuickFilter="0" FastFilter="0" RowID="97bc9770-52d6-4f5e-a289-682c8092cbc9" />
                         <GIResult LineNbr="30" SortOrder="20" IsActive="1" Field="curyRate" Caption="Currency Rate" IsVisible="1" DefaultNav="1" QuickFilter="0" FastFilter="0" RowID="bc6c3d6a-2efc-4323-acb0-5e64f64a705a" />
                         <GIResult LineNbr="29" SortOrder="4" IsActive="1" Field="=IIf( [t.DrCr]='D', -1, 1 )*[t.TranCost]" SchemaField="t.TranCost" Caption="Cost" IsVisible="1" DefaultNav="1" QuickFilter="0" FastFilter="0" RowID="16bb564b-60b0-4db7-920b-49a2d4f3c5a0" />
                         <GIResult LineNbr="28" SortOrder="22" IsActive="1" Field="uom" Caption="UOM" IsVisible="1" DefaultNav="1" QuickFilter="0" FastFilter="0" RowID="1ccf6b89-fe9d-4850-9630-1cf2a7999143" />
@@ -158,7 +159,6 @@
                         <GIResult LineNbr="17" SortOrder="9" IsActive="1" Field="itemClassDescr" Caption="Item Class" IsVisible="1" DefaultNav="1" QuickFilter="0" FastFilter="0" RowID="d7dbf049-d810-43ee-8401-7b7022c27bba" />
                         <GIResult LineNbr="16" SortOrder="5" IsActive="1" Field="isTranCostFinal" Caption="Complete" IsVisible="1" DefaultNav="1" QuickFilter="0" FastFilter="0" RowID="c911e6e3-240d-456e-8c56-f596355b5ba7" />
                         <GIResult LineNbr="14" SortOrder="18" IsActive="1" Field="invoiceBranchCD" Caption="Tenant" IsVisible="1" DefaultNav="1" QuickFilter="0" FastFilter="0" RowID="89446150-e3e9-44c0-96f7-4e9fc9b8996d" />
-                        <GIResult LineNbr="13" SortOrder="10" IsActive="1" Field="inventoryID" Caption="Account Group/Item" IsVisible="1" DefaultNav="1" QuickFilter="0" FastFilter="0" RowID="bcf9d764-5507-4b9b-b139-baadf8ec5384" />
                         <GIResult LineNbr="12" SortOrder="11" IsActive="1" Field="inventoryDescr" Caption="Inventory Description" IsVisible="1" DefaultNav="1" QuickFilter="0" FastFilter="0" RowID="8efd5375-0953-4302-9ca7-508808a57748" />
                         <GIResult LineNbr="10" SortOrder="12" IsActive="1" Field="customerName" Caption="Customer" IsVisible="1" DefaultNav="1" QuickFilter="0" FastFilter="0" RowID="0ea0b9e1-b7e9-4416-8dd5-8644e6b3067d" />
                         <GIResult LineNbr="7" SortOrder="13" IsActive="1" Field="customerClassDescr" Caption="Customer Class" IsVisible="1" DefaultNav="1" QuickFilter="0" FastFilter="0" RowID="3b5a2fca-b972-4510-84d4-ebbf982dfa8d" />
