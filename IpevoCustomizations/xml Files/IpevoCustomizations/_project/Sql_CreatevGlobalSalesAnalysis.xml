@@ -1,4 +1,4 @@
-﻿<Sql TableName="CreatevGlobalSalesAnalysis" CustomScript="#CDATA">
+﻿<Sql TableName="CreatevGlobalSalesAnalysis" SqlScriptPriority="2" CustomScript="#CDATA">
     <CDATA name="CustomScript"><![CDATA[  IF EXISTS
 (
 	SELECT *
@@ -33,6 +33,9 @@ SELECT arCompany.CompanyCD,
 	   invoice.CompanyID as InvoiceBranchID,
 	   invoiceBranch.CompanyCD as InvoiceBranchCD,
 	   b.BaseCuryID,
+	   CASE WHEN rate.CuryRate IS NULL AND b.BaseCuryID = 'USD'　THEN 1
+	   WHEN rate.CuryRate IS NULL THEN 0
+	   ELSE rate.CuryRate END AS CuryRate,
 	   t.UOM
 FROM ARTran t
 INNER JOIN Branch b ON t.CompanyID = b.CompanyID
@@ -54,5 +57,10 @@ LEFT JOIN ARAddress address ON t.CompanyID = address.CompanyID
 						   AND invoice.ShipAddressID = address.AddressID
 INNER JOIN Company invoiceBranch ON invoice.CompanyID = invoiceBranch.CompanyID
 INNER JOIN Company arCompany ON t.CompanyID = arCompany.CompanyID
+LEFT JOIN vLumCurrencyRateQuery rate ON rate.CompanyID = 4
+									AND rate.ToCuryID = 'TWD'
+									AND rate.CuryRateType = 'SPOT'
+									AND t.TranDate between rate.CuryEffDate and rate.EndCuryEffDate
+									AND b.BaseCuryID = rate.FromCuryID
 WHERE t.CompanyID > 0]]></CDATA>
 </Sql>

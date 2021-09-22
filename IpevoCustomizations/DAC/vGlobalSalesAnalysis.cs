@@ -192,6 +192,13 @@ namespace IpevoCustomizations
         public abstract class baseCuryID : PX.Data.BQL.BqlString.Field<baseCuryID> { }
         #endregion
 
+        #region CuryRate
+        [PXDBDecimal()]
+        [PXUIField(DisplayName = "Currency Rate")]
+        public virtual Decimal? CuryRate { get; set; }
+        public abstract class curyRate : PX.Data.BQL.BqlDecimal.Field<curyRate> { }
+        #endregion
+
         #region Uom
         [INUnit(typeof(vGlobalSalesAnalysis.inventoryID))]
         [PXUIField(DisplayName = "UOM")]
