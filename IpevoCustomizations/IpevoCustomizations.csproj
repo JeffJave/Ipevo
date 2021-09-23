@@ -67,6 +67,7 @@
     <Compile Include="DAC\LUMStateZipCode.cs" />
     <Compile Include="DAC\LumTaxExemptionCcertificate.cs" />
     <Compile Include="DAC\LumTaxExemptionCcertificateLog.cs" />
+    <Compile Include="DAC\vGlobalSalesAnalysis.cs" />
     <Compile Include="DAC_Extensions\ARInvoiceExtension.cs" />
     <Compile Include="DAC_Extensions\BatchExtension.cs" />
     <Compile Include="DAC_Extensions\PaymentInfo.cs" />

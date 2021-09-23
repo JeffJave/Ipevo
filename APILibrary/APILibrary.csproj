@@ -17,7 +17,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\Bin\</OutputPath>
+    <OutputPath>..\..\..\..\Bin\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -62,6 +62,8 @@
     <Compile Include="Model\LumAPIResultModel.cs" />
     <Compile Include="Model\MiddleWare_Config.cs" />
     <Compile Include="Model\MiddleWare_Shipment.cs" />
+    <Compile Include="Model\UPS_FreightRateRequest.cs" />
+    <Compile Include="Model\UPS_FreightRateResponse.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
