@@ -58,8 +58,8 @@ LEFT JOIN ARAddress address ON t.CompanyID = address.CompanyID
 						   AND invoice.ShipAddressID = address.AddressID
 INNER JOIN Company invoiceBranch ON invoice.CompanyID = invoiceBranch.CompanyID
 INNER JOIN Company arCompany ON t.CompanyID = arCompany.CompanyID
-LEFT JOIN vLumCurrencyRateQuery rate ON rate.CompanyID = 2
-									AND rate.ToCuryID = 'USD'
+LEFT JOIN vLumCurrencyRateQuery rate ON rate.CompanyID = 4
+									AND rate.ToCuryID = 'TWD'
 									AND rate.CuryRateType = 'SPOT'
 									AND t.TranDate between rate.CuryEffDate　and rate.EndCuryEffDate
 									AND b.BaseCuryID = rate.FromCuryID
