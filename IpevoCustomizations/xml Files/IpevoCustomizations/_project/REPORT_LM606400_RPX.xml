@@ -5901,7 +5901,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                                 <Top>4px</Top>
                             </Padding>
                         </Style>
-                        <Value>=IIF(#010;[Note.NoteText] &lt;&gt; Null,#010;[Note.NoteText],#010;IIF([InvoiceCustomerInfo.CustomerClassID] = 'INTERCO', 'Manufacturer Name: \n' + IsNull([AttrVENDENGNA.Value], '') +#010;IsNull('\nAddress:' + [AttrVENDENGAD.Value], ''), '')#010;)</Value>
+                        <Value>=IIF([InventoryItem.ItemType] &lt;&gt; 'N',#010;IIF([Note.NoteText] &lt;&gt; Null,#010;[Note.NoteText],#010;IIF([InvoiceCustomerInfo.CustomerClassID] = 'INTERCO', 'Manufacturer Name: \n' + IsNull([AttrVENDENGNA.Value], '') +#010;IsNull('\nAddress:' + [AttrVENDENGAD.Value], ''), '')#010;),#010;'')</Value>
                     </TextBox>
                 </Items>
             </Detail>
