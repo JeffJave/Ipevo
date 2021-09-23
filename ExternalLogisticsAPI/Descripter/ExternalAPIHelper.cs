@@ -2,6 +2,7 @@
 using PX.Data.BQL;
 using PX.Data.BQL.Fluent;
 using PX.Objects.AR;
+using PX.Objects.CA;
 using PX.Objects.CR;
 using PX.Objects.IN;
 using PX.Objects.SO;
@@ -304,7 +305,6 @@ namespace ExternalLogisticsAPI.Descripter
 
                     orderEntry.DiscountDetails.Update(disDetail);
 
-                    //orderEntry.DiscountDetails.Cache.SetValueExt<SOOrderDiscountDetail.curyDiscountAmt>(disDetail, Math.Abs((decimal)root.item[i].cop[k].amount));
                     disDetail.CuryDiscountAmt = Math.Abs((decimal)root.item[i].cop[k].amount);
 
                     orderEntry.DiscountDetails.Update(disDetail);
@@ -376,12 +376,12 @@ namespace ExternalLogisticsAPI.Descripter
         /// </summary>
         public static void UpdateSOContactAddress(SOOrderEntry orderEntry, object obj)
         {
-            var root = obj as APILibrary.Model.Amazon_Middleware.Root;
+            dynamic root = obj as APILibrary.Model.Amazon_Middleware.Root;
 
-            //if (root == null)
-            //{
-            //    root = obj as APILibrary.Model.Amazon_Middleware.Root2;
-            //}
+            if (root == null)
+            {
+                root = obj as APILibrary.Model.Amazon_Middleware.Root2;
+            }
 
             SOBillingContact billContact = orderEntry.Billing_Contact.Select();
             SOBillingAddress billAddress = orderEntry.Billing_Address.Select();
@@ -635,6 +635,77 @@ namespace ExternalLogisticsAPI.Descripter
         /// <param name="curSetup"></param>
         /// <param name="orderID"></param>
         //public static void Update3DCartOrderStatus(LUM3DCartSetup curSetup, int orderID) => GetResponse(curSetup, string.Format("3dCartWebAPI/v2/Orders/{0}", orderID), true);
+
+        public static void CreateCreditMemo(object obj)
+        {
+            var root = obj as APILibrary.Model.Amazon_Middleware.Root;
+
+            ARInvoiceEntry invoiceEntry = PXGraph.CreateInstance<ARInvoiceEntry>();
+
+            ARInvoice invoice = new ARInvoice()
+            {
+                DocType = ARDocType.CreditMemo
+            };
+
+            invoice = invoiceEntry.Document.Insert(invoice);
+
+            invoice.CustomerID = Customer.UK.Find(invoiceEntry, "SELLERCENTRAL").BAccountID;
+            invoice.DocDate    = string.IsNullOrEmpty(root.item[0]?.shipment_date) ? invoice.DocDate : DateTime.Parse(root.item[0]?.shipment_date);
+            invoice.InvoiceNbr = root.amazon_order_id;
+            invoice.DocDesc    = nameof(AmazonOrderType.MCF);
+
+            invoiceEntry.Document.Update(invoice);
+
+            ARShippingContact shipContact = invoiceEntry.Shipping_Contact.Select();
+
+            shipContact.OverrideContact = true;
+            shipContact.FullName        = root.recipient_name;
+
+            invoiceEntry.Shipping_Contact.Cache.MarkUpdated(shipContact);
+
+            ARShippingAddress shipAddress = invoiceEntry.Shipping_Address.Select();
+
+            shipAddress.OverrideAddress = true;
+            shipAddress.AddressLine1    = root.ship_address;
+            shipAddress.City            = root.ship_city;
+            shipAddress.CountryID       = root.ship_country;
+            shipAddress.State           = root.ship_state;
+            shipAddress.PostalCode      = root.ship_postal_code;
+
+            invoiceEntry.Shipping_Address.Update(shipAddress);
+
+            string entryTypeID = null;
+
+            for (int i = 0; i < root.item.Count; i++)
+            {
+                ARTran tran = invoiceEntry.Transactions.Cache.CreateInstance() as ARTran;
+
+                tran.Qty      = root.item[i].qty;
+                tran.TranDesc = root.item[i].sku;
+
+                tran = invoiceEntry.Transactions.Insert(tran);
+
+                for (int j = 0; j < root.item[i].fee.Count; j++)
+                {
+                    entryTypeID = LUMAmzInterfaceAPIMaint.GetAcumaticaPymtEntryType(root.item[i].fee[j].name);
+                    
+                    tran.TranDesc     += " | " + entryTypeID;
+                    tran.CuryExtPrice += Math.Abs((decimal)root.item[i].fee[j].amount);
+                }
+
+                CAEntryType entryType = CAEntryType.PK.Find(invoiceEntry, CashAccountETDetail.PK.Find(invoiceEntry, invoice.CashAccountID, entryTypeID).EntryTypeID);
+
+                tran.AccountID = entryType.AccountID;
+                tran.SubID     = entryType.SubID;
+
+                invoiceEntry.Transactions.Update(tran);
+
+                PXNoteAttribute.SetNote(invoiceEntry.Transactions.Cache, tran, $"Fulfillment Center ID {root.item[i].fulfillment_center_id}\nCarrier {root.item[i].carrier}\nTracking Nbr. {root.item[i].tracking_no}");
+            }
+
+            invoiceEntry.Save.Press();
+            invoiceEntry.releaseFromHold.Press();
+        }
     }
 
     #region Entity Classes

@@ -40,17 +40,17 @@ namespace ExternalLogisticsAPI.Graph
 
             AMZInterfaceAPI.SetProcessDelegate(delegate (List<LUMAmazonInterfaceAPI> list)
             {
-                CreateSO(list);
+                CreateSOCRM(list);
             });
         }
         #endregion
 
         #region Static Methods
-        public static void CreateSO(List<LUMAmazonInterfaceAPI> list)
+        public static void CreateSOCRM(List<LUMAmazonInterfaceAPI> list)
         {
             LUMAmzInterfaceAPIMaint graph = PXGraph.CreateInstance<LUMAmzInterfaceAPIMaint>();
 
-            graph.CreateSO(graph, list);
+            graph.CreateSO_CRM(graph, list);
         }
 
         /// <summary>
@@ -124,7 +124,7 @@ namespace ExternalLogisticsAPI.Graph
         #endregion
 
         #region Methods
-        public virtual void CreateSO(LUMAmzInterfaceAPIMaint graph, List<LUMAmazonInterfaceAPI> list)
+        public virtual void CreateSO_CRM(LUMAmzInterfaceAPIMaint graph, List<LUMAmazonInterfaceAPI> list)
         {
             if (list.Count < 0) { return; }
 
@@ -152,83 +152,90 @@ namespace ExternalLogisticsAPI.Graph
                             root = JsonConvert.DeserializeObject<APILibrary.Model.Amazon_Middleware.Root>(list[i].Data1);
                         }
 
-                        SOOrder order = orderEntry.Document.Cache.CreateInstance() as SOOrder;
-
-                        if (hasAMZFee == false)
+                        if (list[i].OrderType == AmazonOrderType.MCF)
                         {
-                            order.OrderType = GetAcumaticaSOType(list[i].OrderType);
-
-                            order = orderEntry.Document.Insert(order);
-
-                            order.CustomerID       = Customer.UK.Find(orderEntry, "SELLERCENTRAL").BAccountID;
-                            order.OrderDate        = DateTime.Parse(root.payments_date);
-                            order.RequestDate      = string.IsNullOrEmpty(root.item[0]?.shipment_date) ? order.RequestDate : DateTime.Parse(root.item[0]?.shipment_date);
-                            order.CustomerOrderNbr = root.amazon_order_id;
-
-                            orderEntry.Document.Cache.SetValue<SOOrderExt.usrAPIOrderType>(order, list[i].OrderType);
-
-                            orderEntry.Document.Update(order);
-
-                            ExternalAPIHelper.UpdateSOContactAddress(orderEntry, root);
-                            ExternalAPIHelper.CreateOrderDetail(orderEntry, root);
+                            ExternalAPIHelper.CreateCreditMemo(root);
                         }
                         else
                         {
-                            orderEntry.Document.Current = SelectFrom<SOOrder>.Where<SOOrder.customerOrderNbr.IsEqual<@P.AsString>>.View.SelectSingleBound(orderEntry, null, root.amazon_order_id);
-                            order = orderEntry.Document.Current;
+                            SOOrder order = orderEntry.Document.Cache.CreateInstance() as SOOrder;
 
-                            foreach (SOLine line in orderEntry.Transactions.Select())
+                            if (hasAMZFee == false)
                             {
-                                line.GetExtension<SOLineExt>().UsrCarrier     = root.item[line.SortOrder.Value - 1].carrier;
-                                line.GetExtension<SOLineExt>().UsrTrackingNbr = root.item[line.SortOrder.Value - 1].tracking_no;
+                                order.OrderType = GetAcumaticaSOType(list[i].OrderType);
 
-                                orderEntry.Transactions.Update(line);
+                                order = orderEntry.Document.Insert(order);
+
+                                order.CustomerID = Customer.UK.Find(orderEntry, "SELLERCENTRAL").BAccountID;
+                                order.OrderDate = DateTime.Parse(root.payments_date);
+                                order.RequestDate = string.IsNullOrEmpty(root.item[0]?.shipment_date) ? order.RequestDate : DateTime.Parse(root.item[0]?.shipment_date);
+                                order.CustomerOrderNbr = root.amazon_order_id;
+
+                                orderEntry.Document.Cache.SetValue<SOOrderExt.usrAPIOrderType>(order, list[i].OrderType);
+
+                                orderEntry.Document.Update(order);
+
+                                ExternalAPIHelper.UpdateSOContactAddress(orderEntry, root);
+                                ExternalAPIHelper.CreateOrderDetail(orderEntry, root);
                             }
-                        }
+                            else
+                            {
+                                orderEntry.Document.Current = SelectFrom<SOOrder>.Where<SOOrder.customerOrderNbr.IsEqual<@P.AsString>>.View.SelectSingleBound(orderEntry, null, root.amazon_order_id);
+                                order = orderEntry.Document.Current;
 
-                        string country  = root.item[0]?.country;
-                        string state    = root.item[0]?.state;
-                        string currency = root.item[0]?.currency;
+                                foreach (SOLine line in orderEntry.Transactions.Select())
+                                {
+                                    line.GetExtension<SOLineExt>().UsrCarrier = root.item[line.SortOrder.Value - 1].carrier;
+                                    line.GetExtension<SOLineExt>().UsrTrackingNbr = root.item[line.SortOrder.Value - 1].tracking_no;
 
-                        if ((country == "US" && State.PK.Find(this, country, state)?.GetExtension<StateExt>().UsrIsAMZWithheldTax == true) ||
-                            (country == "CA" && root.marketplaceWithheldTax != 0) )
-                        {
-                            order.OverrideTaxZone = true;
-                            order.TaxZoneID = "AMAZONCA";
-                        }
+                                    orderEntry.Transactions.Update(line);
+                                }
+                            }
 
-                        if (currency != order.CuryID && currency != "CDN")
-                        {
-                            orderEntry.Document.Cache.SetValueExt<SOOrder.curyID>(order, currency);
-                        }
+                            string country = root.item[0]?.country;
+                            string state = root.item[0]?.state;
+                            string currency = root.item[0]?.currency;
 
-                        ///<remarks> 
-                        ///Becuase the standard tax calculation logic write in SOOrder_RowUpdate event which means I must use the following approach.
-                        order.CuryPremiumFreightAmt = (decimal)root.shipment;
-                        orderEntry.Document.Update(order);
-                        ///</remarks>
+                            if ((country == "US" && State.PK.Find(this, country, state)?.GetExtension<StateExt>().UsrIsAMZWithheldTax == true) ||
+                                (country == "CA" && root.marketplaceWithheldTax != 0))
+                            {
+                                order.OverrideTaxZone = true;
+                                order.TaxZoneID = "AMAZONCA";
+                            }
 
-                        order.CuryTaxTotal   = UpdateSOTaxAmount(orderEntry, root);
-                        order.CuryOrderTotal = hasAMZFee == false ? (order.CuryOrderTotal + order.CuryTaxTotal) : order.CuryOrderTotal;
+                            if (currency != order.CuryID && currency != "CDN")
+                            {
+                                orderEntry.Document.Cache.SetValueExt<SOOrder.curyID>(order, currency);
+                            }
 
-                        UpdateSOUserDefineFields(orderEntry.Document.Cache, root);
+                            ///<remarks> 
+                            ///Becuase the standard tax calculation logic write in SOOrder_RowUpdate event which means I must use the following approach.
+                            order.CuryPremiumFreightAmt = (decimal)root.shipment;
+                            orderEntry.Document.Update(order);
+                            ///</remarks>
 
-                        orderEntry.Save.Press();
+                            order.CuryTaxTotal = UpdateSOTaxAmount(orderEntry, root);
+                            order.CuryOrderTotal = hasAMZFee == false ? (order.CuryOrderTotal + order.CuryTaxTotal) : order.CuryOrderTotal;
 
-                        CurrencyInfo curyInfo = CurrencyInfo.PK.Find(this, order.CuryInfoID);
+                            UpdateSOUserDefineFields(orderEntry.Document.Cache, root);
 
-                        if (curyInfo.CuryRate != 1 && country == "UK")
-                        {
-                            orderEntry.Document.Cache.SetValueExt<SOOrder.cashAccountID>(order, SelectFrom<CashAccount>.Where<CashAccount.cashAccountCD.IsEqual<@P.AsString>
-                                                                                                                              .And<CashAccount.curyID.IsEqual<@P.AsString>>>.View
-                                                                                                .SelectSingleBound(this, null, (currency == "EUR") ? "EURAMAZON" : "GBPAMAZON", currency).TopFirst?.CashAccountID);
-                            orderEntry.Document.Cache.MarkUpdated(order);
                             orderEntry.Save.Press();
-                        }
 
-                        if (noAMZFee == false || hasAMZFee == true)
-                        {
-                            ExternalAPIHelper.CreatePaymentProcess(order, root, curyInfo.CuryMultDiv == CuryMultDivType.Div ? curyInfo.RecipRate : curyInfo.CuryRate);
+                            CurrencyInfo curyInfo = CurrencyInfo.PK.Find(this, order.CuryInfoID);
+
+                            if (curyInfo.CuryRate != 1 && country == "UK")
+                            {
+                                orderEntry.Document.Cache.SetValueExt<SOOrder.cashAccountID>(order, SelectFrom<CashAccount>.Where<CashAccount.cashAccountCD.IsEqual<@P.AsString>
+                                                                                                                                  .And<CashAccount.curyID.IsEqual<@P.AsString>>>.View
+                                                                                                    .SelectSingleBound(this, null, (currency == "EUR") ? "EURAMAZON" : "GBPAMAZON", currency).TopFirst?.CashAccountID);
+                                orderEntry.Document.Cache.MarkUpdated(order);
+                                orderEntry.Save.Press();
+                            }
+
+                            if (noAMZFee == false || hasAMZFee == true)
+                            {
+                                ExternalAPIHelper.CreatePaymentProcess(order, root, curyInfo.CuryMultDiv == CuryMultDivType.Div ? curyInfo.RecipRate : curyInfo.CuryRate);
+                            }
                         }
 
                         graph.AMZInterfaceAPI.Cache.SetValue<LUMAmazonInterfaceAPI.write2Acumatica1>(list[i], true);
