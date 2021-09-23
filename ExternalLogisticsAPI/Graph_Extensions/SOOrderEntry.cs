@@ -3,12 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using APILibrary;
 using APILibrary.Model;
-using APILibrary.Model.Interface;
 using ExternalLogisticsAPI.DAC;
-using ExternalLogisticsAPI.DAC_Extensions;
 using ExternalLogisticsAPI.Descripter;
 using Newtonsoft.Json;
 using PX.Common;
@@ -16,7 +13,6 @@ using PX.Data;
 using PX.Data.BQL;
 using PX.Data.BQL.Fluent;
 using PX.Data.Licensing;
-using PX.Data.Update.ExchangeService;
 using PX.Objects.AR;
 using PX.Objects.Common;
 using PX.Objects.CS;
@@ -75,7 +71,7 @@ namespace ExternalLogisticsAPI.Graph_Extensions
                                            .Where<State.countryID.IsEqual<P.AsString>
                                                    .And<State.stateID.IsEqual<P.AsString>>>
                                            .View.Select(Base, ShipToAddress.CountryID, ShipToAddress.State).RowCast<State>().FirstOrDefault();
-                decimal freightFactor = statInfo == null ? 1 : statInfo.GetExtension<StateExtension>().UsrFreightFactor ?? 1;
+                decimal freightFactor = statInfo == null ? 1 : statInfo.GetExtension<StateExt>().UsrFreightFactor ?? 1;
                 foreach (var item in Base.Transactions.Select().RowCast<SOLine>())
                 {
                     var itemInfo = InventoryItem.PK.Find(Base, item.InventoryID);
