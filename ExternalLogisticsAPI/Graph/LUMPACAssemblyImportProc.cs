@@ -53,7 +53,8 @@ namespace ExternalLogisticsAPI.Graph
                              ItemClassID = item.ItemClassID,
                              SiteID = kit.SiteID,
                              KitInventoryID = kitItem.KitInventoryID,
-                             ProductSiteid = kitItem.SiteID
+                             ProductSiteid = kitItem.SiteID,
+                             RefNbr = kitItem.RefNbr
                          };
 
             // Delete temp table data
@@ -75,6 +76,7 @@ namespace ExternalLogisticsAPI.Graph
                 data.ProductInventoryID = row.KitInventoryID;
                 data.ProductAdjAmount = data.AssemblyAdjAmount * -1;
                 data.ProductSiteid = row.ProductSiteid;
+                data.KitRefNbr = row.RefNbr;
                 data.Selected = true;
             }
             this.Actions.PressSave();

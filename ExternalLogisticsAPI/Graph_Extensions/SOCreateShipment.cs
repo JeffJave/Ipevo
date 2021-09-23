@@ -26,8 +26,28 @@ namespace PX.Objects.SO
         public SelectFrom<LUMVendCntrlSetup>.View DCLSetup;
 
         #region Override Mehtod
-        public delegate void AddCommonFiltersDelegate(SOOrderFilter filter, PXSelectBase<SOOrder> cmd);
 
+        public delegate PXSelectBase<SOOrder> GetSelectCommandDelegate(SOOrderFilter filter);
+        [PXOverride]
+        public virtual PXSelectBase<SOOrder> GetSelectCommand(SOOrderFilter filter, GetSelectCommandDelegate baseMethod)
+        {
+            PXSelectBase<SOOrder> cmd;
+            switch (filter.Action)
+            {
+                case "SO301000$lumCreateShipmentforFBA":
+                    cmd = BuildCommandCreateShipment(filter);
+                    break;
+                case "SO301000$lumPrepareInvoiceforAmazon":
+                    cmd = BuildCommandPrepareInvoice();
+                    break;
+                default:
+                    cmd = baseMethod(filter);
+                    break;
+            }
+            return cmd;
+        }
+
+        public delegate void AddCommonFiltersDelegate(SOOrderFilter filter, PXSelectBase<SOOrder> cmd);
         [PXOverride]
         public virtual void AddCommonFilters(SOOrderFilter filter, PXSelectBase<SOOrder> cmd, AddCommonFiltersDelegate baseMethod)
         {
@@ -43,10 +63,6 @@ namespace PX.Objects.SO
                     cmd.WhereAnd<Where<SOOrder.status, Equal<SOOrderStatus.open>>>();
                     cmd.WhereAnd<Where<SOOrderExt.usrDCLShipmentCreated, Equal<True>>>();
                     cmd.WhereAnd<Where<SOOrder.orderType, NotEqual<SotypeVCAttr>>>();
-                    break;
-                case "SO301000$lumCreateShipmentforFBA": // copy from standard create shipment qry
-                    cmd = BuildCommandCreateShipment(filter);
-                    baseMethod.Invoke(filter, cmd);
                     break;
                 case "SO301000$lumGenerate3PLUKFile":
                     cmd.Join<InnerJoin<vSOSiteMapping, On<SOOrder.orderType, Equal<vSOSiteMapping.orderType>, And<SOOrder.orderNbr, Equal<vSOSiteMapping.orderNbr>>>>>();
@@ -72,9 +88,15 @@ namespace PX.Objects.SO
                     cmd.WhereAnd<Where<SOOrderExt.usrSendToMiddleware, Equal<False>,
                         Or<SOOrderExt.usrSendToMiddleware, IsNull>>>();
                     break;
+                case "SO301000$lumPrepareInvoiceforAmazon":
+                    //cmd.WhereAnd<Where<SOShipment.status.IsEqual<SOShipmentStatus.confirmed>>>();
+                    break;
             }
         }
 
+        #endregion
+
+        #region Method
 
         protected virtual PXSelectBase<SOOrder> BuildCommandCreateShipment(SOOrderFilter filter)
         {
@@ -113,6 +135,43 @@ namespace PX.Objects.SO
                 }
 
                 filter.DateSel = string.Empty;
+            }
+
+            return cmd;
+        }
+
+        protected virtual PXSelectBase<SOOrder> BuildCommandPrepareInvoice()
+        {
+            var cmd =
+                new PXSelectJoinGroupBy<SOOrder,
+                        InnerJoin<SOOrderType, On<SOOrderType.orderType, Equal<SOOrder.orderType>, And<SOOrderType.aRDocType, NotEqual<ARDocType.noUpdate>>>,
+                        LeftJoin<Carrier, On<SOOrder.shipVia, Equal<Carrier.carrierID>>,
+                        LeftJoin<SOOrderShipment, On<SOOrderShipment.orderType, Equal<SOOrder.orderType>, And<SOOrderShipment.orderNbr, Equal<SOOrder.orderNbr>>>,
+                        LeftJoinSingleTable<ARInvoice, On<ARInvoice.docType, Equal<SOOrderShipment.invoiceType>, And<ARInvoice.refNbr, Equal<SOOrderShipment.invoiceNbr>>>,
+                        LeftJoinSingleTable<Customer, On<SOOrder.customerID, Equal<Customer.bAccountID>>>>>>>,
+                    Where<SOOrder.hold, Equal<boolFalse>, And<SOOrder.cancelled, Equal<boolFalse>,
+                        And<Where<Customer.bAccountID, IsNull, Or<Match<Customer, Current<AccessInfo.userName>>>>>>>,
+                    Aggregate<
+                        GroupBy<SOOrder.orderType,
+                        GroupBy<SOOrder.orderNbr,
+                        GroupBy<SOOrder.approved>>>>>(Base);
+
+            if (PXAccess.FeatureInstalled<FeaturesSet.inventory>())
+            {
+                cmd.WhereAnd<
+                    Where<Sub<Sub<Sub<SOOrder.shipmentCntr,
+                                                                    SOOrder.openShipmentCntr>,
+                                                                    SOOrder.billedCntr>,
+                                                                    SOOrder.releasedCntr>, Greater<short0>,
+                        Or2<Where<SOOrder.orderQty, Equal<decimal0>,
+                                    And<SOOrder.curyUnbilledMiscTot, Greater<decimal0>>>,
+                        Or<Where<SOOrderType.requireShipping, Equal<boolFalse>, And<ARInvoice.refNbr, IsNull>>>>>>();
+            }
+            else
+            {
+                cmd.WhereAnd<
+                    Where<SOOrder.curyUnbilledMiscTot, Greater<decimal0>, And<SOOrderShipment.shipmentNbr, IsNull,
+                        Or<Where<SOOrderType.requireShipping, Equal<boolFalse>, And<ARInvoice.refNbr, IsNull>>>>>>();
             }
 
             return cmd;

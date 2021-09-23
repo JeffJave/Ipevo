@@ -295,7 +295,6 @@ namespace PX.Objects.SO
                 throw new PXException("Can not find Tracking URL");
             throw new PXRedirectToUrlException(url, PXBaseRedirectException.WindowMode.NewWindow, "Tracking URL");
         }
-
         #endregion
 
         #region Method
@@ -520,7 +519,7 @@ namespace PX.Objects.SO
                 line += $"{FillUpLen(30, shipContact?.Attention)}";
                 line += $"{FillUpLen(20, shipContact?.Phone1)}";
                 line += $"{FillUpLen(40, shipContact?.Email)}";
-                line += $"{FillUpLen(3, "DE")}";
+                line += $"{FillUpLen(3, shipAddress?.CountryID)}";
                 line += "\r\n";
                 sb.Append(line);
                 totalLine++;
@@ -536,7 +535,7 @@ namespace PX.Objects.SO
                     line += $"{FillUpLen(3, "ORA")}";
                     line += $"{FillUpLen(10, item?.LineNbr.ToString())}";
                     line += $"{FillUpLen(20, DCLHelper.GetCorrectInventoryCD(item.InventoryID))}";
-                    line += $"{FillUpLen(11, item?.ShippedQty?.ToString())}";
+                    line += $"{FillUpLen(11, item?.ShippedQty?.ToString("0"))}";
                     line += $"{FillUpLen(25, " ")}";
                     line += $"{FillUpLen(25, " ")}";
                     line += "\r\n";
@@ -626,7 +625,7 @@ namespace PX.Objects.SO
                 line += $"{FillUpLen(30, shipContact?.Attention)}";
                 line += $"{FillUpLen(20, shipContact?.Phone1)}";
                 line += $"{FillUpLen(40, shipContact?.Email)}";
-                line += $"{FillUpLen(3, "DE")}";
+                line += $"{FillUpLen(3, shipAddress?.CountryID)}";
                 line += "\r\n";
                 sb.Append(line);
                 totalLine++;
@@ -642,7 +641,7 @@ namespace PX.Objects.SO
                     line += $"{FillUpLen(3, "ORA")}";
                     line += $"{FillUpLen(10, item?.LineNbr.ToString())}";
                     line += $"{FillUpLen(20, DCLHelper.GetCorrectInventoryCD(item.InventoryID))}";
-                    line += $"{FillUpLen(11, item?.OpenQty?.ToString())}";
+                    line += $"{FillUpLen(11, item?.OpenQty?.ToString("0"))}";
                     line += $"{FillUpLen(25, " ")}";
                     line += $"{FillUpLen(25, " ")}";
                     line += "\r\n";

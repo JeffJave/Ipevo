@@ -1,3 +1,4 @@
 ﻿<Table TableName="State">
     <Column TableName="State" ColumnName="UsrIsAMZWithheldTax" ColumnType="bool" AllowNull="True" MaxLength="25" DecimalPrecision="2" IsNewColumn="True" IsUnicode="True" />
+    <Column TableName="State" ColumnName="UsrFreightFactor" ColumnType="decimal" AllowNull="True" DecimalPrecision="2" DecimalLength="5" IsNewColumn="True" IsUnicode="True" />
 </Table>

@@ -1,4 +1,7 @@
 ﻿using PX.Data;
+using PX.Data.BQL.Fluent;
+using PX.Objects.AR;
+using PX.Objects.CS;
 using PX.Objects.IN;
 using PX.Objects.SO;
 using System;
