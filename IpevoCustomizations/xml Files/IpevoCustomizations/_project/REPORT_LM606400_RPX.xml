@@ -5657,7 +5657,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                 <Variables>
                     <ReportVariable>
                         <Name>TotalQty</Name>
-                        <ValueExpr>= $TotalQty + [ARTran.Qty]</ValueExpr>
+                        <ValueExpr>=IIF([InventoryItem.ItemType] &lt;&gt; 'N', $TotalQty + [ARTran.Qty], $TotalQty)</ValueExpr>
                     </ReportVariable>
                 </Variables>
                 <Items>
@@ -5819,7 +5819,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                         </Items>
                     </Panel>
                     <TextBox Name="textBox39">
-                        <Format>='N2'</Format>
+                        <Format>$#,##0.00;-$#,##0.00</Format>
                         <Location>312px, 0px</Location>
                         <Size>80px, 88px</Size>
                         <Style>
@@ -5837,7 +5837,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                             <TextAlign>Center</TextAlign>
                             <VerticalAlign>Middle</VerticalAlign>
                         </Style>
-                        <Value>=IsNull('$' + [ARTran.CuryUnitPrice], '')</Value>
+                        <Value>=IIF([InventoryItem.ItemType] &lt;&gt; 'N', [ARTran.CuryUnitPrice], '')</Value>
                     </TextBox>
                     <TextBox Name="textBox40">
                         <Format>='N0'</Format>
@@ -5858,10 +5858,10 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                             <TextAlign>Center</TextAlign>
                             <VerticalAlign>Middle</VerticalAlign>
                         </Style>
-                        <Value>=IsNull([ARTran.Qty], '')</Value>
+                        <Value>=IIF([InventoryItem.ItemType] &lt;&gt; 'N', IsNull([ARTran.Qty], ''), '')</Value>
                     </TextBox>
                     <TextBox Name="textBox41">
-                        <Format>='N2'</Format>
+                        <Format>$#,##0.00;-$#,##0.00</Format>
                         <Location>464px, 0px</Location>
                         <Size>80px, 88px</Size>
                         <Style>
@@ -5879,7 +5879,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                             <TextAlign>Center</TextAlign>
                             <VerticalAlign>Middle</VerticalAlign>
                         </Style>
-                        <Value>=IsNull('$' + [ARTran.CuryTranAmt], '')</Value>
+                        <Value>=[ARTran.CuryTranAmt]</Value>
                     </TextBox>
                     <TextBox Name="textBox42">
                         <Location>544px, 0px</Location>
@@ -6043,7 +6043,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                         <Value>Alice Chiu</Value>
                     </TextBox>
                     <TextBox Name="textBox62">
-                        <Format>='N2'</Format>
+                        <Format>$#,##0.00;-$#,##0.00</Format>
                         <Location>584px, 16px</Location>
                         <Size>112px, 0.16667in</Size>
                         <Style>
@@ -6058,7 +6058,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                             <TextAlign>Right</TextAlign>
                             <VerticalAlign>Middle</VerticalAlign>
                         </Style>
-                        <Value>=IsNull(Round([ARInvoice.CuryLineTotal], 2), '')</Value>
+                        <Value>=[ARInvoice.CuryLineTotal]</Value>
                     </TextBox>
                 </Items>
             </PageFooter>
