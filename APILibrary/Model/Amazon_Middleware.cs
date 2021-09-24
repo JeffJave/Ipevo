@@ -59,6 +59,7 @@ namespace APILibrary.Model
             public string marketplace { get; set; }
             public string payments_date { get; set; }
             public string amazon_order_id { get; set; }
+            public string merchant_order_id { get; set; }
             public string buyer_tax_registration { get; set; }
             public string seller_tax_registration { get; set; }
             public bool export_outside_eu { get; set; }
