@@ -28,6 +28,18 @@ namespace PX.Objects.SO
             Base.action.AddMenuAction(lumTrackingURL);
         }
 
+        #region Delegate
+
+        public delegate void ShipPackagesDelegate(SOShipment shiporder);
+        [PXOverride]
+        public virtual void ShipPackages(SOShipment shiporder, ShipPackagesDelegate baseMethod)
+        {
+            // UPS FREIGHT 不執行打印Label
+            if(shiporder.ShipVia?.ToUpper() != "UPSFREIGHT")
+                baseMethod(shiporder);
+        }
+        #endregion
+
         #region Action
 
         public PXAction<SOShipment> printFedexLabel;
