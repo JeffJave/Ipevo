@@ -4,6 +4,7 @@ using PX.Data.BQL.Fluent;
 using PX.Objects.AR;
 using PX.Objects.CA;
 using PX.Objects.CR;
+using PX.Objects.CS;
 using PX.Objects.IN;
 using PX.Objects.SO;
 using System;
@@ -70,6 +71,11 @@ namespace ExternalLogisticsAPI.Descripter
             }
         }
 
+        /// <summary>
+        /// Retrieve data from 3DCart API through fixed request.
+        /// </summary>
+        /// <param name="curSetup"></param>
+        /// <param name="endDate"></param>
         public static void PrepareRecords(LUM3DCartSetup curSetup, DateTime? endDate)
         {
             LUM3DCartImportProc graph = PXGraph.CreateInstance<LUM3DCartImportProc>();
@@ -636,7 +642,7 @@ namespace ExternalLogisticsAPI.Descripter
         /// <param name="orderID"></param>
         //public static void Update3DCartOrderStatus(LUM3DCartSetup curSetup, int orderID) => GetResponse(curSetup, string.Format("3dCartWebAPI/v2/Orders/{0}", orderID), true);
 
-        public static void CreateCreditMemo(object obj)
+        public static void CreateCreditMemo(object obj, bool isRMA = false)
         {
             var root = obj as APILibrary.Model.Amazon_Middleware.Root;
 
@@ -652,7 +658,14 @@ namespace ExternalLogisticsAPI.Descripter
             invoice.CustomerID = Customer.UK.Find(invoiceEntry, "SELLERCENTRAL").BAccountID;
             invoice.DocDate    = string.IsNullOrEmpty(root.item[0]?.shipment_date) ? invoice.DocDate : DateTime.Parse(root.item[0]?.shipment_date);
             invoice.InvoiceNbr = root.amazon_order_id;
-            invoice.DocDesc    = nameof(AmazonOrderType.MCF);
+            invoice.DocDesc    = isRMA == false ? $"{nameof(AmazonOrderType.MCF)} | {root.merchant_order_id}" : AmazonOrderType.Labels[7];
+
+            if (State.PK.Find(invoiceEntry, root.ship_country, root.ship_state)?.GetExtension<StateExt>().UsrIsAMZWithheldTax == true)
+            {
+                invoice.TaxZoneID = "AMAZONCA";
+            }
+
+            invoiceEntry.Taxes.Cache.SetValueExt<ARTaxTran.curyTaxAmt>(invoiceEntry.Taxes.Current, root.tax);
 
             invoiceEntry.Document.Update(invoice);
 
@@ -672,25 +685,54 @@ namespace ExternalLogisticsAPI.Descripter
             shipAddress.State           = root.ship_state;
             shipAddress.PostalCode      = root.ship_postal_code;
 
-            invoiceEntry.Shipping_Address.Update(shipAddress);
+            invoiceEntry.Shipping_Address.Cache.MarkUpdated(shipAddress);
 
             string entryTypeID = null;
+            string inventoryCD = string.Empty;
 
             for (int i = 0; i < root.item.Count; i++)
             {
-                ARTran tran = invoiceEntry.Transactions.Cache.CreateInstance() as ARTran;
-
-                tran.Qty      = root.item[i].qty;
-                tran.TranDesc = root.item[i].sku;
-
-                tran = invoiceEntry.Transactions.Insert(tran);
+                ARTran tran = new ARTran();
 
                 for (int j = 0; j < root.item[i].fee.Count; j++)
                 {
                     entryTypeID = LUMAmzInterfaceAPIMaint.GetAcumaticaPymtEntryType(root.item[i].fee[j].name);
-                    
-                    tran.TranDesc     += " | " + entryTypeID;
-                    tran.CuryExtPrice += Math.Abs((decimal)root.item[i].fee[j].amount);
+
+                    tran = invoiceEntry.Transactions.Cache.CreateInstance() as ARTran;
+
+                    if (root.item[i].fee[j].type == 3)
+                    {
+                        invoiceEntry.Transactions.Cache.SetValueExt<ARTran.inventoryID>(tran, InventoryItem.UK.Find(invoiceEntry, "SHIPPING")?.InventoryID);
+                    }
+
+                    tran.Qty          = root.item[i].qty;
+                    tran.TranDesc     = $"{root.item[i].sku} | {entryTypeID} | {root.item[i].fulfillment_center_id} | {root.item[i].country} | {root.item[i].state}";
+                    tran.CuryExtPrice = Math.Abs((decimal)root.item[i].fee[j].amount);
+
+                    tran = invoiceEntry.Transactions.Insert(tran);
+                }
+
+                for (int k = 0; k < root.item[i].charge.Count; k++)
+                {
+                    tran = invoiceEntry.Transactions.Cache.CreateInstance() as ARTran;
+
+                    switch (root.item[i].charge[k].type)
+                    {
+                        case 1: // AMZChargeType.Shipping
+                            inventoryCD = "SHIPPINGHB";
+                            break;
+                        case 11: // AMZChargeType.Shipping_Tax
+                            inventoryCD = "TAXRETURN";
+                            break;
+                    }
+
+                    invoiceEntry.Transactions.Cache.SetValueExt<ARTran.inventoryID>(tran, InventoryItem.UK.Find(invoiceEntry, inventoryCD)?.InventoryID);
+
+                    tran.Qty          = root.item[i].qty;
+                    tran.TranDesc     = $"{root.item[i].sku} | {entryTypeID} | {root.item[i].fulfillment_center_id} | {root.item[i].country} | {root.item[i].state}";
+                    tran.CuryExtPrice = Math.Abs((decimal)root.item[i].charge[k].amount);
+
+                    tran = invoiceEntry.Transactions.Insert(tran);
                 }
 
                 CAEntryType entryType = CAEntryType.PK.Find(invoiceEntry, CashAccountETDetail.PK.Find(invoiceEntry, invoice.CashAccountID, entryTypeID).EntryTypeID);
@@ -700,8 +742,10 @@ namespace ExternalLogisticsAPI.Descripter
 
                 invoiceEntry.Transactions.Update(tran);
 
-                PXNoteAttribute.SetNote(invoiceEntry.Transactions.Cache, tran, $"Fulfillment Center ID {root.item[i].fulfillment_center_id}\nCarrier {root.item[i].carrier}\nTracking Nbr. {root.item[i].tracking_no}");
+                PXNoteAttribute.SetNote(invoiceEntry.Transactions.Cache, tran, $"Carrier : {root.item[i].carrier}\nTracking Nbr. : {root.item[i].tracking_no}");
             }
+
+            LUMAmzInterfaceAPIMaint.UpdateSOUserDefineFields(invoiceEntry.Document.Cache, root);
 
             invoiceEntry.Save.Press();
             invoiceEntry.releaseFromHold.Press();

@@ -121,6 +121,26 @@ namespace ExternalLogisticsAPI.Graph
 				    return "COMMISSION";
             }
         }
+
+        public static void UpdateSOUserDefineFields(PXCache cache, object obj)
+        {
+            dynamic root = obj as APILibrary.Model.Amazon_Middleware.Root;
+
+            if (root == null)
+            {
+                root = obj as APILibrary.Model.Amazon_Middleware.Root2;
+            }
+
+            cache.SetValueExt(cache.Current, PX.Objects.CS.Messages.Attribute + "TAXRATE", root.tax_rate);
+            cache.SetValueExt(cache.Current, PX.Objects.CS.Messages.Attribute + "GSTRATE", root.gst_rate);
+            cache.SetValueExt(cache.Current, PX.Objects.CS.Messages.Attribute + "HSTRATE", root.hst_rate);
+            cache.SetValueExt(cache.Current, PX.Objects.CS.Messages.Attribute + "PSTRATE", root.pst_rate);
+            cache.SetValueExt(cache.Current, PX.Objects.CS.Messages.Attribute + "QSTRATE", root.qst_rate);
+            cache.SetValueExt(cache.Current, PX.Objects.CS.Messages.Attribute + "BUYERTAXID", root.buyer_tax_registration);
+            cache.SetValueExt(cache.Current, PX.Objects.CS.Messages.Attribute + "ORITAXABLE", root.seller_tax_registration);
+            cache.SetValueExt(cache.Current, PX.Objects.CS.Messages.Attribute + "MKTPLACE", root.marketplace);
+            cache.SetValueExt(cache.Current, PX.Objects.CS.Messages.Attribute + "PAYMENTREL", root.paymentReleaseDate);
+        }
         #endregion
 
         #region Methods
@@ -154,7 +174,7 @@ namespace ExternalLogisticsAPI.Graph
 
                         if (list[i].OrderType == AmazonOrderType.MCF)
                         {
-                            ExternalAPIHelper.CreateCreditMemo(root);
+                            ExternalAPIHelper.CreateCreditMemo(root, list[i].OrderType == AmazonOrderType.FBA_RMA_CM);
                         }
                         else
                         {
@@ -251,26 +271,6 @@ namespace ExternalLogisticsAPI.Graph
 
                 ts.Complete();
             }
-        }
-
-        protected virtual void UpdateSOUserDefineFields(PXCache cache, object obj)
-        {
-            dynamic root = obj as APILibrary.Model.Amazon_Middleware.Root;
-
-            if (root == null)
-            {
-                root = obj as APILibrary.Model.Amazon_Middleware.Root2;
-            }
-
-            cache.SetValueExt(cache.Current, PX.Objects.CS.Messages.Attribute + "TAXRATE", root.tax_rate);
-            cache.SetValueExt(cache.Current, PX.Objects.CS.Messages.Attribute + "GSTRATE", root.gst_rate);
-            cache.SetValueExt(cache.Current, PX.Objects.CS.Messages.Attribute + "HSTRATE", root.hst_rate);
-            cache.SetValueExt(cache.Current, PX.Objects.CS.Messages.Attribute + "PSTRATE", root.pst_rate);
-            cache.SetValueExt(cache.Current, PX.Objects.CS.Messages.Attribute + "QSTRATE", root.qst_rate);
-            cache.SetValueExt(cache.Current, PX.Objects.CS.Messages.Attribute + "BUYERTAXID", root.buyer_tax_registration);
-            cache.SetValueExt(cache.Current, PX.Objects.CS.Messages.Attribute + "ORITAXABLE", root.seller_tax_registration);
-            cache.SetValueExt(cache.Current, PX.Objects.CS.Messages.Attribute + "MKTPLACE", root.marketplace);
-            cache.SetValueExt(cache.Current, PX.Objects.CS.Messages.Attribute + "PAYMENTREL", root.paymentReleaseDate);
         }
 
         protected virtual decimal? UpdateSOTaxAmount(SOOrderEntry orderEntry, object obj)
