@@ -122,24 +122,25 @@ namespace ExternalLogisticsAPI.Graph
             }
         }
 
-        public static void UpdateSOUserDefineFields(PXCache cache, object obj)
+        /// <summary>
+        /// Update user-defined fields by parameters.
+        /// </summary>
+        /// <param name="cache"></param>
+        /// <param name="root"></param>
+        public static void UpdateUserDefineFields(PXCache cache, dynamic root)
         {
-            dynamic root = obj as APILibrary.Model.Amazon_Middleware.Root;
-
-            if (root == null)
-            {
-                root = obj as APILibrary.Model.Amazon_Middleware.Root2;
-            }
-
-            cache.SetValueExt(cache.Current, PX.Objects.CS.Messages.Attribute + "TAXRATE", root.tax_rate);
-            cache.SetValueExt(cache.Current, PX.Objects.CS.Messages.Attribute + "GSTRATE", root.gst_rate);
-            cache.SetValueExt(cache.Current, PX.Objects.CS.Messages.Attribute + "HSTRATE", root.hst_rate);
-            cache.SetValueExt(cache.Current, PX.Objects.CS.Messages.Attribute + "PSTRATE", root.pst_rate);
-            cache.SetValueExt(cache.Current, PX.Objects.CS.Messages.Attribute + "QSTRATE", root.qst_rate);
+            cache.SetValueExt(cache.Current, PX.Objects.CS.Messages.Attribute + "TAXRATE"   , root.tax_rate);
+            cache.SetValueExt(cache.Current, PX.Objects.CS.Messages.Attribute + "GSTRATE"   , root.gst_rate);
+            cache.SetValueExt(cache.Current, PX.Objects.CS.Messages.Attribute + "HSTRATE"   , root.hst_rate);
+            cache.SetValueExt(cache.Current, PX.Objects.CS.Messages.Attribute + "PSTRATE"   , root.pst_rate);
+            cache.SetValueExt(cache.Current, PX.Objects.CS.Messages.Attribute + "QSTRATE"   , root.qst_rate);
             cache.SetValueExt(cache.Current, PX.Objects.CS.Messages.Attribute + "BUYERTAXID", root.buyer_tax_registration);
             cache.SetValueExt(cache.Current, PX.Objects.CS.Messages.Attribute + "ORITAXABLE", root.seller_tax_registration);
-            cache.SetValueExt(cache.Current, PX.Objects.CS.Messages.Attribute + "MKTPLACE", root.marketplace);
-            cache.SetValueExt(cache.Current, PX.Objects.CS.Messages.Attribute + "PAYMENTREL", root.paymentReleaseDate);
+            cache.SetValueExt(cache.Current, PX.Objects.CS.Messages.Attribute + "MKTPLACE"  , root.marketplace);
+            if (!string.IsNullOrWhiteSpace((string)root.paymentReleaseDate))
+            {
+                cache.SetValueExt(cache.Current, PX.Objects.CS.Messages.Attribute + "PAYMENTREL", root.paymentReleaseDate);
+            }
         }
         #endregion
 
@@ -161,18 +162,20 @@ namespace ExternalLogisticsAPI.Graph
                         bool noAMZFee  = list[i].OrderType.IsIn(AmazonOrderType.FBM_ShipInfo, AmazonOrderType.FBA_OI_ShipInfo, AmazonOrderType.FBM_OI_ShipInfo);
                         bool hasAMZFee = list[i].OrderType.IsIn(AmazonOrderType.FBM_AmzFee, AmazonOrderType.FBA_OI_AmzFee, AmazonOrderType.FBM_OI_AmzFee);
 
-                        dynamic root = null;
+                        //dynamic root = null;
 
-                        if (noAMZFee == true)
-                        {
-                            root = JsonConvert.DeserializeObject<APILibrary.Model.Amazon_Middleware.Root2>(list[i].Data1);
-                        }
-                        else
-                        {
-                            root = JsonConvert.DeserializeObject<APILibrary.Model.Amazon_Middleware.Root>(list[i].Data1);
-                        }
+                        //if (noAMZFee == true)
+                        //{
+                        //    root = JsonConvert.DeserializeObject<APILibrary.Model.Amazon_Middleware.Root2>(list[i].Data1);
+                        //}
+                        //else
+                        //{
+                        //    root = JsonConvert.DeserializeObject<APILibrary.Model.Amazon_Middleware.Root>(list[i].Data1);
+                        //}
 
-                        if (list[i].OrderType == AmazonOrderType.MCF)
+                        dynamic root = JsonConvert.DeserializeObject(list[i].Data1);
+                        
+                        if (list[i].OrderType.IsIn(AmazonOrderType.MCF, AmazonOrderType.FBA_RMA_CM))
                         {
                             ExternalAPIHelper.CreateCreditMemo(root, list[i].OrderType == AmazonOrderType.FBA_RMA_CM);
                         }
@@ -186,9 +189,9 @@ namespace ExternalLogisticsAPI.Graph
 
                                 order = orderEntry.Document.Insert(order);
 
-                                order.CustomerID = Customer.UK.Find(orderEntry, "SELLERCENTRAL").BAccountID;
-                                order.OrderDate = DateTime.Parse(root.payments_date);
-                                order.RequestDate = string.IsNullOrEmpty(root.item[0]?.shipment_date) ? order.RequestDate : DateTime.Parse(root.item[0]?.shipment_date);
+                                order.CustomerID       = Customer.UK.Find(orderEntry, "SELLERCENTRAL").BAccountID;
+                                order.OrderDate        = string.IsNullOrWhiteSpace((string)root.payments_date) ? order.OrderDate : root.payments_date;
+                                order.RequestDate      = string.IsNullOrWhiteSpace((string)root.item[0]?.shipment_date) ? order.RequestDate : root.item[0]?.shipment_date;
                                 order.CustomerOrderNbr = root.amazon_order_id;
 
                                 orderEntry.Document.Cache.SetValue<SOOrderExt.usrAPIOrderType>(order, list[i].OrderType);
@@ -205,15 +208,15 @@ namespace ExternalLogisticsAPI.Graph
 
                                 foreach (SOLine line in orderEntry.Transactions.Select())
                                 {
-                                    line.GetExtension<SOLineExt>().UsrCarrier = root.item[line.SortOrder.Value - 1].carrier;
+                                    line.GetExtension<SOLineExt>().UsrCarrier     = root.item[line.SortOrder.Value - 1].carrier;
                                     line.GetExtension<SOLineExt>().UsrTrackingNbr = root.item[line.SortOrder.Value - 1].tracking_no;
 
                                     orderEntry.Transactions.Update(line);
                                 }
                             }
 
-                            string country = root.item[0]?.country;
-                            string state = root.item[0]?.state;
+                            string country  = root.item[0]?.country;
+                            string state    = root.item[0]?.state;
                             string currency = root.item[0]?.currency;
 
                             if ((country == "US" && State.PK.Find(this, country, state)?.GetExtension<StateExt>().UsrIsAMZWithheldTax == true) ||
@@ -234,10 +237,10 @@ namespace ExternalLogisticsAPI.Graph
                             orderEntry.Document.Update(order);
                             ///</remarks>
 
-                            order.CuryTaxTotal = UpdateSOTaxAmount(orderEntry, root);
+                            order.CuryTaxTotal   = UpdateSOTaxAmount(orderEntry, root);
                             order.CuryOrderTotal = hasAMZFee == false ? (order.CuryOrderTotal + order.CuryTaxTotal) : order.CuryOrderTotal;
 
-                            UpdateSOUserDefineFields(orderEntry.Document.Cache, root);
+                            UpdateUserDefineFields(orderEntry.Document.Cache, root);
 
                             orderEntry.Save.Press();
 
@@ -273,17 +276,8 @@ namespace ExternalLogisticsAPI.Graph
             }
         }
 
-        protected virtual decimal? UpdateSOTaxAmount(SOOrderEntry orderEntry, object obj)
+        protected virtual decimal? UpdateSOTaxAmount(SOOrderEntry orderEntry, dynamic root)
         {
-            dynamic root = obj as APILibrary.Model.Amazon_Middleware.Root;
-
-            if (root == null)
-            {
-                root = obj as APILibrary.Model.Amazon_Middleware.Root2;
-            }
-
-            decimal? totalTax = 0m;
-
             if (root.item[0].country == "CA")
             {
                 foreach (SOTaxTran row in orderEntry.Taxes.Cache.Inserted)
@@ -304,16 +298,14 @@ namespace ExternalLogisticsAPI.Graph
                             break;
                     }
                 }
-                totalTax = (decimal)(root.gst + root.hst + root.pst + root.qst);
+                return (decimal)(root.gst + root.hst + root.pst + root.qst);
             }
             else
             {
                 orderEntry.Taxes.Cache.SetValueExt<SOTaxTran.curyTaxAmt>(orderEntry.Taxes.Current, root.tax);
 
-                totalTax = (decimal)root.tax;
+                return (decimal)root.tax;
             }
-
-            return totalTax;
         }
         #endregion
     }

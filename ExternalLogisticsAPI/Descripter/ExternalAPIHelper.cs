@@ -217,20 +217,13 @@ namespace ExternalLogisticsAPI.Descripter
         /// <summary>
         /// Generate sales order line from AMZ interface.
         /// </summary>
-        public static void CreateOrderDetail(SOOrderEntry orderEntry, object obj)
+        public static void CreateOrderDetail(SOOrderEntry orderEntry, dynamic root)
         {
-            dynamic root = obj as APILibrary.Model.Amazon_Middleware.Root;
-
-            if (root == null)
-            {
-                root = obj as APILibrary.Model.Amazon_Middleware.Root2;
-            }
-
             for (int i = 0; i < root.item.Count; i++)
             {
                 SOLine line = orderEntry.Transactions.Cache.CreateInstance() as SOLine;
 
-                line.InventoryID   = InventoryItem.UK.Find(orderEntry, root.item[i].sku).InventoryID;
+                line.InventoryID   = InventoryItem.UK.Find(orderEntry, (string)root.item[i].sku).InventoryID;
                 line.OrderQty      = root.item[i].qty;
                 line.CuryUnitPrice = (decimal)root.item[i].unit_price;
 
@@ -244,7 +237,7 @@ namespace ExternalLogisticsAPI.Descripter
 
                 for (int j = 0; j < root.item[i].charge.Count; j++)
                 {
-                    switch (root.item[i].charge[j].type)
+                    switch ((int)root.item[i].charge[j].type)
                     {
                         case (int)AMZChargeType.Discount:
                             line.CuryDiscAmt = (line.CuryDiscAmt ?? 0m) + Math.Abs((decimal)root.item[i].charge[j].amount);
@@ -380,51 +373,58 @@ namespace ExternalLogisticsAPI.Descripter
         /// <summary>
         /// Override billing, shipping contact & address from AMZ interface.
         /// </summary>
-        public static void UpdateSOContactAddress(SOOrderEntry orderEntry, object obj)
+        public static void UpdateSOContactAddress(SOOrderEntry orderEntry, dynamic root)
         {
-            dynamic root = obj as APILibrary.Model.Amazon_Middleware.Root;
-
-            if (root == null)
+            if (!string.IsNullOrWhiteSpace((string)root.buyer_email))
             {
-                root = obj as APILibrary.Model.Amazon_Middleware.Root2;
+                SOBillingContact billContact = orderEntry.Billing_Contact.Select();
+
+                billContact.OverrideContact = true;
+                billContact.FullName        = root.buyer_name;
+                billContact.Email           = root.buyer_email;
+
+                orderEntry.Billing_Contact.Update(billContact);
             }
 
-            SOBillingContact billContact = orderEntry.Billing_Contact.Select();
-            SOBillingAddress billAddress = orderEntry.Billing_Address.Select();
+            if (!string.IsNullOrWhiteSpace((string)root.bill_country))
+            {
+                SOBillingAddress billAddress = orderEntry.Billing_Address.Select();
 
-            billContact.OverrideContact = true;
-            billContact.FullName        = root.buyer_name;
-            billContact.Email           = root.buyer_email;
+                billAddress.OverrideAddress = true;
+                billAddress.AddressLine1    = ((string)root.bill_address).Length <= 50 ? root.bill_address : ((string)root.bill_address).Substring(0, 50);
+                billAddress.AddressLine2    = ((string)root.bill_address).Length <= 50 ? null : ((string)root.bill_address).Substring(51);
+                billAddress.City            = root.bill_city;
+                billAddress.CountryID       = billAddress.CountryID;
+                billAddress.PostalCode      = root.bill_postal_code;
+                billAddress.State           = root.bill_state;
 
-            orderEntry.Billing_Contact.Update(billContact);
+                orderEntry.Billing_Address.Update(billAddress);
+            }
 
-            billAddress.OverrideAddress = true;
-            billAddress.AddressLine1    = (root.bill_address.Length <= 50) ? root.bill_address : root.bill_address.Substring(0, 50);
-            billAddress.AddressLine2    = (root.bill_address.Length <= 50) ? null : root.bill_address.Substring(51);
-            billAddress.City            = root.bill_city;
-            billAddress.CountryID       = string.IsNullOrEmpty(root.bill_country) ? billAddress.CountryID : root.bill_country;
-            billAddress.PostalCode      = root.bill_postal_code;
-            billAddress.State           = root.bill_state;
+            if (!string.IsNullOrWhiteSpace((string)root.recipient_name))
+            {
+                SOShippingContact shipContact = orderEntry.Shipping_Contact.Select();
 
-            orderEntry.Billing_Address.Update(billAddress);
+                shipContact.OverrideContact = true;
+                shipContact.FullName        = root.recipient_name;
 
-            SOShippingContact shipContact = orderEntry.Shipping_Contact.Select();
-            SOShippingAddress shipAddress = orderEntry.Shipping_Address.Select();
+                orderEntry.Shipping_Contact.Update(shipContact);
+            }
 
-            shipContact.OverrideContact = true;
-            shipContact.FullName        = root.recipient_name;
+            if (!string.IsNullOrWhiteSpace((string)root.ship_city))
+            {
+                SOShippingAddress shipAddress = orderEntry.Shipping_Address.Select();
 
-            orderEntry.Shipping_Contact.Update(shipContact);
+                shipAddress.OverrideAddress = true;
+                shipAddress.AddressLine1    = ((string)root.ship_address).Length <= 50 ? root.ship_address : ((string)root.ship_address).Substring(0, 50);
+                shipAddress.AddressLine2    = ((string)root.ship_address).Length <= 50 ? null : ((string)root.ship_address).Substring(51);
+                shipAddress.City            = root.ship_city;
+                shipAddress.CountryID       = root.ship_country;
+                shipAddress.PostalCode      = root.ship_postal_code;
+                shipAddress.State           = root.ship_state;
 
-            shipAddress.OverrideAddress = true;
-            shipAddress.AddressLine1    = (root.ship_address.Length <= 50) ? root.ship_address : root.ship_address.Substring(0, 50);
-            shipAddress.AddressLine2    = (root.ship_address.Length <= 50) ? null : root.ship_address.Substring(51);
-            shipAddress.City            = root.ship_city;
-            shipAddress.CountryID       = root.ship_country;
-            shipAddress.PostalCode      = root.ship_postal_code;
-            shipAddress.State           = root.ship_state;
-
-            orderEntry.Shipping_Address.Update(shipAddress);
+                orderEntry.Shipping_Address.Update(shipAddress);
+            }
         }
 
         /// <summary>
@@ -516,19 +516,8 @@ namespace ExternalLogisticsAPI.Descripter
         /// <summary>
         /// Manually create AR payment and related to specified sales order from AMZ interface.
         /// </summary>
-        public static void CreatePaymentProcess(SOOrder order, object obj, decimal? recipRate)
+        public static void CreatePaymentProcess(SOOrder order, dynamic root, decimal? recipRate)
         {
-            dynamic root = obj as APILibrary.Model.Amazon_Middleware.Root;
-
-            bool hasAMZFee = false;
-
-            if (root == null)
-            {
-                root = obj as APILibrary.Model.Amazon_Middleware.Root2;
-
-                hasAMZFee = true;
-            }
-
             ARPaymentEntry pymtEntry = PXGraph.CreateInstance<ARPaymentEntry>();
 
             ARPayment payment = new ARPayment()
@@ -545,7 +534,7 @@ namespace ExternalLogisticsAPI.Descripter
             payment.CuryOrigDocAmt     = 0m;
             payment.ExtRefNbr          = order.CustomerRefNbr ?? order.CustomerOrderNbr;
             payment.DocDesc            = $"{order.CuryID} EX-Rate = {recipRate}";
-            payment.AdjDate            = (hasAMZFee == true && root.paymentReleaseDate != null) ? DateTime.Parse(root.paymentReleaseDate) : order.OrderDate;
+            payment.AdjDate            = order.OrderDate;
 
             payment = pymtEntry.Document.Update(payment);
 
@@ -565,8 +554,8 @@ namespace ExternalLogisticsAPI.Descripter
                     {
                         ARPaymentChargeTran chargeTran = pymtEntry.PaymentCharges.Cache.CreateInstance() as ARPaymentChargeTran;
 
-                        chargeTran.EntryTypeID = LUMAmzInterfaceAPIMaint.GetAcumaticaPymtEntryType(root.item[i].fee[j].name);
-                        chargeTran.CuryTranAmt = Math.Round((decimal)Math.Abs(root.item[i].fee[j].amount) * recipRate.Value, 4);
+                        chargeTran.EntryTypeID = LUMAmzInterfaceAPIMaint.GetAcumaticaPymtEntryType((string)root.item[i].fee[j].name);
+                        chargeTran.CuryTranAmt = Math.Round(Math.Abs((decimal)root.item[i].fee[j].amount) * recipRate.Value, 4);
 
                         pymtEntry.PaymentCharges.Insert(chargeTran);
                     }
@@ -642,10 +631,8 @@ namespace ExternalLogisticsAPI.Descripter
         /// <param name="orderID"></param>
         //public static void Update3DCartOrderStatus(LUM3DCartSetup curSetup, int orderID) => GetResponse(curSetup, string.Format("3dCartWebAPI/v2/Orders/{0}", orderID), true);
 
-        public static void CreateCreditMemo(object obj, bool isRMA = false)
+        public static void CreateCreditMemo(dynamic root, bool isRMA = false)
         {
-            var root = obj as APILibrary.Model.Amazon_Middleware.Root;
-
             ARInvoiceEntry invoiceEntry = PXGraph.CreateInstance<ARInvoiceEntry>();
 
             ARInvoice invoice = new ARInvoice()
@@ -656,11 +643,11 @@ namespace ExternalLogisticsAPI.Descripter
             invoice = invoiceEntry.Document.Insert(invoice);
 
             invoice.CustomerID = Customer.UK.Find(invoiceEntry, "SELLERCENTRAL").BAccountID;
-            invoice.DocDate    = string.IsNullOrEmpty(root.item[0]?.shipment_date) ? invoice.DocDate : DateTime.Parse(root.item[0]?.shipment_date);
+            invoice.DocDate    = string.IsNullOrWhiteSpace((string)root.item[0]?.shipment_date) ? invoice.DocDate : root.item[0]?.shipment_date;
             invoice.InvoiceNbr = root.amazon_order_id;
             invoice.DocDesc    = isRMA == false ? $"{nameof(AmazonOrderType.MCF)} | {root.merchant_order_id}" : AmazonOrderType.Labels[7];
 
-            if (State.PK.Find(invoiceEntry, root.ship_country, root.ship_state)?.GetExtension<StateExt>().UsrIsAMZWithheldTax == true)
+            if (State.PK.Find(invoiceEntry, (string)root.ship_country, (string)root.ship_state)?.GetExtension<StateExt>().UsrIsAMZWithheldTax == true)
             {
                 invoice.TaxZoneID = "AMAZONCA";
             }
@@ -669,23 +656,29 @@ namespace ExternalLogisticsAPI.Descripter
 
             invoiceEntry.Document.Update(invoice);
 
-            ARShippingContact shipContact = invoiceEntry.Shipping_Contact.Select();
+            if (!string.IsNullOrWhiteSpace((string)root.recipient_name))
+            {
+                ARShippingContact shipContact = invoiceEntry.Shipping_Contact.Select();
 
-            shipContact.OverrideContact = true;
-            shipContact.FullName        = root.recipient_name;
+                shipContact.OverrideContact = true;
+                shipContact.FullName        = root.recipient_name;
 
-            invoiceEntry.Shipping_Contact.Cache.MarkUpdated(shipContact);
+                invoiceEntry.Shipping_Contact.Cache.MarkUpdated(shipContact);
+            }
 
-            ARShippingAddress shipAddress = invoiceEntry.Shipping_Address.Select();
+            if (!string.IsNullOrWhiteSpace((string)root.ship_country))
+            {
+                ARShippingAddress shipAddress = invoiceEntry.Shipping_Address.Select();
 
-            shipAddress.OverrideAddress = true;
-            shipAddress.AddressLine1    = root.ship_address;
-            shipAddress.City            = root.ship_city;
-            shipAddress.CountryID       = root.ship_country;
-            shipAddress.State           = root.ship_state;
-            shipAddress.PostalCode      = root.ship_postal_code;
+                shipAddress.OverrideAddress = true;
+                shipAddress.AddressLine1    = root.ship_address;
+                shipAddress.City            = root.ship_city;
+                shipAddress.CountryID       = root.ship_country;
+                shipAddress.State           = root.ship_state;
+                shipAddress.PostalCode      = root.ship_postal_code;
 
-            invoiceEntry.Shipping_Address.Cache.MarkUpdated(shipAddress);
+                invoiceEntry.Shipping_Address.Cache.MarkUpdated(shipAddress);
+            }
 
             string entryTypeID = null;
             string inventoryCD = string.Empty;
@@ -696,11 +689,11 @@ namespace ExternalLogisticsAPI.Descripter
 
                 for (int j = 0; j < root.item[i].fee.Count; j++)
                 {
-                    entryTypeID = LUMAmzInterfaceAPIMaint.GetAcumaticaPymtEntryType(root.item[i].fee[j].name);
+                    entryTypeID = LUMAmzInterfaceAPIMaint.GetAcumaticaPymtEntryType((string)root.item[i].fee[j].name);
 
                     tran = invoiceEntry.Transactions.Cache.CreateInstance() as ARTran;
 
-                    if (root.item[i].fee[j].type == 3)
+                    if ((int)root.item[i].fee[j].type == 3)
                     {
                         invoiceEntry.Transactions.Cache.SetValueExt<ARTran.inventoryID>(tran, InventoryItem.UK.Find(invoiceEntry, "SHIPPING")?.InventoryID);
                     }
@@ -716,7 +709,7 @@ namespace ExternalLogisticsAPI.Descripter
                 {
                     tran = invoiceEntry.Transactions.Cache.CreateInstance() as ARTran;
 
-                    switch (root.item[i].charge[k].type)
+                    switch ((int)root.item[i].charge[k].type)
                     {
                         case 1: // AMZChargeType.Shipping
                             inventoryCD = "SHIPPINGHB";
@@ -745,7 +738,7 @@ namespace ExternalLogisticsAPI.Descripter
                 PXNoteAttribute.SetNote(invoiceEntry.Transactions.Cache, tran, $"Carrier : {root.item[i].carrier}\nTracking Nbr. : {root.item[i].tracking_no}");
             }
 
-            LUMAmzInterfaceAPIMaint.UpdateSOUserDefineFields(invoiceEntry.Document.Cache, root);
+            LUMAmzInterfaceAPIMaint.UpdateUserDefineFields(invoiceEntry.Document.Cache, root);
 
             invoiceEntry.Save.Press();
             invoiceEntry.releaseFromHold.Press();
