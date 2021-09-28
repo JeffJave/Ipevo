@@ -79,6 +79,10 @@ namespace ExternalLogisticsAPI.Graph
                 case AmazonOrderType.FBM_OI_AmzFee:
                     sOType = "FM";
                     break;
+                case AmazonOrderType.RestockingFee:
+                case AmazonOrderType.Reimbursement:
+                    sOType = "IN";
+                    break;
             }
 
             return sOType;
@@ -139,7 +143,7 @@ namespace ExternalLogisticsAPI.Graph
             cache.SetValueExt(cache.Current, PX.Objects.CS.Messages.Attribute + "MKTPLACE"  , root.marketplace);
             if (!string.IsNullOrWhiteSpace((string)root.paymentReleaseDate))
             {
-                cache.SetValueExt(cache.Current, PX.Objects.CS.Messages.Attribute + "PAYMENTREL", root.paymentReleaseDate);
+                cache.SetValueExt(cache.Current, PX.Objects.CS.Messages.Attribute + "PAYMENTREL", (DateTime)root.paymentReleaseDate);
             }
         }
         #endregion
@@ -159,20 +163,6 @@ namespace ExternalLogisticsAPI.Graph
 
                     try
                     {
-                        bool noAMZFee  = list[i].OrderType.IsIn(AmazonOrderType.FBM_ShipInfo, AmazonOrderType.FBA_OI_ShipInfo, AmazonOrderType.FBM_OI_ShipInfo);
-                        bool hasAMZFee = list[i].OrderType.IsIn(AmazonOrderType.FBM_AmzFee, AmazonOrderType.FBA_OI_AmzFee, AmazonOrderType.FBM_OI_AmzFee);
-
-                        //dynamic root = null;
-
-                        //if (noAMZFee == true)
-                        //{
-                        //    root = JsonConvert.DeserializeObject<APILibrary.Model.Amazon_Middleware.Root2>(list[i].Data1);
-                        //}
-                        //else
-                        //{
-                        //    root = JsonConvert.DeserializeObject<APILibrary.Model.Amazon_Middleware.Root>(list[i].Data1);
-                        //}
-
                         dynamic root = JsonConvert.DeserializeObject(list[i].Data1);
                         
                         if (list[i].OrderType.IsIn(AmazonOrderType.MCF, AmazonOrderType.FBA_RMA_CM))
@@ -181,6 +171,10 @@ namespace ExternalLogisticsAPI.Graph
                         }
                         else
                         {
+                            bool noAMZFee  = list[i].OrderType.IsIn(AmazonOrderType.FBM_ShipInfo, AmazonOrderType.FBA_OI_ShipInfo, AmazonOrderType.FBM_OI_ShipInfo);
+                            bool hasAMZFee = list[i].OrderType.IsIn(AmazonOrderType.FBM_AmzFee, AmazonOrderType.FBA_OI_AmzFee, AmazonOrderType.FBM_OI_AmzFee);
+                            bool isRSFee   = list[i].OrderType == AmazonOrderType.RestockingFee;
+
                             SOOrder order = orderEntry.Document.Cache.CreateInstance() as SOOrder;
 
                             if (hasAMZFee == false)
@@ -190,15 +184,18 @@ namespace ExternalLogisticsAPI.Graph
                                 order = orderEntry.Document.Insert(order);
 
                                 order.CustomerID       = Customer.UK.Find(orderEntry, "SELLERCENTRAL").BAccountID;
-                                order.OrderDate        = string.IsNullOrWhiteSpace((string)root.payments_date) ? order.OrderDate : root.payments_date;
-                                order.RequestDate      = string.IsNullOrWhiteSpace((string)root.item[0]?.shipment_date) ? order.RequestDate : root.item[0]?.shipment_date;
-                                order.CustomerOrderNbr = root.amazon_order_id;
-
-                                orderEntry.Document.Cache.SetValue<SOOrderExt.usrAPIOrderType>(order, list[i].OrderType);
+                                order.OrderDate        = isRSFee == true ? root.return_date : list[i].OrderType == AmazonOrderType.Reimbursement ? root.item[0].approval_date : root.payments_date;
+                                order.RequestDate      = list[i].OrderType.IsIn(AmazonOrderType.RestockingFee, AmazonOrderType.Reimbursement) ? order.OrderDate : string.IsNullOrWhiteSpace((string)root.item[0]?.shipment_date) ? order.RequestDate : root.item[0]?.shipment_date;
+                                order.CustomerOrderNbr = list[i].OrderNbr;
+                                order.OrderDesc        = list[i].OrderType == AmazonOrderType.Reimbursement ? $"{root.item[0].sku} | {root.item[0].reason} | {root.item[0].condition} | {root.item[0].fnsku}" : null;
 
                                 orderEntry.Document.Update(order);
 
-                                ExternalAPIHelper.UpdateSOContactAddress(orderEntry, root);
+                                if (isRSFee == false)
+                                {
+                                    ExternalAPIHelper.UpdateSOContactAddress(orderEntry, root);
+                                }
+
                                 ExternalAPIHelper.CreateOrderDetail(orderEntry, root);
                             }
                             else
@@ -215,9 +212,11 @@ namespace ExternalLogisticsAPI.Graph
                                 }
                             }
 
-                            string country  = root.item[0]?.country;
-                            string state    = root.item[0]?.state;
-                            string currency = root.item[0]?.currency;
+                            orderEntry.Document.Cache.SetValue<SOOrderExt.usrAPIOrderType>(order, list[i].OrderType);
+
+                            string country  = root.item?[0].country;
+                            string state    = root.item?[0].state;
+                            string currency = root.item?[0].currency;
 
                             if ((country == "US" && State.PK.Find(this, country, state)?.GetExtension<StateExt>().UsrIsAMZWithheldTax == true) ||
                                 (country == "CA" && root.marketplaceWithheldTax != 0))
@@ -226,15 +225,18 @@ namespace ExternalLogisticsAPI.Graph
                                 order.TaxZoneID = "AMAZONCA";
                             }
 
-                            if (currency != order.CuryID && currency != "CDN")
+                            if (!string.IsNullOrEmpty(currency) && currency != order.CuryID && currency != "CDN")
                             {
                                 orderEntry.Document.Cache.SetValueExt<SOOrder.curyID>(order, currency);
                             }
 
                             ///<remarks> 
                             ///Becuase the standard tax calculation logic write in SOOrder_RowUpdate event which means I must use the following approach.
-                            order.CuryPremiumFreightAmt = (decimal)root.shipment;
-                            orderEntry.Document.Update(order);
+                            if (root.shipment != null)
+                            {
+                                order.CuryPremiumFreightAmt = root.shipment;
+                                orderEntry.Document.Update(order);
+                            }
                             ///</remarks>
 
                             order.CuryTaxTotal   = UpdateSOTaxAmount(orderEntry, root);
@@ -255,7 +257,7 @@ namespace ExternalLogisticsAPI.Graph
                                 orderEntry.Save.Press();
                             }
 
-                            if (noAMZFee == false || hasAMZFee == true)
+                            if ((noAMZFee == false || hasAMZFee == true) && order.CuryOrderTotal > 0)
                             {
                                 ExternalAPIHelper.CreatePaymentProcess(order, root, curyInfo.CuryMultDiv == CuryMultDivType.Div ? curyInfo.RecipRate : curyInfo.CuryRate);
                             }
@@ -278,34 +280,37 @@ namespace ExternalLogisticsAPI.Graph
 
         protected virtual decimal? UpdateSOTaxAmount(SOOrderEntry orderEntry, dynamic root)
         {
-            if (root.item[0].country == "CA")
-            {
-                foreach (SOTaxTran row in orderEntry.Taxes.Cache.Inserted)
-                {
-                    switch (row.TaxID)
-                    {
-                        case "AMAZONGST":
-                            orderEntry.Taxes.Cache.SetValueExt<SOTaxTran.curyTaxAmt>(row, root.gst);
-                            break;
-                        case "AMAZONHST":
-                            orderEntry.Taxes.Cache.SetValueExt<SOTaxTran.curyTaxAmt>(row, root.hst);
-                            break;
-                        case "AMAZONPST":
-                            orderEntry.Taxes.Cache.SetValueExt<SOTaxTran.curyTaxAmt>(row, root.pst);
-                            break;
-                        case "AMAZONQST":
-                            orderEntry.Taxes.Cache.SetValueExt<SOTaxTran.curyTaxAmt>(row, root.qst);
-                            break;
-                    }
-                }
-                return (decimal)(root.gst + root.hst + root.pst + root.qst);
-            }
-            else
-            {
-                orderEntry.Taxes.Cache.SetValueExt<SOTaxTran.curyTaxAmt>(orderEntry.Taxes.Current, root.tax);
+            decimal totalTax = orderEntry.Document.Current.CuryTaxTotal.Value;
 
-                return (decimal)root.tax;
+            foreach (SOTaxTran row in orderEntry.Taxes.Cache.Inserted)
+            {
+                switch (row.TaxID)
+                {
+                    case "AMAZONGST":
+                        orderEntry.Taxes.Cache.SetValueExt<SOTaxTran.curyTaxAmt>(row, root.gst);
+                        totalTax += (decimal)root.gst;
+                        break;
+                    case "AMAZONHST":
+                        orderEntry.Taxes.Cache.SetValueExt<SOTaxTran.curyTaxAmt>(row, root.hst);
+                        totalTax += (decimal)root.hst;
+                        break;
+                    case "AMAZONPST":
+                        orderEntry.Taxes.Cache.SetValueExt<SOTaxTran.curyTaxAmt>(row, root.pst);
+                        totalTax += (decimal)root.pst;
+                        break;
+                    case "AMAZONQST":
+                        orderEntry.Taxes.Cache.SetValueExt<SOTaxTran.curyTaxAmt>(row, root.qst);
+                        totalTax += (decimal)root.qst;
+                        break;
+                    default:
+                        orderEntry.Taxes.Cache.SetValueExt<SOTaxTran.curyTaxAmt>(row, root.tax);
+                        totalTax += (decimal)root.tax;
+                        break;
+                }
             }
+
+            return totalTax;
+            //if (root.item[0].country == "CA" || (decimal)root.restocking_fee > 0)
         }
         #endregion
     }
