@@ -154,7 +154,7 @@ namespace PX.Objects.SO
         #endregion
 
         #region UsrCarrier
-        [PXDBString(10, IsUnicode = true)]
+        [PXDBString(15, IsUnicode = true)]
         [PXUIField(DisplayName = "Carrier")]
         public virtual string UsrCarrier { get; set; }
         public abstract class usrCarrier : PX.Data.BQL.BqlString.Field<usrCarrier> { }
