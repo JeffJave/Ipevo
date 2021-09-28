@@ -219,81 +219,91 @@ namespace ExternalLogisticsAPI.Descripter
         /// </summary>
         public static void CreateOrderDetail(SOOrderEntry orderEntry, dynamic root)
         {
-            for (int i = 0; i < root.item.Count; i++)
+            for (int i = 0; i < root.item?.Count; i++)
             {
                 SOLine line = orderEntry.Transactions.Cache.CreateInstance() as SOLine;
 
-                line.InventoryID   = InventoryItem.UK.Find(orderEntry, (string)root.item[i].sku).InventoryID;
-                line.OrderQty      = root.item[i].qty;
-                line.CuryUnitPrice = (decimal)root.item[i].unit_price;
-
-                SOLineExt lineExt = line.GetExtension<SOLineExt>();
-
-                lineExt.UsrFulfillmentCenter = root.item[i].fulfillment_center_id;
-                lineExt.UsrShipFromCountryID = root.item[i].country;
-                lineExt.UsrShipFromState     = root.item[i].state;
-                lineExt.UsrCarrier           = root.item[i].carrier;
-                lineExt.UsrTrackingNbr       = root.item[i].tracking_no;
-
-                for (int j = 0; j < root.item[i].charge.Count; j++)
+                if (root.item[i].reimbursement_id == null)
                 {
-                    switch ((int)root.item[i].charge[j].type)
+                    line.InventoryID   = InventoryItem.UK.Find(orderEntry, (string)root.item[i].sku).InventoryID;
+                    line.OrderQty      = root.item[i].qty;
+                    line.CuryUnitPrice = root.item[i].unit_price;
+
+                    SOLineExt lineExt = line.GetExtension<SOLineExt>();
+
+                    lineExt.UsrFulfillmentCenter = root.item[i].fulfillment_center_id;
+                    lineExt.UsrShipFromCountryID = root.item[i].country;
+                    lineExt.UsrShipFromState     = root.item[i].state;
+                    lineExt.UsrCarrier           = root.item[i].carrier;
+                    lineExt.UsrTrackingNbr       = root.item[i].tracking_no;
+
+                    for (int j = 0; j < root.item[i].charge.Count; j++)
                     {
-                        case (int)AMZChargeType.Discount:
-                            line.CuryDiscAmt = (line.CuryDiscAmt ?? 0m) + Math.Abs((decimal)root.item[i].charge[j].amount);
-                            break;
-                        case (int)AMZChargeType.Shipping_Tax:
-                            lineExt.UsrFreightTaxAmt = (decimal)root.item[i].charge[j].amount;
-                            break;
-                        case (int)AMZChargeType.Gift_Wrap_Tax:
-                            lineExt.UsrGiftwrapTaxAmt = (decimal)root.item[i].charge[j].amount;
-                            break;
-                        case (int)AMZChargeType.Item_Tax:
-                            lineExt.UsrItemTaxAmt    = (decimal)root.item[i].charge[j].amount;
-                            lineExt.UsrAmazWHTaxAmt  = -lineExt.UsrItemTaxAmt;
-                            break;
-                        case (int)AMZChargeType.GST_Shipping_Tax:
-                            lineExt.UsrFrtGSTTaxAmt = (decimal)root.item[i].charge[j].amount;
-                            break;
-                        case (int)AMZChargeType.GST_Gift_Wrap_Tax:
-                            lineExt.UsrGWGSTTaxAmt = (decimal)root.item[i].charge[j].amount;
-                            break;
-                        case (int)AMZChargeType.GST_Item_Tax:
-                            lineExt.UsrItemGSTTaxAmt = (decimal)root.item[i].charge[j].amount;
-                            break;
-                        case (int)AMZChargeType.HST_Shipping_Tax:
-                            lineExt.UsrFrtHSTTaxAmt = (decimal)root.item[i].charge[j].amount;
-                            break;
-                        case (int)AMZChargeType.HST_Gift_Wrap_Tax:
-                            lineExt.UsrGWHSTTaxAmt = (decimal)root.item[i].charge[j].amount;
-                            break;
-                        case (int)AMZChargeType.HST_Item_Tax:
-                            lineExt.UsrItemHSTTaxAmt = (decimal)root.item[i].charge[j].amount;
-                            break;
-                        case (int)AMZChargeType.QST_Shipping_Tax:
-                            lineExt.UsrFrtQSTTaxAmt = (decimal)root.item[i].charge[j].amount;
-                            break;
-                        case (int)AMZChargeType.QST_Gift_Wrap_Tax:
-                            lineExt.UsrGWQSTTaxAmt = (decimal)root.item[i].charge[j].amount;
-                            break;
-                        case (int)AMZChargeType.QST_Item_Tax:
-                            lineExt.UsrItemQSTTaxAmt = (decimal)root.item[i].charge[j].amount;
-                            break;
-                        case (int)AMZChargeType.PST_Shipping_Tax:
-                            lineExt.UsrFrtPSTTaxAmt = (decimal)root.item[i].charge[j].amount;
-                            break;
-                        case (int)AMZChargeType.PST_Gift_Wrap_Tax:
-                            lineExt.UsrGWPSTTaxAmt = (decimal)root.item[i].charge[j].amount;
-                            break;
-                        case (int)AMZChargeType.PST_Item_Tax:
-                            lineExt.UsrItemPSTTaxAmt = (decimal)root.item[i].charge[j].amount;
-                            break;
+                        switch ((int)root.item[i].charge[j].type)
+                        {
+                            case (int)AMZChargeType.Discount:
+                                line.CuryDiscAmt = (line.CuryDiscAmt ?? 0m) + Math.Abs((decimal)root.item[i].charge[j].amount);
+                                break;
+                            case (int)AMZChargeType.Shipping_Tax:
+                                lineExt.UsrFreightTaxAmt = (decimal)root.item[i].charge[j].amount;
+                                break;
+                            case (int)AMZChargeType.Gift_Wrap_Tax:
+                                lineExt.UsrGiftwrapTaxAmt = (decimal)root.item[i].charge[j].amount;
+                                break;
+                            case (int)AMZChargeType.Item_Tax:
+                                lineExt.UsrItemTaxAmt = (decimal)root.item[i].charge[j].amount;
+                                lineExt.UsrAmazWHTaxAmt = -lineExt.UsrItemTaxAmt;
+                                break;
+                            case (int)AMZChargeType.GST_Shipping_Tax:
+                                lineExt.UsrFrtGSTTaxAmt = (decimal)root.item[i].charge[j].amount;
+                                break;
+                            case (int)AMZChargeType.GST_Gift_Wrap_Tax:
+                                lineExt.UsrGWGSTTaxAmt = (decimal)root.item[i].charge[j].amount;
+                                break;
+                            case (int)AMZChargeType.GST_Item_Tax:
+                                lineExt.UsrItemGSTTaxAmt = (decimal)root.item[i].charge[j].amount;
+                                break;
+                            case (int)AMZChargeType.HST_Shipping_Tax:
+                                lineExt.UsrFrtHSTTaxAmt = (decimal)root.item[i].charge[j].amount;
+                                break;
+                            case (int)AMZChargeType.HST_Gift_Wrap_Tax:
+                                lineExt.UsrGWHSTTaxAmt = (decimal)root.item[i].charge[j].amount;
+                                break;
+                            case (int)AMZChargeType.HST_Item_Tax:
+                                lineExt.UsrItemHSTTaxAmt = (decimal)root.item[i].charge[j].amount;
+                                break;
+                            case (int)AMZChargeType.QST_Shipping_Tax:
+                                lineExt.UsrFrtQSTTaxAmt = (decimal)root.item[i].charge[j].amount;
+                                break;
+                            case (int)AMZChargeType.QST_Gift_Wrap_Tax:
+                                lineExt.UsrGWQSTTaxAmt = (decimal)root.item[i].charge[j].amount;
+                                break;
+                            case (int)AMZChargeType.QST_Item_Tax:
+                                lineExt.UsrItemQSTTaxAmt = (decimal)root.item[i].charge[j].amount;
+                                break;
+                            case (int)AMZChargeType.PST_Shipping_Tax:
+                                lineExt.UsrFrtPSTTaxAmt = (decimal)root.item[i].charge[j].amount;
+                                break;
+                            case (int)AMZChargeType.PST_Gift_Wrap_Tax:
+                                lineExt.UsrGWPSTTaxAmt = (decimal)root.item[i].charge[j].amount;
+                                break;
+                            case (int)AMZChargeType.PST_Item_Tax:
+                                lineExt.UsrItemPSTTaxAmt = (decimal)root.item[i].charge[j].amount;
+                                break;
+                        }
                     }
+                }
+                else
+                {
+
+                    line.InventoryID   = InventoryItem.UK.Find(orderEntry, "REIMBURSEMENT").InventoryID;
+                    line.OrderQty      = 1;
+                    line.CuryUnitPrice = root.item[i].amount_per_unit;
                 }
 
                 orderEntry.Transactions.Insert(line);
 
-                for (int k = 0; k < root.item[i].cop.Count; k++)
+                for (int k = 0; k < root.item[i].cop?.Count; k++)
                 {
                     ///<remarks> 
                     /// Because the standard SO Discount logic is calculated differently in RowInserted, RowUpdated and DiscountID_FieldUpdated events.
@@ -308,6 +318,17 @@ namespace ExternalLogisticsAPI.Descripter
 
                     orderEntry.DiscountDetails.Update(disDetail);
                 }
+            }
+
+            if (root.restocking_fee != null)
+            {
+                SOLine line = orderEntry.Transactions.Cache.CreateInstance() as SOLine;
+
+                line.InventoryID   = InventoryItem.UK.Find(orderEntry, "RESTOCKING").InventoryID;
+                line.OrderQty      = 1;
+                line.CuryUnitPrice = (decimal)root.restocking_fee;
+
+                orderEntry.Transactions.Insert(line);
             }
         }
 
@@ -375,45 +396,50 @@ namespace ExternalLogisticsAPI.Descripter
         /// </summary>
         public static void UpdateSOContactAddress(SOOrderEntry orderEntry, dynamic root)
         {
+            SOBillingContact billContact = null;
+            SOBillingAddress billAddress = null;
+            SOShippingContact shipContact = null;
+            SOShippingAddress shipAddress = null;
+
             if (!string.IsNullOrWhiteSpace((string)root.buyer_email))
             {
-                SOBillingContact billContact = orderEntry.Billing_Contact.Select();
+                billContact = orderEntry.Billing_Contact.Current ?? orderEntry.Billing_Contact.Select();
 
                 billContact.OverrideContact = true;
                 billContact.FullName        = root.buyer_name;
                 billContact.Email           = root.buyer_email;
 
-                orderEntry.Billing_Contact.Update(billContact);
+                orderEntry.Billing_Contact.Cache.Update(billContact);
             }
 
             if (!string.IsNullOrWhiteSpace((string)root.bill_country))
             {
-                SOBillingAddress billAddress = orderEntry.Billing_Address.Select();
+                billAddress = orderEntry.Billing_Address.Current ?? orderEntry.Billing_Address.Select();
 
                 billAddress.OverrideAddress = true;
                 billAddress.AddressLine1    = ((string)root.bill_address).Length <= 50 ? root.bill_address : ((string)root.bill_address).Substring(0, 50);
                 billAddress.AddressLine2    = ((string)root.bill_address).Length <= 50 ? null : ((string)root.bill_address).Substring(51);
                 billAddress.City            = root.bill_city;
-                billAddress.CountryID       = billAddress.CountryID;
+                billAddress.CountryID       = root.bill_country;
                 billAddress.PostalCode      = root.bill_postal_code;
                 billAddress.State           = root.bill_state;
 
-                orderEntry.Billing_Address.Update(billAddress);
+                orderEntry.Billing_Address.Cache.Update(billAddress);
             }
 
             if (!string.IsNullOrWhiteSpace((string)root.recipient_name))
             {
-                SOShippingContact shipContact = orderEntry.Shipping_Contact.Select();
+                shipContact = orderEntry.Shipping_Contact.Current ?? orderEntry.Shipping_Contact.Select();
 
                 shipContact.OverrideContact = true;
                 shipContact.FullName        = root.recipient_name;
 
-                orderEntry.Shipping_Contact.Update(shipContact);
+                orderEntry.Shipping_Contact.Cache.Update(shipContact);
             }
 
             if (!string.IsNullOrWhiteSpace((string)root.ship_city))
             {
-                SOShippingAddress shipAddress = orderEntry.Shipping_Address.Select();
+                shipAddress = orderEntry.Shipping_Address.Current ?? orderEntry.Shipping_Address.Select();
 
                 shipAddress.OverrideAddress = true;
                 shipAddress.AddressLine1    = ((string)root.ship_address).Length <= 50 ? root.ship_address : ((string)root.ship_address).Substring(0, 50);
@@ -423,7 +449,21 @@ namespace ExternalLogisticsAPI.Descripter
                 shipAddress.PostalCode      = root.ship_postal_code;
                 shipAddress.State           = root.ship_state;
 
-                orderEntry.Shipping_Address.Update(shipAddress);
+                orderEntry.Shipping_Address.Cache.Update(shipAddress);
+            }
+
+            if (!string.IsNullOrWhiteSpace((string)root.ship_to_city))
+            {
+                shipAddress = orderEntry.Shipping_Address.Select();
+
+                shipAddress.OverrideAddress = true;
+                shipAddress.AddressLine1    = root.ship_to_address;
+                shipAddress.City            = root.ship_to_city;
+                shipAddress.CountryID       = root.ship_to_country;
+                shipAddress.PostalCode      = root.ship_to_zipcode;
+                shipAddress.State           = root.ship_to_state;
+
+                orderEntry.Shipping_Address.Cache.MarkUpdated(shipAddress);
             }
         }
 
@@ -535,6 +575,7 @@ namespace ExternalLogisticsAPI.Descripter
             payment.ExtRefNbr          = order.CustomerRefNbr ?? order.CustomerOrderNbr;
             payment.DocDesc            = $"{order.CuryID} EX-Rate = {recipRate}";
             payment.AdjDate            = order.OrderDate;
+            //payment.CurySOApplAmt      = order.OrderType == "IN" ? string.IsNullOrEmpty(order.OrderDesc) ? (decimal)root.restocking_fee + (decimal)root.tax : (decimal)root.salesProceeds : payment.CurySOApplAmt;
 
             payment = pymtEntry.Document.Update(payment);
 
@@ -546,9 +587,9 @@ namespace ExternalLogisticsAPI.Descripter
 
             pymtEntry.SOAdjustments.Insert(adj);
 
-            for (int i = 0; i < root.item.Count; i++)
+            for (int i = 0; i < root.item?.Count; i++)
             {
-                for (int j = 0; j < root.item[i].fee.Count; j++)
+                for (int j = 0; j < root.item[i].fee?.Count; j++)
                 {
                     if (root.item[i].fee[j].type == AmazonFeeType.Amz_WarehouseFee)
                     {
@@ -631,9 +672,14 @@ namespace ExternalLogisticsAPI.Descripter
         /// <param name="orderID"></param>
         //public static void Update3DCartOrderStatus(LUM3DCartSetup curSetup, int orderID) => GetResponse(curSetup, string.Format("3dCartWebAPI/v2/Orders/{0}", orderID), true);
 
+        /// <summary>
+        /// Manually create sales invoice from AMZ inferface.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="isRMA"></param>
         public static void CreateCreditMemo(dynamic root, bool isRMA = false)
         {
-            ARInvoiceEntry invoiceEntry = PXGraph.CreateInstance<ARInvoiceEntry>();
+            SOInvoiceEntry invoiceEntry = PXGraph.CreateInstance<SOInvoiceEntry>();
 
             ARInvoice invoice = new ARInvoice()
             {
@@ -700,7 +746,7 @@ namespace ExternalLogisticsAPI.Descripter
 
                     tran.Qty          = root.item[i].qty;
                     tran.TranDesc     = $"{root.item[i].sku} | {entryTypeID} | {root.item[i].fulfillment_center_id} | {root.item[i].country} | {root.item[i].state}";
-                    tran.CuryExtPrice = Math.Abs((decimal)root.item[i].fee[j].amount);
+                    tran.CuryExtPrice = -1 * (decimal)root.item[i].fee[j].amount;
 
                     tran = invoiceEntry.Transactions.Insert(tran);
                 }
@@ -723,7 +769,7 @@ namespace ExternalLogisticsAPI.Descripter
 
                     tran.Qty          = root.item[i].qty;
                     tran.TranDesc     = $"{root.item[i].sku} | {entryTypeID} | {root.item[i].fulfillment_center_id} | {root.item[i].country} | {root.item[i].state}";
-                    tran.CuryExtPrice = Math.Abs((decimal)root.item[i].charge[k].amount);
+                    tran.CuryExtPrice = -1 * (decimal)root.item[i].charge[k].amount;
 
                     tran = invoiceEntry.Transactions.Insert(tran);
                 }
