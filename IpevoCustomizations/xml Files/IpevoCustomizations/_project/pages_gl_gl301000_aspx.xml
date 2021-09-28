@@ -6,9 +6,16 @@
                     <Prop Key="Virtual:ApplyStylesheetSkin" />
                     <Prop Key="ID" Value="CstPXLayoutRule1" />
                     <Prop Key="StartColumn" Value="True" />
-                    <Prop Key="LabelsWidth" Value="SM" />
-                    <Prop Key="ControlSize" Value="S" />
+                    <Prop Key="LabelsWidth" Value="S" />
+                    <Prop Key="ControlSize" Value="M" />
                 </PXLayoutRule>
+            </AddItem>
+            <AddItem>
+                <PXTextEdit TypeFullName="PX.Web.UI.PXTextEdit">
+                    <Prop Key="Virtual:ApplyStylesheetSkin" />
+                    <Prop Key="ID" Value="CstPXTextEdit2" />
+                    <Prop Key="DataField" Value="CreatedByID_Creator_displayName" />
+                </PXTextEdit>
             </AddItem>
             <AddItem>
                 <PXTextEdit TypeFullName="PX.Web.UI.PXTextEdit">
@@ -24,13 +31,6 @@
                     <Prop Key="ID" Value="CstPXTextEdit3" />
                     <Prop Key="DataField" Value="UsrDisplayPostedBy" />
                     <Prop Key="Enabled" Value="False" />
-                </PXTextEdit>
-            </AddItem>
-            <AddItem>
-                <PXTextEdit TypeFullName="PX.Web.UI.PXTextEdit">
-                    <Prop Key="Virtual:ApplyStylesheetSkin" />
-                    <Prop Key="ID" Value="CstPXTextEdit2" />
-                    <Prop Key="DataField" Value="CreatedByID_Creator_displayName" />
                 </PXTextEdit>
             </AddItem>
         </Children>
