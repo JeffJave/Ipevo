@@ -99,6 +99,7 @@
     <Compile Include="DAC\LUMWarehouseImportProcessLog.cs" />
     <Compile Include="DAC\LumYusenCASetup.cs" />
     <Compile Include="DAC\LUMYusenNLSetup.cs" />
+    <Compile Include="DAC\SQLView\vPACReturnPO.cs" />
     <Compile Include="DAC\SQLView\vRMAOrderInfo.cs" />
     <Compile Include="DAC\SQLView\vPACAdjCostCOGS.cs" />
     <Compile Include="DAC\SQLView\vPACAdjCostAssembly.cs" />
