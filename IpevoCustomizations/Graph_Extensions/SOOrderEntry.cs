@@ -47,7 +47,8 @@ namespace PX.Objects.SO
                 var customerData = Customer.PK.Find(Base, doc.CustomerID);
                 var sumTaxableAmt = Base.Taxes.Select().RowCast<SOTaxTran>().FirstOrDefault()?.CuryTaxableAmt;
                 var sumTaxAmt = Base.Taxes.Select().RowCast<SOTaxTran>().Sum(x => x?.CuryTaxAmt ?? 0);
-                if (customerData != null && customerData.AcctCD.Trim().ToUpper() != "SELLERCENTRA")
+                var UsrAPIOrderType = Base.Document.Cache.GetValueExt(Base.Document.Current, "UsrAPIOrderType") as string;
+                if (customerData != null && (customerData.AcctCD.Trim().ToUpper() != "SELLERCENTRAL" || string.IsNullOrEmpty(UsrAPIOrderType)))
                     Base.Document.Cache.SetValueExt(doc, "AttributeTAXRATE", (sumTaxableAmt == 0 || sumTaxAmt == 0 || sumTaxableAmt == null ) ? 0 : Math.Round((decimal)(sumTaxAmt / sumTaxableAmt),5));
             }
 
