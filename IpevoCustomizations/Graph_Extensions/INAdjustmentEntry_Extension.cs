@@ -38,7 +38,7 @@ namespace IpevoCustomizations.Graph_Extensions
             var newDoc = graph.adjustment.Insert((INRegister)graph.adjustment.Cache.CreateInstance());
             newDoc.Hold = true;
             newDoc.ExtRefNbr = Base.adjustment.Current.RefNbr;
-            newDoc.TranDesc = Base.adjustment.Current.TranDesc + "(REVERSED)";
+            newDoc.TranDesc = Base.adjustment.Current.TranDesc + " (REVERSED)";
             newDoc.TranDate = Base.adjustment.Current.TranDate;
             newDoc.FinPeriodID = Base.adjustment.Current.FinPeriodID;
             newDoc.TranPeriodID = Base.adjustment.Current.TranPeriodID;
