@@ -51,11 +51,13 @@ namespace IpevoCustomizations.Graph_Extensions
             foreach (var item in Base.transactions.Select().RowCast<INTran>())
             {
                 var newTrans = graph.transactions.Insert((INTran)graph.transactions.Cache.CreateInstance());
+                var oldLineNbr = newTrans.LineNbr;
                 PXCache<INTran>.RestoreCopy(newTrans, item);
                 newTrans.RefNbr = graph.adjustment.Current.RefNbr;
                 newTrans.OrigTranCost *= -1;
                 newTrans.TranCost *= -1; ;
                 newTrans.NoteID = PXNoteAttribute.GetNoteID<INTran.noteID>(graph.transactions.Cache, graph.transactions.Cache.CreateInstance());
+                newTrans.LineNbr = oldLineNbr;
                 graph.transactions.Cache.Insert(newTrans);
             }
             graph.Actions.PressSave();
