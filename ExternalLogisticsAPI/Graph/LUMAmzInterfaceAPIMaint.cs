@@ -278,7 +278,7 @@ namespace ExternalLogisticsAPI.Graph
                             }
                         }
 
-                        //graph.AMZInterfaceAPI.Cache.SetValue<LUMAmazonInterfaceAPI.write2Acumatica1>(list[i], true);
+                        graph.AMZInterfaceAPI.Cache.SetValue<LUMAmazonInterfaceAPI.write2Acumatica1>(list[i], true);
                         graph.AMZInterfaceAPI.Cache.SetValue<LUMAmazonInterfaceAPI.remark>(list[i], null);
                     }
                     catch (Exception ex)
