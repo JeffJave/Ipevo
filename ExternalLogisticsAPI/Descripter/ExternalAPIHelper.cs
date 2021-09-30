@@ -219,9 +219,30 @@ namespace ExternalLogisticsAPI.Descripter
         /// </summary>
         public static void CreateOrderDetail(SOOrderEntry orderEntry, dynamic root)
         {
-            for (int i = 0; i < root.item?.Count; i++)
+            int counter = root.item?.Count;
+
+            for (int i = 0; i < counter; i++)
             {
                 SOLine line = orderEntry.Transactions.Cache.CreateInstance() as SOLine;
+
+                if (orderEntry.Document.Current.OrderType == "RA")
+                {
+                    if (counter == root.item.Count)
+                    {
+                        line.Operation  = SOOperation.Receipt;
+                        line.ReasonCode = "RMARECEIPT";
+
+                        counter++;
+                    }
+                    else
+                    {
+                        line.Operation  = SOOperation.Issue;
+                        line.ReasonCode = "RMAISSUE";
+
+                        i -= root.item?.Count;
+                        counter = root.item?.Count;
+                    }
+                }
 
                 if (root.item[i].reimbursement_id == null)
                 {
@@ -295,15 +316,17 @@ namespace ExternalLogisticsAPI.Descripter
                 }
                 else
                 {
-
                     line.InventoryID   = InventoryItem.UK.Find(orderEntry, "REIMBURSEMENT").InventoryID;
-                    line.OrderQty      = 1;
-                    line.CuryUnitPrice = root.item[i].amount_per_unit;
+                    line.OrderQty      = root.item[i].original_reimbursement_id == null ? root.item[i].quantity_reimbursed_cash : root.item[i].quantity_reimbursed_inventory;
+                    line.CuryUnitPrice = Math.Abs((decimal)root.item[i].amount_per_unit);
+
+                    counter = root.item?.Count;
                 }
 
                 orderEntry.Transactions.Insert(line);
 
-                for (int k = 0; k < root.item[i].cop?.Count; k++)
+                //for (int k = 0; k < root.item[i].cop?.Count; k++)
+                if (root.costOfPoints != null && (decimal)root.costOfPoints != 0m)
                 {
                     ///<remarks> 
                     /// Because the standard SO Discount logic is calculated differently in RowInserted, RowUpdated and DiscountID_FieldUpdated events.
@@ -314,7 +337,7 @@ namespace ExternalLogisticsAPI.Descripter
 
                     orderEntry.DiscountDetails.Update(disDetail);
 
-                    disDetail.CuryDiscountAmt = Math.Abs((decimal)root.item[i].cop[k].amount);
+                    disDetail.CuryDiscountAmt = Math.Abs((decimal)root.costOfPoints);
 
                     orderEntry.DiscountDetails.Update(disDetail);
                 }
@@ -396,25 +419,22 @@ namespace ExternalLogisticsAPI.Descripter
         /// </summary>
         public static void UpdateSOContactAddress(SOOrderEntry orderEntry, dynamic root)
         {
-            SOBillingContact billContact = null;
-            SOBillingAddress billAddress = null;
-            SOShippingContact shipContact = null;
-            SOShippingAddress shipAddress = null;
+            SOShippingAddress shipAddress = new SOShippingAddress();
 
             if (!string.IsNullOrWhiteSpace((string)root.buyer_email))
             {
-                billContact = orderEntry.Billing_Contact.Current ?? orderEntry.Billing_Contact.Select();
+                SOBillingContact billContact = orderEntry.Billing_Contact.Select();
 
                 billContact.OverrideContact = true;
                 billContact.FullName        = root.buyer_name;
                 billContact.Email           = root.buyer_email;
 
-                orderEntry.Billing_Contact.Cache.Update(billContact);
+                orderEntry.Billing_Contact.Cache.MarkUpdated(billContact);
             }
 
             if (!string.IsNullOrWhiteSpace((string)root.bill_country))
             {
-                billAddress = orderEntry.Billing_Address.Current ?? orderEntry.Billing_Address.Select();
+                SOBillingAddress billAddress = orderEntry.Billing_Address.Select();
 
                 billAddress.OverrideAddress = true;
                 billAddress.AddressLine1    = ((string)root.bill_address).Length <= 50 ? root.bill_address : ((string)root.bill_address).Substring(0, 50);
@@ -424,24 +444,30 @@ namespace ExternalLogisticsAPI.Descripter
                 billAddress.PostalCode      = root.bill_postal_code;
                 billAddress.State           = root.bill_state;
 
-                orderEntry.Billing_Address.Cache.Update(billAddress);
+                orderEntry.Billing_Address.Cache.MarkUpdated(billAddress);
             }
 
             if (!string.IsNullOrWhiteSpace((string)root.recipient_name))
             {
-                shipContact = orderEntry.Shipping_Contact.Current ?? orderEntry.Shipping_Contact.Select();
+                SOShippingContact shipContact = new SOShippingContact();
+
+                SOShippingContactAttribute.CopyContact(shipContact, orderEntry.Shipping_Contact.Select().TopFirst);
 
                 shipContact.OverrideContact = true;
+                shipContact.RevisionID      = 0;
                 shipContact.FullName        = root.recipient_name;
 
                 orderEntry.Shipping_Contact.Cache.Update(shipContact);
+
+                orderEntry.Document.Cache.SetValue<SOOrder.shipContactID>(orderEntry.Document.Current, orderEntry.Shipping_Contact.Current.ContactID);
             }
 
-            if (!string.IsNullOrWhiteSpace((string)root.ship_city))
+            if (!string.IsNullOrWhiteSpace((string)root.ship_country))
             {
-                shipAddress = orderEntry.Shipping_Address.Current ?? orderEntry.Shipping_Address.Select();
+                SOShippingAddressAttribute.Copy(shipAddress, orderEntry.Shipping_Address.Select().TopFirst);
 
                 shipAddress.OverrideAddress = true;
+                shipAddress.RevisionID      = 0;
                 shipAddress.AddressLine1    = ((string)root.ship_address).Length <= 50 ? root.ship_address : ((string)root.ship_address).Substring(0, 50);
                 shipAddress.AddressLine2    = ((string)root.ship_address).Length <= 50 ? null : ((string)root.ship_address).Substring(51);
                 shipAddress.City            = root.ship_city;
@@ -450,20 +476,25 @@ namespace ExternalLogisticsAPI.Descripter
                 shipAddress.State           = root.ship_state;
 
                 orderEntry.Shipping_Address.Cache.Update(shipAddress);
+
+                orderEntry.Document.Cache.SetValue<SOOrder.shipAddressID>(orderEntry.Document.Current, orderEntry.Shipping_Address.Current.AddressID);
             }
 
-            if (!string.IsNullOrWhiteSpace((string)root.ship_to_city))
+            if (!string.IsNullOrWhiteSpace((string)root.ship_to_country))
             {
-                shipAddress = orderEntry.Shipping_Address.Select();
+                SOShippingAddressAttribute.Copy(shipAddress, orderEntry.Shipping_Address.Select().TopFirst);
 
                 shipAddress.OverrideAddress = true;
+                shipAddress.RevisionID      = 0;
                 shipAddress.AddressLine1    = root.ship_to_address;
                 shipAddress.City            = root.ship_to_city;
                 shipAddress.CountryID       = root.ship_to_country;
                 shipAddress.PostalCode      = root.ship_to_zipcode;
                 shipAddress.State           = root.ship_to_state;
 
-                orderEntry.Shipping_Address.Cache.MarkUpdated(shipAddress);
+                orderEntry.Shipping_Address.Cache.Update(shipAddress);
+
+                orderEntry.Document.Cache.SetValue<SOOrder.shipAddressID>(orderEntry.Document.Current, orderEntry.Shipping_Address.Current.AddressID);
             }
         }
 
@@ -575,7 +606,6 @@ namespace ExternalLogisticsAPI.Descripter
             payment.ExtRefNbr          = order.CustomerRefNbr ?? order.CustomerOrderNbr;
             payment.DocDesc            = $"{order.CuryID} EX-Rate = {recipRate}";
             payment.AdjDate            = order.OrderDate;
-            //payment.CurySOApplAmt      = order.OrderType == "IN" ? string.IsNullOrEmpty(order.OrderDesc) ? (decimal)root.restocking_fee + (decimal)root.tax : (decimal)root.salesProceeds : payment.CurySOApplAmt;
 
             payment = pymtEntry.Document.Update(payment);
 
