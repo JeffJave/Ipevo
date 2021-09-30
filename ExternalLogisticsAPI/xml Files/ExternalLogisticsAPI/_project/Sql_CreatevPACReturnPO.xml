@@ -24,34 +24,18 @@ SELECT [POReceiptLineAdd_POReceiptLine].[CompanyID]
 	,SUM([POReceiptLineAdd_POReceiptLine].[BaseReceiptQty] * ((- 1))) AS Qty
 FROM (
 	[POReceiptLine] [POReceiptLineAdd_POReceiptLine] LEFT JOIN [POLine] [POReceiptLineAdd_POLine] ON ([POReceiptLineAdd_POLine].[CompanyID] = [POReceiptLineAdd_POReceiptLine].[CompanyID])
-		AND (
-			[POReceiptLineAdd_POLine].[BranchID] IS NULL
-			OR [POReceiptLineAdd_POLine].[BranchID] = 1
-			)
 		AND [POReceiptLineAdd_POLine].[OrderType] = [POReceiptLineAdd_POReceiptLine].[POType]
 		AND [POReceiptLineAdd_POLine].[OrderNbr] = [POReceiptLineAdd_POReceiptLine].[PONbr]
 		AND [POReceiptLineAdd_POLine].[LineNbr] = [POReceiptLineAdd_POReceiptLine].[POLineNbr]
 	LEFT JOIN [POOrder] [POReceiptLineAdd_POOrder] ON ([POReceiptLineAdd_POOrder].[CompanyID] = [POReceiptLineAdd_POReceiptLine].[CompanyID])
-		AND (
-			[POReceiptLineAdd_POOrder].[BranchID] IS NULL
-			OR [POReceiptLineAdd_POOrder].[BranchID] = 1
-			)
 		AND [POReceiptLineAdd_POOrder].[OrderType] = [POReceiptLineAdd_POReceiptLine].[POType]
 		AND [POReceiptLineAdd_POOrder].[OrderNbr] = [POReceiptLineAdd_POReceiptLine].[PONbr]
 	)
 LEFT JOIN [POReceipt] [POReceipt] ON ([POReceipt].[CompanyID] = [POReceiptLineAdd_POReceiptLine].[CompanyID])
-	AND (
-		[POReceipt].[BranchID] IS NULL
-		OR [POReceipt].[BranchID] = 1
-		)
 	AND ([POReceiptLineAdd_POReceiptLine].[ReceiptNbr] = [POReceipt].[ReceiptNbr])
 WHERE (
 		[POReceipt].[ReceiptType] = 'RN'
 		AND [POReceipt].[Status] = 'R'
-		)
-	AND (
-		[POReceiptLineAdd_POReceiptLine].[BranchID] IS NULL
-		OR [POReceiptLineAdd_POReceiptLine].[BranchID] = 1
 		)
 GROUP BY [POReceiptLineAdd_POReceiptLine].[InventoryID]
 	,[POReceipt].[FinPeriodID]
