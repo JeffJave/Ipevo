@@ -1,0 +1,43 @@
+﻿<Sql TableName="CreatevPACReturnPO" CustomScript="#CDATA">
+    <CDATA name="CustomScript"><![CDATA[  IF EXISTS
+(
+	SELECT *
+	FROM SYS.views
+	WHERE name = 'vPACReturnPO' AND SCHEMA_ID = SCHEMA_ID('dbo')
+)
+DROP VIEW [dbo].[vPACReturnPO]	
+GO
+CREATE VIEW vPACReturnPO AS
+SELECT [POReceiptLineAdd_POReceiptLine].[CompanyID]
+	,MAX([POReceiptLineAdd_POReceiptLine].[ReceiptNbr]) AS [POLine_ReceiptNbr]
+	,MAX([POReceiptLineAdd_POReceiptLine].[LineNbr]) AS [POLine_LineNbr]
+	,[POReceiptLineAdd_POReceiptLine].[InventoryID] AS InventoryID
+	,MAX([POReceiptLineAdd_POReceiptLine].[UOM]) AS [UOM]
+	,MAX([POReceipt].[ReceiptType]) AS [ReceiptType]
+	,MAX([POReceipt].[ReceiptNbr]) AS [ReceiptNbr]
+	,[POReceipt].[FinPeriodID] AS FinPeriodID
+	,MAX([POReceipt].[Status]) AS [Status]
+	,MAX([POReceipt].[NoteID]) AS [NoteID]
+	,MAX([POReceipt].[CuryID]) AS [CuryID]
+	,SUM([POReceipt].[CuryInfoID]) AS [POReceipt_CuryInfoID]
+	,SUM([POReceiptLineAdd_POLine].[LineAmt] * ((- 1))) AS Amt
+	,SUM([POReceiptLineAdd_POReceiptLine].[BaseReceiptQty] * ((- 1))) AS Qty
+FROM (
+	[POReceiptLine] [POReceiptLineAdd_POReceiptLine] LEFT JOIN [POLine] [POReceiptLineAdd_POLine] ON ([POReceiptLineAdd_POLine].[CompanyID] = [POReceiptLineAdd_POReceiptLine].[CompanyID])
+		AND [POReceiptLineAdd_POLine].[OrderType] = [POReceiptLineAdd_POReceiptLine].[POType]
+		AND [POReceiptLineAdd_POLine].[OrderNbr] = [POReceiptLineAdd_POReceiptLine].[PONbr]
+		AND [POReceiptLineAdd_POLine].[LineNbr] = [POReceiptLineAdd_POReceiptLine].[POLineNbr]
+	LEFT JOIN [POOrder] [POReceiptLineAdd_POOrder] ON ([POReceiptLineAdd_POOrder].[CompanyID] = [POReceiptLineAdd_POReceiptLine].[CompanyID])
+		AND [POReceiptLineAdd_POOrder].[OrderType] = [POReceiptLineAdd_POReceiptLine].[POType]
+		AND [POReceiptLineAdd_POOrder].[OrderNbr] = [POReceiptLineAdd_POReceiptLine].[PONbr]
+	)
+LEFT JOIN [POReceipt] [POReceipt] ON ([POReceipt].[CompanyID] = [POReceiptLineAdd_POReceiptLine].[CompanyID])
+	AND ([POReceiptLineAdd_POReceiptLine].[ReceiptNbr] = [POReceipt].[ReceiptNbr])
+WHERE (
+		[POReceipt].[ReceiptType] = 'RN'
+		AND [POReceipt].[Status] = 'R'
+		)
+GROUP BY [POReceiptLineAdd_POReceiptLine].[InventoryID]
+	,[POReceipt].[FinPeriodID]
+	,[POReceiptLineAdd_POReceiptLine].[CompanyID]]]></CDATA>
+</Sql>

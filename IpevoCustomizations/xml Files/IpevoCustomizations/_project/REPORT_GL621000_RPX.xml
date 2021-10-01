@@ -1131,7 +1131,7 @@
                                 <Name>Microsoft YaHei UI</Name>
                             </Font>
                         </Style>
-                        <Value>='覆核:'+ ' ' +#010;IIF([Batch.Status] = 'U',[Batch.LastModifiedByID_Modifier_Username],IIF([Batch.Status] = 'P',[revierInfo.Username],''))</Value>
+                        <Value>='覆核:'</Value>
                     </TextBox>
                     <TextBox Name="textBox69">
                         <Location>816px, 20px</Location>
