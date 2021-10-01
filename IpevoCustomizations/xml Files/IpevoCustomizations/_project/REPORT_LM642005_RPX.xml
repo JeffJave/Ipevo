@@ -61,6 +61,14 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
             </ReportParameter>
             <ReportParameter>
                 <ColumnSpan>2</ColumnSpan>
+                <DefaultValue>=True</DefaultValue>
+                <Name>CountPalletWeight</Name>
+                <Prompt>Count Pallet Weight</Prompt>
+                <Required>True</Required>
+                <Type>Boolean</Type>
+            </ReportParameter>
+            <ReportParameter>
+                <ColumnSpan>2</ColumnSpan>
                 <Name>PackageCountEn</Name>
                 <Visible>False</Visible>
             </ReportParameter>
@@ -3332,6 +3340,10 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                         <Name>TotalMeasurement</Name>
                         <ValueExpr>=$TotalMeasurement + Round((Round([SOPackageDetailEx.UsrLength], 2) * Round([SOPackageDetailEx.UsrWidth], 2) * Round([SOPackageDetailEx.UsrHeight], 2) * ([SOPackageDetailEx.UsrCartonQty] * CDec([SOPackageDetailEx.CustomRefNbr1])) / 5000 / 35.315 / 4.72), 2)</ValueExpr>
                     </ReportVariable>
+                    <ReportVariable>
+                        <Name>PalletWeight</Name>
+                        <ValueExpr>=IIF([@CountPalletWeight] = True, (CDec([@PackageCountNo]) * 15), 0)</ValueExpr>
+                    </ReportVariable>
                 </Variables>
                 <Items>
                     <TextBox Name="textBox17">
@@ -3686,7 +3698,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                                     </Font>
                                     <VerticalAlign>Middle</VerticalAlign>
                                 </Style>
-                                <Value>=[@PackageCountEn] + ' PALLET(S) ' +#010;'(=' + Round($TotalPalletQty, 2) + ' CARTONS)'</Value>
+                                <Value>=IIF([@CountPalletWeight] = True,#010;[@PackageCountEn] + ' PALLET(S) ' + '(=' + Round($TotalPalletQty, 2) + ' CARTONS)',#010;Round($TotalPalletQty, 2) + ' CARTONS')</Value>
                             </TextBox>
                             <TextBox Name="textBox34">
                                 <Format>='N0'</Format>
@@ -3725,7 +3737,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                                     <TextAlign>Center</TextAlign>
                                     <VerticalAlign>Middle</VerticalAlign>
                                 </Style>
-                                <Value>=Round($TotalGWQty, 2) + (CDec([@PackageCountNo]) * 15)</Value>
+                                <Value>=Round($TotalGWQty, 2) + CDec($PalletWeight)</Value>
                             </TextBox>
                             <TextBox Name="textBox37">
                                 <Format>='N2'</Format>
@@ -3772,6 +3784,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                                     </Font>
                                 </Style>
                                 <Value>=[@PackageCountNo] + ' PALLET(S)'</Value>
+                                <VisibleExpr>=IIF([@CountPalletWeight] = True, True, False)</VisibleExpr>
                             </TextBox>
                             <TextBox Name="textBox41">
                                 <Location>416px, 32px</Location>
@@ -3806,9 +3819,13 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                                     </Font>
                                     <TextAlign>Center</TextAlign>
                                 </Style>
-                                <Value>=CDec([@PackageCountNo]) * 15</Value>
+                                <Value>=$PalletWeight</Value>
+                                <VisibleExpr>=IIF([@CountPalletWeight] = True, True, False)</VisibleExpr>
                             </TextBox>
                         </Items>
+                    </Footer>
+                    <Footer Name="">
+                        <Expanded>True</Expanded>
                     </Footer>
                 </Footers>
             </Group>
