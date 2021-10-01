@@ -180,81 +180,6 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                 <ParentName>SOShipLine</ParentName>
             </ReportRelation>
             <ReportRelation>
-                <ChildAlias>AttrMODELNO</ChildAlias>
-                <ChildName>CSAnswers</ChildName>
-                <Links>
-                    <RelationRow>
-                        <ChildField>RefNoteID</ChildField>
-                        <ParentField>NoteID</ParentField>
-                    </RelationRow>
-                    <RelationRow>
-                        <ChildField>@Attribute_MODELNO</ChildField>
-                        <ParentField>AttrMODELNO.AttributeID</ParentField>
-                    </RelationRow>
-                </Links>
-                <ParentName>InventoryItem</ParentName>
-            </ReportRelation>
-            <ReportRelation>
-                <ChildAlias>AttrGROSPERCTN</ChildAlias>
-                <ChildName>CSAnswers</ChildName>
-                <Links>
-                    <RelationRow>
-                        <ChildField>RefNoteID</ChildField>
-                        <ParentField>NoteID</ParentField>
-                    </RelationRow>
-                    <RelationRow>
-                        <ChildField>@Attribute_GROSPERCTN</ChildField>
-                        <ParentField>AttrGROSPERCTN.AttributeID</ParentField>
-                    </RelationRow>
-                </Links>
-                <ParentName>InventoryItem</ParentName>
-            </ReportRelation>
-            <ReportRelation>
-                <ChildAlias>AttrNETPERCTN</ChildAlias>
-                <ChildName>CSAnswers</ChildName>
-                <Links>
-                    <RelationRow>
-                        <ChildField>RefNoteID</ChildField>
-                        <ParentField>NoteID</ParentField>
-                    </RelationRow>
-                    <RelationRow>
-                        <ChildField>@Attribute_NETPERCTN</ChildField>
-                        <ParentField>AttrNETPERCTN.AttributeID</ParentField>
-                    </RelationRow>
-                </Links>
-                <ParentName>InventoryItem</ParentName>
-            </ReportRelation>
-            <ReportRelation>
-                <ChildAlias>AttrQTYPERCTN</ChildAlias>
-                <ChildName>CSAnswers</ChildName>
-                <Links>
-                    <RelationRow>
-                        <ChildField>RefNoteID</ChildField>
-                        <ParentField>NoteID</ParentField>
-                    </RelationRow>
-                    <RelationRow>
-                        <ChildField>@Attribute_QTYPERCTN</ChildField>
-                        <ParentField>AttrQTYPERCTN.AttributeID</ParentField>
-                    </RelationRow>
-                </Links>
-                <ParentName>InventoryItem</ParentName>
-            </ReportRelation>
-            <ReportRelation>
-                <ChildAlias>AttrITEMDESEN</ChildAlias>
-                <ChildName>CSAnswers</ChildName>
-                <Links>
-                    <RelationRow>
-                        <ChildField>RefNoteID</ChildField>
-                        <ParentField>NoteID</ParentField>
-                    </RelationRow>
-                    <RelationRow>
-                        <ChildField>@Attribute_ITEMDESEN</ChildField>
-                        <ParentField>AttrITEMDESEN.AttributeID</ParentField>
-                    </RelationRow>
-                </Links>
-                <ParentName>InventoryItem</ParentName>
-            </ReportRelation>
-            <ReportRelation>
                 <ChildName>SOOrder</ChildName>
                 <Links>
                     <RelationRow>
@@ -973,784 +898,6 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                     </ReportField>
                 </Fields>
                 <FullName>PX.Objects.SO.SOShipmentContact</FullName>
-            </ReportTable>
-            <ReportTable Name="InventoryItem">
-                <Fields>
-                    <ReportField Name="ABCCodeID">
-                    </ReportField>
-                    <ReportField Name="ABCCodeID_description">
-                    </ReportField>
-                    <ReportField Name="ABCCodeID_INABCCode_descr">
-                    </ReportField>
-                    <ReportField Name="ABCCodeIsFixed">
-                        <DataType>Boolean</DataType>
-                    </ReportField>
-                    <ReportField Name="AccrueCost">
-                        <DataType>Boolean</DataType>
-                    </ReportField>
-                    <ReportField Name="AMBOMID">
-                    </ReportField>
-                    <ReportField Name="AMBOMID_AMBomItem_descr">
-                    </ReportField>
-                    <ReportField Name="AMBOMID_description">
-                    </ReportField>
-                    <ReportField Name="AMCheckSchdMatlAvailability">
-                        <DataType>Boolean</DataType>
-                    </ReportField>
-                    <ReportField Name="AMConfigurationID">
-                    </ReportField>
-                    <ReportField Name="AMConfigurationID_AMConfiguration_descr">
-                    </ReportField>
-                    <ReportField Name="AMConfigurationID_description">
-                    </ReportField>
-                    <ReportField Name="AMCTPItem">
-                        <DataType>Boolean</DataType>
-                    </ReportField>
-                    <ReportField Name="AMDefaultMarkFor">
-                        <DataType>Int32</DataType>
-                    </ReportField>
-                    <ReportField Name="AMGroupWindow">
-                        <DataType>Int32</DataType>
-                    </ReportField>
-                    <ReportField Name="AMLotSize">
-                        <DataType>Decimal</DataType>
-                    </ReportField>
-                    <ReportField Name="AMLowLevel">
-                        <DataType>Int32</DataType>
-                    </ReportField>
-                    <ReportField Name="AMMakeToOrderItem">
-                        <DataType>Boolean</DataType>
-                    </ReportField>
-                    <ReportField Name="AMMaxOrdQty">
-                        <DataType>Decimal</DataType>
-                    </ReportField>
-                    <ReportField Name="AMMFGLeadTime">
-                        <DataType>Int32</DataType>
-                    </ReportField>
-                    <ReportField Name="AMMinOrdQty">
-                        <DataType>Decimal</DataType>
-                    </ReportField>
-                    <ReportField Name="AMMinQty">
-                        <DataType>Decimal</DataType>
-                    </ReportField>
-                    <ReportField Name="AMMinQtyOverride">
-                        <DataType>Boolean</DataType>
-                    </ReportField>
-                    <ReportField Name="AMMRPItem">
-                        <DataType>Boolean</DataType>
-                    </ReportField>
-                    <ReportField Name="AMPlanningBOMID">
-                    </ReportField>
-                    <ReportField Name="AMPlanningBOMID_AMBomItem_descr">
-                    </ReportField>
-                    <ReportField Name="AMPlanningBOMID_description">
-                    </ReportField>
-                    <ReportField Name="AMQtyRoundUp">
-                        <DataType>Boolean</DataType>
-                    </ReportField>
-                    <ReportField Name="AMReplenishmentSource">
-                    </ReportField>
-                    <ReportField Name="AMReplenishmentSourceOverride">
-                        <DataType>Boolean</DataType>
-                    </ReportField>
-                    <ReportField Name="AMSafetyStock">
-                        <DataType>Decimal</DataType>
-                    </ReportField>
-                    <ReportField Name="AMSafetyStockOverride">
-                        <DataType>Boolean</DataType>
-                    </ReportField>
-                    <ReportField Name="AMScrapLocationID">
-                    </ReportField>
-                    <ReportField Name="AMScrapLocationID_description">
-                    </ReportField>
-                    <ReportField Name="AMScrapLocationID_INLocation_descr">
-                    </ReportField>
-                    <ReportField Name="AMScrapLocationID_Segment1">
-                    </ReportField>
-                    <ReportField Name="AMScrapSiteID">
-                    </ReportField>
-                    <ReportField Name="AMScrapSiteID_description">
-                    </ReportField>
-                    <ReportField Name="AMScrapSiteID_INSite_descr">
-                    </ReportField>
-                    <ReportField Name="AMScrapSiteID_Segment1">
-                    </ReportField>
-                    <ReportField Name="AMWIPAcctID">
-                    </ReportField>
-                    <ReportField Name="AMWIPAcctID_Account_description">
-                    </ReportField>
-                    <ReportField Name="AMWIPAcctID_description">
-                    </ReportField>
-                    <ReportField Name="AMWIPAcctID_Segment1">
-                    </ReportField>
-                    <ReportField Name="AMWIPSubID">
-                    </ReportField>
-                    <ReportField Name="AMWIPSubID_description">
-                    </ReportField>
-                    <ReportField Name="AMWIPSubID_Segment1">
-                    </ReportField>
-                    <ReportField Name="AMWIPSubID_Segment2">
-                    </ReportField>
-                    <ReportField Name="AMWIPSubID_Sub_description">
-                    </ReportField>
-                    <ReportField Name="AMWIPVarianceAcctID">
-                    </ReportField>
-                    <ReportField Name="AMWIPVarianceAcctID_Account_description">
-                    </ReportField>
-                    <ReportField Name="AMWIPVarianceAcctID_description">
-                    </ReportField>
-                    <ReportField Name="AMWIPVarianceAcctID_Segment1">
-                    </ReportField>
-                    <ReportField Name="AMWIPVarianceSubID">
-                    </ReportField>
-                    <ReportField Name="AMWIPVarianceSubID_description">
-                    </ReportField>
-                    <ReportField Name="AMWIPVarianceSubID_Segment1">
-                    </ReportField>
-                    <ReportField Name="AMWIPVarianceSubID_Segment2">
-                    </ReportField>
-                    <ReportField Name="AMWIPVarianceSubID_Sub_description">
-                    </ReportField>
-                    <ReportField Name="AttributeDescriptionGroupID">
-                        <DataType>Int32</DataType>
-                    </ReportField>
-                    <ReportField Name="Availability">
-                    </ReportField>
-                    <ReportField Name="BaseItemVolume">
-                        <DataType>Decimal</DataType>
-                    </ReportField>
-                    <ReportField Name="BaseItemWeight">
-                        <DataType>Decimal</DataType>
-                    </ReportField>
-                    <ReportField Name="BasePrice">
-                        <DataType>Decimal</DataType>
-                    </ReportField>
-                    <ReportField Name="BaseUnit">
-                    </ReportField>
-                    <ReportField Name="BaseVolume">
-                        <DataType>Decimal</DataType>
-                    </ReportField>
-                    <ReportField Name="BaseWeight">
-                        <DataType>Decimal</DataType>
-                    </ReportField>
-                    <ReportField Name="Body">
-                    </ReportField>
-                    <ReportField Name="ClassID">
-                        <DataType>Int32</DataType>
-                    </ReportField>
-                    <ReportField Name="COGSAcctID">
-                    </ReportField>
-                    <ReportField Name="COGSAcctID_Account_description">
-                    </ReportField>
-                    <ReportField Name="COGSAcctID_description">
-                    </ReportField>
-                    <ReportField Name="COGSAcctID_Segment1">
-                    </ReportField>
-                    <ReportField Name="COGSSubID">
-                    </ReportField>
-                    <ReportField Name="COGSSubID_description">
-                    </ReportField>
-                    <ReportField Name="COGSSubID_Segment1">
-                    </ReportField>
-                    <ReportField Name="COGSSubID_Segment2">
-                    </ReportField>
-                    <ReportField Name="COGSSubID_Sub_description">
-                    </ReportField>
-                    <ReportField Name="ColumnAttributeValue">
-                    </ReportField>
-                    <ReportField Name="Commisionable">
-                        <DataType>Boolean</DataType>
-                    </ReportField>
-                    <ReportField Name="CompletePOLine">
-                    </ReportField>
-                    <ReportField Name="CostBasis">
-                    </ReportField>
-                    <ReportField Name="CountryOfOrigin">
-                    </ReportField>
-                    <ReportField Name="CountryOfOrigin_Country_description">
-                    </ReportField>
-                    <ReportField Name="CountryOfOrigin_description">
-                    </ReportField>
-                    <ReportField Name="CreatedByID">
-                    </ReportField>
-                    <ReportField Name="CreatedByID_Creator_displayName">
-                    </ReportField>
-                    <ReportField Name="CreatedByID_Creator_Username">
-                    </ReportField>
-                    <ReportField Name="CreatedByID_description">
-                    </ReportField>
-                    <ReportField Name="CreatedByScreenID">
-                    </ReportField>
-                    <ReportField Name="CreatedDateTime">
-                        <DataType>DateTime</DataType>
-                    </ReportField>
-                    <ReportField Name="CreatedDateTime_Day">
-                    </ReportField>
-                    <ReportField Name="CreatedDateTime_Hour">
-                    </ReportField>
-                    <ReportField Name="CreatedDateTime_Month">
-                    </ReportField>
-                    <ReportField Name="CreatedDateTime_Quarter">
-                    </ReportField>
-                    <ReportField Name="CTNPPLTAIR_Attributes">
-                    </ReportField>
-                    <ReportField Name="CTNPPLTSEA_Attributes">
-                    </ReportField>
-                    <ReportField Name="CTONPERPL_Attributes">
-                    </ReportField>
-                    <ReportField Name="CycleID">
-                    </ReportField>
-                    <ReportField Name="CycleID_description">
-                    </ReportField>
-                    <ReportField Name="CycleID_INPICycle_descr">
-                    </ReportField>
-                    <ReportField Name="DecimalBaseUnit">
-                        <DataType>Boolean</DataType>
-                    </ReportField>
-                    <ReportField Name="DecimalPurchaseUnit">
-                        <DataType>Boolean</DataType>
-                    </ReportField>
-                    <ReportField Name="DecimalSalesUnit">
-                        <DataType>Boolean</DataType>
-                    </ReportField>
-                    <ReportField Name="DefaultColumnMatrixAttributeID">
-                    </ReportField>
-                    <ReportField Name="DefaultColumnMatrixAttributeID_CSAttribute_description">
-                    </ReportField>
-                    <ReportField Name="DefaultColumnMatrixAttributeID_description">
-                    </ReportField>
-                    <ReportField Name="DefaultRowMatrixAttributeID">
-                    </ReportField>
-                    <ReportField Name="DefaultRowMatrixAttributeID_CSAttribute_description">
-                    </ReportField>
-                    <ReportField Name="DefaultRowMatrixAttributeID_description">
-                    </ReportField>
-                    <ReportField Name="DefaultSubItemID">
-                    </ReportField>
-                    <ReportField Name="DefaultSubItemID_Segment1">
-                    </ReportField>
-                    <ReportField Name="DefaultSubItemOnEntry">
-                        <DataType>Boolean</DataType>
-                    </ReportField>
-                    <ReportField Name="DefaultTerm">
-                        <DataType>Decimal</DataType>
-                    </ReportField>
-                    <ReportField Name="DefaultTermUOM">
-                    </ReportField>
-                    <ReportField Name="DeferralAcctID">
-                    </ReportField>
-                    <ReportField Name="DeferralAcctID_Account_description">
-                    </ReportField>
-                    <ReportField Name="DeferralAcctID_description">
-                    </ReportField>
-                    <ReportField Name="DeferralAcctID_Segment1">
-                    </ReportField>
-                    <ReportField Name="DeferralSubID">
-                    </ReportField>
-                    <ReportField Name="DeferralSubID_description">
-                    </ReportField>
-                    <ReportField Name="DeferralSubID_Segment1">
-                    </ReportField>
-                    <ReportField Name="DeferralSubID_Segment2">
-                    </ReportField>
-                    <ReportField Name="DeferralSubID_Sub_description">
-                    </ReportField>
-                    <ReportField Name="DeferredCode">
-                    </ReportField>
-                    <ReportField Name="Descr">
-                    </ReportField>
-                    <ReportField Name="DfltReceiptLocationID">
-                    </ReportField>
-                    <ReportField Name="DfltReceiptLocationID_description">
-                    </ReportField>
-                    <ReportField Name="DfltReceiptLocationID_INLocation_descr">
-                    </ReportField>
-                    <ReportField Name="DfltReceiptLocationID_Segment1">
-                    </ReportField>
-                    <ReportField Name="DfltShipLocationID">
-                    </ReportField>
-                    <ReportField Name="DfltShipLocationID_description">
-                    </ReportField>
-                    <ReportField Name="DfltShipLocationID_INLocation_descr">
-                    </ReportField>
-                    <ReportField Name="DfltShipLocationID_Segment1">
-                    </ReportField>
-                    <ReportField Name="DfltSiteID">
-                    </ReportField>
-                    <ReportField Name="DfltSiteID_description">
-                    </ReportField>
-                    <ReportField Name="DfltSiteID_INSite_descr">
-                    </ReportField>
-                    <ReportField Name="DfltSiteID_Segment1">
-                    </ReportField>
-                    <ReportField Name="DIMENSION_Attributes">
-                    </ReportField>
-                    <ReportField Name="DiscAcctID">
-                        <DataType>Int32</DataType>
-                    </ReportField>
-                    <ReportField Name="DiscSubID">
-                        <DataType>Int32</DataType>
-                    </ReportField>
-                    <ReportField Name="EAN_Attributes">
-                    </ReportField>
-                    <ReportField Name="EntityTypeID">
-                        <DataType>Int32</DataType>
-                    </ReportField>
-                    <ReportField Name="ExpenseAccrualAcctID">
-                        <DataType>Int32</DataType>
-                    </ReportField>
-                    <ReportField Name="ExpenseAccrualSubID">
-                        <DataType>Int32</DataType>
-                    </ReportField>
-                    <ReportField Name="ExpenseAcctID">
-                        <DataType>Int32</DataType>
-                    </ReportField>
-                    <ReportField Name="ExpenseSubID">
-                        <DataType>Int32</DataType>
-                    </ReportField>
-                    <ReportField Name="ExportToExternal">
-                        <DataType>Boolean</DataType>
-                    </ReportField>
-                    <ReportField Name="FGPKGSIZE_Attributes">
-                    </ReportField>
-                    <ReportField Name="GenerationRuleCntr">
-                        <DataType>Int32</DataType>
-                    </ReportField>
-                    <ReportField Name="GROSPERCTN_Attributes">
-                    </ReportField>
-                    <ReportField Name="GroupMask">
-                        <DataType>Object</DataType>
-                    </ReportField>
-                    <ReportField Name="HasChild">
-                        <DataType>Boolean</DataType>
-                    </ReportField>
-                    <ReportField Name="HSCODE_Attributes">
-                    </ReportField>
-                    <ReportField Name="HSCODECA_Attributes">
-                    </ReportField>
-                    <ReportField Name="HSCODEEU_Attributes">
-                    </ReportField>
-                    <ReportField Name="HSCODEJP_Attributes">
-                    </ReportField>
-                    <ReportField Name="HSCODENL_Attributes">
-                    </ReportField>
-                    <ReportField Name="HSCODEUK_Attributes">
-                    </ReportField>
-                    <ReportField Name="HSCODEUS_Attributes">
-                    </ReportField>
-                    <ReportField Name="HSTariffCode">
-                    </ReportField>
-                    <ReportField Name="ImageUrl">
-                    </ReportField>
-                    <ReportField Name="Included">
-                        <DataType>Boolean</DataType>
-                    </ReportField>
-                    <ReportField Name="InventoryCD">
-                    </ReportField>
-                    <ReportField Name="InventoryCD_Segment1">
-                    </ReportField>
-                    <ReportField Name="InventoryID">
-                        <DataType>Int32</DataType>
-                    </ReportField>
-                    <ReportField Name="InvtAcctID">
-                    </ReportField>
-                    <ReportField Name="InvtAcctID_Account_description">
-                    </ReportField>
-                    <ReportField Name="InvtAcctID_description">
-                    </ReportField>
-                    <ReportField Name="InvtAcctID_Segment1">
-                    </ReportField>
-                    <ReportField Name="InvtSubID">
-                    </ReportField>
-                    <ReportField Name="InvtSubID_description">
-                    </ReportField>
-                    <ReportField Name="InvtSubID_Segment1">
-                    </ReportField>
-                    <ReportField Name="InvtSubID_Segment2">
-                    </ReportField>
-                    <ReportField Name="InvtSubID_Sub_description">
-                    </ReportField>
-                    <ReportField Name="IsSplitted">
-                        <DataType>Boolean</DataType>
-                    </ReportField>
-                    <ReportField Name="IsTemplate">
-                        <DataType>Boolean</DataType>
-                    </ReportField>
-                    <ReportField Name="ITEMCAT_Attributes">
-                    </ReportField>
-                    <ReportField Name="ItemClassID">
-                    </ReportField>
-                    <ReportField Name="ItemClassID_description">
-                    </ReportField>
-                    <ReportField Name="ItemClassID_INItemClass_descr">
-                    </ReportField>
-                    <ReportField Name="ItemClassID_Segment1">
-                    </ReportField>
-                    <ReportField Name="ItemStatus">
-                    </ReportField>
-                    <ReportField Name="ItemType">
-                    </ReportField>
-                    <ReportField Name="KitItem">
-                        <DataType>Boolean</DataType>
-                    </ReportField>
-                    <ReportField Name="LastModifiedByID">
-                    </ReportField>
-                    <ReportField Name="LastModifiedByID_description">
-                    </ReportField>
-                    <ReportField Name="LastModifiedByID_Modifier_displayName">
-                    </ReportField>
-                    <ReportField Name="LastModifiedByID_Modifier_Username">
-                    </ReportField>
-                    <ReportField Name="LastModifiedByScreenID">
-                    </ReportField>
-                    <ReportField Name="LastModifiedDateTime">
-                        <DataType>DateTime</DataType>
-                    </ReportField>
-                    <ReportField Name="LastModifiedDateTime_Day">
-                    </ReportField>
-                    <ReportField Name="LastModifiedDateTime_Hour">
-                    </ReportField>
-                    <ReportField Name="LastModifiedDateTime_Month">
-                    </ReportField>
-                    <ReportField Name="LastModifiedDateTime_Quarter">
-                    </ReportField>
-                    <ReportField Name="LastSiteID">
-                        <DataType>Int32</DataType>
-                    </ReportField>
-                    <ReportField Name="LastStdCost">
-                        <DataType>Decimal</DataType>
-                    </ReportField>
-                    <ReportField Name="LCVarianceAcctID">
-                    </ReportField>
-                    <ReportField Name="LCVarianceAcctID_Account_description">
-                    </ReportField>
-                    <ReportField Name="LCVarianceAcctID_description">
-                    </ReportField>
-                    <ReportField Name="LCVarianceAcctID_Segment1">
-                    </ReportField>
-                    <ReportField Name="LCVarianceSubID">
-                    </ReportField>
-                    <ReportField Name="LCVarianceSubID_description">
-                    </ReportField>
-                    <ReportField Name="LCVarianceSubID_Segment1">
-                    </ReportField>
-                    <ReportField Name="LCVarianceSubID_Segment2">
-                    </ReportField>
-                    <ReportField Name="LCVarianceSubID_Sub_description">
-                    </ReportField>
-                    <ReportField Name="LotSerClassID">
-                    </ReportField>
-                    <ReportField Name="LotSerClassID_description">
-                    </ReportField>
-                    <ReportField Name="LotSerClassID_INLotSerClass_descr">
-                    </ReportField>
-                    <ReportField Name="LotSerNumberResult">
-                    </ReportField>
-                    <ReportField Name="MarkupPct">
-                        <DataType>Decimal</DataType>
-                    </ReportField>
-                    <ReportField Name="MinGrossProfitPct">
-                        <DataType>Decimal</DataType>
-                    </ReportField>
-                    <ReportField Name="MODELNO_Attributes">
-                    </ReportField>
-                    <ReportField Name="MovementClassID">
-                    </ReportField>
-                    <ReportField Name="MovementClassID_description">
-                    </ReportField>
-                    <ReportField Name="MovementClassID_INMovementClass_descr">
-                    </ReportField>
-                    <ReportField Name="MovementClassIsFixed">
-                        <DataType>Boolean</DataType>
-                    </ReportField>
-                    <ReportField Name="NegQty">
-                        <DataType>Boolean</DataType>
-                    </ReportField>
-                    <ReportField Name="NETPERCTN_Attributes">
-                    </ReportField>
-                    <ReportField Name="NETUNITWT_Attributes">
-                    </ReportField>
-                    <ReportField Name="NonStockReceipt">
-                        <DataType>Boolean</DataType>
-                    </ReportField>
-                    <ReportField Name="NonStockReceiptAsService">
-                        <DataType>Boolean</DataType>
-                    </ReportField>
-                    <ReportField Name="NonStockShip">
-                        <DataType>Boolean</DataType>
-                    </ReportField>
-                    <ReportField Name="NotAvailMode">
-                    </ReportField>
-                    <ReportField Name="NoteActivity">
-                    </ReportField>
-                    <ReportField Name="NoteFiles">
-                    </ReportField>
-                    <ReportField Name="NoteID">
-                        <DataType>Object</DataType>
-                    </ReportField>
-                    <ReportField Name="NoteImages">
-                    </ReportField>
-                    <ReportField Name="NotePopupText">
-                    </ReportField>
-                    <ReportField Name="NoteText">
-                    </ReportField>
-                    <ReportField Name="OvershipThreshold">
-                        <DataType>Decimal</DataType>
-                    </ReportField>
-                    <ReportField Name="PackageOption">
-                    </ReportField>
-                    <ReportField Name="PackSeparately">
-                        <DataType>Boolean</DataType>
-                    </ReportField>
-                    <ReportField Name="ParentItemClassID">
-                        <DataType>Int32</DataType>
-                    </ReportField>
-                    <ReportField Name="PendingStdCost">
-                        <DataType>Decimal</DataType>
-                    </ReportField>
-                    <ReportField Name="PendingStdCostDate">
-                        <DataType>DateTime</DataType>
-                    </ReportField>
-                    <ReportField Name="PendingStdCostDate_Day">
-                    </ReportField>
-                    <ReportField Name="PendingStdCostDate_Hour">
-                    </ReportField>
-                    <ReportField Name="PendingStdCostDate_Month">
-                    </ReportField>
-                    <ReportField Name="PendingStdCostDate_Quarter">
-                    </ReportField>
-                    <ReportField Name="PercentOfSalesPrice">
-                        <DataType>Decimal</DataType>
-                    </ReportField>
-                    <ReportField Name="POAccrualAcctID">
-                    </ReportField>
-                    <ReportField Name="POAccrualAcctID_Account_description">
-                    </ReportField>
-                    <ReportField Name="POAccrualAcctID_description">
-                    </ReportField>
-                    <ReportField Name="POAccrualAcctID_Segment1">
-                    </ReportField>
-                    <ReportField Name="POAccrualSubID">
-                    </ReportField>
-                    <ReportField Name="POAccrualSubID_description">
-                    </ReportField>
-                    <ReportField Name="POAccrualSubID_Segment1">
-                    </ReportField>
-                    <ReportField Name="POAccrualSubID_Segment2">
-                    </ReportField>
-                    <ReportField Name="POAccrualSubID_Sub_description">
-                    </ReportField>
-                    <ReportField Name="PostClassID">
-                    </ReportField>
-                    <ReportField Name="PPVAcctID">
-                    </ReportField>
-                    <ReportField Name="PPVAcctID_Account_description">
-                    </ReportField>
-                    <ReportField Name="PPVAcctID_description">
-                    </ReportField>
-                    <ReportField Name="PPVAcctID_Segment1">
-                    </ReportField>
-                    <ReportField Name="PPVSubID">
-                    </ReportField>
-                    <ReportField Name="PPVSubID_description">
-                    </ReportField>
-                    <ReportField Name="PPVSubID_Segment1">
-                    </ReportField>
-                    <ReportField Name="PPVSubID_Segment2">
-                    </ReportField>
-                    <ReportField Name="PPVSubID_Sub_description">
-                    </ReportField>
-                    <ReportField Name="PreferredVendorID">
-                    </ReportField>
-                    <ReportField Name="PreferredVendorID_BAccountR_acctName">
-                    </ReportField>
-                    <ReportField Name="PreferredVendorID_description">
-                    </ReportField>
-                    <ReportField Name="PreferredVendorID_Segment1">
-                    </ReportField>
-                    <ReportField Name="PreferredVendorID_Vendor_acctName">
-                    </ReportField>
-                    <ReportField Name="PreferredVendorLocationID">
-                    </ReportField>
-                    <ReportField Name="PreferredVendorLocationID_description">
-                    </ReportField>
-                    <ReportField Name="PreferredVendorLocationID_Location_descr">
-                    </ReportField>
-                    <ReportField Name="PreferredVendorLocationID_Segment1">
-                    </ReportField>
-                    <ReportField Name="PriceClassID">
-                    </ReportField>
-                    <ReportField Name="PriceClassID_description">
-                    </ReportField>
-                    <ReportField Name="PriceClassID_INPriceClass_description">
-                    </ReportField>
-                    <ReportField Name="PriceManagerID">
-                        <DataType>Int32</DataType>
-                    </ReportField>
-                    <ReportField Name="PriceManagerID_description">
-                    </ReportField>
-                    <ReportField Name="PriceManagerID_Owner_displayName">
-                    </ReportField>
-                    <ReportField Name="PriceWorkgroupID">
-                    </ReportField>
-                    <ReportField Name="ProductManagerID">
-                        <DataType>Int32</DataType>
-                    </ReportField>
-                    <ReportField Name="ProductManagerID_description">
-                    </ReportField>
-                    <ReportField Name="ProductManagerID_Owner_displayName">
-                    </ReportField>
-                    <ReportField Name="ProductWorkgroupID">
-                    </ReportField>
-                    <ReportField Name="PurchaseUnit">
-                    </ReportField>
-                    <ReportField Name="QTYPERCTN_Attributes">
-                    </ReportField>
-                    <ReportField Name="ReasonCodeSubID">
-                    </ReportField>
-                    <ReportField Name="ReasonCodeSubID_description">
-                    </ReportField>
-                    <ReportField Name="ReasonCodeSubID_Segment1">
-                    </ReportField>
-                    <ReportField Name="ReasonCodeSubID_Segment2">
-                    </ReportField>
-                    <ReportField Name="ReasonCodeSubID_Sub_description">
-                    </ReportField>
-                    <ReportField Name="RecPrice">
-                        <DataType>Decimal</DataType>
-                    </ReportField>
-                    <ReportField Name="RowAttributeValue">
-                    </ReportField>
-                    <ReportField Name="SalesAcctID">
-                    </ReportField>
-                    <ReportField Name="SalesAcctID_Account_description">
-                    </ReportField>
-                    <ReportField Name="SalesAcctID_description">
-                    </ReportField>
-                    <ReportField Name="SalesAcctID_Segment1">
-                    </ReportField>
-                    <ReportField Name="SalesSubID">
-                    </ReportField>
-                    <ReportField Name="SalesSubID_description">
-                    </ReportField>
-                    <ReportField Name="SalesSubID_Segment1">
-                    </ReportField>
-                    <ReportField Name="SalesSubID_Segment2">
-                    </ReportField>
-                    <ReportField Name="SalesSubID_Sub_description">
-                    </ReportField>
-                    <ReportField Name="SalesUnit">
-                    </ReportField>
-                    <ReportField Name="SampleDescription">
-                    </ReportField>
-                    <ReportField Name="SampleID">
-                    </ReportField>
-                    <ReportField Name="Secured">
-                        <DataType>Boolean</DataType>
-                    </ReportField>
-                    <ReportField Name="Selected">
-                        <DataType>Boolean</DataType>
-                    </ReportField>
-                    <ReportField Name="StdCost">
-                        <DataType>Decimal</DataType>
-                    </ReportField>
-                    <ReportField Name="StdCostDate">
-                        <DataType>DateTime</DataType>
-                    </ReportField>
-                    <ReportField Name="StdCostDate_Day">
-                    </ReportField>
-                    <ReportField Name="StdCostDate_Hour">
-                    </ReportField>
-                    <ReportField Name="StdCostDate_Month">
-                    </ReportField>
-                    <ReportField Name="StdCostDate_Quarter">
-                    </ReportField>
-                    <ReportField Name="StdCstRevAcctID">
-                    </ReportField>
-                    <ReportField Name="StdCstRevAcctID_Account_description">
-                    </ReportField>
-                    <ReportField Name="StdCstRevAcctID_description">
-                    </ReportField>
-                    <ReportField Name="StdCstRevAcctID_Segment1">
-                    </ReportField>
-                    <ReportField Name="StdCstRevSubID">
-                    </ReportField>
-                    <ReportField Name="StdCstRevSubID_description">
-                    </ReportField>
-                    <ReportField Name="StdCstRevSubID_Segment1">
-                    </ReportField>
-                    <ReportField Name="StdCstRevSubID_Segment2">
-                    </ReportField>
-                    <ReportField Name="StdCstRevSubID_Sub_description">
-                    </ReportField>
-                    <ReportField Name="StdCstVarAcctID">
-                    </ReportField>
-                    <ReportField Name="StdCstVarAcctID_Account_description">
-                    </ReportField>
-                    <ReportField Name="StdCstVarAcctID_description">
-                    </ReportField>
-                    <ReportField Name="StdCstVarAcctID_Segment1">
-                    </ReportField>
-                    <ReportField Name="StdCstVarSubID">
-                    </ReportField>
-                    <ReportField Name="StdCstVarSubID_description">
-                    </ReportField>
-                    <ReportField Name="StdCstVarSubID_Segment1">
-                    </ReportField>
-                    <ReportField Name="StdCstVarSubID_Segment2">
-                    </ReportField>
-                    <ReportField Name="StdCstVarSubID_Sub_description">
-                    </ReportField>
-                    <ReportField Name="StkItem">
-                        <DataType>Boolean</DataType>
-                    </ReportField>
-                    <ReportField Name="TaxCalcMode">
-                    </ReportField>
-                    <ReportField Name="TaxCategoryID">
-                    </ReportField>
-                    <ReportField Name="TaxCategoryID_description">
-                    </ReportField>
-                    <ReportField Name="TaxCategoryID_TaxCategory_descr">
-                    </ReportField>
-                    <ReportField Name="TemplateItemID">
-                    </ReportField>
-                    <ReportField Name="TemplateItemID_description">
-                    </ReportField>
-                    <ReportField Name="TemplateItemID_InventoryItem_descr">
-                    </ReportField>
-                    <ReportField Name="TemplateItemID_Segment1">
-                    </ReportField>
-                    <ReportField Name="TotalPercentage">
-                        <DataType>Decimal</DataType>
-                    </ReportField>
-                    <ReportField Name="tstamp">
-                    </ReportField>
-                    <ReportField Name="UndershipThreshold">
-                        <DataType>Decimal</DataType>
-                    </ReportField>
-                    <ReportField Name="UpdateOnlySelected">
-                        <DataType>Boolean</DataType>
-                    </ReportField>
-                    <ReportField Name="UseParentSubID">
-                        <DataType>Boolean</DataType>
-                    </ReportField>
-                    <ReportField Name="ValMethod">
-                    </ReportField>
-                    <ReportField Name="VENDENGAD_Attributes">
-                    </ReportField>
-                    <ReportField Name="VENDENGNA_Attributes">
-                    </ReportField>
-                    <ReportField Name="Visibility">
-                    </ReportField>
-                    <ReportField Name="VolumeUOM">
-                    </ReportField>
-                    <ReportField Name="WeightItem">
-                        <DataType>Boolean</DataType>
-                    </ReportField>
-                    <ReportField Name="WeightUOM">
-                    </ReportField>
-                </Fields>
-                <FullName>PX.Objects.IN.InventoryItem</FullName>
             </ReportTable>
             <ReportTable Name="CSAnswers">
                 <Fields>
@@ -3302,6 +2449,782 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                 </Fields>
                 <FullName>PX.Objects.SO.SOShipment</FullName>
             </ReportTable>
+            <ReportTable Name="InventoryItem">
+                <Fields>
+                    <ReportField Name="ABCCodeID">
+                    </ReportField>
+                    <ReportField Name="ABCCodeID_description">
+                    </ReportField>
+                    <ReportField Name="ABCCodeID_INABCCode_descr">
+                    </ReportField>
+                    <ReportField Name="ABCCodeIsFixed">
+                        <DataType>Boolean</DataType>
+                    </ReportField>
+                    <ReportField Name="AccrueCost">
+                        <DataType>Boolean</DataType>
+                    </ReportField>
+                    <ReportField Name="AMBOMID">
+                    </ReportField>
+                    <ReportField Name="AMBOMID_AMBomItem_descr">
+                    </ReportField>
+                    <ReportField Name="AMBOMID_description">
+                    </ReportField>
+                    <ReportField Name="AMCheckSchdMatlAvailability">
+                        <DataType>Boolean</DataType>
+                    </ReportField>
+                    <ReportField Name="AMConfigurationID">
+                    </ReportField>
+                    <ReportField Name="AMConfigurationID_AMConfiguration_descr">
+                    </ReportField>
+                    <ReportField Name="AMConfigurationID_description">
+                    </ReportField>
+                    <ReportField Name="AMCTPItem">
+                        <DataType>Boolean</DataType>
+                    </ReportField>
+                    <ReportField Name="AMDefaultMarkFor">
+                        <DataType>Int32</DataType>
+                    </ReportField>
+                    <ReportField Name="AMGroupWindow">
+                        <DataType>Int32</DataType>
+                    </ReportField>
+                    <ReportField Name="AMLotSize">
+                        <DataType>Decimal</DataType>
+                    </ReportField>
+                    <ReportField Name="AMLowLevel">
+                        <DataType>Int32</DataType>
+                    </ReportField>
+                    <ReportField Name="AMMakeToOrderItem">
+                        <DataType>Boolean</DataType>
+                    </ReportField>
+                    <ReportField Name="AMMaxOrdQty">
+                        <DataType>Decimal</DataType>
+                    </ReportField>
+                    <ReportField Name="AMMFGLeadTime">
+                        <DataType>Int32</DataType>
+                    </ReportField>
+                    <ReportField Name="AMMinOrdQty">
+                        <DataType>Decimal</DataType>
+                    </ReportField>
+                    <ReportField Name="AMMinQty">
+                        <DataType>Decimal</DataType>
+                    </ReportField>
+                    <ReportField Name="AMMinQtyOverride">
+                        <DataType>Boolean</DataType>
+                    </ReportField>
+                    <ReportField Name="AMMRPItem">
+                        <DataType>Boolean</DataType>
+                    </ReportField>
+                    <ReportField Name="AMPlanningBOMID">
+                    </ReportField>
+                    <ReportField Name="AMPlanningBOMID_AMBomItem_descr">
+                    </ReportField>
+                    <ReportField Name="AMPlanningBOMID_description">
+                    </ReportField>
+                    <ReportField Name="AMQtyRoundUp">
+                        <DataType>Boolean</DataType>
+                    </ReportField>
+                    <ReportField Name="AMReplenishmentSource">
+                    </ReportField>
+                    <ReportField Name="AMReplenishmentSourceOverride">
+                        <DataType>Boolean</DataType>
+                    </ReportField>
+                    <ReportField Name="AMSafetyStock">
+                        <DataType>Decimal</DataType>
+                    </ReportField>
+                    <ReportField Name="AMSafetyStockOverride">
+                        <DataType>Boolean</DataType>
+                    </ReportField>
+                    <ReportField Name="AMScrapLocationID">
+                    </ReportField>
+                    <ReportField Name="AMScrapLocationID_description">
+                    </ReportField>
+                    <ReportField Name="AMScrapLocationID_INLocation_descr">
+                    </ReportField>
+                    <ReportField Name="AMScrapLocationID_Segment1">
+                    </ReportField>
+                    <ReportField Name="AMScrapSiteID">
+                    </ReportField>
+                    <ReportField Name="AMScrapSiteID_description">
+                    </ReportField>
+                    <ReportField Name="AMScrapSiteID_INSite_descr">
+                    </ReportField>
+                    <ReportField Name="AMScrapSiteID_Segment1">
+                    </ReportField>
+                    <ReportField Name="AMWIPAcctID">
+                    </ReportField>
+                    <ReportField Name="AMWIPAcctID_Account_description">
+                    </ReportField>
+                    <ReportField Name="AMWIPAcctID_description">
+                    </ReportField>
+                    <ReportField Name="AMWIPAcctID_Segment1">
+                    </ReportField>
+                    <ReportField Name="AMWIPSubID">
+                    </ReportField>
+                    <ReportField Name="AMWIPSubID_description">
+                    </ReportField>
+                    <ReportField Name="AMWIPSubID_Segment1">
+                    </ReportField>
+                    <ReportField Name="AMWIPSubID_Segment2">
+                    </ReportField>
+                    <ReportField Name="AMWIPSubID_Sub_description">
+                    </ReportField>
+                    <ReportField Name="AMWIPVarianceAcctID">
+                    </ReportField>
+                    <ReportField Name="AMWIPVarianceAcctID_Account_description">
+                    </ReportField>
+                    <ReportField Name="AMWIPVarianceAcctID_description">
+                    </ReportField>
+                    <ReportField Name="AMWIPVarianceAcctID_Segment1">
+                    </ReportField>
+                    <ReportField Name="AMWIPVarianceSubID">
+                    </ReportField>
+                    <ReportField Name="AMWIPVarianceSubID_description">
+                    </ReportField>
+                    <ReportField Name="AMWIPVarianceSubID_Segment1">
+                    </ReportField>
+                    <ReportField Name="AMWIPVarianceSubID_Segment2">
+                    </ReportField>
+                    <ReportField Name="AMWIPVarianceSubID_Sub_description">
+                    </ReportField>
+                    <ReportField Name="AttributeDescriptionGroupID">
+                        <DataType>Int32</DataType>
+                    </ReportField>
+                    <ReportField Name="Availability">
+                    </ReportField>
+                    <ReportField Name="BaseItemVolume">
+                        <DataType>Decimal</DataType>
+                    </ReportField>
+                    <ReportField Name="BaseItemWeight">
+                        <DataType>Decimal</DataType>
+                    </ReportField>
+                    <ReportField Name="BasePrice">
+                        <DataType>Decimal</DataType>
+                    </ReportField>
+                    <ReportField Name="BaseUnit">
+                    </ReportField>
+                    <ReportField Name="BaseVolume">
+                        <DataType>Decimal</DataType>
+                    </ReportField>
+                    <ReportField Name="BaseWeight">
+                        <DataType>Decimal</DataType>
+                    </ReportField>
+                    <ReportField Name="Body">
+                    </ReportField>
+                    <ReportField Name="ClassID">
+                        <DataType>Int32</DataType>
+                    </ReportField>
+                    <ReportField Name="COGSAcctID">
+                    </ReportField>
+                    <ReportField Name="COGSAcctID_Account_description">
+                    </ReportField>
+                    <ReportField Name="COGSAcctID_description">
+                    </ReportField>
+                    <ReportField Name="COGSAcctID_Segment1">
+                    </ReportField>
+                    <ReportField Name="COGSSubID">
+                    </ReportField>
+                    <ReportField Name="COGSSubID_description">
+                    </ReportField>
+                    <ReportField Name="COGSSubID_Segment1">
+                    </ReportField>
+                    <ReportField Name="COGSSubID_Segment2">
+                    </ReportField>
+                    <ReportField Name="COGSSubID_Sub_description">
+                    </ReportField>
+                    <ReportField Name="ColumnAttributeValue">
+                    </ReportField>
+                    <ReportField Name="Commisionable">
+                        <DataType>Boolean</DataType>
+                    </ReportField>
+                    <ReportField Name="CompletePOLine">
+                    </ReportField>
+                    <ReportField Name="CostBasis">
+                    </ReportField>
+                    <ReportField Name="CountryOfOrigin">
+                    </ReportField>
+                    <ReportField Name="CountryOfOrigin_Country_description">
+                    </ReportField>
+                    <ReportField Name="CountryOfOrigin_description">
+                    </ReportField>
+                    <ReportField Name="CreatedByID">
+                    </ReportField>
+                    <ReportField Name="CreatedByID_Creator_displayName">
+                    </ReportField>
+                    <ReportField Name="CreatedByID_Creator_Username">
+                    </ReportField>
+                    <ReportField Name="CreatedByID_description">
+                    </ReportField>
+                    <ReportField Name="CreatedByScreenID">
+                    </ReportField>
+                    <ReportField Name="CreatedDateTime">
+                        <DataType>DateTime</DataType>
+                    </ReportField>
+                    <ReportField Name="CreatedDateTime_Day">
+                    </ReportField>
+                    <ReportField Name="CreatedDateTime_Hour">
+                    </ReportField>
+                    <ReportField Name="CreatedDateTime_Month">
+                    </ReportField>
+                    <ReportField Name="CreatedDateTime_Quarter">
+                    </ReportField>
+                    <ReportField Name="CTNPPLTAIR_Attributes">
+                    </ReportField>
+                    <ReportField Name="CTNPPLTSEA_Attributes">
+                    </ReportField>
+                    <ReportField Name="CTNSPERPAL_Attributes">
+                    </ReportField>
+                    <ReportField Name="CycleID">
+                    </ReportField>
+                    <ReportField Name="CycleID_description">
+                    </ReportField>
+                    <ReportField Name="CycleID_INPICycle_descr">
+                    </ReportField>
+                    <ReportField Name="DecimalBaseUnit">
+                        <DataType>Boolean</DataType>
+                    </ReportField>
+                    <ReportField Name="DecimalPurchaseUnit">
+                        <DataType>Boolean</DataType>
+                    </ReportField>
+                    <ReportField Name="DecimalSalesUnit">
+                        <DataType>Boolean</DataType>
+                    </ReportField>
+                    <ReportField Name="DefaultColumnMatrixAttributeID">
+                    </ReportField>
+                    <ReportField Name="DefaultColumnMatrixAttributeID_CSAttribute_description">
+                    </ReportField>
+                    <ReportField Name="DefaultColumnMatrixAttributeID_description">
+                    </ReportField>
+                    <ReportField Name="DefaultRowMatrixAttributeID">
+                    </ReportField>
+                    <ReportField Name="DefaultRowMatrixAttributeID_CSAttribute_description">
+                    </ReportField>
+                    <ReportField Name="DefaultRowMatrixAttributeID_description">
+                    </ReportField>
+                    <ReportField Name="DefaultSubItemID">
+                    </ReportField>
+                    <ReportField Name="DefaultSubItemID_Segment1">
+                    </ReportField>
+                    <ReportField Name="DefaultSubItemOnEntry">
+                        <DataType>Boolean</DataType>
+                    </ReportField>
+                    <ReportField Name="DefaultTerm">
+                        <DataType>Decimal</DataType>
+                    </ReportField>
+                    <ReportField Name="DefaultTermUOM">
+                    </ReportField>
+                    <ReportField Name="DeferralAcctID">
+                    </ReportField>
+                    <ReportField Name="DeferralAcctID_Account_description">
+                    </ReportField>
+                    <ReportField Name="DeferralAcctID_description">
+                    </ReportField>
+                    <ReportField Name="DeferralAcctID_Segment1">
+                    </ReportField>
+                    <ReportField Name="DeferralSubID">
+                    </ReportField>
+                    <ReportField Name="DeferralSubID_description">
+                    </ReportField>
+                    <ReportField Name="DeferralSubID_Segment1">
+                    </ReportField>
+                    <ReportField Name="DeferralSubID_Segment2">
+                    </ReportField>
+                    <ReportField Name="DeferralSubID_Sub_description">
+                    </ReportField>
+                    <ReportField Name="DeferredCode">
+                    </ReportField>
+                    <ReportField Name="Descr">
+                    </ReportField>
+                    <ReportField Name="DfltReceiptLocationID">
+                    </ReportField>
+                    <ReportField Name="DfltReceiptLocationID_description">
+                    </ReportField>
+                    <ReportField Name="DfltReceiptLocationID_INLocation_descr">
+                    </ReportField>
+                    <ReportField Name="DfltReceiptLocationID_Segment1">
+                    </ReportField>
+                    <ReportField Name="DfltShipLocationID">
+                    </ReportField>
+                    <ReportField Name="DfltShipLocationID_description">
+                    </ReportField>
+                    <ReportField Name="DfltShipLocationID_INLocation_descr">
+                    </ReportField>
+                    <ReportField Name="DfltShipLocationID_Segment1">
+                    </ReportField>
+                    <ReportField Name="DfltSiteID">
+                    </ReportField>
+                    <ReportField Name="DfltSiteID_description">
+                    </ReportField>
+                    <ReportField Name="DfltSiteID_INSite_descr">
+                    </ReportField>
+                    <ReportField Name="DfltSiteID_Segment1">
+                    </ReportField>
+                    <ReportField Name="DIMENSION_Attributes">
+                    </ReportField>
+                    <ReportField Name="DiscAcctID">
+                        <DataType>Int32</DataType>
+                    </ReportField>
+                    <ReportField Name="DiscSubID">
+                        <DataType>Int32</DataType>
+                    </ReportField>
+                    <ReportField Name="EAN_Attributes">
+                    </ReportField>
+                    <ReportField Name="EntityTypeID">
+                        <DataType>Int32</DataType>
+                    </ReportField>
+                    <ReportField Name="ExpenseAccrualAcctID">
+                        <DataType>Int32</DataType>
+                    </ReportField>
+                    <ReportField Name="ExpenseAccrualSubID">
+                        <DataType>Int32</DataType>
+                    </ReportField>
+                    <ReportField Name="ExpenseAcctID">
+                        <DataType>Int32</DataType>
+                    </ReportField>
+                    <ReportField Name="ExpenseSubID">
+                        <DataType>Int32</DataType>
+                    </ReportField>
+                    <ReportField Name="ExportToExternal">
+                        <DataType>Boolean</DataType>
+                    </ReportField>
+                    <ReportField Name="FGPKGSIZE_Attributes">
+                    </ReportField>
+                    <ReportField Name="GenerationRuleCntr">
+                        <DataType>Int32</DataType>
+                    </ReportField>
+                    <ReportField Name="GROSPERCTN_Attributes">
+                    </ReportField>
+                    <ReportField Name="GroupMask">
+                        <DataType>Object</DataType>
+                    </ReportField>
+                    <ReportField Name="HasChild">
+                        <DataType>Boolean</DataType>
+                    </ReportField>
+                    <ReportField Name="HSCODE_Attributes">
+                    </ReportField>
+                    <ReportField Name="HSCODECA_Attributes">
+                    </ReportField>
+                    <ReportField Name="HSCODEJP_Attributes">
+                    </ReportField>
+                    <ReportField Name="HSCODENL_Attributes">
+                    </ReportField>
+                    <ReportField Name="HSCODEUK_Attributes">
+                    </ReportField>
+                    <ReportField Name="HSCODEUS_Attributes">
+                    </ReportField>
+                    <ReportField Name="HSTariffCode">
+                    </ReportField>
+                    <ReportField Name="ImageUrl">
+                    </ReportField>
+                    <ReportField Name="Included">
+                        <DataType>Boolean</DataType>
+                    </ReportField>
+                    <ReportField Name="InventoryCD">
+                    </ReportField>
+                    <ReportField Name="InventoryCD_Segment1">
+                    </ReportField>
+                    <ReportField Name="InventoryID">
+                        <DataType>Int32</DataType>
+                    </ReportField>
+                    <ReportField Name="InvtAcctID">
+                    </ReportField>
+                    <ReportField Name="InvtAcctID_Account_description">
+                    </ReportField>
+                    <ReportField Name="InvtAcctID_description">
+                    </ReportField>
+                    <ReportField Name="InvtAcctID_Segment1">
+                    </ReportField>
+                    <ReportField Name="InvtSubID">
+                    </ReportField>
+                    <ReportField Name="InvtSubID_description">
+                    </ReportField>
+                    <ReportField Name="InvtSubID_Segment1">
+                    </ReportField>
+                    <ReportField Name="InvtSubID_Segment2">
+                    </ReportField>
+                    <ReportField Name="InvtSubID_Sub_description">
+                    </ReportField>
+                    <ReportField Name="IsSplitted">
+                        <DataType>Boolean</DataType>
+                    </ReportField>
+                    <ReportField Name="IsTemplate">
+                        <DataType>Boolean</DataType>
+                    </ReportField>
+                    <ReportField Name="ITEMCAT_Attributes">
+                    </ReportField>
+                    <ReportField Name="ItemClassID">
+                    </ReportField>
+                    <ReportField Name="ItemClassID_description">
+                    </ReportField>
+                    <ReportField Name="ItemClassID_INItemClass_descr">
+                    </ReportField>
+                    <ReportField Name="ItemClassID_Segment1">
+                    </ReportField>
+                    <ReportField Name="ITEMDESEN_Attributes">
+                    </ReportField>
+                    <ReportField Name="ItemStatus">
+                    </ReportField>
+                    <ReportField Name="ItemType">
+                    </ReportField>
+                    <ReportField Name="KitItem">
+                        <DataType>Boolean</DataType>
+                    </ReportField>
+                    <ReportField Name="LastModifiedByID">
+                    </ReportField>
+                    <ReportField Name="LastModifiedByID_description">
+                    </ReportField>
+                    <ReportField Name="LastModifiedByID_Modifier_displayName">
+                    </ReportField>
+                    <ReportField Name="LastModifiedByID_Modifier_Username">
+                    </ReportField>
+                    <ReportField Name="LastModifiedByScreenID">
+                    </ReportField>
+                    <ReportField Name="LastModifiedDateTime">
+                        <DataType>DateTime</DataType>
+                    </ReportField>
+                    <ReportField Name="LastModifiedDateTime_Day">
+                    </ReportField>
+                    <ReportField Name="LastModifiedDateTime_Hour">
+                    </ReportField>
+                    <ReportField Name="LastModifiedDateTime_Month">
+                    </ReportField>
+                    <ReportField Name="LastModifiedDateTime_Quarter">
+                    </ReportField>
+                    <ReportField Name="LastSiteID">
+                        <DataType>Int32</DataType>
+                    </ReportField>
+                    <ReportField Name="LastStdCost">
+                        <DataType>Decimal</DataType>
+                    </ReportField>
+                    <ReportField Name="LCVarianceAcctID">
+                    </ReportField>
+                    <ReportField Name="LCVarianceAcctID_Account_description">
+                    </ReportField>
+                    <ReportField Name="LCVarianceAcctID_description">
+                    </ReportField>
+                    <ReportField Name="LCVarianceAcctID_Segment1">
+                    </ReportField>
+                    <ReportField Name="LCVarianceSubID">
+                    </ReportField>
+                    <ReportField Name="LCVarianceSubID_description">
+                    </ReportField>
+                    <ReportField Name="LCVarianceSubID_Segment1">
+                    </ReportField>
+                    <ReportField Name="LCVarianceSubID_Segment2">
+                    </ReportField>
+                    <ReportField Name="LCVarianceSubID_Sub_description">
+                    </ReportField>
+                    <ReportField Name="LotSerClassID">
+                    </ReportField>
+                    <ReportField Name="LotSerClassID_description">
+                    </ReportField>
+                    <ReportField Name="LotSerClassID_INLotSerClass_descr">
+                    </ReportField>
+                    <ReportField Name="LotSerNumberResult">
+                    </ReportField>
+                    <ReportField Name="MarkupPct">
+                        <DataType>Decimal</DataType>
+                    </ReportField>
+                    <ReportField Name="MinGrossProfitPct">
+                        <DataType>Decimal</DataType>
+                    </ReportField>
+                    <ReportField Name="MODELNO_Attributes">
+                    </ReportField>
+                    <ReportField Name="MovementClassID">
+                    </ReportField>
+                    <ReportField Name="MovementClassID_description">
+                    </ReportField>
+                    <ReportField Name="MovementClassID_INMovementClass_descr">
+                    </ReportField>
+                    <ReportField Name="MovementClassIsFixed">
+                        <DataType>Boolean</DataType>
+                    </ReportField>
+                    <ReportField Name="NegQty">
+                        <DataType>Boolean</DataType>
+                    </ReportField>
+                    <ReportField Name="NETPERCTN_Attributes">
+                    </ReportField>
+                    <ReportField Name="NETUNITWT_Attributes">
+                    </ReportField>
+                    <ReportField Name="NETWEIGHT_Attributes">
+                    </ReportField>
+                    <ReportField Name="NonStockReceipt">
+                        <DataType>Boolean</DataType>
+                    </ReportField>
+                    <ReportField Name="NonStockReceiptAsService">
+                        <DataType>Boolean</DataType>
+                    </ReportField>
+                    <ReportField Name="NonStockShip">
+                        <DataType>Boolean</DataType>
+                    </ReportField>
+                    <ReportField Name="NotAvailMode">
+                    </ReportField>
+                    <ReportField Name="NoteActivity">
+                    </ReportField>
+                    <ReportField Name="NoteFiles">
+                    </ReportField>
+                    <ReportField Name="NoteID">
+                        <DataType>Object</DataType>
+                    </ReportField>
+                    <ReportField Name="NoteImages">
+                    </ReportField>
+                    <ReportField Name="NotePopupText">
+                    </ReportField>
+                    <ReportField Name="NoteText">
+                    </ReportField>
+                    <ReportField Name="OvershipThreshold">
+                        <DataType>Decimal</DataType>
+                    </ReportField>
+                    <ReportField Name="PackageOption">
+                    </ReportField>
+                    <ReportField Name="PackSeparately">
+                        <DataType>Boolean</DataType>
+                    </ReportField>
+                    <ReportField Name="ParentItemClassID">
+                        <DataType>Int32</DataType>
+                    </ReportField>
+                    <ReportField Name="PendingStdCost">
+                        <DataType>Decimal</DataType>
+                    </ReportField>
+                    <ReportField Name="PendingStdCostDate">
+                        <DataType>DateTime</DataType>
+                    </ReportField>
+                    <ReportField Name="PendingStdCostDate_Day">
+                    </ReportField>
+                    <ReportField Name="PendingStdCostDate_Hour">
+                    </ReportField>
+                    <ReportField Name="PendingStdCostDate_Month">
+                    </ReportField>
+                    <ReportField Name="PendingStdCostDate_Quarter">
+                    </ReportField>
+                    <ReportField Name="PercentOfSalesPrice">
+                        <DataType>Decimal</DataType>
+                    </ReportField>
+                    <ReportField Name="POAccrualAcctID">
+                    </ReportField>
+                    <ReportField Name="POAccrualAcctID_Account_description">
+                    </ReportField>
+                    <ReportField Name="POAccrualAcctID_description">
+                    </ReportField>
+                    <ReportField Name="POAccrualAcctID_Segment1">
+                    </ReportField>
+                    <ReportField Name="POAccrualSubID">
+                    </ReportField>
+                    <ReportField Name="POAccrualSubID_description">
+                    </ReportField>
+                    <ReportField Name="POAccrualSubID_Segment1">
+                    </ReportField>
+                    <ReportField Name="POAccrualSubID_Segment2">
+                    </ReportField>
+                    <ReportField Name="POAccrualSubID_Sub_description">
+                    </ReportField>
+                    <ReportField Name="PostClassID">
+                    </ReportField>
+                    <ReportField Name="PPVAcctID">
+                    </ReportField>
+                    <ReportField Name="PPVAcctID_Account_description">
+                    </ReportField>
+                    <ReportField Name="PPVAcctID_description">
+                    </ReportField>
+                    <ReportField Name="PPVAcctID_Segment1">
+                    </ReportField>
+                    <ReportField Name="PPVSubID">
+                    </ReportField>
+                    <ReportField Name="PPVSubID_description">
+                    </ReportField>
+                    <ReportField Name="PPVSubID_Segment1">
+                    </ReportField>
+                    <ReportField Name="PPVSubID_Segment2">
+                    </ReportField>
+                    <ReportField Name="PPVSubID_Sub_description">
+                    </ReportField>
+                    <ReportField Name="PreferredVendorID">
+                    </ReportField>
+                    <ReportField Name="PreferredVendorID_BAccountR_acctName">
+                    </ReportField>
+                    <ReportField Name="PreferredVendorID_description">
+                    </ReportField>
+                    <ReportField Name="PreferredVendorID_Segment1">
+                    </ReportField>
+                    <ReportField Name="PreferredVendorID_Vendor_acctName">
+                    </ReportField>
+                    <ReportField Name="PreferredVendorLocationID">
+                    </ReportField>
+                    <ReportField Name="PreferredVendorLocationID_description">
+                    </ReportField>
+                    <ReportField Name="PreferredVendorLocationID_Location_descr">
+                    </ReportField>
+                    <ReportField Name="PreferredVendorLocationID_Segment1">
+                    </ReportField>
+                    <ReportField Name="PriceClassID">
+                    </ReportField>
+                    <ReportField Name="PriceClassID_description">
+                    </ReportField>
+                    <ReportField Name="PriceClassID_INPriceClass_description">
+                    </ReportField>
+                    <ReportField Name="PriceManagerID">
+                        <DataType>Int32</DataType>
+                    </ReportField>
+                    <ReportField Name="PriceManagerID_description">
+                    </ReportField>
+                    <ReportField Name="PriceManagerID_Owner_displayName">
+                    </ReportField>
+                    <ReportField Name="PriceWorkgroupID">
+                    </ReportField>
+                    <ReportField Name="ProductManagerID">
+                        <DataType>Int32</DataType>
+                    </ReportField>
+                    <ReportField Name="ProductManagerID_description">
+                    </ReportField>
+                    <ReportField Name="ProductManagerID_Owner_displayName">
+                    </ReportField>
+                    <ReportField Name="ProductWorkgroupID">
+                    </ReportField>
+                    <ReportField Name="PurchaseUnit">
+                    </ReportField>
+                    <ReportField Name="QTYPERCTN_Attributes">
+                    </ReportField>
+                    <ReportField Name="ReasonCodeSubID">
+                    </ReportField>
+                    <ReportField Name="ReasonCodeSubID_description">
+                    </ReportField>
+                    <ReportField Name="ReasonCodeSubID_Segment1">
+                    </ReportField>
+                    <ReportField Name="ReasonCodeSubID_Segment2">
+                    </ReportField>
+                    <ReportField Name="ReasonCodeSubID_Sub_description">
+                    </ReportField>
+                    <ReportField Name="RecPrice">
+                        <DataType>Decimal</DataType>
+                    </ReportField>
+                    <ReportField Name="RowAttributeValue">
+                    </ReportField>
+                    <ReportField Name="SalesAcctID">
+                    </ReportField>
+                    <ReportField Name="SalesAcctID_Account_description">
+                    </ReportField>
+                    <ReportField Name="SalesAcctID_description">
+                    </ReportField>
+                    <ReportField Name="SalesAcctID_Segment1">
+                    </ReportField>
+                    <ReportField Name="SalesSubID">
+                    </ReportField>
+                    <ReportField Name="SalesSubID_description">
+                    </ReportField>
+                    <ReportField Name="SalesSubID_Segment1">
+                    </ReportField>
+                    <ReportField Name="SalesSubID_Segment2">
+                    </ReportField>
+                    <ReportField Name="SalesSubID_Sub_description">
+                    </ReportField>
+                    <ReportField Name="SalesUnit">
+                    </ReportField>
+                    <ReportField Name="SampleDescription">
+                    </ReportField>
+                    <ReportField Name="SampleID">
+                    </ReportField>
+                    <ReportField Name="Secured">
+                        <DataType>Boolean</DataType>
+                    </ReportField>
+                    <ReportField Name="Selected">
+                        <DataType>Boolean</DataType>
+                    </ReportField>
+                    <ReportField Name="StdCost">
+                        <DataType>Decimal</DataType>
+                    </ReportField>
+                    <ReportField Name="StdCostDate">
+                        <DataType>DateTime</DataType>
+                    </ReportField>
+                    <ReportField Name="StdCostDate_Day">
+                    </ReportField>
+                    <ReportField Name="StdCostDate_Hour">
+                    </ReportField>
+                    <ReportField Name="StdCostDate_Month">
+                    </ReportField>
+                    <ReportField Name="StdCostDate_Quarter">
+                    </ReportField>
+                    <ReportField Name="StdCstRevAcctID">
+                    </ReportField>
+                    <ReportField Name="StdCstRevAcctID_Account_description">
+                    </ReportField>
+                    <ReportField Name="StdCstRevAcctID_description">
+                    </ReportField>
+                    <ReportField Name="StdCstRevAcctID_Segment1">
+                    </ReportField>
+                    <ReportField Name="StdCstRevSubID">
+                    </ReportField>
+                    <ReportField Name="StdCstRevSubID_description">
+                    </ReportField>
+                    <ReportField Name="StdCstRevSubID_Segment1">
+                    </ReportField>
+                    <ReportField Name="StdCstRevSubID_Segment2">
+                    </ReportField>
+                    <ReportField Name="StdCstRevSubID_Sub_description">
+                    </ReportField>
+                    <ReportField Name="StdCstVarAcctID">
+                    </ReportField>
+                    <ReportField Name="StdCstVarAcctID_Account_description">
+                    </ReportField>
+                    <ReportField Name="StdCstVarAcctID_description">
+                    </ReportField>
+                    <ReportField Name="StdCstVarAcctID_Segment1">
+                    </ReportField>
+                    <ReportField Name="StdCstVarSubID">
+                    </ReportField>
+                    <ReportField Name="StdCstVarSubID_description">
+                    </ReportField>
+                    <ReportField Name="StdCstVarSubID_Segment1">
+                    </ReportField>
+                    <ReportField Name="StdCstVarSubID_Segment2">
+                    </ReportField>
+                    <ReportField Name="StdCstVarSubID_Sub_description">
+                    </ReportField>
+                    <ReportField Name="StkItem">
+                        <DataType>Boolean</DataType>
+                    </ReportField>
+                    <ReportField Name="TaxCalcMode">
+                    </ReportField>
+                    <ReportField Name="TaxCategoryID">
+                    </ReportField>
+                    <ReportField Name="TaxCategoryID_description">
+                    </ReportField>
+                    <ReportField Name="TaxCategoryID_TaxCategory_descr">
+                    </ReportField>
+                    <ReportField Name="TemplateItemID">
+                    </ReportField>
+                    <ReportField Name="TemplateItemID_description">
+                    </ReportField>
+                    <ReportField Name="TemplateItemID_InventoryItem_descr">
+                    </ReportField>
+                    <ReportField Name="TemplateItemID_Segment1">
+                    </ReportField>
+                    <ReportField Name="TotalPercentage">
+                        <DataType>Decimal</DataType>
+                    </ReportField>
+                    <ReportField Name="tstamp">
+                    </ReportField>
+                    <ReportField Name="UndershipThreshold">
+                        <DataType>Decimal</DataType>
+                    </ReportField>
+                    <ReportField Name="UpdateOnlySelected">
+                        <DataType>Boolean</DataType>
+                    </ReportField>
+                    <ReportField Name="UseParentSubID">
+                        <DataType>Boolean</DataType>
+                    </ReportField>
+                    <ReportField Name="ValMethod">
+                    </ReportField>
+                    <ReportField Name="Visibility">
+                    </ReportField>
+                    <ReportField Name="VolumeUOM">
+                    </ReportField>
+                    <ReportField Name="WeightItem">
+                        <DataType>Boolean</DataType>
+                    </ReportField>
+                    <ReportField Name="WeightUOM">
+                    </ReportField>
+                </Fields>
+                <FullName>PX.Objects.IN.InventoryItem</FullName>
+            </ReportTable>
         </Tables>
         <Sections>
             <PageHeader Name="pageHeaderSection1">
@@ -3429,11 +3352,11 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                     </ReportVariable>
                     <ReportVariable>
                         <Name>TotalNWQty</Name>
-                        <ValueExpr>=$TotalNWQty + #010;Round(CDec([SOPackageDetailEx.Qty]) / CDec([AttrQTYPERCTN.Value]) * CDec([AttrNETPERCTN.Value]), 2)</ValueExpr>
+                        <ValueExpr>=$TotalNWQty + #010;Round(CDec([SOPackageDetailEx.Qty]) / CDec([InventoryItem.QTYPERCTN_Attributes]) * CDec([InventoryItem.NETPERCTN_Attributes]), 2)</ValueExpr>
                     </ReportVariable>
                     <ReportVariable>
                         <Name>TotalGWQty</Name>
-                        <ValueExpr>=$TotalGWQty + #010;Round(CDec([SOPackageDetailEx.Qty]) / CDec([AttrQTYPERCTN.Value]) * CDec([AttrNETPERCTN.Value]), 2) + (CDec([AttrGROSPERCTN.Value]) - CDec([AttrNETPERCTN.Value]))</ValueExpr>
+                        <ValueExpr>=$TotalGWQty + #010;Round(CDec([SOPackageDetailEx.Qty]) / CDec([InventoryItem.QTYPERCTN_Attributes]) * CDec([InventoryItem.NETPERCTN_Attributes]), 2) + (CDec([InventoryItem.GROSPERCTN_Attributes]) - CDec([InventoryItem.NETPERCTN_Attributes]))</ValueExpr>
                     </ReportVariable>
                     <ReportVariable>
                         <Name>TotalMeasurement</Name>
@@ -3484,7 +3407,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                             </Font>
                             <TextAlign>Center</TextAlign>
                         </Style>
-                        <Value>=Round(CDec([SOPackageDetailEx.Qty]) / CDec([AttrQTYPERCTN.Value]) * CDec([AttrNETPERCTN.Value]), 2)</Value>
+                        <Value>=Round(CDec([SOPackageDetailEx.Qty]) / CDec([InventoryItem.QTYPERCTN_Attributes]) * CDec([InventoryItem.NETPERCTN_Attributes]), 2)</Value>
                     </TextBox>
                     <TextBox Name="textBox21">
                         <Location>520px, 64px</Location>
@@ -3495,7 +3418,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                             </Font>
                             <TextAlign>Center</TextAlign>
                         </Style>
-                        <Value>=Round(CDec([SOPackageDetailEx.Qty]) / CDec([AttrQTYPERCTN.Value]) * CDec([AttrNETPERCTN.Value]), 2) + (CDec([AttrGROSPERCTN.Value]) - CDec([AttrNETPERCTN.Value]))</Value>
+                        <Value>=Round(CDec([SOPackageDetailEx.Qty]) / CDec([InventoryItem.QTYPERCTN_Attributes]) * CDec([InventoryItem.NETPERCTN_Attributes]), 2) + (CDec([InventoryItem.GROSPERCTN_Attributes]) - CDec([InventoryItem.NETPERCTN_Attributes]))</Value>
                     </TextBox>
                     <TextBox Name="textBox22">
                         <Location>600px, 0px</Location>
@@ -3518,7 +3441,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                                 <Name>Microsoft JhengHei</Name>
                             </Font>
                         </Style>
-                        <Value>=[AttrITEMDESEN.Value]</Value>
+                        <Value>=[InventoryItem.ITEMDESEN_Attributes]</Value>
                     </TextBox>
                     <TextBox Name="textBox26">
                         <Location>80px, 32px</Location>
@@ -3538,7 +3461,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                                 <Name>Microsoft JhengHei</Name>
                             </Font>
                         </Style>
-                        <Value>='Model No.: ' + [AttrMODELNO.Value]</Value>
+                        <Value>='Model No.: ' + [InventoryItem.MODELNO_Attributes]</Value>
                     </TextBox>
                     <TextBox Name="textBox28">
                         <Format>='N2'</Format>
@@ -3562,7 +3485,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                             </Font>
                             <TextAlign>Center</TextAlign>
                         </Style>
-                        <Value>='@' + [AttrQTYPERCTN.Value]</Value>
+                        <Value>='@' + [InventoryItem.QTYPERCTN_Attributes]</Value>
                     </TextBox>
                     <TextBox Name="textBox30">
                         <Location>440px, 24px</Location>
@@ -3573,7 +3496,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                             </Font>
                             <TextAlign>Center</TextAlign>
                         </Style>
-                        <Value>='@' + [AttrNETPERCTN.Value]</Value>
+                        <Value>='@' + [InventoryItem.NETPERCTN_Attributes]</Value>
                     </TextBox>
                     <TextBox Name="textBox31">
                         <Location>520px, 24px</Location>
@@ -3584,7 +3507,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                             </Font>
                             <TextAlign>Center</TextAlign>
                         </Style>
-                        <Value>='@' + [AttrGROSPERCTN.Value]</Value>
+                        <Value>='@' + [InventoryItem.GROSPERCTN_Attributes]</Value>
                     </TextBox>
                     <TextBox Name="textBox43">
                         <Location>416px, 64px</Location>
