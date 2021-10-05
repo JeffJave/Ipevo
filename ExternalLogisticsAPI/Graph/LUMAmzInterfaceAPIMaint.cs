@@ -20,6 +20,7 @@ namespace ExternalLogisticsAPI.Graph
         #region Features
         public PXSave<LUMAmazonInterfaceAPI> Save;
         public PXCancel<LUMAmazonInterfaceAPI> Cancel;
+        [PXFilterable()]
         [PXImport(typeof(LUMAmazonInterfaceAPI))]
         public PXProcessing<LUMAmazonInterfaceAPI> AMZInterfaceAPI;
         #endregion
@@ -68,7 +69,6 @@ namespace ExternalLogisticsAPI.Graph
                 case AmazonOrderType.FBA_OI_ShipInfo:
                 case AmazonOrderType.FBA_OI_AmzFee:
                 case AmazonOrderType.FBA_RMA_CM:
-                case AmazonOrderType.FBA_RMA_Exch:
                 case AmazonOrderType.FBA_RMA_RA_Ealier:
                 case AmazonOrderType.FBA_RMA_RA_Later:
                     sOType = "FA";
@@ -82,6 +82,10 @@ namespace ExternalLogisticsAPI.Graph
                 case AmazonOrderType.RestockingFee:
                 case AmazonOrderType.Reimbursement:
                     sOType = "IN";
+                    break;
+                case AmazonOrderType.Rev_Reimbursement:
+                case AmazonOrderType.FBA_RMA_Exch:
+                    sOType = "RA";
                     break;
             }
 
@@ -163,32 +167,38 @@ namespace ExternalLogisticsAPI.Graph
 
                     try
                     {
+                        int orderType = list[i].OrderType.Value;
+
                         dynamic root = JsonConvert.DeserializeObject(list[i].Data1);
                         
-                        if (list[i].OrderType.IsIn(AmazonOrderType.MCF, AmazonOrderType.FBA_RMA_CM))
+                        if (orderType.IsIn(AmazonOrderType.MCF, AmazonOrderType.FBA_RMA_CM))
                         {
-                            ExternalAPIHelper.CreateCreditMemo(root, list[i].OrderType == AmazonOrderType.FBA_RMA_CM);
+                            ExternalAPIHelper.CreateCreditMemo(root, orderType == AmazonOrderType.FBA_RMA_CM);
                         }
                         else
                         {
-                            bool noAMZFee  = list[i].OrderType.IsIn(AmazonOrderType.FBM_ShipInfo, AmazonOrderType.FBA_OI_ShipInfo, AmazonOrderType.FBM_OI_ShipInfo);
-                            bool hasAMZFee = list[i].OrderType.IsIn(AmazonOrderType.FBM_AmzFee, AmazonOrderType.FBA_OI_AmzFee, AmazonOrderType.FBM_OI_AmzFee);
-                            bool isRSFee   = list[i].OrderType == AmazonOrderType.RestockingFee;
+                            bool noAMZFee  = orderType.IsIn(AmazonOrderType.FBM_ShipInfo, AmazonOrderType.FBA_OI_ShipInfo, AmazonOrderType.FBM_OI_ShipInfo);
+                            bool hasAMZFee = orderType.IsIn(AmazonOrderType.FBM_AmzFee, AmazonOrderType.FBA_OI_AmzFee, AmazonOrderType.FBM_OI_AmzFee);
+                            bool isRSFee   = orderType == AmazonOrderType.RestockingFee;
 
                             SOOrder order = orderEntry.Document.Cache.CreateInstance() as SOOrder;
 
                             if (hasAMZFee == false)
                             {
-                                order.OrderType = GetAcumaticaSOType(list[i].OrderType);
+                                order.OrderType  = GetAcumaticaSOType(list[i].OrderType);
 
                                 order = orderEntry.Document.Insert(order);
 
                                 order.CustomerID       = Customer.UK.Find(orderEntry, "SELLERCENTRAL").BAccountID;
-                                order.OrderDate        = isRSFee == true ? root.return_date : list[i].OrderType == AmazonOrderType.Reimbursement ? root.item[0].approval_date : root.payments_date;
-                                order.RequestDate      = list[i].OrderType.IsIn(AmazonOrderType.RestockingFee, AmazonOrderType.Reimbursement) ? order.OrderDate : string.IsNullOrWhiteSpace((string)root.item[0]?.shipment_date) ? order.RequestDate : root.item[0]?.shipment_date;
+                                order.OrderDate        = root.return_date ?? root.item?[0].approval_date ?? root.payments_date;
+                                order.RequestDate      = orderType.IsIn(AmazonOrderType.RestockingFee, AmazonOrderType.Reimbursement, AmazonOrderType.Rev_Reimbursement, AmazonOrderType.FBA_RMA_Exch) ?
+                                                         order.OrderDate : root.item?[0].shipment_date ?? order.RequestDate; 
                                 order.CustomerOrderNbr = list[i].OrderNbr;
-                                order.OrderDesc        = list[i].OrderType == AmazonOrderType.Reimbursement ? $"{root.item[0].sku} | {root.item[0].reason} | {root.item[0].condition} | {root.item[0].fnsku}" : null;
-
+                                order.CustomerRefNbr   = orderType == AmazonOrderType.Reimbursement ? root.item?[0].reimbursement_id : 
+                                                                                                      orderType == AmazonOrderType.Rev_Reimbursement ? root.item?[0].original_reimbursement_id : 
+                                                                                                                                                       orderType == AmazonOrderType.FBA_RMA_Exch ? "RA Exchange" : null;
+                                order.OrderDesc        = orderType.IsIn(AmazonOrderType.Reimbursement, AmazonOrderType.Rev_Reimbursement) ? $"{root.item[0].sku} | {root.item[0].reason} | {root.item[0].condition} | {order.CustomerRefNbr ?? root.item[0].fnsku}" : null;
+                                
                                 orderEntry.Document.Update(order);
 
                                 if (isRSFee == false)
@@ -218,10 +228,15 @@ namespace ExternalLogisticsAPI.Graph
                             string state    = root.item?[0].state;
                             string currency = root.item?[0].currency;
 
-                            if ((country == "US" && State.PK.Find(this, country, state)?.GetExtension<StateExt>().UsrIsAMZWithheldTax == true) ||
-                                (country == "CA" && root.marketplaceWithheldTax != 0))
+                            if (orderType.IsIn(AmazonOrderType.RestockingFee, AmazonOrderType.Reimbursement, AmazonOrderType.Rev_Reimbursement, AmazonOrderType.FBA_RMA_Exch))
                             {
                                 order.OverrideTaxZone = true;
+                                orderEntry.Document.Cache.SetValueExt<SOOrder.taxZoneID>(order, "AMAZONTZ");
+                            }
+                            else if ((country == "US" && State.PK.Find(this, country, state)?.GetExtension<StateExt>().UsrIsAMZWithheldTax == true) ||
+                                     (country == "CA" && (decimal)root.marketplaceWithheldTax != 0m))
+                            {
+                                order.OverrideTaxZone = order.TaxZoneID != "AMAZONCA";
                                 order.TaxZoneID = "AMAZONCA";
                             }
 
@@ -264,15 +279,19 @@ namespace ExternalLogisticsAPI.Graph
                         }
 
                         graph.AMZInterfaceAPI.Cache.SetValue<LUMAmazonInterfaceAPI.write2Acumatica1>(list[i], true);
-                        graph.AMZInterfaceAPI.Update(list[i]);
-                        graph.Save.Press();
+                        graph.AMZInterfaceAPI.Cache.SetValue<LUMAmazonInterfaceAPI.remark>(list[i], null);
                     }
                     catch (Exception ex)
                     {
                         PXProcessing.SetError<LUMAmazonInterfaceAPI>(ex.Message);
-                        throw;
+                        graph.AMZInterfaceAPI.Cache.SetValue<LUMAmazonInterfaceAPI.remark>(list[i], ex.Message);
+                        //throw;
                     }
+
+                    graph.AMZInterfaceAPI.Update(list[i]);
                 }
+
+                graph.Save.Press();
 
                 ts.Complete();
             }
@@ -310,7 +329,6 @@ namespace ExternalLogisticsAPI.Graph
             }
 
             return totalTax;
-            //if (root.item[0].country == "CA" || (decimal)root.restocking_fee > 0)
         }
         #endregion
     }
