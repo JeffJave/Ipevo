@@ -17,6 +17,7 @@ namespace ExternalLogisticsAPI.Graph
 {
     public class LUMAmzInterfaceAPIMaint : PXGraph<LUMAmzInterfaceAPIMaint>
     {
+        public const string AMZCustomer = "SELLERCENTRAL";
         #region Features
         public PXSave<LUMAmazonInterfaceAPI> Save;
         public PXCancel<LUMAmazonInterfaceAPI> Cancel;
@@ -69,8 +70,6 @@ namespace ExternalLogisticsAPI.Graph
                 case AmazonOrderType.FBA_OI_ShipInfo:
                 case AmazonOrderType.FBA_OI_AmzFee:
                 case AmazonOrderType.FBA_RMA_CM:
-                case AmazonOrderType.FBA_RMA_RA_Ealier:
-                case AmazonOrderType.FBA_RMA_RA_Later:
                     sOType = "FA";
                     break;
                 case AmazonOrderType.FBM_ShipInfo:
@@ -86,6 +85,9 @@ namespace ExternalLogisticsAPI.Graph
                 case AmazonOrderType.Rev_Reimbursement:
                 case AmazonOrderType.FBA_RMA_Exch:
                     sOType = "RA";
+                    break;
+                case AmazonOrderType.FBA_RMA_RA_Later:
+                    sOType = "CM";
                     break;
             }
 
@@ -189,11 +191,11 @@ namespace ExternalLogisticsAPI.Graph
 
                                 order = orderEntry.Document.Insert(order);
 
-                                order.CustomerID       = Customer.UK.Find(orderEntry, "SELLERCENTRAL").BAccountID;
-                                order.OrderDate        = root.return_date ?? root.item?[0].approval_date ?? root.payments_date;
-                                order.RequestDate      = orderType.IsIn(AmazonOrderType.RestockingFee, AmazonOrderType.Reimbursement, AmazonOrderType.Rev_Reimbursement, AmazonOrderType.FBA_RMA_Exch) ?
-                                                         order.OrderDate : root.item?[0].shipment_date ?? order.RequestDate; 
-                                order.CustomerOrderNbr = list[i].OrderNbr;
+                                order.CustomerID       = Customer.UK.Find(orderEntry, AMZCustomer).BAccountID;
+                                order.OrderDate        = orderType == AmazonOrderType.FBA_RMA_RA_Later ? root.item?[0].shipment_date : root.return_date ?? root.item?[0].approval_date ?? root.payments_date;
+                                order.RequestDate      = orderType.IsIn(new List<int>(new int[] { AmazonOrderType.RestockingFee, AmazonOrderType.Reimbursement, AmazonOrderType.Rev_Reimbursement, AmazonOrderType.FBA_RMA_Exch, AmazonOrderType.FBA_RMA_RA_Later })) ?//AmazonOrderType.RestockingFee, AmazonOrderType.Reimbursement, AmazonOrderType.Rev_Reimbursement, AmazonOrderType.FBA_RMA_Exch, AmazonOrderType.FBA_RMA_RA_Later) ?
+                                                         order.OrderDate : string.IsNullOrWhiteSpace((string)root.item?[0].shipment_date) ? root.payments_date : order.RequestDate; 
+                                order.CustomerOrderNbr = orderType.IsIn(AmazonOrderType.Reimbursement, AmazonOrderType.Rev_Reimbursement) ? root.item?[0].reimbursement_id : list[i].OrderNbr;
                                 order.CustomerRefNbr   = orderType == AmazonOrderType.Reimbursement ? root.item?[0].reimbursement_id : 
                                                                                                       orderType == AmazonOrderType.Rev_Reimbursement ? root.item?[0].original_reimbursement_id : 
                                                                                                                                                        orderType == AmazonOrderType.FBA_RMA_Exch ? "RA Exchange" : null;
@@ -249,7 +251,7 @@ namespace ExternalLogisticsAPI.Graph
                             ///Becuase the standard tax calculation logic write in SOOrder_RowUpdate event which means I must use the following approach.
                             if (root.shipment != null)
                             {
-                                order.CuryPremiumFreightAmt = root.shipment;
+                                order.CuryPremiumFreightAmt = Math.Abs((decimal)root.shipment);
                                 orderEntry.Document.Update(order);
                             }
                             ///</remarks>
@@ -272,7 +274,7 @@ namespace ExternalLogisticsAPI.Graph
                                 orderEntry.Save.Press();
                             }
 
-                            if ((noAMZFee == false || hasAMZFee == true) && order.CuryOrderTotal > 0)
+                            if ((noAMZFee == false || hasAMZFee == true) && order.CuryOrderTotal > 0 && order.OrderType != "CM")
                             {
                                 ExternalAPIHelper.CreatePaymentProcess(order, root, curyInfo.CuryMultDiv == CuryMultDivType.Div ? curyInfo.RecipRate : curyInfo.CuryRate);
                             }
@@ -306,26 +308,23 @@ namespace ExternalLogisticsAPI.Graph
                 switch (row.TaxID)
                 {
                     case "AMAZONGST":
-                        orderEntry.Taxes.Cache.SetValueExt<SOTaxTran.curyTaxAmt>(row, root.gst);
-                        totalTax += (decimal)root.gst;
+                        orderEntry.Taxes.Cache.SetValueExt<SOTaxTran.curyTaxAmt>(row, Math.Abs((decimal)root.gst));
                         break;
                     case "AMAZONHST":
-                        orderEntry.Taxes.Cache.SetValueExt<SOTaxTran.curyTaxAmt>(row, root.hst);
-                        totalTax += (decimal)root.hst;
+                        orderEntry.Taxes.Cache.SetValueExt<SOTaxTran.curyTaxAmt>(row, Math.Abs((decimal)root.hst));
                         break;
                     case "AMAZONPST":
-                        orderEntry.Taxes.Cache.SetValueExt<SOTaxTran.curyTaxAmt>(row, root.pst);
-                        totalTax += (decimal)root.pst;
+                        orderEntry.Taxes.Cache.SetValueExt<SOTaxTran.curyTaxAmt>(row, Math.Abs((decimal)root.pst));
                         break;
                     case "AMAZONQST":
-                        orderEntry.Taxes.Cache.SetValueExt<SOTaxTran.curyTaxAmt>(row, root.qst);
-                        totalTax += (decimal)root.qst;
+                        orderEntry.Taxes.Cache.SetValueExt<SOTaxTran.curyTaxAmt>(row, Math.Abs((decimal)root.qst));
                         break;
                     default:
-                        orderEntry.Taxes.Cache.SetValueExt<SOTaxTran.curyTaxAmt>(row, root.tax);
-                        totalTax += (decimal)root.tax;
+                        orderEntry.Taxes.Cache.SetValueExt<SOTaxTran.curyTaxAmt>(row, Math.Abs((decimal)root.tax));
                         break;
                 }
+
+                totalTax += row.CuryTaxAmt.Value;
             }
 
             return totalTax;
