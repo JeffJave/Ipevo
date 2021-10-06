@@ -1,4 +1,4 @@
-﻿<Report Name="so606405.rpx">
+<Report Name="so606405.rpx">
     <Report Name="report1" version="20201103">
         <CommonSettings>
             <ViewPdf>True</ViewPdf>
@@ -6110,7 +6110,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                             <TextAlign>Center</TextAlign>
                             <VerticalAlign>Middle</VerticalAlign>
                         </Style>
-                        <Value>Brian Yu</Value>
+                        <Value>=[ARInvoice.SalesPersonID_SalesPerson_descr]</Value>
                     </TextBox>
                     <TextBox Name="textBox26">
                         <Location>504px, 456px</Location>

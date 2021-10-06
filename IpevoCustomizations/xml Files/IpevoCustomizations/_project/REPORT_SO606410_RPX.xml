@@ -1,4 +1,4 @@
-﻿<Report Name="so606410.rpx">
+<Report Name="so606410.rpx">
     <Report Name="report1" version="20201103">
         <CommonSettings>
             <ViewPdf>True</ViewPdf>
@@ -326,7 +326,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                 <ParentName>ARInvoice</ParentName>
             </ReportRelation>
         </Relations>
-        <SchemaUrl>https://erp.ipevo.com/</SchemaUrl>
+        <SchemaUrl>http://localhost/AcumaticaIPEVO/</SchemaUrl>
         <Tables>
             <ReportTable Name="BAccount">
                 <Fields>
@@ -6424,7 +6424,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                             <TextAlign>Center</TextAlign>
                             <VerticalAlign>Middle</VerticalAlign>
                         </Style>
-                        <Value>David CW Chang</Value>
+                        <Value>=[ARInvoice.SalesPersonID_SalesPerson_descr]</Value>
                     </TextBox>
                     <TextBox Name="textBox26">
                         <Location>504px, 440px</Location>
