@@ -195,7 +195,7 @@ namespace ExternalLogisticsAPI.Graph
                                 order.OrderDate        = orderType == AmazonOrderType.FBA_RMA_RA_Later ? root.item?[0].shipment_date : root.return_date ?? root.item?[0].approval_date ?? root.payments_date;
                                 order.RequestDate      = orderType.IsIn(new List<int>(new int[] { AmazonOrderType.RestockingFee, AmazonOrderType.Reimbursement, AmazonOrderType.Rev_Reimbursement, AmazonOrderType.FBA_RMA_Exch, AmazonOrderType.FBA_RMA_RA_Later })) ?//AmazonOrderType.RestockingFee, AmazonOrderType.Reimbursement, AmazonOrderType.Rev_Reimbursement, AmazonOrderType.FBA_RMA_Exch, AmazonOrderType.FBA_RMA_RA_Later) ?
                                                          order.OrderDate : string.IsNullOrWhiteSpace((string)root.item?[0].shipment_date) ? root.payments_date : order.RequestDate; 
-                                order.CustomerOrderNbr = orderType.IsIn(AmazonOrderType.Reimbursement, AmazonOrderType.Rev_Reimbursement) ? root.item?[0].reimbursement_id : list[i].OrderNbr;
+                                order.CustomerOrderNbr = orderType == AmazonOrderType.Rev_Reimbursement ? $"{list[i].OrderNbr} - {list[i].SequenceNo}" : list[i].OrderNbr;
                                 order.CustomerRefNbr   = orderType == AmazonOrderType.Reimbursement ? root.item?[0].reimbursement_id : 
                                                                                                       orderType == AmazonOrderType.Rev_Reimbursement ? root.item?[0].original_reimbursement_id : 
                                                                                                                                                        orderType == AmazonOrderType.FBA_RMA_Exch ? "RA Exchange" : null;
@@ -212,7 +212,7 @@ namespace ExternalLogisticsAPI.Graph
                             }
                             else
                             {
-                                orderEntry.Document.Current = SelectFrom<SOOrder>.Where<SOOrder.customerOrderNbr.IsEqual<@P.AsString>>.View.SelectSingleBound(orderEntry, null, root.amazon_order_id);
+                                orderEntry.Document.Current = SelectFrom<SOOrder>.Where<SOOrder.customerOrderNbr.IsEqual<@P.AsString>>.View.SelectSingleBound(orderEntry, null, list[i].OrderNbr);
                                 order = orderEntry.Document.Current;
 
                                 foreach (SOLine line in orderEntry.Transactions.Select())
