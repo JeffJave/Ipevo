@@ -13,6 +13,7 @@ namespace ExternalLogisticsAPI.Graph_Extensions
 {
     public class CustomerMaint_Extension : PXGraphExtension<CustomerMaint>
     {
+        #region Override
         public override void Initialize()
         {
             base.Initialize();
@@ -23,7 +24,35 @@ namespace ExternalLogisticsAPI.Graph_Extensions
                 Base.action.AddMenuAction(lumValidEUVAT);
             }
         }
+        #endregion
 
+        #region Delegate
+        public delegate void PersistDelegate();
+
+        [PXOverride]
+        public void Persist(PersistDelegate baseMethod)
+        {
+            var curCoutry = (PXSelect<Branch>.Select(Base, PX.Data.Update.PXInstanceHelper.CurrentCompany)).TopFirst;
+            var locationRow = Base.BaseLocations.Current;
+            if (locationRow != null && curCoutry?.BranchCD.Trim() == "IPEVONL" && locationRow.CTaxZoneID == "OTB2B" && string.IsNullOrEmpty(locationRow?.TaxRegistrationID))
+            {
+                Base.BaseLocations.Cache.RaiseExceptionHandling<PX.Objects.CR.Standalone.Location.taxRegistrationID>(
+                  locationRow,
+                  locationRow.TaxRegistrationID,
+                  new PXSetPropertyException<PX.Objects.CR.Standalone.Location.taxRegistrationID>("Tax Registration ID not validated", PXErrorLevel.Error));
+            }
+            else if (locationRow != null && curCoutry?.BranchCD.Trim() == "IPEVOUK" && locationRow.CTaxZoneID == "VATEX" && string.IsNullOrEmpty(locationRow?.TaxRegistrationID))
+            {
+                Base.BaseLocations.Cache.RaiseExceptionHandling<PX.Objects.CR.Standalone.Location.taxRegistrationID>(
+                 locationRow,
+                 locationRow.TaxRegistrationID,
+                 new PXSetPropertyException<PX.Objects.CR.Standalone.Location.taxRegistrationID>("Tax Registration ID not validated", PXErrorLevel.Error));
+            }
+            baseMethod();
+        }
+        #endregion
+
+        #region Action
         public PXAction<Customer> lumValidEUVAT;
         [PXButton]
         [PXUIField(DisplayName = "Validate Tax ID", Enabled = true, MapEnableRights = PXCacheRights.Select, Visible = false)]
@@ -53,5 +82,6 @@ namespace ExternalLogisticsAPI.Graph_Extensions
             Base.Save.Press();
             return adapter.Get();
         }
+        #endregion
     }
 }
