@@ -26,7 +26,7 @@ namespace ExternalLogisticsAPI.Graph_Extensions
 
         public PXAction<Customer> lumValidEUVAT;
         [PXButton]
-        [PXUIField(DisplayName = "Valid EU VAT", Enabled = true, MapEnableRights = PXCacheRights.Select, Visible = false)]
+        [PXUIField(DisplayName = "Validate Tax ID", Enabled = true, MapEnableRights = PXCacheRights.Select, Visible = false)]
         protected IEnumerable LumValidEUVAT(PXAdapter adapter)
         {
             var row = Base.BaseLocations.Current;
@@ -34,16 +34,23 @@ namespace ExternalLogisticsAPI.Graph_Extensions
             {
                 var vaildResult = new SOAPHelper().ValidEUVat(row.TaxRegistrationID);
                 if (!vaildResult)
-                   Base.BaseLocations.Cache.RaiseExceptionHandling<PX.Objects.CR.Standalone.Location.taxRegistrationID>(
-                   row,
-                   row.TaxRegistrationID,
-                   new PXSetPropertyException<PX.Objects.CR.Standalone.Location.taxRegistrationID>("Tax Registration ID is not valid", PXErrorLevel.Warning));
+                {
+                    Base.BaseLocations.Cache.RaiseExceptionHandling<PX.Objects.CR.Standalone.Location.taxRegistrationID>(
+                    row,
+                    row.TaxRegistrationID,
+                    new PXSetPropertyException<PX.Objects.CR.Standalone.Location.taxRegistrationID>("Tax Registration ID not validated", PXErrorLevel.Warning));
+                    Base.BaseLocations.Cache.SetValue<PX.Objects.CR.Standalone.LocationExt.usrVATIsValid>(row, false);
+                }
+                else
+                    Base.BaseLocations.Cache.SetValue<PX.Objects.CR.Standalone.LocationExt.usrVATIsValid>(row, true);
             }
             else if (row != null && string.IsNullOrEmpty(row.TaxRegistrationID))
                 Base.BaseLocations.Cache.RaiseExceptionHandling<PX.Objects.CR.Standalone.Location.taxRegistrationID>(
                     row,
                     row.TaxRegistrationID,
                     new PXSetPropertyException<PX.Objects.CR.Standalone.Location.taxRegistrationID>("Tax Registration ID can not be empty", PXErrorLevel.Warning));
+            Base.BaseLocations.Cache.MarkUpdated(row);
+            Base.Save.Press();
             return adapter.Get();
         }
     }
