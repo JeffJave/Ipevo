@@ -20,7 +20,7 @@ BEGIN
 	INSERT INTO LumINItemCostHist ([InventoryID], [InventoryCD], [ItemDescr], [CompanyID], [ItemClassID], [ItemClassCD], [ItemClassDescr]/*,  [WareHouseID_SiteID], [WareHouseID_SiteCD], [WareHouse_SiteID_Descr]*/, [ConditionPeriod])
 	(
 		select distinct(INItemCostHist.InventoryID), InventoryItem.InventoryCD, InventoryItem.Descr, INItemCostHist.CompanyID, InventoryItem.ItemClassID, INItemClass.ItemClassCD, INItemClass.Descr/*, INSite.SiteID, INSite.SiteCD, INSite.Descr*/, @period from INItemCostHist
-		inner join FinPeriod on FinPeriod.FinPeriodID = INItemCostHist.FinPeriodID and FinPeriod.CompanyID = INItemCostHist.CompanyID and FinPeriod.Active = 1
+		left join FinPeriod on FinPeriod.FinPeriodID = INItemCostHist.FinPeriodID and FinPeriod.CompanyID = INItemCostHist.CompanyID and FinPeriod.Active = 1
 		left join InventoryItem on InventoryItem.InventoryID = INItemCostHist.InventoryID and InventoryItem.CompanyID = INItemCostHist.CompanyID
 		--left join INSite on INSite.SiteID = INItemCostHist.SiteID and INSite.CompanyID = INItemCostHist.CompanyID
 		left join INItemClass on INItemClass.ItemClassID = InventoryItem.ItemClassID and INItemClass.CompanyID = INItemCostHist.CompanyID
