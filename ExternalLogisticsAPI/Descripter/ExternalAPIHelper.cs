@@ -255,7 +255,7 @@ namespace ExternalLogisticsAPI.Descripter
                     line.TranDesc      = isCM == false ? null : root.item[i].sku;
 
                     lineExt.UsrFulfillmentCenter = root.item[i].fulfillment_center_id;
-                    lineExt.UsrShipFromCountryID = root.item[i].country;
+                    lineExt.UsrShipFromCountryID = string.IsNullOrWhiteSpace((string)root.item[i].country) ? null : root.item[i].country;
                     lineExt.UsrShipFromState     = root.item[i].state;
                     lineExt.UsrCarrier           = root.item[i].carrier;
                     lineExt.UsrTrackingNbr       = root.item[i].tracking_no;
@@ -342,7 +342,7 @@ namespace ExternalLogisticsAPI.Descripter
                         lineExt = line.GetExtension<SOLineExt>();
 
                         lineExt.UsrFulfillmentCenter = root.item[i].fulfillment_center_id;
-                        lineExt.UsrShipFromCountryID = root.item[i].country;
+                        lineExt.UsrShipFromCountryID = string.IsNullOrWhiteSpace((string)root.item[i].country) ? null : root.item[i].country;
                         lineExt.UsrShipFromState     = root.item[i].state;
                         lineExt.UsrCarrier           = root.item[i].carrier;
                         lineExt.UsrTrackingNbr       = root.item[i].tracking_no;
@@ -368,7 +368,7 @@ namespace ExternalLogisticsAPI.Descripter
                         lineExt = line.GetExtension<SOLineExt>();
 
                         lineExt.UsrFulfillmentCenter = root.item[i].fulfillment_center_id;
-                        lineExt.UsrShipFromCountryID = root.item[i].country;
+                        lineExt.UsrShipFromCountryID = string.IsNullOrWhiteSpace((string)root.item[i].country) ? null : root.item[i].country;
                         lineExt.UsrShipFromState     = root.item[i].state;
 
                         orderEntry.Transactions.Insert(line);
