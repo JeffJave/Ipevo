@@ -51,17 +51,9 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
         </Filters>
         <MailSettings>
             <ActivitySource>ARInvoice.NoteID</ActivitySource>
-            <Bcc>
-            </Bcc>
             <Body>='Dear Customer,#010;#010;This is an automatic email to notify you that you have a new Invoice available on your account.  #010;You will find a copy of'+' '+[ARInvoice.PrintDocType]+' '+'#'+' '+[ARInvoice.RefNbr]+' '+'attached to this email.  #010;#010;If you have any questions, please don’t hesitate to contact us at Email.  #010;#010;Thank you for choosing'+' '+[CompanyContact.FullName]+'.'#010;</Body>
-            <Cc>
-            </Cc>
-            <Format>
-            </Format>
             <ParentSource>Customer.NoteID</ParentSource>
             <Subject>=[CompanyContact.FullName]+' '+[ARInvoice.PrintDocType]+' '+'#'+' '+[ARInvoice.RefNbr]</Subject>
-            <TemplateID>
-            </TemplateID>
             <To>=IsNull([BillingContact.Email],'')</To>
         </MailSettings>
         <Parameters>
@@ -6383,7 +6375,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                             <TextAlign>Center</TextAlign>
                             <VerticalAlign>Middle</VerticalAlign>
                         </Style>
-                        <Value>John Lee</Value>
+                        <Value>=[ARInvoice.SalesPersonID_SalesPerson_descr]</Value>
                     </TextBox>
                     <TextBox Name="textBox26">
                         <Location>504px, 320px</Location>
@@ -7118,7 +7110,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                             <TextAlign>Center</TextAlign>
                             <VerticalAlign>Middle</VerticalAlign>
                         </Style>
-                        <Value>John Lee</Value>
+                        <Value>=[ARInvoice.SalesPersonID_SalesPerson_descr]</Value>
                     </TextBox>
                     <TextBox Name="textBox79">
                         <Location>592px, 296px</Location>
@@ -7695,7 +7687,7 @@ ZwxECDmHKQXeq4BASDGzTiHiTTYjEUTMzcBkQJCkeMYMDGup2vMUyiyYfA/OUGJ9qhiHWZ0fyQbCrq4t
                             <TextAlign>Center</TextAlign>
                             <VerticalAlign>Middle</VerticalAlign>
                         </Style>
-                        <Value>John Lee</Value>
+                        <Value>=[ARInvoice.SalesPersonID_SalesPerson_descr]</Value>
                     </TextBox>
                     <TextBox Name="textBox136">
                         <Location>592px, 296px</Location>
