@@ -41,7 +41,7 @@ namespace ExternalLogisticsAPI.Graph_Extensions
                   locationRow.TaxRegistrationID,
                   new PXSetPropertyException<PX.Objects.CR.Standalone.Location.taxRegistrationID>("Tax Registration ID not validated", PXErrorLevel.Error));
             }
-            else if (locationRow != null && curCoutry?.BranchCD.Trim() == "IPEVOUK" && locationRow.CTaxZoneID == "VATEX" && string.IsNullOrEmpty(locationRow?.TaxRegistrationID))
+            else if (locationRow != null && curCoutry?.BranchCD.Trim() == "IPEVOUK" && locationRow.CTaxZoneID == "TAXEXEMPT" && string.IsNullOrEmpty(locationRow?.TaxRegistrationID))
             {
                 Base.BaseLocations.Cache.RaiseExceptionHandling<PX.Objects.CR.Standalone.Location.taxRegistrationID>(
                  locationRow,
