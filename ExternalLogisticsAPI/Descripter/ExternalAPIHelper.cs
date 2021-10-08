@@ -535,7 +535,8 @@ namespace ExternalLogisticsAPI.Descripter
 
                 shipAddress.OverrideAddress = true;
                 shipAddress.RevisionID      = 0;
-                shipAddress.AddressLine1    = root.ship_to_address;
+                shipAddress.AddressLine1    = ((string)root.ship_to_address).Length <= 50 ? root.ship_to_address : ((string)root.ship_to_address).Substring(0, 50);
+                shipAddress.AddressLine2    = ((string)root.ship_to_address).Length <= 50 ? null : ((string)root.ship_to_address).Substring(51);
                 shipAddress.City            = root.ship_to_city;
                 shipAddress.CountryID       = root.ship_to_country;
                 shipAddress.PostalCode      = root.ship_to_zipcode;
