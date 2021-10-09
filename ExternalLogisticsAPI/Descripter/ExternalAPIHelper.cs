@@ -22,6 +22,7 @@ namespace ExternalLogisticsAPI.Descripter
 {
     public class ExternalAPIHelper
     {
+        #region 3DCart
         public const string StockItemNonExists = "[{0}] Doesn't Exist In The System.";
 
         public static async Task<List<MyArray>> GetResponse(LUM3DCartSetup setup, string specifyLocation, bool updateStatus = false)
@@ -216,6 +217,205 @@ namespace ExternalLogisticsAPI.Descripter
         }
 
         /// <summary>
+        /// Override billing, shipping contact & address.
+        /// </summary>
+        public static void UpdateSOContactAddress(SOOrderEntry orderEntry, List<MyArray> list, SOOrder order)
+        {
+            SOBillingContact billContact = orderEntry.Billing_Contact.Current;
+            SOBillingAddress billAddress = orderEntry.Billing_Address.Current;
+
+            order.ContactID = CreateSOContact(order.CustomerID, list[0]);
+
+            billContact.OverrideContact = true;
+            billContact.Attention = list[0].BillingFirstName + "," + list[0].BillingLastName;
+            billContact.FullName = list[0].BillingCompany;
+            billContact.Phone1 = list[0].BillingPhoneNumber;
+            billContact.Email = list[0].BillingEmail;
+
+            orderEntry.Billing_Contact.Update(billContact);
+
+            billAddress.OverrideAddress = true;
+            billAddress.AddressLine1 = list[0].BillingAddress;
+            billAddress.AddressLine2 = list[0].BillingAddress2;
+            billAddress.City = list[0].BillingCity;
+            billAddress.CountryID = list[0].BillingCountry;
+            billAddress.PostalCode = list[0].BillingZipCode;
+            billAddress.State = list[0].BillingState;
+
+            orderEntry.Billing_Address.Update(billAddress);
+
+            var shipList = list.Find(x => x.ShipmentList.Count > 0).ShipmentList;
+
+            SOShippingContact shipContact = orderEntry.Shipping_Contact.Current;
+            SOShippingAddress shipAddress = orderEntry.Shipping_Address.Current;
+
+            for (int i = 0; i < shipList.Count; i++)
+            {
+                //order.OrderDesc = string.IsNullOrEmpty(shipList[i].ShipmentTrackingCode) ? null : string.Format("Tracking Nbr. : {0}", shipList[i].ShipmentTrackingCode);
+
+                orderEntry.Document.Cache.SetValueExt<SOOrder.curyPremiumFreightAmt>(order, (decimal)shipList[i].ShipmentCost);
+
+                shipContact.OverrideContact = true;
+                shipContact.Attention = shipList[i].ShipmentFirstName + "," + shipList[i].ShipmentLastName;
+                shipContact.FullName = shipList[i].ShipmentCompany;
+                shipContact.Phone1 = shipList[i].ShipmentPhone;
+                shipContact.Email = shipList[i].ShipmentEmail;
+
+                orderEntry.Shipping_Contact.Update(shipContact);
+
+                shipAddress.OverrideAddress = true;
+                shipAddress.AddressLine1 = shipList[i].ShipmentAddress;
+                shipAddress.AddressLine2 = shipList[i].ShipmentAddress2;
+                shipAddress.City = shipList[i].ShipmentCity;
+                shipAddress.CountryID = shipList[i].ShipmentCountry;
+                shipAddress.PostalCode = shipList[i].ShipmentZipCode;
+                shipAddress.State = shipList[i].ShipmentState;
+
+                orderEntry.Shipping_Address.Update(shipAddress);
+            }
+        }
+
+        /// <summary>
+        /// If external logistic email doesn't exist in Acumatica contact, then create it.
+        /// </summary>
+        public static int? CreateSOContact(int? sOCustomeID, MyArray myArray)
+        {
+            ContactMaint contactGraph = PXGraph.CreateInstance<ContactMaint>();
+
+            Contact origContact = SelectFrom<Contact>.Where<Contact.eMail.IsEqual<@P.AsString>
+                                                            .And<Contact.bAccountID.IsEqual<@P.AsInt>>>.View.Select(contactGraph, myArray.BillingEmail, sOCustomeID);
+
+            if (origContact == null)
+            {
+                Contact contact = contactGraph.ContactCurrent.Cache.CreateInstance() as Contact;
+
+                contact.ContactType = ContactTypesAttribute.Person;
+                contact.BAccountID = sOCustomeID;
+                contact.FirstName = myArray.BillingFirstName;
+                contact.LastName = myArray.BillingLastName;
+                contact.EMail = myArray.BillingEmail;
+                contact.Phone1 = myArray.BillingPhoneNumber;
+
+                contactGraph.ContactCurrent.Insert(contact);
+
+                Address address = contactGraph.AddressCurrent.Select();
+
+                address.AddressLine1 = myArray.BillingAddress;
+                address.AddressLine2 = myArray.BillingAddress2;
+                address.City = myArray.BillingCity;
+                address.CountryID = myArray.BillingCountry;
+                address.PostalCode = myArray.BillingZipCode;
+                address.State = myArray.BillingState;
+
+                contactGraph.AddressCurrent.Update(address);
+
+                contactGraph.Save.Press();
+            }
+
+            return contactGraph.ContactCurrent.Current?.ContactID ?? origContact.ContactID;
+        }
+
+        /// <summary>
+        /// Manually create AR payment and related to specified sales order.
+        /// </summary>
+        public static void CreatePaymentProcess(SOOrder order)
+        {
+            ARPaymentEntry pymtEntry = PXGraph.CreateInstance<ARPaymentEntry>();
+
+            ARPayment payment = new ARPayment()
+            {
+                DocType = ARPaymentType.Payment
+            };
+
+            payment = PXCache<ARPayment>.CreateCopy(pymtEntry.Document.Insert(payment));
+
+            payment.CustomerID = order.CustomerID;
+            payment.CustomerLocationID = order.CustomerLocationID;
+            payment.PaymentMethodID = order.PaymentMethodID;
+            payment.PMInstanceID = order.PMInstanceID;
+            payment.CuryOrigDocAmt = 0m;
+            payment.ExtRefNbr = order.CustomerRefNbr ?? order.CustomerOrderNbr;
+            payment.DocDesc = order.OrderNbr;
+            payment.AdjDate = order.RequestDate;
+
+            payment = pymtEntry.Document.Update(payment);
+
+            SOAdjust adj = new SOAdjust()
+            {
+                AdjdOrderType = order.OrderType.Trim(),
+                AdjdOrderNbr = order.OrderNbr.Trim()
+            };
+            pymtEntry.SOAdjustments.Insert(adj);
+
+            if (payment.CuryOrigDocAmt == 0m)
+            {
+                payment.CuryOrigDocAmt = payment.CurySOApplAmt;
+                pymtEntry.Document.Update(payment);
+            }
+            pymtEntry.Actions.PressSave();
+
+            if (pymtEntry.Actions.Contains("Release"))
+            {
+                pymtEntry.releaseFromHold.Press();
+                pymtEntry.release.Press();
+            }
+        }
+
+        /// <summary>
+        /// The process ID value is generated based on the number of executions.
+        /// </summary>
+        public static int? GetProcessID(PXGraph graph)
+        {
+            LUM3DCartProcessOrder objProcess = PXSelectGroupBy<LUM3DCartProcessOrder, Aggregate<Max<LUM3DCartProcessOrder.processID>>>.Select(graph);
+
+            return objProcess != null && objProcess.ProcessID != null ? (objProcess.ProcessID + 1) : 1;
+        }
+
+        /// <summary>
+        /// Get Acumatica inventory ID by item name.
+        /// </summary>
+        public static int? GetAcuInventoryID(PXGraph graph, string inventoryCD)
+        {
+            InventoryItem item = SelectFrom<InventoryItem>.Where<InventoryItem.inventoryCD.Contains<@P.AsString>>.View.Select(graph, inventoryCD);
+
+            if (item != null)
+            {
+                return item.InventoryID;
+            }
+            else
+            {
+                throw new PXException(StockItemNonExists, inventoryCD);
+            }
+        }
+
+        /// <summary>
+        /// Get Acumatica payment method ID by payment description.
+        /// </summary>
+        public static string GetAcuPymtMethod(PXGraph graph, int? customerID, string paymDescr)
+        {
+            CustomerPaymentMethodC paymMethod = SelectFrom<CustomerPaymentMethodC>.Where<CustomerPaymentMethodC.descr.Contains<@P.AsString>
+                                                                                         .And<CustomerPaymentMethodC.bAccountID.IsEqual<@P.AsInt>>>.View.Select(graph, paymDescr, customerID);
+            return paymMethod?.PaymentMethodID;
+        }
+
+        /// <summary>
+        /// Delete specify table record by Processed is not true.
+        /// </summary>
+        protected static void DeleteWrkTableRecs()
+        {
+            PXDatabase.Delete<LUM3DCartProcessOrder>(new PXDataFieldRestrict<LUM3DCartProcessOrder.processed>(PXDbType.Bit, false));
+        }
+
+        /// <summary>
+        /// Update 3D Cart specify order status to cancelled.
+        /// </summary>
+        /// <param name="curSetup"></param>
+        /// <param name="orderID"></param>
+        //public static void Update3DCartOrderStatus(LUM3DCartSetup curSetup, int orderID) => GetResponse(curSetup, string.Format("3dCartWebAPI/v2/Orders/{0}", orderID), true);
+        #endregion
+
+        #region AMZ Middleware
+        /// <summary>
         /// Generate sales order line from AMZ interface.
         /// </summary>
         public static void CreateOrderDetail(SOOrderEntry orderEntry, dynamic root)
@@ -373,8 +573,11 @@ namespace ExternalLogisticsAPI.Descripter
 
                         orderEntry.Transactions.Insert(line);
                     }
+
+                    counter = root.item?.Count;
                 }
 
+                /// <remarks> It's only for JP tenant. </remarks>
                 if (root.costOfPoints != null && (decimal)root.costOfPoints != 0m)
                 {
                     ///<remarks> 
@@ -392,6 +595,7 @@ namespace ExternalLogisticsAPI.Descripter
                 }
             }
 
+            /// <remarks> It's only for specified order type [Restocking fee]. </remarks>
             if (root.restocking_fee != null)
             {
                 SOLine line = orderEntry.Transactions.Cache.CreateInstance() as SOLine;
@@ -401,65 +605,6 @@ namespace ExternalLogisticsAPI.Descripter
                 line.CuryUnitPrice = (decimal)root.restocking_fee;
 
                 orderEntry.Transactions.Insert(line);
-            }
-        }
-
-        /// <summary>
-        /// Override billing, shipping contact & address.
-        /// </summary>
-        public static void UpdateSOContactAddress(SOOrderEntry orderEntry, List<MyArray> list, SOOrder order)
-        {
-            SOBillingContact billContact = orderEntry.Billing_Contact.Current;
-            SOBillingAddress billAddress = orderEntry.Billing_Address.Current;
-
-            order.ContactID = CreateSOContact(order.CustomerID, list[0]);
-
-            billContact.OverrideContact = true;
-            billContact.Attention       = list[0].BillingFirstName + "," + list[0].BillingLastName;
-            billContact.FullName        = list[0].BillingCompany;
-            billContact.Phone1          = list[0].BillingPhoneNumber;
-            billContact.Email           = list[0].BillingEmail;
-
-            orderEntry.Billing_Contact.Update(billContact);
-
-            billAddress.OverrideAddress = true;
-            billAddress.AddressLine1    = list[0].BillingAddress;
-            billAddress.AddressLine2    = list[0].BillingAddress2;
-            billAddress.City            = list[0].BillingCity;
-            billAddress.CountryID       = list[0].BillingCountry;
-            billAddress.PostalCode      = list[0].BillingZipCode;
-            billAddress.State           = list[0].BillingState;
-
-            orderEntry.Billing_Address.Update(billAddress);
-
-            var shipList = list.Find(x => x.ShipmentList.Count > 0).ShipmentList;
-
-            SOShippingContact shipContact = orderEntry.Shipping_Contact.Current;
-            SOShippingAddress shipAddress = orderEntry.Shipping_Address.Current;
-
-            for (int i = 0; i < shipList.Count; i++)
-            {
-                //order.OrderDesc = string.IsNullOrEmpty(shipList[i].ShipmentTrackingCode) ? null : string.Format("Tracking Nbr. : {0}", shipList[i].ShipmentTrackingCode);
-
-                orderEntry.Document.Cache.SetValueExt<SOOrder.curyPremiumFreightAmt>(order, (decimal)shipList[i].ShipmentCost);
-
-                shipContact.OverrideContact = true;
-                shipContact.Attention       = shipList[i].ShipmentFirstName + "," + shipList[i].ShipmentLastName;
-                shipContact.FullName        = shipList[i].ShipmentCompany;
-                shipContact.Phone1          = shipList[i].ShipmentPhone;
-                shipContact.Email           = shipList[i].ShipmentEmail;
-
-                orderEntry.Shipping_Contact.Update(shipContact);
-
-                shipAddress.OverrideAddress = true;
-                shipAddress.AddressLine1    = shipList[i].ShipmentAddress;
-                shipAddress.AddressLine2    = shipList[i].ShipmentAddress2;
-                shipAddress.City            = shipList[i].ShipmentCity;
-                shipAddress.CountryID       = shipList[i].ShipmentCountry;
-                shipAddress.PostalCode      = shipList[i].ShipmentZipCode;
-                shipAddress.State           = shipList[i].ShipmentState;
-
-                orderEntry.Shipping_Address.Update(shipAddress);
             }
         }
 
@@ -486,8 +631,8 @@ namespace ExternalLogisticsAPI.Descripter
                 SOBillingAddress billAddress = orderEntry.Billing_Address.Select();
 
                 billAddress.OverrideAddress = true;
-                billAddress.AddressLine1    = ((string)root.bill_address).Length <= 50 ? root.bill_address : ((string)root.bill_address).Substring(0, 50);
-                billAddress.AddressLine2    = ((string)root.bill_address).Length <= 50 ? null : ((string)root.bill_address).Substring(51);
+                billAddress.AddressLine1    = ((string)root.bill_address)?.Length <= 50 ? root.bill_address : ((string)root.bill_address)?.Substring(0, 50);
+                billAddress.AddressLine2    = ((string)root.bill_address)?.Length <= 50 ? null : ((string)root.bill_address)?.Substring(51);
                 billAddress.City            = root.bill_city;
                 billAddress.CountryID       = root.bill_country;
                 billAddress.PostalCode      = root.bill_postal_code;
@@ -517,8 +662,8 @@ namespace ExternalLogisticsAPI.Descripter
 
                 shipAddress.OverrideAddress = true;
                 shipAddress.RevisionID      = 0;
-                shipAddress.AddressLine1    = ((string)root.ship_address).Length <= 50 ? root.ship_address : ((string)root.ship_address).Substring(0, 50);
-                shipAddress.AddressLine2    = ((string)root.ship_address).Length <= 50 ? null : ((string)root.ship_address).Substring(51);
+                shipAddress.AddressLine1    = ((string)root.ship_address)?.Length <= 50 ? root.ship_address : ((string)root.ship_address)?.Substring(0, 50);
+                shipAddress.AddressLine2    = ((string)root.ship_address)?.Length <= 50 ? null : ((string)root.ship_address)?.Substring(51);
                 shipAddress.City            = root.ship_city;
                 shipAddress.CountryID       = root.ship_country;
                 shipAddress.PostalCode      = root.ship_postal_code;
@@ -535,8 +680,8 @@ namespace ExternalLogisticsAPI.Descripter
 
                 shipAddress.OverrideAddress = true;
                 shipAddress.RevisionID      = 0;
-                shipAddress.AddressLine1    = ((string)root.ship_to_address).Length <= 50 ? root.ship_to_address : ((string)root.ship_to_address).Substring(0, 50);
-                shipAddress.AddressLine2    = ((string)root.ship_to_address).Length <= 50 ? null : ((string)root.ship_to_address).Substring(51);
+                shipAddress.AddressLine1    = ((string)root.ship_to_address)?.Length <= 50 ? root.ship_to_address : ((string)root.ship_to_address)?.Substring(0, 50);
+                shipAddress.AddressLine2    = ((string)root.ship_to_address)?.Length <= 50 ? null : ((string)root.ship_to_address)?.Substring(51);
                 shipAddress.City            = root.ship_to_city;
                 shipAddress.CountryID       = root.ship_to_country;
                 shipAddress.PostalCode      = root.ship_to_zipcode;
@@ -545,92 +690,6 @@ namespace ExternalLogisticsAPI.Descripter
                 orderEntry.Shipping_Address.Cache.Update(shipAddress);
 
                 orderEntry.Document.Cache.SetValue<SOOrder.shipAddressID>(orderEntry.Document.Current, orderEntry.Shipping_Address.Current.AddressID);
-            }
-        }
-
-        /// <summary>
-        /// If external logistic email doesn't exist in Acumatica contact, then create it.
-        /// </summary>
-        public static int? CreateSOContact(int? sOCustomeID, MyArray myArray)
-        {
-            ContactMaint contactGraph = PXGraph.CreateInstance<ContactMaint>();
-
-            Contact origContact = SelectFrom<Contact>.Where<Contact.eMail.IsEqual<@P.AsString>
-                                                            .And<Contact.bAccountID.IsEqual<@P.AsInt>>>.View.Select(contactGraph, myArray.BillingEmail, sOCustomeID);
-
-            if (origContact == null)
-            {
-                Contact contact = contactGraph.ContactCurrent.Cache.CreateInstance() as Contact;
-
-                contact.ContactType = ContactTypesAttribute.Person;
-                contact.BAccountID  = sOCustomeID;
-                contact.FirstName   = myArray.BillingFirstName;
-                contact.LastName    = myArray.BillingLastName;
-                contact.EMail       = myArray.BillingEmail;
-                contact.Phone1      = myArray.BillingPhoneNumber;
-
-                contactGraph.ContactCurrent.Insert(contact);
-
-                Address address = contactGraph.AddressCurrent.Select();
-
-                address.AddressLine1 = myArray.BillingAddress;
-                address.AddressLine2 = myArray.BillingAddress2;
-                address.City         = myArray.BillingCity;
-                address.CountryID    = myArray.BillingCountry;
-                address.PostalCode   = myArray.BillingZipCode;
-                address.State        = myArray.BillingState;
-
-                contactGraph.AddressCurrent.Update(address);
-
-                contactGraph.Save.Press();
-            }
-
-            return contactGraph.ContactCurrent.Current?.ContactID ?? origContact.ContactID;
-        }
-
-        /// <summary>
-        /// Manually create AR payment and related to specified sales order.
-        /// </summary>
-        public static void CreatePaymentProcess(SOOrder order)
-        {
-            ARPaymentEntry pymtEntry = PXGraph.CreateInstance<ARPaymentEntry>();
-
-            ARPayment payment = new ARPayment()
-            {
-                DocType = ARPaymentType.Payment
-            };
-
-            payment = PXCache<ARPayment>.CreateCopy(pymtEntry.Document.Insert(payment));
-
-            payment.CustomerID         = order.CustomerID;
-            payment.CustomerLocationID = order.CustomerLocationID;
-            payment.PaymentMethodID    = order.PaymentMethodID;
-            payment.PMInstanceID       = order.PMInstanceID;
-            payment.CuryOrigDocAmt     = 0m;
-            payment.ExtRefNbr          = order.CustomerRefNbr ?? order.CustomerOrderNbr;
-            payment.DocDesc            = order.OrderNbr;
-            payment.AdjDate            = order.RequestDate;
-
-            payment = pymtEntry.Document.Update(payment);
-
-            SOAdjust adj = new SOAdjust()
-            {
-                AdjdOrderType = order.OrderType.Trim(),
-                AdjdOrderNbr = order.OrderNbr.Trim()
-            };
-            pymtEntry.SOAdjustments.Insert(adj);
-
-            if (payment.CuryOrigDocAmt == 0m)
-            {
-                payment.CuryOrigDocAmt = payment.CurySOApplAmt;
-                pymtEntry.Document.Update(payment);
-            }
-            pymtEntry.Actions.PressSave();
-
-            if (pymtEntry.Actions.Contains("Release"))
-            {
-                pymtEntry.releaseFromHold.Press();
-                pymtEntry.release.Press();
             }
         }
 
@@ -648,21 +707,21 @@ namespace ExternalLogisticsAPI.Descripter
 
             payment = PXCache<ARPayment>.CreateCopy(pymtEntry.Document.Insert(payment));
 
-            payment.CustomerID         = order.CustomerID;
+            payment.CustomerID = order.CustomerID;
             payment.CustomerLocationID = order.CustomerLocationID;
-            payment.PaymentMethodID    = order.PaymentMethodID;
-            payment.PMInstanceID       = order.PMInstanceID;
-            payment.CuryOrigDocAmt     = 0m;
-            payment.ExtRefNbr          = order.CustomerRefNbr ?? order.CustomerOrderNbr;
-            payment.DocDesc            = $"{order.CuryID} EX-Rate = {recipRate}";
-            payment.AdjDate            = order.OrderDate;
+            payment.PaymentMethodID = order.PaymentMethodID;
+            payment.PMInstanceID = order.PMInstanceID;
+            payment.CuryOrigDocAmt = 0m;
+            payment.ExtRefNbr = order.CustomerRefNbr ?? order.CustomerOrderNbr;
+            payment.DocDesc = $"{order.CuryID} EX-Rate = {recipRate}";
+            payment.AdjDate = order.OrderDate;
 
             payment = pymtEntry.Document.Update(payment);
 
             SOAdjust adj = new SOAdjust()
             {
                 AdjdOrderType = order.OrderType.Trim(),
-                AdjdOrderNbr  = order.OrderNbr.Trim()
+                AdjdOrderNbr = order.OrderNbr.Trim()
             };
 
             pymtEntry.SOAdjustments.Insert(adj);
@@ -701,62 +760,8 @@ namespace ExternalLogisticsAPI.Descripter
         }
 
         /// <summary>
-        /// The process ID value is generated based on the number of executions.
-        /// </summary>
-        public static int? GetProcessID(PXGraph graph)
-        {
-            LUM3DCartProcessOrder objProcess = PXSelectGroupBy<LUM3DCartProcessOrder, Aggregate<Max<LUM3DCartProcessOrder.processID>>>.Select(graph);
-
-            return objProcess != null && objProcess.ProcessID != null ? (objProcess.ProcessID + 1) : 1;
-        }
-
-        /// <summary>
-        /// Get Acumatica inventory ID by item name.
-        /// </summary>
-        public static int? GetAcuInventoryID(PXGraph graph, string inventoryCD)
-        {
-            InventoryItem item = SelectFrom<InventoryItem>.Where<InventoryItem.inventoryCD.Contains<@P.AsString>>.View.Select(graph, inventoryCD);
-
-            if (item != null)
-            {
-                return item.InventoryID;
-            }
-            else
-            {
-                throw new PXException(StockItemNonExists, inventoryCD);
-            }
-        }
-
-        /// <summary>
-        /// Get Acumatica payment method ID by payment description.
-        /// </summary>
-        public static string GetAcuPymtMethod(PXGraph graph, int? customerID, string paymDescr)
-        {
-            CustomerPaymentMethodC paymMethod = SelectFrom<CustomerPaymentMethodC>.Where<CustomerPaymentMethodC.descr.Contains<@P.AsString>
-                                                                                         .And<CustomerPaymentMethodC.bAccountID.IsEqual<@P.AsInt>>>.View.Select(graph, paymDescr, customerID);
-            return paymMethod?.PaymentMethodID;
-        }
-
-        /// <summary>
-        /// Delete specify table record by Processed is not true.
-        /// </summary>
-        protected static void DeleteWrkTableRecs()
-        {
-            PXDatabase.Delete<LUM3DCartProcessOrder>(new PXDataFieldRestrict<LUM3DCartProcessOrder.processed>(PXDbType.Bit, false));
-        }
-
-        /// <summary>
-        /// Update 3D Cart specify order status to cancelled.
-        /// </summary>
-        /// <param name="curSetup"></param>
-        /// <param name="orderID"></param>
-        //public static void Update3DCartOrderStatus(LUM3DCartSetup curSetup, int orderID) => GetResponse(curSetup, string.Format("3dCartWebAPI/v2/Orders/{0}", orderID), true);
-
-        /// <summary>
         /// Manually create sales invoice from AMZ inferface.
         /// </summary>
-        /// <param name="root"></param>
-        /// <param name="isRMA"></param>
         public static void CreateCreditMemo(dynamic root, bool isRMA = false)
         {
             SOInvoiceEntry invoiceEntry = PXGraph.CreateInstance<SOInvoiceEntry>();
@@ -869,6 +874,7 @@ namespace ExternalLogisticsAPI.Descripter
             invoiceEntry.Save.Press();
             invoiceEntry.releaseFromHold.Press();
         }
+        #endregion
     }
 
     #region Entity Classes

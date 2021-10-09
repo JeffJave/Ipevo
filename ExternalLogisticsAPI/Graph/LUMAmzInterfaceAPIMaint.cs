@@ -18,6 +18,7 @@ namespace ExternalLogisticsAPI.Graph
     public class LUMAmzInterfaceAPIMaint : PXGraph<LUMAmzInterfaceAPIMaint>
     {
         public const string AMZCustomer = "SELLERCENTRAL";
+
         #region Features
         public PXSave<LUMAmazonInterfaceAPI> Save;
         public PXCancel<LUMAmazonInterfaceAPI> Cancel;
@@ -84,6 +85,7 @@ namespace ExternalLogisticsAPI.Graph
                     break;
                 case AmazonOrderType.Rev_Reimbursement:
                 case AmazonOrderType.FBA_RMA_Exch:
+                case AmazonOrderType.FBA_RMA_RA_Ealier:
                     sOType = "RA";
                     break;
                 case AmazonOrderType.FBA_RMA_RA_Later:
@@ -193,7 +195,7 @@ namespace ExternalLogisticsAPI.Graph
 
                                 order.CustomerID       = Customer.UK.Find(orderEntry, AMZCustomer).BAccountID;
                                 order.OrderDate        = orderType == AmazonOrderType.FBA_RMA_RA_Later ? root.item?[0].shipment_date : root.return_date ?? root.item?[0].approval_date ?? root.payments_date;
-                                order.RequestDate      = orderType.IsIn(new List<int>(new int[] { AmazonOrderType.RestockingFee, AmazonOrderType.Reimbursement, AmazonOrderType.Rev_Reimbursement, AmazonOrderType.FBA_RMA_Exch, AmazonOrderType.FBA_RMA_RA_Later })) ?//AmazonOrderType.RestockingFee, AmazonOrderType.Reimbursement, AmazonOrderType.Rev_Reimbursement, AmazonOrderType.FBA_RMA_Exch, AmazonOrderType.FBA_RMA_RA_Later) ?
+                                order.RequestDate      = orderType.IsIn(new List<int>(new int[] { AmazonOrderType.RestockingFee, AmazonOrderType.Reimbursement, AmazonOrderType.Rev_Reimbursement, AmazonOrderType.FBA_RMA_Exch, AmazonOrderType.FBA_RMA_RA_Later, AmazonOrderType.FBA_RMA_RA_Ealier })) ?
                                                          order.OrderDate : string.IsNullOrWhiteSpace((string)root.item?[0].shipment_date) ? root.payments_date : order.RequestDate; 
                                 order.CustomerOrderNbr = orderType == AmazonOrderType.Rev_Reimbursement ? $"{list[i].OrderNbr} - {list[i].SequenceNo}" : list[i].OrderNbr;
                                 order.CustomerRefNbr   = orderType == AmazonOrderType.Reimbursement ? root.item?[0].reimbursement_id : 
@@ -213,15 +215,19 @@ namespace ExternalLogisticsAPI.Graph
                             else
                             {
                                 orderEntry.Document.Current = SelectFrom<SOOrder>.Where<SOOrder.customerOrderNbr.IsEqual<@P.AsString>>.View.SelectSingleBound(orderEntry, null, list[i].OrderNbr);
-                                order = orderEntry.Document.Current;
+
+                                int lineCount = orderEntry.Transactions.Select().Count;
+                                int itemCount = root.item.Count;
 
                                 foreach (SOLine line in orderEntry.Transactions.Select())
                                 {
-                                    line.GetExtension<SOLineExt>().UsrCarrier     = root.item[line.SortOrder.Value - 1].carrier;
-                                    line.GetExtension<SOLineExt>().UsrTrackingNbr = root.item[line.SortOrder.Value - 1].tracking_no;
+                                    line.GetExtension<SOLineExt>().UsrCarrier     = root.item[(lineCount != itemCount ? 1 : line.SortOrder.Value) - 1].carrier;
+                                    line.GetExtension<SOLineExt>().UsrTrackingNbr = root.item[(lineCount != itemCount ? 1 : line.SortOrder.Value) - 1].tracking_no;
 
                                     orderEntry.Transactions.Update(line);
                                 }
+
+                                order = orderEntry.Document.Current;
                             }
 
                             orderEntry.Document.Cache.SetValue<SOOrderExt.usrAPIOrderType>(order, list[i].OrderType);
@@ -274,7 +280,7 @@ namespace ExternalLogisticsAPI.Graph
                                 orderEntry.Save.Press();
                             }
 
-                            if ((noAMZFee == false || hasAMZFee == true) && order.CuryOrderTotal > 0 && order.OrderType != "CM")
+                            if ((noAMZFee == false || hasAMZFee == true) && order.CuryOrderTotal > 0 && !order.OrderType.IsIn("RA", "CM") )
                             {
                                 ExternalAPIHelper.CreatePaymentProcess(order, root, curyInfo.CuryMultDiv == CuryMultDivType.Div ? curyInfo.RecipRate : curyInfo.CuryRate);
                             }
