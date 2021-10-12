@@ -314,19 +314,19 @@ namespace ExternalLogisticsAPI.Graph
                 switch (row.TaxID)
                 {
                     case "AMAZONGST":
-                        orderEntry.Taxes.Cache.SetValueExt<SOTaxTran.curyTaxAmt>(row, Math.Abs((decimal)root.gst));
+                        orderEntry.Taxes.Cache.SetValueExt<SOTaxTran.curyTaxAmt>(row, row.CuryTaxableAmt > 0 ? Math.Abs((decimal)root.gst) : (decimal)root.gst);
                         break;
                     case "AMAZONHST":
-                        orderEntry.Taxes.Cache.SetValueExt<SOTaxTran.curyTaxAmt>(row, Math.Abs((decimal)root.hst));
+                        orderEntry.Taxes.Cache.SetValueExt<SOTaxTran.curyTaxAmt>(row, row.CuryTaxableAmt > 0 ? Math.Abs((decimal)root.hst) : (decimal)root.hst);
                         break;
                     case "AMAZONPST":
-                        orderEntry.Taxes.Cache.SetValueExt<SOTaxTran.curyTaxAmt>(row, Math.Abs((decimal)root.pst));
+                        orderEntry.Taxes.Cache.SetValueExt<SOTaxTran.curyTaxAmt>(row, row.CuryTaxableAmt > 0 ? Math.Abs((decimal)root.pst) : (decimal)root.pst);
                         break;
                     case "AMAZONQST":
-                        orderEntry.Taxes.Cache.SetValueExt<SOTaxTran.curyTaxAmt>(row, Math.Abs((decimal)root.qst));
+                        orderEntry.Taxes.Cache.SetValueExt<SOTaxTran.curyTaxAmt>(row, row.CuryTaxableAmt > 0 ? Math.Abs((decimal)root.qst) : (decimal)root.qst);
                         break;
                     default:
-                        orderEntry.Taxes.Cache.SetValueExt<SOTaxTran.curyTaxAmt>(row, Math.Abs((decimal)root.tax));
+                        orderEntry.Taxes.Cache.SetValueExt<SOTaxTran.curyTaxAmt>(row, row.CuryTaxableAmt > 0 ? Math.Abs((decimal)root.tax) : (decimal)root.tax);
                         break;
                 }
 
