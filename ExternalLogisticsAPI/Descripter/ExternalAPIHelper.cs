@@ -465,6 +465,7 @@ namespace ExternalLogisticsAPI.Descripter
                         switch ((int)root.item[i].charge[j].type)
                         {
                             case (int)AMZChargeType.Discount:
+                            case (int)AMZChargeType.Discount_Item:
                                 line.CuryDiscAmt = (line.CuryDiscAmt ?? 0m) + Math.Abs((decimal)root.item[i].charge[j].amount);
                                 break;
                             case (int)AMZChargeType.Shipping_Tax:
@@ -563,7 +564,7 @@ namespace ExternalLogisticsAPI.Descripter
 
                         line.InventoryID   = InventoryItem.UK.Find(orderEntry, fees[k].name.Contains("Refund") ? "REFUNDADMIN" : "COMMISSION").InventoryID;
                         line.OrderQty      = 1;
-                        line.CuryUnitPrice = -1 * (decimal)fees[k].amount;
+                        line.CuryUnitPrice = (decimal)fees[k].amount;
 
                         lineExt = line.GetExtension<SOLineExt>();
 

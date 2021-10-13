@@ -8,6 +8,7 @@ using PX.Objects.CM;
 using PX.Objects.CS;
 using PX.Objects.SO;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using ExternalLogisticsAPI.DAC;
@@ -196,7 +197,7 @@ namespace ExternalLogisticsAPI.Graph
                                 order.CustomerID       = Customer.UK.Find(orderEntry, AMZCustomer).BAccountID;
                                 order.OrderDate        = orderType == AmazonOrderType.FBA_RMA_RA_Later ? root.item?[0].shipment_date : root.return_date ?? root.item?[0].approval_date ?? root.payments_date;
                                 order.RequestDate      = orderType.IsIn(new List<int>(new int[] { AmazonOrderType.RestockingFee, AmazonOrderType.Reimbursement, AmazonOrderType.Rev_Reimbursement, AmazonOrderType.FBA_RMA_Exch, AmazonOrderType.FBA_RMA_RA_Later, AmazonOrderType.FBA_RMA_RA_Ealier })) ?
-                                                         order.OrderDate : string.IsNullOrWhiteSpace((string)root.item?[0].shipment_date) ? root.payments_date : order.RequestDate; 
+                                                         order.OrderDate : string.IsNullOrWhiteSpace((string)root.item?[0].shipment_date) ? root.payments_date : root.item?[0].shipment_date; 
                                 order.CustomerOrderNbr = orderType == AmazonOrderType.Rev_Reimbursement ? $"{list[i].OrderNbr} - {list[i].SequenceNo}" : list[i].OrderNbr;
                                 order.CustomerRefNbr   = orderType == AmazonOrderType.Reimbursement ? root.item?[0].reimbursement_id : 
                                                                                                       orderType == AmazonOrderType.Rev_Reimbursement ? root.item?[0].original_reimbursement_id : 
@@ -257,7 +258,17 @@ namespace ExternalLogisticsAPI.Graph
                             ///Becuase the standard tax calculation logic write in SOOrder_RowUpdate event which means I must use the following approach.
                             if (root.shipment != null)
                             {
-                                order.CuryPremiumFreightAmt = Math.Abs((decimal)root.shipment);
+                                decimal totalFgtDis = 0m;
+
+                                if (root.item[0].charge != null)
+                                {
+                                    List<APILibrary.Model.Amazon_Middleware.Charge> charges = root.item[i].charge.ToObject<List<APILibrary.Model.Amazon_Middleware.Charge>>();
+
+                                    charges = charges.FindAll(x => x.type == (int)AMZChargeType.Discount_Shipping);
+                                    totalFgtDis = charges.Sum(x => (decimal)x.amount);
+                                }
+
+                                order.CuryPremiumFreightAmt = Math.Abs((decimal)root.shipment) + totalFgtDis;
                                 orderEntry.Document.Update(order);
                             }
                             ///</remarks>
@@ -346,6 +357,8 @@ namespace ExternalLogisticsAPI.Graph
         Discount = 3, 
         COD = 4, // Cash_On_Delivery
         Shipping_Tax_Discount = 5, // (Open Invoice無finance data, 無稅報前，使用出貨報表代替時才會用到)
+        Discount_Shipping = 6,
+        Discount_Item = 7,
         Shipping_Tax = 11, 
         Gift_Wrap_Tax = 12, 
         Item_Tax = 13,
