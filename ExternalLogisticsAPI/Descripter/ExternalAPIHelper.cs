@@ -522,6 +522,7 @@ namespace ExternalLogisticsAPI.Descripter
                     line.InventoryID   = InventoryItem.UK.Find(orderEntry, "REIMBURSEMENT").InventoryID;
                     line.OrderQty      = string.IsNullOrWhiteSpace((string)root.item[i].original_reimbursement_id)? root.item[i].quantity_reimbursed_cash : root.item[i].quantity_reimbursed_inventory;
                     line.CuryUnitPrice = Math.Abs((decimal)root.item[i].amount_per_unit);
+                    line.CuryExtPrice  = root.item[i].amount_total;
 
                     counter = root.item?.Count;
                 }
@@ -556,7 +557,7 @@ namespace ExternalLogisticsAPI.Descripter
                 {
                     List<APILibrary.Model.Amazon_Middleware.Fee> fees = root.item[i].fee.ToObject<List<APILibrary.Model.Amazon_Middleware.Fee>>();
 
-                    fees = fees.FindAll(x => ((string)x.name).Contains("Commission") && (int)x.type == AmazonFeeType.Amz_Commission);
+                    fees = fees.FindAll(x => x.name.Contains("Commission") && (int)x.type == AmazonFeeType.Amz_Commission);
 
                     for (int k = 0; k < fees.Count; k++)
                     {
@@ -564,7 +565,7 @@ namespace ExternalLogisticsAPI.Descripter
 
                         line.InventoryID   = InventoryItem.UK.Find(orderEntry, fees[k].name.Contains("Refund") ? "REFUNDADMIN" : "COMMISSION").InventoryID;
                         line.OrderQty      = 1;
-                        line.CuryUnitPrice = (decimal)fees[k].amount;
+                        line.CuryUnitPrice = isCM == true ? -1 * (decimal)fees[k].amount : (decimal)fees[k].amount;
 
                         lineExt = line.GetExtension<SOLineExt>();
 

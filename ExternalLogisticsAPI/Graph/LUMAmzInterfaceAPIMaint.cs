@@ -164,11 +164,11 @@ namespace ExternalLogisticsAPI.Graph
 
             using (PXTransactionScope ts = new PXTransactionScope())
             {
-                SOOrderEntry orderEntry = PXGraph.CreateInstance<SOOrderEntry>();
-
                 for (int i = 0; i < list.Count; i++)
                 {
                     if (list[i].Write2Acumatica1 == true) { continue; }
+
+                    SOOrderEntry orderEntry = PXGraph.CreateInstance<SOOrderEntry>();
 
                     try
                     {
@@ -262,7 +262,7 @@ namespace ExternalLogisticsAPI.Graph
 
                                 if (root.item[0].charge != null)
                                 {
-                                    List<APILibrary.Model.Amazon_Middleware.Charge> charges = root.item[i].charge.ToObject<List<APILibrary.Model.Amazon_Middleware.Charge>>();
+                                    List<APILibrary.Model.Amazon_Middleware.Charge> charges = root.item[0].charge.ToObject<List<APILibrary.Model.Amazon_Middleware.Charge>>();
 
                                     charges = charges.FindAll(x => x.type == (int)AMZChargeType.Discount_Shipping);
                                     totalFgtDis = charges.Sum(x => (decimal)x.amount);
@@ -320,7 +320,7 @@ namespace ExternalLogisticsAPI.Graph
         {
             decimal totalTax = orderEntry.Document.Current.CuryTaxTotal.Value;
 
-            foreach (SOTaxTran row in orderEntry.Taxes.Cache.Inserted)
+            foreach (SOTaxTran row in orderEntry.Taxes.Cache.Cached)
             {
                 switch (row.TaxID)
                 {
