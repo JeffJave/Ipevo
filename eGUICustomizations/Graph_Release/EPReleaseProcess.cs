@@ -23,7 +23,7 @@ namespace PX.Objects.EP
                 claim != null &&
                 claim.Released == true )
             {
-                ExpenseClaimEntry graph = PXGraph.CreateInstance<ExpenseClaimEntry>();
+                //ExpenseClaimEntry graph = PXGraph.CreateInstance<ExpenseClaimEntry>();
                 TWNReleaseProcess rp    = PXGraph.CreateInstance<TWNReleaseProcess>();
 
                 Vendor vendor = new Vendor();
@@ -44,7 +44,7 @@ namespace PX.Objects.EP
                             VATCode       = manualGUIExp.VATInCode,
                             GUINbr        = manualGUIExp.GUINbr,
                             GUIStatus     = TWNGUIStatus.Used,
-                            BranchID      = graph.ExpenseClaimDetailsCurrent.Current.BranchID,
+                            BranchID      = claim.BranchID, //graph.ExpenseClaimDetailsCurrent.Current.BranchID,
                             GUIDirection  = TWNGUIDirection.Receipt,
                             GUIDate       = manualGUIExp.GUIDate,
                             GUITitle      = vendor.AcctName,
