@@ -1,0 +1,36 @@
+﻿<Sql TableName="v_AllPOInTransit" CustomScript="#CDATA">
+    <CDATA name="CustomScript"><![CDATA[IF EXISTS
+(
+	SELECT *
+	FROM SYS.views
+	WHERE name = 'v_AllPOInTransit' AND SCHEMA_ID = SCHEMA_ID('dbo')
+)
+DROP VIEW [dbo].[v_AllPOInTransit]	
+GO
+CREATE VIEW v_AllPOInTransit AS
+SELECT
+	[Company].[CompanyCD] AS 'TenantName', 
+	[POOrder].[OrderType],
+	[POOrder].[OrderNbr],
+	[POOrder].[Status],
+	[POOrder].[OrderDate],
+	[BAccount].[AcctName],
+	[POOrder].[OrderDesc],
+	[POOrder].[VendorRefNbr],
+	[POOrder].[CuryID],
+	[InventoryItem].[InventoryCD],
+	[InventoryItem].[Descr],
+	[POLine].[UOM],
+	[POLine].[OrderQty],
+	[POLine].[OpenQty],
+	[Branch].[BranchCD],
+	[POLine].[CuryUnitCost],
+	[POOrder].[CreatedDateTime]
+FROM POOrder
+LEFT JOIN Company on Company.CompanyID = POOrder.CompanyID
+LEFT JOIN POLine on POLine.OrderType = POOrder.OrderType and POLine.OrderNbr = POOrder.OrderNbr and POLine.CompanyID = POOrder.CompanyID
+LEFT JOIN BAccount on BAccount.BAccountID = POOrder.VendorID and BAccount.CompanyID = POOrder.CompanyID
+LEFT JOIN InventoryItem on InventoryItem.InventoryID = POLine.InventoryID and InventoryItem.CompanyID = POLine.CompanyID
+LEFT JOIN Branch on Branch.BranchID = POOrder.BranchID and Branch.CompanyID = POOrder.CompanyID
+WHERE POOrder.CompanyID > 0]]></CDATA>
+</Sql>
