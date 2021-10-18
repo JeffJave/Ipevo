@@ -28,10 +28,9 @@ namespace PX.Objects.CA
 
                 PXSelectBase<TWNManualGUIBank> ViewManGUIBank = new SelectFrom<TWNManualGUIBank>.Where<TWNManualGUIBank.adjRefNbr.IsEqual<@P.AsString>>.View(Base);
 
-                foreach (TWNManualGUIBank manualGUIBank in ViewManGUIBank.Cache.Cached)
+                foreach (TWNManualGUIBank manualGUIBank in ViewManGUIBank.Select(cAAdj.AdjRefNbr))
                 {
-                    if (PXCache<Tax>.GetExtension<TaxExt>(Tax.PK.Find(Base, manualGUIBank.TaxID)).UsrTWNGUI.Equals(false) )
-                       { continue; }
+                    if (PXCache<Tax>.GetExtension<TaxExt>(Tax.PK.Find(Base, manualGUIBank.TaxID)).UsrTWNGUI == false) { continue; }
 
                     using (PXTransactionScope ts = new PXTransactionScope())
                     {
@@ -40,7 +39,7 @@ namespace PX.Objects.CA
                             VATCode       = manualGUIBank.VATInCode,
                             GUINbr        = manualGUIBank.GUINbr,
                             GUIStatus     = TWNGUIStatus.Used,
-                            BranchID      = Base.CATranCashTrans_Ordered.Current.BranchID,
+                            BranchID      = cAAdj.BranchID,//Base.CATranCashTrans_Ordered.Current.BranchID,
                             GUIDirection  = TWNGUIDirection.Receipt,
                             GUIDate       = manualGUIBank.GUIDate,
                             GUITitle      = (string)PXSelectorAttribute.GetField(ViewManGUIBank.Cache, manualGUIBank,
