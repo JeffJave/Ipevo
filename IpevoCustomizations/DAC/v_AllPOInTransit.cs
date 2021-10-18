@@ -3,6 +3,7 @@ using PX.Data;
 using PX.Objects.CR;
 using PX.Objects.CS;
 using PX.Objects.GL;
+using PX.Objects.PO;
 
 namespace IpevoCustomizations.DAC
 {
@@ -34,6 +35,7 @@ namespace IpevoCustomizations.DAC
         #region Status
         [PXDBString(1, IsFixed = true, InputMask = "")]
         [PXUIField(DisplayName = "Status")]
+        [POOrderStatus.ListAttribute]
         public virtual string Status { get; set; }
         public abstract class status : PX.Data.BQL.BqlString.Field<status> { }
         #endregion
