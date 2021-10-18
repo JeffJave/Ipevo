@@ -34,7 +34,7 @@ namespace eGUICustomizations.Descriptor
         }
         #endregion
 
-        #region Functions
+        #region Methods
         public virtual void CheckGUINbrExisted(PXGraph graph, string gUINbr, string gUIFmtCode)
         {
             if (SelectFrom<TWNGUITrans>.Where<TWNGUITrans.gUINbr.IsEqual<@P.AsString>
@@ -82,10 +82,12 @@ namespace eGUICustomizations.Descriptor
                     break;
             }
 
-            if (isCreditNote.Equals(true))
+            if (isCreditNote == true)
             {
-                errorOccurred = true;
-                errorMessage  = TWMessages.CNIsNotFound;
+                //errorOccurred = true;
+                //errorMessage  = TWMessages.CNIsNotFound;
+
+                throw new PXException(TWMessages.CNIsNotFound, PXErrorLevel.Error);
             }
         }
 
