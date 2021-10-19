@@ -318,7 +318,7 @@ namespace ExternalLogisticsAPI.Graph
 
         protected virtual decimal? UpdateSOTaxAmount(SOOrderEntry orderEntry, dynamic root)
         {
-            decimal totalTax = orderEntry.Document.Current.CuryTaxTotal.Value;
+            decimal totalTax = 0m; //orderEntry.Document.Current.CuryTaxTotal.Value;
 
             foreach (SOTaxTran row in orderEntry.Taxes.Cache.Cached)
             {

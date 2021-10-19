@@ -44,7 +44,7 @@ namespace PX.Objects.AP
 
             var row = e.Row as APInvoice;
 
-            if (row != null && row.DocType.IsIn(APDocType.Invoice, APDocType.DebitAdj) )
+            if (row != null && row.DocType.IsIn(APDocType.Invoice, APDocType.DebitAdj) && string.IsNullOrEmpty(row.OrigModule))
             {
                 if (ManualAPBill.Select().Count == 0 && Base.Taxes.Select().Count > 0)
                 {
