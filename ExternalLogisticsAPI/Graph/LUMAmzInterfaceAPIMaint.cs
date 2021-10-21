@@ -155,6 +155,33 @@ namespace ExternalLogisticsAPI.Graph
                 cache.SetValueExt(cache.Current, PX.Objects.CS.Messages.Attribute + "PAYMENTREL", (DateTime)root.paymentReleaseDate);
             }
         }
+
+        /// <summary>
+        /// For for FM order type only, sales order line warehouse should be specific warehouse.
+        /// </summary>
+        /// <param name="graph"></param>
+        /// <param name="country"></param>
+        /// <returns></returns>
+        public static int? UpdateSOLineWarehouse(PXGraph graph, string country)
+        {
+            string warehouse = string.Empty;
+
+            switch (country)
+            {
+                case "US":
+                    warehouse = "DCL";
+                    break;
+                case "UK":
+                    warehouse = "P3PL";
+                    break;
+                case "CA":
+                case "NL":
+                    warehouse = "YUSEN";
+                    break;
+            }
+
+            return PX.Objects.IN.INSite.UK.Find(graph, warehouse).SiteID;
+        }
         #endregion
 
         #region Methods
@@ -268,7 +295,7 @@ namespace ExternalLogisticsAPI.Graph
                                     totalFgtDis = charges.Sum(x => (decimal)x.amount);
                                 }
 
-                                order.CuryPremiumFreightAmt = Math.Abs((decimal)root.shipment) + totalFgtDis;
+                                order.CuryPremiumFreightAmt = (decimal)root.shipment + totalFgtDis;
                                 orderEntry.Document.Update(order);
                             }
                             ///</remarks>
