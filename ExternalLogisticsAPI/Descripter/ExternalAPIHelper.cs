@@ -453,6 +453,7 @@ namespace ExternalLogisticsAPI.Descripter
                     line.OrderQty      = root.item[i].qty;
                     line.CuryUnitPrice = Math.Abs((decimal)root.item[i].unit_price);
                     line.TranDesc      = isCM == false ? null : root.item[i].sku;
+                    line.SiteID        = orderEntry.Document.Current.OrderType == "FM" ? LUMAmzInterfaceAPIMaint.UpdateSOLineWarehouse(orderEntry, orderEntry.Shipping_Address.Current.CountryID) : line.SiteID ;
 
                     lineExt.UsrFulfillmentCenter = root.item[i].fulfillment_center_id;
                     lineExt.UsrShipFromCountryID = string.IsNullOrWhiteSpace((string)root.item[i].country) ? null : root.item[i].country;
@@ -557,13 +558,13 @@ namespace ExternalLogisticsAPI.Descripter
                 {
                     List<APILibrary.Model.Amazon_Middleware.Fee> fees = root.item[i].fee.ToObject<List<APILibrary.Model.Amazon_Middleware.Fee>>();
 
-                    fees = fees.FindAll(x => x.name.Contains("Commission") && (int)x.type == AmazonFeeType.Amz_Commission);
+                    fees = fees.FindAll(x => (x.name.Contains("Commission") || x.name.StartsWith("Giftwrap")) && (int)x.type == AmazonFeeType.Amz_Commission);
 
                     for (int k = 0; k < fees.Count; k++)
                     {
                         line = orderEntry.Transactions.Cache.CreateInstance() as SOLine;
 
-                        line.InventoryID   = InventoryItem.UK.Find(orderEntry, fees[k].name.Contains("Refund") ? "REFUNDADMIN" : "COMMISSION").InventoryID;
+                        line.InventoryID   = InventoryItem.UK.Find(orderEntry, fees[k].name.Contains("Refund") ? "REFUNDADMIN" : fees[k].name.StartsWith("Giftwrap") ? nameof(AMZChargeType.GiftWrap).ToUpper() : "COMMISSION").InventoryID;
                         line.OrderQty      = 1;
                         line.CuryUnitPrice = isCM == true ? -1 * (decimal)fees[k].amount : (decimal)fees[k].amount;
 
