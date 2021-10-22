@@ -49,7 +49,7 @@ namespace PX.Objects.SO
                 var sumTaxAmt = Base.Taxes.Select().RowCast<SOTaxTran>().Sum(x => x?.CuryTaxAmt ?? 0);
                 var UsrAPIOrderType = Base.Document.Cache.GetValueExt(Base.Document.Current, "UsrAPIOrderType") as string;
                 if (customerData != null && (customerData.AcctCD.Trim().ToUpper() != "SELLERCENTRAL" || string.IsNullOrEmpty(UsrAPIOrderType)))
-                    Base.Document.Cache.SetValueExt(doc, "AttributeTAXRATE", (sumTaxableAmt == 0 || sumTaxAmt == 0 || sumTaxableAmt == null ) ? 0 : Math.Round((decimal)(sumTaxAmt / sumTaxableAmt),5));
+                    Base.Document.Cache.SetValueExt(doc, "AttributeTAXRATE", (sumTaxableAmt == 0 || sumTaxAmt == 0 || sumTaxableAmt == null) ? 0 : Math.Round((decimal)(sumTaxAmt / sumTaxableAmt), 5));
             }
 
             var transDatas = Base.Transactions.Select().RowCast<SOLine>();
@@ -61,6 +61,13 @@ namespace PX.Objects.SO
                 if (row != null && itemData != null && doc != null)
                 {
                     var itemClass = INItemClass.PK.Find(Base, itemData.ItemClassID);
+
+                    #region Verify qty can not be zero
+                    if (row.OrderQty == 0)
+                        Base.Transactions.Cache.RaiseExceptionHandling<SOLine.orderQty>(row, row.OrderQty,
+                            new PXSetPropertyException<SOLine.orderQty>("Item quantity cannot be 0, please check.", PXErrorLevel.Error));
+                    #endregion
+
                     #region Set MSRP Discount Rate
                     var curyInfoData = PX.Objects.CM.CurrencyInfo.PK.Find(Base, doc.CuryInfoID);
                     if (curyInfoData == null)
