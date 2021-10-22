@@ -453,7 +453,7 @@ namespace ExternalLogisticsAPI.Descripter
                     line.OrderQty      = root.item[i].qty;
                     line.CuryUnitPrice = Math.Abs((decimal)root.item[i].unit_price);
                     line.TranDesc      = isCM == false ? null : root.item[i].sku;
-                    line.SiteID        = orderEntry.Document.Current.OrderType == "FM" ? LUMAmzInterfaceAPIMaint.UpdateSOLineWarehouse(orderEntry, orderEntry.Shipping_Address.Current.CountryID) : line.SiteID ;
+                    line.SiteID        = orderEntry.Document.Current.OrderType == "FM" ? LUMAmzInterfaceAPIMaint.UpdateSOLineWarehouse(orderEntry) : line.SiteID ;
 
                     lineExt.UsrFulfillmentCenter = root.item[i].fulfillment_center_id;
                     lineExt.UsrShipFromCountryID = string.IsNullOrWhiteSpace((string)root.item[i].country) ? null : root.item[i].country;

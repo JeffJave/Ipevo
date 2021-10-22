@@ -162,11 +162,11 @@ namespace ExternalLogisticsAPI.Graph
         /// <param name="graph"></param>
         /// <param name="country"></param>
         /// <returns></returns>
-        public static int? UpdateSOLineWarehouse(PXGraph graph, string country)
+        public static int? UpdateSOLineWarehouse(PXGraph graph)
         {
             string warehouse = string.Empty;
 
-            switch (country)
+            switch (graph.Accessinfo.CompanyName.Substring(graph.Accessinfo.CompanyName.Length - 2, 2))
             {
                 case "US":
                     warehouse = "DCL";
