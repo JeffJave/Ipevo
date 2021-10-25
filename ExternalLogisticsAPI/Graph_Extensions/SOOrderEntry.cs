@@ -193,12 +193,9 @@ namespace ExternalLogisticsAPI.Graph_Extensions
                     // Update FBM
                     var updateResult = MiddleWareHelper.CallMiddleWareToUpdateFBM(setup, metaData);
                     // Check HttpStatusCode
-                    if (updateResult.StatusCode != System.Net.HttpStatusCode.OK)
-                        throw new PXException($"Update MiddleWare FBM fail , Code = {updateResult.StatusCode}");
-                    // Check Response status
                     var updateModel = JsonConvert.DeserializeObject<MiddleWare_Response>(updateResult.ContentResult);
-                    if (!updateModel.Status)
-                        throw new PXException($"Update Middleware FBM fail, Msg = {updateModel.Message}");
+                    if (updateResult.StatusCode != System.Net.HttpStatusCode.OK || !updateModel.Status)
+                        throw new PXException($"Update MiddleWare FBM fail , Code = {updateResult.StatusCode},  Msg = {updateModel.Message}");
                     _soOrder.GetExtension<SOOrderExt>().UsrSendToMiddleware = true;
                     Base.Document.Update(_soOrder);
                     Base.Save.Press();
