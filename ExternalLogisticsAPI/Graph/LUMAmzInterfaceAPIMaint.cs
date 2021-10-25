@@ -295,7 +295,7 @@ namespace ExternalLogisticsAPI.Graph
                                     totalFgtDis = charges.Sum(x => (decimal)x.amount);
                                 }
 
-                                order.CuryPremiumFreightAmt = (decimal)root.shipment + totalFgtDis;
+                                order.CuryPremiumFreightAmt = (order.OrderType == "RA" ? (decimal)root.shipment : Math.Abs((decimal)root.shipment)) + totalFgtDis;
                                 orderEntry.Document.Update(order);
                             }
                             ///</remarks>
