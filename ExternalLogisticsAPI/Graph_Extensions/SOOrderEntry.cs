@@ -374,7 +374,8 @@ namespace ExternalLogisticsAPI.Graph_Extensions
                 using (PXTransactionScope sc = new PXTransactionScope())
                 {
                     var soline = Base.Transactions.Select().RowCast<SOLine>().ToList().FirstOrDefault();
-                    var soTaxInfo = Base.Taxes.Select().RowCast<SOTaxTran>().ToList().FirstOrDefault();
+                    var soTaxInfo = Base.Taxes.Select().RowCast<SOTaxTran>().ToList();
+                    // Prepare Invoice
                     Base.prepareInvoice.PressButton(adapter);
                     var soshipInfo = Base.shipmentlist.Select().ToList().FirstOrDefault().GetItem<SOOrderShipment>();
                     SOInvoiceEntry ie = PXGraph.CreateInstance<SOInvoiceEntry>();
@@ -399,25 +400,29 @@ namespace ExternalLogisticsAPI.Graph_Extensions
                             ie.Document.Cache.SetValueExt(ie.Document.Current, PX.Objects.CS.Messages.Attribute + "TAXRATE", attrTAXRATE);
                             ie.Document.Cache.SetValueExt(ie.Document.Current, PX.Objects.CS.Messages.Attribute + "MKTPLACE", attrMKTPLACE);
                             // set taxAmt
-                            var inoviceTax = ie.Taxes.Select().RowCast<ARTaxTran>().ToList().FirstOrDefault();
-                            if (soTaxInfo != null && soTaxInfo.TaxID == "AMAZONCA" && inoviceTax != null)
+                            var invoiceTaxInfo = ie.Taxes.Select().RowCast<ARTaxTran>().ToList();
+                            for (int i = 0; i < invoiceTaxInfo.Count; i++)
                             {
-                                ie.Taxes.Cache.SetValueExt<ARTaxTran.taxAmt>(inoviceTax, (decimal)0);
-                                ie.Taxes.Cache.SetValueExt<ARTaxTran.curyTaxAmt>(inoviceTax, (decimal)0);
-                                ie.Document.Cache.SetValue<ARInvoice.taxTotal>(ie.Document.Current, (decimal)0);
-                                ie.Document.Cache.SetValue<ARInvoice.curyTaxTotal>(ie.Document.Current, (decimal)0);
-                            }
-                            else if (inoviceTax != null)
-                            {
-                                ie.Taxes.Cache.SetValueExt<ARTaxTran.taxAmt>(inoviceTax, soTaxInfo.CuryTaxAmt);
-                                ie.Taxes.Cache.SetValueExt<ARTaxTran.curyTaxAmt>(inoviceTax, soTaxInfo.CuryTaxAmt);
-                                ie.Document.Cache.SetValueExt<ARInvoice.taxTotal>(ie.Document.Current, soTaxInfo.CuryTaxAmt);
-                                ie.Document.Cache.SetValueExt<ARInvoice.curyTaxTotal>(ie.Document.Current, soTaxInfo.CuryTaxAmt);
-                                ie.Document.Cache.SetValueExt<ARInvoice.docBal>(ie.Document.Current, ie.Document.Current.CuryDocBal + soTaxInfo.CuryTaxAmt);
-                                ie.Document.Cache.SetValueExt<ARInvoice.curyDocBal>(ie.Document.Current, ie.Document.Current.CuryDocBal + soTaxInfo.CuryTaxAmt);
+                                if (soTaxInfo != null && soTaxInfo[i].TaxID == "AMAZONCA" && invoiceTaxInfo != null)
+                                {
+                                    ie.Taxes.Cache.SetValueExt<ARTaxTran.taxAmt>(invoiceTaxInfo[i], (decimal)0);
+                                    ie.Taxes.Cache.SetValueExt<ARTaxTran.curyTaxAmt>(invoiceTaxInfo[i], (decimal)0);
+                                    ie.Document.Cache.SetValueExt<ARInvoice.taxTotal>(ie.Document.Current, ie.Document.Current.TaxTotal + 0);
+                                    ie.Document.Cache.SetValueExt<ARInvoice.curyTaxTotal>(ie.Document.Current, ie.Document.Current.CuryTaxTotal + 0);
+
+                                }
+                                else if (invoiceTaxInfo != null && soTaxInfo[i].TaxID != "TAXCLOUD")
+                                {
+                                    ie.Taxes.Cache.SetValueExt<ARTaxTran.taxAmt>(invoiceTaxInfo[i], soTaxInfo[i].TaxAmt);
+                                    ie.Taxes.Cache.SetValueExt<ARTaxTran.curyTaxAmt>(invoiceTaxInfo[i], soTaxInfo[i].CuryTaxAmt);
+                                    ie.Document.Cache.SetValueExt<ARInvoice.taxTotal>(ie.Document.Current, ie.Document.Current.TaxTotal + soTaxInfo[i].TaxAmt);
+                                    ie.Document.Cache.SetValueExt<ARInvoice.curyTaxTotal>(ie.Document.Current, ie.Document.Current.CuryTaxTotal + soTaxInfo[i].CuryTaxAmt);
+                                    ie.Document.Cache.SetValueExt<ARInvoice.docBal>(ie.Document.Current, ie.Document.Current.CuryDocBal + soTaxInfo[i].TaxAmt);
+                                    ie.Document.Cache.SetValueExt<ARInvoice.curyDocBal>(ie.Document.Current, ie.Document.Current.CuryDocBal + soTaxInfo[i].CuryTaxAmt);
+                                }
+                                ie.Taxes.Cache.MarkUpdated(invoiceTaxInfo[i]);
                             }
                             ie.Document.Cache.MarkUpdated(ie.Document.Current);
-                            ie.Taxes.Cache.MarkUpdated(inoviceTax);
                             // save data
                             ie.Actions.PressSave();
                         }
