@@ -287,12 +287,15 @@ namespace ExternalLogisticsAPI.Graph
                             {
                                 decimal totalFgtDis = 0m;
 
-                                if (root.item[0].charge != null)
+                                for (int j = 0; j < root.item.Count; j++)
                                 {
-                                    List<APILibrary.Model.Amazon_Middleware.Charge> charges = root.item[0].charge.ToObject<List<APILibrary.Model.Amazon_Middleware.Charge>>();
+                                    if (root.item[j].charge != null)
+                                    {
+                                        List<APILibrary.Model.Amazon_Middleware.Charge> charges = root.item[j].charge.ToObject<List<APILibrary.Model.Amazon_Middleware.Charge>>();
 
-                                    charges = charges.FindAll(x => x.type == (int)AMZChargeType.Discount_Shipping);
-                                    totalFgtDis = charges.Sum(x => (decimal)x.amount);
+                                        charges = charges.FindAll(x => x.type == (int)AMZChargeType.Discount_Shipping);
+                                        totalFgtDis += charges.Sum(x => (decimal)x.amount);
+                                    }
                                 }
 
                                 order.CuryPremiumFreightAmt = (order.OrderType == "RA" ? (decimal)root.shipment : Math.Abs((decimal)root.shipment)) + totalFgtDis;
