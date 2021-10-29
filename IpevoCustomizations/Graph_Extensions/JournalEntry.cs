@@ -1,16 +1,26 @@
-﻿using IpevoCustomizations.DAC_Extensions;
-using PX.Data;
+﻿using PX.Data;
 using PX.SM;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Collections;
+using IpevoCustomizations.DAC_Extensions;
 
 namespace PX.Objects.GL
 {
     public class JournalEntryExt : PXGraphExtension<JournalEntry>
     {
+        #region Delegate Data View
+        public IEnumerable gLTranModuleBatNbr()
+        {
+            PXView select = new PXView(Base, true, Base.GLTranModuleBatNbr.View.BqlSelect);
+
+            int totalrow = 0;
+            int startrow = PXView.StartRow;
+
+            select.WhereAnd<Where<GLTran.curyDebitAmt, Greater<CS.decimal0>, Or<GLTran.curyCreditAmt, Greater<CS.decimal0>>>>();
+
+            return select.Select(PXView.Currents, PXView.Parameters, PXView.Searches, PXView.SortColumns, PXView.Descendings, PXView.Filters, ref startrow, PXView.MaximumRows, ref totalrow);
+        }
+        #endregion
+
         public virtual void _(Events.RowSelected<Batch> e, PXRowSelected baseHandler)
         {
             baseHandler?.Invoke(e.Cache, e.Args);

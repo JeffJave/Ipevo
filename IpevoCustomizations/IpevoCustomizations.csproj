@@ -80,11 +80,13 @@
     <Compile Include="Graph\LUMRestockNonTaxStateMaint.cs" />
     <Compile Include="Graph\LUMStateZipCodeMaint.cs" />
     <Compile Include="Graph\LumTaxExemptionMaint.cs" />
+    <Compile Include="Graph_Extensions\APInvoiceEntry_Extension.cs" />
     <Compile Include="Graph_Extensions\APPaymentEntryExt.cs" />
     <Compile Include="Graph_Extensions\APPayBills_Extension.cs" />
     <Compile Include="Graph_Extensions\ARInvoiceEntryExternalTax.cs" />
     <Compile Include="Graph_Extensions\BatchPostEntry.cs" />
     <Compile Include="Graph_Extensions\CADepositEntry.cs" />
+    <Compile Include="Graph_Extensions\INAdjustmentEntry_Extension.cs" />
     <Compile Include="Graph_Extensions\JournalEntry.cs" />
     <Compile Include="Graph_Extensions\KitAssemblyEntry.cs" />
     <Compile Include="Graph_Extensions\SOInvoiceEntry_Extension.cs" />
