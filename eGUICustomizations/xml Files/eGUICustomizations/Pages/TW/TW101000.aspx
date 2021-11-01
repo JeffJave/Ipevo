@@ -12,14 +12,18 @@
 <asp:Content ID="cont2" ContentPlaceHolderID="phF" Runat="Server">
 	<px:PXFormView SyncPosition="True" ID="form" runat="server" DataSourceID="ds" DataMember="GUIPreferences" Width="100%" AllowAutoHide="false">
 		<Template>
-			<px:PXLayoutRule ControlSize="M" LabelsWidth="M" runat="server" ID="CstPXLayoutRule6" StartRow="True" ></px:PXLayoutRule>
+			<px:PXLayoutRule ControlSize="M" LabelsWidth="XM" runat="server" ID="CstPXLayoutRule6" StartRow="True" ></px:PXLayoutRule>
 			<px:PXLayoutRule runat="server" ID="CstPXLayoutRule8" StartGroup="True" GroupCaption="Numbering Settings" ></px:PXLayoutRule>
 			<px:PXSelector runat="server" ID="CstPXSelector10" DataField="GUI3CopiesNumbering" AllowEdit="True" ></px:PXSelector>
 			<px:PXSelector runat="server" ID="CstPXSelector11" DataField="GUI2CopiesNumbering" AllowEdit="True" ></px:PXSelector>
 			<px:PXSelector AllowEdit="True" runat="server" ID="CstPXSelector12" DataField="MediaFileNumbering" ></px:PXSelector>
-			<px:PXSelector runat="server" ID="CstPXSelector25" DataField="RequestNumbering" AllowEdit="True" />
+			<px:PXSelector runat="server" ID="CstPXSelector25" DataField="RequestNumbering" AllowEdit="True" ></px:PXSelector>
+			<px:PXSelector runat="server" ID="CstPXSelector26" DataField="WHTFileNumbering" AllowEdit="True" ></px:PXSelector>
 			<px:PXLayoutRule ControlSize="M" LabelsWidth="M" runat="server" ID="CstPXLayoutRule7" StartRow="True" ></px:PXLayoutRule>
 			<px:PXLayoutRule LabelsWidth="M" runat="server" ID="CstPXLayoutRule9" StartGroup="True" GroupCaption="Registration" ></px:PXLayoutRule>
+			<px:PXCheckBox runat="server" ID="CstPXCheckBox27" DataField="EnableWHT" />
+			<px:PXTextEdit runat="server" ID="CstPXTextEdit29" DataField="WHTTaxAuthority" />
+			<px:PXNumberEdit runat="server" ID="CstPXNumberEdit28" DataField="SecGenerationNHIPct" />
 			<px:PXTextEdit runat="server" ID="CstPXTextEdit13" DataField="TaxRegistrationID" ></px:PXTextEdit>
 			<px:PXTextEdit CommitChanges="True" runat="server" ID="CstPXTextEdit14" DataField="OurTaxNbr" ></px:PXTextEdit>
 			<px:PXTextEdit runat="server" ID="CstPXTextEdit15" DataField="ZeroTaxTaxCntry" ></px:PXTextEdit>

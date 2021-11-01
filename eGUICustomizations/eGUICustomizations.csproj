@@ -71,6 +71,8 @@
     <Compile Include="DAC\TWNManualGUIBank.cs" />
     <Compile Include="DAC\TWNManualGUIExpense.cs" />
     <Compile Include="DAC\TWNNPOTable.cs" />
+    <Compile Include="DAC\TWNWHT.cs" />
+    <Compile Include="DAC\TWNWHTTran.cs" />
     <Compile Include="DAC_Extension\APRegisterExtensions.cs" />
     <Compile Include="DAC_Extension\ARRegisterExtensions.cs" />
     <Compile Include="DAC_Extension\TaxExtensions.cs" />
@@ -88,11 +90,13 @@
     <Compile Include="Graph\TWNExportMthsMaint.cs" />
     <Compile Include="Graph\TWNExportTiktTypesMaint.cs" />
     <Compile Include="Graph\TWNGenGUIMediaFile.cs" />
+    <Compile Include="Graph\TWNGenWHTFile.cs" />
     <Compile Include="Graph\TWNGenZeroTaxRateMedFile.cs" />
     <Compile Include="Graph\TWNGUIPrefMaint.cs" />
     <Compile Include="Graph\TWNManGUIAPMaint.cs" />
     <Compile Include="Graph\TWNManGUIARMaint.cs" />
     <Compile Include="Graph\TWNNPOMaint.cs" />
+    <Compile Include="Graph\TWNWHTInquiry.cs" />
     <Compile Include="Graph_Extension\AddReturnLineToDirectInvoice.cs" />
     <Compile Include="Graph_Extension\APInvoiceEntry.cs" />
     <Compile Include="Graph_Extension\ARInvoiceEntry.cs" />
