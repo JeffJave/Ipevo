@@ -32,7 +32,7 @@ namespace PX.Objects.AP
             var userEmployeeInfo = SelectFrom<PX.Objects.CR.CREmployee>
                              .Where<PX.Objects.CR.CREmployee.userID.IsEqual<AccessInfo.userID.FromCurrent>>
                              .View.Select(Base).RowCast<PX.Objects.CR.CREmployee>().FirstOrDefault();
-            var isOwner = _employeeid == userEmployeeInfo.DefContactID || _employeeid == userEmployeeInfo.OwnerID;
+            var isOwner = _employeeid == userEmployeeInfo?.DefContactID || _employeeid == userEmployeeInfo?.OwnerID;
             return IsAdmin || isOwner;
         }
 
