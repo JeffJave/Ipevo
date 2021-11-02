@@ -520,10 +520,12 @@ namespace ExternalLogisticsAPI.Descripter
                 }
                 else
                 {
-                    line.InventoryID   = InventoryItem.UK.Find(orderEntry, "REIMBURSEMENT").InventoryID;
-                    line.OrderQty      = string.IsNullOrWhiteSpace((string)root.item[i].original_reimbursement_id)? root.item[i].quantity_reimbursed_cash : root.item[i].quantity_reimbursed_inventory;
+                    bool hasOrigReimbID = !string.IsNullOrWhiteSpace((string)root.item[i].original_reimbursement_id);
+
+                    line.InventoryID   = InventoryItem.UK.Find(orderEntry, hasOrigReimbID == false ? "REIMBURSEMENT" : (string)root.item[i].sku).InventoryID;
+                    line.OrderQty      = hasOrigReimbID == false ? root.item[i].quantity_reimbursed_cash : root.item[i].quantity_reimbursed_inventory;
                     line.CuryUnitPrice = Math.Abs((decimal)root.item[i].amount_per_unit);
-                    line.CuryExtPrice  = root.item[i].amount_total;
+                    line.CuryExtPrice  = Math.Abs((decimal)root.item[i].amount_total);
 
                     counter = root.item?.Count;
                 }
