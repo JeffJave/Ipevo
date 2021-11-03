@@ -20,6 +20,7 @@ namespace ExternalLogisticsAPI.Descripter
         public const int Reimbursement = 13;
         public const int Rev_Reimbursement = 14;
         public const int MCF = 15;
+        public const int FBA_RMA_OI_AmzFee = 16;
         #endregion
 
         public static readonly int[] Values = new int[]
@@ -38,7 +39,8 @@ namespace ExternalLogisticsAPI.Descripter
             RestockingFee, 
             Reimbursement, 
             Rev_Reimbursement,
-            MCF
+            MCF,
+            FBA_RMA_OI_AmzFee
         };
         public static readonly string[] Labels = new string[]
         {
@@ -56,7 +58,8 @@ namespace ExternalLogisticsAPI.Descripter
             "Restocking Fee", 
             "Reimbursement(全為正項)", 
             "Reverse Reimbursement(全為負項)",
-            "MCF"
+            "MCF",
+            "FBA RMA RA Open Invoice With Amz Fee"
         };
 
         public class ListAttribute : PXIntListAttribute

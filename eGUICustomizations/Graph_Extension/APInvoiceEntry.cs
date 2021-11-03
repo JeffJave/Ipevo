@@ -16,6 +16,11 @@ namespace PX.Objects.AP
                                  typeof(TWNManualGUIAPBill.gUINbr))]
         public SelectFrom<TWNManualGUIAPBill>.Where<TWNManualGUIAPBill.docType.IsEqual<APInvoice.docType.FromCurrent>
                                                     .And<TWNManualGUIAPBill.refNbr.IsEqual<APInvoice.refNbr.FromCurrent>>>.View ManualAPBill;
+
+        public SelectFrom<TWNWHT>.Where<TWNWHT.docType.IsEqual<APInvoice.docType.FromCurrent>
+                                        .And<TWNWHT.refNbr.IsEqual<APInvoice.refNbr.FromCurrent>>>.View WHTView;
+
+        public SelectFrom<TWNGUIPreferences>.View GUISetup;
         #endregion
 
         #region Delegate Methods
@@ -86,6 +91,8 @@ namespace PX.Objects.AP
                 ManualAPBill.Cache.AllowDelete = ManualAPBill.Cache.AllowInsert = ManualAPBill.Cache.AllowUpdate = row.Status.IsIn(APDocStatus.Hold, APDocStatus.Balanced);
             }
 
+            WHTView.AllowSelect = GUISetup.Select().TopFirst?.EnableWHT == true;
+
             //PXUIFieldAttribute.SetVisible<APRegisterExt.usrDeduction>(e.Cache, null, activateGUI);
             //PXUIFieldAttribute.SetVisible<APRegisterExt.usrGUIDate>(e.Cache, null, activateGUI);
             //PXUIFieldAttribute.SetVisible<APRegisterExt.usrGUINbr>(e.Cache, null, activateGUI);
@@ -131,6 +138,25 @@ namespace PX.Objects.AP
 
                     PXCache<APRegister>.GetExtension<APRegisterExt>(row).UsrVATInCode = cSAnswers?.Value;
                     break;
+            }
+
+            if (GUISetup.Select().TopFirst?.EnableWHT == true &&
+                Base.Document.Current != null && Base.Document.Current.DocType.Equals(APDocType.Invoice))
+            {
+                TWNWHT wNWHT = new TWNWHT()
+                {
+                    DocType = Base.Document.Current.DocType
+                };
+
+                WHTView.Cache.SetDefaultExt<TWNWHT.personalID>(wNWHT);
+                WHTView.Cache.SetDefaultExt<TWNWHT.propertyID>(wNWHT);
+                WHTView.Cache.SetDefaultExt<TWNWHT.typeOfIn>(wNWHT);
+                WHTView.Cache.SetDefaultExt<TWNWHT.wHTFmtCode>(wNWHT);
+                WHTView.Cache.SetDefaultExt<TWNWHT.wHTFmtSub>(wNWHT);
+                WHTView.Cache.SetDefaultExt<TWNWHT.wHTTaxPct>(wNWHT);
+                WHTView.Cache.SetDefaultExt<TWNWHT.secNHICode>(wNWHT);
+
+                WHTView.Cache.Insert(wNWHT);
             }
         }
 

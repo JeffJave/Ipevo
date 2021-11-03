@@ -17,6 +17,7 @@ namespace eGUICustomizations.DAC
         [PXDBString(10, IsUnicode = true)]
         [PXUIField(DisplayName = "3 Copies GUI Numbering Sequence", Visibility = PXUIVisibility.Visible)]
         [PXSelector(typeof(Numbering.numberingID), DescriptionField = typeof(Numbering.descr))]
+        [PXDefault()]
         public virtual string GUI3CopiesNumbering { get; set; }
         public abstract class gUI3CopiesNumbering : PX.Data.BQL.BqlString.Field<gUI3CopiesNumbering> { }
         #endregion
@@ -45,6 +46,14 @@ namespace eGUICustomizations.DAC
         public abstract class requestNumbering : PX.Data.BQL.BqlString.Field<requestNumbering> { }
         #endregion
 
+        #region WHTFileNumbering
+        [PXDBString(10, IsUnicode = true)]
+        [PXUIField(DisplayName = "Withholding File Numbering Sequence")]
+        [PXSelector(typeof(Numbering.numberingID), DescriptionField = typeof(Numbering.descr))]
+        public virtual string WHTFileNumbering { get; set; }
+        public abstract class wHTFileNumbering : PX.Data.BQL.BqlString.Field<wHTFileNumbering> { }
+        #endregion
+
         #region TaxRegistrationID
         [PXDBString(9, IsUnicode = true)]
         [PXUIField(DisplayName = "Tax Registration")]
@@ -69,7 +78,6 @@ namespace eGUICustomizations.DAC
         #region UserName
         [PXDBString(256, IsUnicode = true)]
         [PXUIField(DisplayName = "User Name", Visibility = PXUIVisibility.Visible)]
-        [PXDefault]
         public virtual string UserName { get; set; }
         public abstract class userName : PX.Data.BQL.BqlString.Field<userName> { }
         #endregion
@@ -77,7 +85,6 @@ namespace eGUICustomizations.DAC
         #region Password
         [PXRSACryptString(IsUnicode = true)]
         [PXUIField(DisplayName = "Password", Visibility = PXUIVisibility.Visible)]
-        [PXDefault]
         public virtual string Password { get; set; }
         public abstract class password : PX.Data.BQL.BqlString.Field<password> { }
         #endregion
@@ -85,7 +92,6 @@ namespace eGUICustomizations.DAC
         #region Url
         [PXDBString(256, IsUnicode = true)]
         [PXUIField(DisplayName = "URL", Visibility = PXUIVisibility.Visible)]
-        [PXDefault]
         public virtual string Url { get; set; }
         public abstract class url : PX.Data.BQL.BqlString.Field<url> { }
         #endregion
@@ -95,6 +101,7 @@ namespace eGUICustomizations.DAC
         [PXUIField(DisplayName = "Company Name", Visibility = PXUIVisibility.SelectorVisible)]
         [PXMassMergableField]
         [PXPersonalDataField]
+        [PXDefault()]
         public virtual string CompanyName { get; set; }
         public abstract class companyName : PX.Data.BQL.BqlString.Field<companyName> { }
         #endregion
@@ -120,6 +127,28 @@ namespace eGUICustomizations.DAC
         [PXUIField(DisplayName = "Plastic Bag")]
         public virtual int? PlasticBag { get; set; }
         public abstract class plasticBag : PX.Data.BQL.BqlInt.Field<plasticBag> { }
+        #endregion
+
+        #region EnableWHT
+        [PXDBBool()]
+        [PXUIField(DisplayName = "Enable Withholding Tax")]
+        [PXDefault(false, PersistingCheck = PXPersistingCheck.Nothing)]
+        public virtual bool? EnableWHT { get; set; }
+        public abstract class enableWHT : PX.Data.BQL.BqlBool.Field<enableWHT> { }
+        #endregion
+
+        #region WHTTaxAuthority
+        [PXDBString(3, IsFixed = true, IsUnicode = true)]
+        [PXUIField(DisplayName = "Withholding Tax Authority")]
+        public virtual string WHTTaxAuthority { get; set; }
+        public abstract class wHTTaxAuthority : PX.Data.BQL.BqlString.Field<wHTTaxAuthority> { }
+        #endregion
+
+        #region SecGenerationNHIPct
+        [PXDBDecimal(3)]
+        [PXUIField(DisplayName = "Second Generation NHI %")]
+        public virtual decimal? SecGenerationNHIPct { get; set; }
+        public abstract class secGenerationNHIPct : PX.Data.BQL.BqlDecimal.Field<secGenerationNHIPct> { }
         #endregion
 
         #region CreatedByID

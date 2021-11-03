@@ -3,7 +3,6 @@ using PX.Data;
 using PX.Objects.CR;
 using PX.Objects.CS;
 using eGUICustomizations.DAC;
-using eGUICustomizations.Graph;
 using eGUICustomizations.Descriptor;
 using static eGUICustomizations.Descriptor.TWNStringList;
 
