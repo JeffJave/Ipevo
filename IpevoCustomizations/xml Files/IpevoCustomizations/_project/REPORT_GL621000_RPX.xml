@@ -1,5 +1,5 @@
 ﻿<Report Name="gl621000.rpx">
-    <Report Name="report1" version="20201103">
+    <Report version="20201103" Name="report1">
         <ExcelColumns>
             <item>8</item>
             <item>15</item>
@@ -246,6 +246,19 @@
                     <RelationRow>
                         <ChildField>BatchNbr</ChildField>
                         <ParentField>BatchNbr</ParentField>
+                    </RelationRow>
+                    <RelationRow>
+                        <ChildField>GLTran.CuryCreditAmt</ChildField>
+                        <Condition>NotEqual</Condition>
+                        <OpenBraces>1</OpenBraces>
+                        <Operator>Or</Operator>
+                        <ParentField>=0</ParentField>
+                    </RelationRow>
+                    <RelationRow>
+                        <ChildField>GLTran.CuryDebitAmt</ChildField>
+                        <CloseBraces>1</CloseBraces>
+                        <Condition>NotEqual</Condition>
+                        <ParentField>=0</ParentField>
                     </RelationRow>
                 </Links>
                 <ParentName>Batch</ParentName>
@@ -971,6 +984,7 @@
                 <FullName>PX.Objects.GL.Batch</FullName>
             </ReportTable>
         </Tables>
+        <Version>20201103</Version>
         <ViewerFields>
             <ViewerField Name="Batch.BatchNbr">
             </ViewerField>
