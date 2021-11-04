@@ -14,7 +14,7 @@
   <col name="WHTFmtSub" type="NChar(2)" nullable="true" />
   <col name="PayeeName" type="NVarChar(30)" nullable="true" />
   <col name="PayeeAddr" type="NVarChar(70)" nullable="true" />
-  <col name="SecNHIPct" type="Decimal(18,0)" nullable="true" />
+  <col name="SecNHIPct" type="Decimal(15,3)" nullable="true" />
   <col name="SecNHICode" type="NChar(10)" nullable="true" />
   <col name="SecNHIAmt" type="Decimal(19,4)" nullable="true" />
   <col name="WHTTaxPct" type="Decimal(15,3)" nullable="true" />
@@ -32,6 +32,10 @@
     <col name="CompanyID" />
     <col name="DocType" />
     <col name="RefNbr" />
+  </index>
+  <index name="TWNWHTTran_NoteID" unique="true">
+    <col name="NoteID" />
+    <col name="CompanyID" />
   </index>
 </table>]]></CDATA>
 </Sql>

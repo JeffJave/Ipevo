@@ -13,7 +13,7 @@
   <col name="Password" type="NVarChar(1000)" nullable="true" />
   <col name="Url" type="NVarChar(256)" nullable="true" />
   <col name="CompanyName" type="NVarChar(255)" />
-  <col name="AddressLine" type="NVarChar(50)" nullable="true" />
+  <col name="AddressLine" type="NVarChar(50)" />
   <col name="AESKey" type="NVarChar(32)" nullable="true" />
   <col name="PlasticBag" type="Int" nullable="true" />
   <col name="EnableWHT" type="Bit" nullable="true" />
