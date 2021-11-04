@@ -1,13 +1,15 @@
+using System;
 using PX.Common;
 using PX.Data;
 using PX.Data.BQL;
 using PX.Data.BQL.Fluent;
+using PX.Objects.CM;
+using PX.Objects.CR;
 using PX.Objects.TX;
 using eGUICustomizations.DAC;
 using eGUICustomizations.Descriptor;
 using eGUICustomizations.Graph_Release;
 using static eGUICustomizations.Descriptor.TWNStringList;
-using PX.Objects.CR;
 
 namespace PX.Objects.AP
 {
@@ -99,14 +101,15 @@ namespace PX.Objects.AP
 
                 // Triggering after save events.
                 ViewGUITrans.Cache.Persisted(false);
+            }
 
-                TWNWHT tWNWHT = SelectFrom<TWNWHT>.Where<TWNWHT.docType.IsEqual<@P.AsString>.And<TWNWHT.refNbr.IsEqual<@P.AsString>>>.View.Select(Base, doc.DocType, doc.RefNbr);
-
-                if (doc.DocType == APDocType.Invoice && tWNWHT != null)
+            foreach (TWNWHT tWNWHT in SelectFrom<TWNWHT>.Where<TWNWHT.docType.IsEqual<@P.AsString>.And<TWNWHT.refNbr.IsEqual<@P.AsString>>>.View.Select(Base, doc.DocType, doc.RefNbr))
+            {
+                if (doc != null && doc.Released == true && doc.DocType == APDocType.Invoice)
                 {
                     using (PXTransactionScope ts = new PXTransactionScope())
                     {
-                        TWNWHTTran wHTTran = new TWNWHTTran() 
+                        TWNWHTTran wHTTran = new TWNWHTTran()
                         {
                             DocType = doc.DocType,
                             RefNbr  = doc.RefNbr,
@@ -116,8 +119,7 @@ namespace PX.Objects.AP
 
                         wHTTran.BatchNbr   = doc.BatchNbr;
                         wHTTran.TranDate   = doc.DocDate;
-                        wHTTran.PaymDate   = Base.APPayment_DocType_RefNbr.Current?.DocDate;
-                        wHTTran.PaymRef    = Base.APPayment_DocType_RefNbr.Current?.ExtRefNbr;
+                        wHTTran.PaymDate   = Base.APInvoice_DocType_RefNbr.Current?.DueDate;
                         wHTTran.PersonalID = tWNWHT.PersonalID;
                         wHTTran.PropertyID = tWNWHT.PropertyID;
                         wHTTran.TypeOfIn   = tWNWHT.TypeOfIn;
@@ -127,20 +129,38 @@ namespace PX.Objects.AP
                         wHTTran.PayeeAddr  = SelectFrom<Address>.InnerJoin<Vendor>.On<Vendor.bAccountID.IsEqual<Address.bAccountID>
                                                                                      .And<Vendor.defAddressID.IsEqual<Address.addressID>>>
                                                                .Where<Vendor.bAccountID.IsEqual<@P.AsInt>>.View.ReadOnly.SelectSingleBound(Base, null, doc.VendorID).TopFirst?.AddressLine1;
-                        wHTTran.WHTTaxPct  = tWNWHT.WHTTaxPct;
-                        wHTTran.WHTAmt     = 0;//row.CuryLineAmt * -1;
+                        wHTTran.WHTTaxPct  = string.IsNullOrEmpty(tWNWHT.WHTTaxPct) ? 0m : Convert.ToDecimal(tWNWHT.WHTTaxPct);
+                        wHTTran.WHTAmt     = PXDBCurrencyAttribute.BaseRound(Base, (doc.CuryDocBal * wHTTran.WHTTaxPct).Value);
                         wHTTran.NetAmt     = doc.CuryOrigDocAmt;
                         wHTTran.SecNHIPct  = tWNWHT.SecNHIPct;
                         wHTTran.SecNHICode = tWNWHT.SecNHICode;
-                        wHTTran.SecNHIAmt  = 0;//row.CuryLineAmt * -1;
+                        wHTTran.SecNHIAmt  = PXDBCurrencyAttribute.BaseRound(Base, (doc.CuryDocBal * wHTTran.SecNHIPct).Value);
 
                         WHTTranView.Cache.Update(wHTTran);
 
+                        // Manually Saving as base code will not call base graph persis.
+                        WHTTranView.Cache.Persist(PXDBOperation.Insert);
+                        WHTTranView.Cache.Persist(PXDBOperation.Update);
+
                         ts.Complete(Base);
                     }
-                }
 
-                baseMethod();
+                    // Triggering after save events.
+                    WHTTranView.Cache.Persisted(false);
+                }
+            }
+
+            foreach (APAdjust adjust in Base.APAdjust_AdjgDocType_RefNbr_VendorID.Cache.Cached)
+            {
+                if (doc != null && doc.Released == true && doc.DocType == APDocType.Check && Base.APPayment_DocType_RefNbr.Current != null)
+                {
+                    PXUpdate<Set<TWNWHTTran.paymDate, Required<APAdjust.adjgDocDate>,
+                                 Set<TWNWHTTran.paymRef, Required<APAdjust.adjgRefNbr>>>,
+                             TWNWHTTran,
+                             Where<TWNWHTTran.docType, Equal<Required<APAdjust.adjdDocType>>,
+                                   And<TWNWHTTran.refNbr, Equal<Required<APAdjust.adjdRefNbr>>>>>.Update(Base, Base.APPayment_DocType_RefNbr.Current.AdjDate, Base.APPayment_DocType_RefNbr.Current.ExtRefNbr, 
+                                                                                                               adjust.AdjdDocType, adjust.AdjdRefNbr);
+                }
             }
         }
         #endregion
