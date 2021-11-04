@@ -17,6 +17,7 @@ namespace PX.Objects.AP
         public SelectFrom<TWNManualGUIAPBill>.Where<TWNManualGUIAPBill.docType.IsEqual<APInvoice.docType.FromCurrent>
                                                     .And<TWNManualGUIAPBill.refNbr.IsEqual<APInvoice.refNbr.FromCurrent>>>.View ManualAPBill;
 
+        [PXCopyPasteHiddenFields(typeof(TWNWHT.docType), typeof(TWNWHT.refNbr))]
         public SelectFrom<TWNWHT>.Where<TWNWHT.docType.IsEqual<APInvoice.docType.FromCurrent>
                                         .And<TWNWHT.refNbr.IsEqual<APInvoice.refNbr.FromCurrent>>>.View WHTView;
 
@@ -92,6 +93,7 @@ namespace PX.Objects.AP
             }
 
             WHTView.AllowSelect = GUISetup.Select().TopFirst?.EnableWHT == true;
+            WHTView.AllowDelete = WHTView.AllowInsert = WHTView.AllowUpdate = Base.Transactions.AllowUpdate;
 
             //PXUIFieldAttribute.SetVisible<APRegisterExt.usrDeduction>(e.Cache, null, activateGUI);
             //PXUIFieldAttribute.SetVisible<APRegisterExt.usrGUIDate>(e.Cache, null, activateGUI);
