@@ -197,6 +197,14 @@ namespace ExternalLogisticsAPI.Descripter
                     orderEntry.Transactions.Insert(line);
                 }
 
+                // Per David's request to include 3D Cart discount to sales order.
+                var promotionList = list.Find(x => x.PromotionList.Count > 0).PromotionList;
+
+                for (int j = 0; j < promotionList.Count; j++)
+                {
+                    CreateOrderDiscount(orderEntry, "DISCOUNT", (decimal)promotionList[j].DiscountAmount);
+                }
+
                 orderEntry.Taxes.Cache.SetValueExt<SOTaxTran.curyTaxAmt>(orderEntry.Taxes.Current, list[0].SalesTax + list[0].SalesTax2);
                 orderEntry.CurrentDocument.SetValueExt<SOOrder.paymentMethodID>(order, GetAcuPymtMethod(orderEntry, order.CustomerID, list[0].BillingPaymentMethod));
 
@@ -585,18 +593,19 @@ namespace ExternalLogisticsAPI.Descripter
                 /// <remarks> It's only for JP tenant. </remarks>
                 if (root.costOfPoints != null && (decimal)root.costOfPoints != 0m)
                 {
+                    CreateOrderDiscount(orderEntry, "COP", Math.Abs((decimal)root.costOfPoints));
                     ///<remarks> 
                     /// Because the standard SO Discount logic is calculated differently in RowInserted, RowUpdated and DiscountID_FieldUpdated events.
                     /// </remarks>
-                    SOOrderDiscountDetail disDetail = orderEntry.DiscountDetails.Insert(orderEntry.DiscountDetails.Cache.CreateInstance() as SOOrderDiscountDetail);
+                    //SOOrderDiscountDetail disDetail = orderEntry.DiscountDetails.Insert(orderEntry.DiscountDetails.Cache.CreateInstance() as SOOrderDiscountDetail);
 
-                    disDetail.DiscountID = "COP";
+                    //disDetail.DiscountID = "COP";
 
-                    orderEntry.DiscountDetails.Update(disDetail);
+                    //orderEntry.DiscountDetails.Update(disDetail);
 
-                    disDetail.CuryDiscountAmt = Math.Abs((decimal)root.costOfPoints);
+                    //disDetail.CuryDiscountAmt = Math.Abs((decimal)root.costOfPoints);
 
-                    orderEntry.DiscountDetails.Update(disDetail);
+                    //orderEntry.DiscountDetails.Update(disDetail);
                 }
             }
 
@@ -703,6 +712,8 @@ namespace ExternalLogisticsAPI.Descripter
         /// </summary>
         public static void CreatePaymentProcess(SOOrder order, dynamic root, decimal? recipRate)
         {
+            bool billed = order.OpenDoc == false && order.Completed == true;
+
             ARPaymentEntry pymtEntry = PXGraph.CreateInstance<ARPaymentEntry>();
 
             ARPayment payment = new ARPayment()
@@ -712,24 +723,35 @@ namespace ExternalLogisticsAPI.Descripter
 
             payment = PXCache<ARPayment>.CreateCopy(pymtEntry.Document.Insert(payment));
 
-            payment.CustomerID = order.CustomerID;
+            payment.CustomerID         = order.CustomerID;
             payment.CustomerLocationID = order.CustomerLocationID;
-            payment.PaymentMethodID = order.PaymentMethodID;
-            payment.PMInstanceID = order.PMInstanceID;
-            payment.CuryOrigDocAmt = 0m;
-            payment.ExtRefNbr = order.CustomerRefNbr ?? order.CustomerOrderNbr;
-            payment.DocDesc = $"{order.CuryID} EX-Rate = {recipRate}";
-            payment.AdjDate = order.OrderDate;
+            payment.PaymentMethodID    = order.PaymentMethodID;
+            payment.PMInstanceID       = order.PMInstanceID;
+            payment.CuryOrigDocAmt     = 0m;
+            payment.ExtRefNbr          = order.CustomerRefNbr ?? order.CustomerOrderNbr;
+            payment.DocDesc            = $"{order.CuryID} EX-Rate = {recipRate}";
+            payment.AdjDate            = billed == false ? order.OrderDate : root.paymentReleaseDate;
 
             payment = pymtEntry.Document.Update(payment);
 
-            SOAdjust adj = new SOAdjust()
+            if (billed == false)
             {
-                AdjdOrderType = order.OrderType.Trim(),
-                AdjdOrderNbr = order.OrderNbr.Trim()
-            };
+                pymtEntry.SOAdjustments.Insert(new SOAdjust()
+                {
+                    AdjdOrderType = order.OrderType.Trim(),
+                    AdjdOrderNbr  = order.OrderNbr.Trim()
+                });
+            }
+            else
+            {
+                SOOrderShipment orderShip = SelectFrom<SOOrderShipment>.Where<SOOrderShipment.orderNoteID.IsEqual<@P.AsGuid>>.View.SelectSingleBound(pymtEntry, null, order.NoteID);
 
-            pymtEntry.SOAdjustments.Insert(adj);
+                pymtEntry.Adjustments.Insert(new ARAdjust()
+                {
+                    AdjdDocType = orderShip.InvoiceType,
+                    AdjdRefNbr  = orderShip.InvoiceNbr
+                });
+            }
 
             for (int i = 0; i < root.item?.Count; i++)
             {
@@ -755,7 +777,7 @@ namespace ExternalLogisticsAPI.Descripter
             {
                 pymtEntry.SOAdjustments.UpdateCurrent();
 
-                payment.CuryOrigDocAmt = payment.CurySOApplAmt;
+                payment.CuryOrigDocAmt = (billed == false) ? payment.CurySOApplAmt : payment.CuryApplAmt;
 
                 pymtEntry.Document.Update(payment);
             }
@@ -879,6 +901,28 @@ namespace ExternalLogisticsAPI.Descripter
             invoiceEntry.Save.Press();
             invoiceEntry.releaseFromHold.Press();
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entry"></param>
+        /// <param name="discountID"></param>
+        /// <param name="discountAmt"></param>
+        public static void CreateOrderDiscount(SOOrderEntry entry, string discountID, decimal discountAmt)
+        {
+            ///<remarks> 
+            /// Because the standard SO Discount logic is calculated differently in RowInserted, RowUpdated and DiscountID_FieldUpdated events.
+            /// </remarks>
+            SOOrderDiscountDetail disDetail = entry.DiscountDetails.Insert(entry.DiscountDetails.Cache.CreateInstance() as SOOrderDiscountDetail);
+
+            disDetail.DiscountID = discountID;
+
+            entry.DiscountDetails.Update(disDetail);
+
+            disDetail.CuryDiscountAmt = discountAmt;
+
+            entry.DiscountDetails.Update(disDetail);
+        }
         #endregion
     }
 
@@ -971,6 +1015,14 @@ namespace ExternalLogisticsAPI.Descripter
         public int TransactionCaptured { get; set; }
     }
 
+    public class PromotionList
+    {
+        public int PromotionID { get; set; }
+        public string PromotionName { get; set; }
+        public string Coupon { get; set; }
+        public double DiscountAmount { get; set; }
+    }
+
     public class QuestionList
     {
         public int QuestionAnswerIndexID { get; set; }
@@ -1015,7 +1067,7 @@ namespace ExternalLogisticsAPI.Descripter
         public bool BillingOnLinePayment { get; set; }
         public List<ShipmentList> ShipmentList { get; set; }
         public List<OrderItemList> OrderItemList { get; set; }
-        public List<object> PromotionList { get; set; }
+        public List<PromotionList> PromotionList { get; set; }
         public double OrderDiscount { get; set; }
         public double OrderDiscountCoupon { get; set; }
         public double OrderDiscountPromotion { get; set; }
