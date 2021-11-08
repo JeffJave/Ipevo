@@ -198,9 +198,9 @@ namespace ExternalLogisticsAPI.Descripter
                 }
 
                 // Per David's request to include 3D Cart discount to sales order.
-                var promotionList = list.Find(x => x.PromotionList.Count > 0).PromotionList;
+                var promotionList = list.Find(x => x.PromotionList.Count > 0)?.PromotionList;
 
-                for (int j = 0; j < promotionList.Count; j++)
+                for (int j = 0; j < promotionList?.Count; j++)
                 {
                     CreateOrderDiscount(orderEntry, "DISCOUNT", (decimal)promotionList[j].DiscountAmount);
                 }
@@ -766,7 +766,7 @@ namespace ExternalLogisticsAPI.Descripter
 
                         pymtEntry.PaymentCharges.Insert(chargeTran);
                     }
-                    else
+                    else if (billed == false)
                     {
                         pymtEntry.SOAdjustments.Current.CuryAdjgAmt += (decimal)root.item[i].fee[j].amount;
                     }
