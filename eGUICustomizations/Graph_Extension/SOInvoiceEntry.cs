@@ -9,7 +9,7 @@ namespace PX.Objects.SO
 {
     public class SOInvoiceEntry_Extension : PXGraphExtension<SOInvoiceEntry_Workflow, SOInvoiceEntry>
     {
-        public const string GUIReportID = "TW601000";
+        public const string GUIReportID = "TW641000";
 
         #region Override Methods
         public override void Configure(PXScreenConfiguration config)

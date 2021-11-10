@@ -25,7 +25,7 @@
         </layout>
         <data>
             <SiteMap>
-                <row Title="GUI Invoice" Url="~/Frames/ReportLauncher.aspx?ID=TW601000.rpx" ScreenID="TW601000" NodeID="74f50db1-6602-45a2-abca-44ac7f0fd454" ParentID="00000000-0000-0000-0000-000000000000">
+                <row Title="GUI Invoice" Url="~/Frames/ReportLauncher.aspx?ID=TW641000.rpx" ScreenID="TW641000" NodeID="74f50db1-6602-45a2-abca-44ac7f0fd454" ParentID="00000000-0000-0000-0000-000000000000">
                     <MUIScreen IsPortal="0" WorkspaceID="e2c3849a-6280-41df-81f3-552b91adfae5" Order="90" SubcategoryID="b731b346-4d68-4796-b797-3e035ef3497c" />
                 </row>
             </SiteMap>
