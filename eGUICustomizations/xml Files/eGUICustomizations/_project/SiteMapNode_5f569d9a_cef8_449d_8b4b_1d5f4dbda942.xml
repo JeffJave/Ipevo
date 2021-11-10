@@ -26,18 +26,9 @@
         <data>
             <SiteMap>
                 <row Position="21520" Title="Generate Withholding Tax File" Url="~/Pages/TW/TW505000.aspx" ScreenID="TW505000" NodeID="5f569d9a-cef8-449d-8b4b-1d5f4dbda942" ParentID="00000000-0000-0000-0000-000000000000">
-                    <MUIScreen IsPortal="0" WorkspaceID="3ca80fc2-2fa4-485a-8672-c8832daa2acc" Order="175.625" SubcategoryID="32130442-2305-4394-9389-cf915b191d2a" />
+                    <MUIScreen IsPortal="0" WorkspaceID="00000000-0000-0000-0000-000000000000" Order="2750" SubcategoryID="aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa" />
                 </row>
             </SiteMap>
-            <MUIWorkspace>
-                <row IsPortal="0" WorkspaceID="3ca80fc2-2fa4-485a-8672-c8832daa2acc" Order="145.25" Title="Taxes" Icon="taxes" AreaID="338edf81-5456-4735-8601-b213458e93fe" ScreenID="WSTX0000" IsSystem="0" />
-            </MUIWorkspace>
-            <MUISubcategory>
-                <row IsPortal="0" SubcategoryID="32130442-2305-4394-9389-cf915b191d2a" Order="820" Name="Processes" Icon="" IsSystem="0" />
-            </MUISubcategory>
-            <MUIArea>
-                <row IsPortal="0" AreaID="338edf81-5456-4735-8601-b213458e93fe" Order="10" Name="Financials" />
-            </MUIArea>
         </data>
     </data-set>
 </SiteMapNode>
