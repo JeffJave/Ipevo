@@ -20,7 +20,7 @@ using ExternalLogisticsAPI.Graph;
 
 namespace ExternalLogisticsAPI.Descripter
 {
-    public class ExternalAPIHelper
+    public static class ExternalAPIHelper
     {
         #region 3DCart
         public const string StockItemNonExists = "[{0}] Doesn't Exist In The System.";
@@ -190,7 +190,7 @@ namespace ExternalLogisticsAPI.Descripter
                 {
                     SOLine line = orderEntry.Transactions.Cache.CreateInstance() as SOLine;
 
-                    line.InventoryID   = GetAcuInventoryID(orderEntry, itemList[i].ItemID);
+                    line.InventoryID   = GetSOLineInventoryID(orderEntry, itemList[i].ItemID);
                     line.OrderQty      = (decimal)itemList[i].ItemQuantity;
                     line.CuryUnitPrice = (decimal)itemList[i].ItemUnitPrice;
 
@@ -380,23 +380,6 @@ namespace ExternalLogisticsAPI.Descripter
         }
 
         /// <summary>
-        /// Get Acumatica inventory ID by item name.
-        /// </summary>
-        public static int? GetAcuInventoryID(PXGraph graph, string inventoryCD)
-        {
-            InventoryItem item = SelectFrom<InventoryItem>.Where<InventoryItem.inventoryCD.Contains<@P.AsString>>.View.Select(graph, inventoryCD);
-
-            if (item != null)
-            {
-                return item.InventoryID;
-            }
-            else
-            {
-                throw new PXException(StockItemNonExists, inventoryCD);
-            }
-        }
-
-        /// <summary>
         /// Get Acumatica payment method ID by payment description.
         /// </summary>
         public static string GetAcuPymtMethod(PXGraph graph, int? customerID, string paymDescr)
@@ -409,7 +392,7 @@ namespace ExternalLogisticsAPI.Descripter
         /// <summary>
         /// Delete specify table record by Processed is not true.
         /// </summary>
-        protected static void DeleteWrkTableRecs()
+        public static void DeleteWrkTableRecs()
         {
             PXDatabase.Delete<LUM3DCartProcessOrder>(new PXDataFieldRestrict<LUM3DCartProcessOrder.processed>(PXDbType.Bit, false));
         }
@@ -457,7 +440,7 @@ namespace ExternalLogisticsAPI.Descripter
 
                 if (root.item[i].reimbursement_id == null)
                 {
-                    line.InventoryID   = InventoryItem.UK.Find(orderEntry, isCM == false ? (string)root.item[i].sku : "RMAPAYMENT").InventoryID;
+                    line.InventoryID   = GetSOLineInventoryID(orderEntry, isCM == false ? (string)root.item[i].sku : "RMAPAYMENT");
                     line.OrderQty      = root.item[i].qty;
                     line.CuryUnitPrice = Math.Abs((decimal)root.item[i].unit_price);
                     line.TranDesc      = isCM == false ? null : root.item[i].sku;
@@ -530,7 +513,7 @@ namespace ExternalLogisticsAPI.Descripter
                 {
                     bool hasOrigReimbID = !string.IsNullOrWhiteSpace((string)root.item[i].original_reimbursement_id);
 
-                    line.InventoryID   = InventoryItem.UK.Find(orderEntry, hasOrigReimbID == false ? "REIMBURSEMENT" : (string)root.item[i].sku).InventoryID;
+                    line.InventoryID   = GetSOLineInventoryID(orderEntry, hasOrigReimbID == false ? "REIMBURSEMENT" : (string)root.item[i].sku);
                     line.OrderQty      = hasOrigReimbID == false ? root.item[i].quantity_reimbursed_cash : root.item[i].quantity_reimbursed_inventory;
                     line.CuryUnitPrice = Math.Abs((decimal)root.item[i].amount_per_unit);
                     line.CuryExtPrice  = Math.Abs((decimal)root.item[i].amount_total);
@@ -548,7 +531,7 @@ namespace ExternalLogisticsAPI.Descripter
                     {
                         line = orderEntry.Transactions.Cache.CreateInstance() as SOLine;
 
-                        line.InventoryID   = InventoryItem.UK.Find(orderEntry, list.Exists(x => x.type == (int)AMZChargeType.GiftWrap) ? nameof(AMZChargeType.GiftWrap).ToUpper() : nameof(AMZChargeType.COD)).InventoryID;
+                        line.InventoryID   = GetSOLineInventoryID(orderEntry, list.Exists(x => x.type == (int)AMZChargeType.GiftWrap) ? nameof(AMZChargeType.GiftWrap).ToUpper() : nameof(AMZChargeType.COD));
                         line.OrderQty      = 1;
                         line.CuryUnitPrice = root.item[i].charge[list.FindIndex(x => x.type.IsIn((int)AMZChargeType.GiftWrap, (int)AMZChargeType.COD))].amount;
 
@@ -574,7 +557,7 @@ namespace ExternalLogisticsAPI.Descripter
                     {
                         line = orderEntry.Transactions.Cache.CreateInstance() as SOLine;
 
-                        line.InventoryID   = InventoryItem.UK.Find(orderEntry, fees[k].name.Contains("Refund") ? "REFUNDADMIN" : fees[k].name.StartsWith("Giftwrap") ? nameof(AMZChargeType.GiftWrap).ToUpper() : "COMMISSION").InventoryID;
+                        line.InventoryID   = GetSOLineInventoryID(orderEntry, fees[k].name.Contains("Refund") ? "REFUNDADMIN" : fees[k].name.StartsWith("Giftwrap") ? nameof(AMZChargeType.GiftWrap).ToUpper() : "COMMISSION");
                         line.OrderQty      = 1;
                         line.CuryUnitPrice = isCM == true ? -1 * (decimal)fees[k].amount : (decimal)fees[k].amount;
 
@@ -594,18 +577,6 @@ namespace ExternalLogisticsAPI.Descripter
                 if (root.costOfPoints != null && (decimal)root.costOfPoints != 0m)
                 {
                     CreateOrderDiscount(orderEntry, "COP", Math.Abs((decimal)root.costOfPoints));
-                    ///<remarks> 
-                    /// Because the standard SO Discount logic is calculated differently in RowInserted, RowUpdated and DiscountID_FieldUpdated events.
-                    /// </remarks>
-                    //SOOrderDiscountDetail disDetail = orderEntry.DiscountDetails.Insert(orderEntry.DiscountDetails.Cache.CreateInstance() as SOOrderDiscountDetail);
-
-                    //disDetail.DiscountID = "COP";
-
-                    //orderEntry.DiscountDetails.Update(disDetail);
-
-                    //disDetail.CuryDiscountAmt = Math.Abs((decimal)root.costOfPoints);
-
-                    //orderEntry.DiscountDetails.Update(disDetail);
                 }
             }
 
@@ -614,7 +585,7 @@ namespace ExternalLogisticsAPI.Descripter
             {
                 SOLine line = orderEntry.Transactions.Cache.CreateInstance() as SOLine;
 
-                line.InventoryID   = InventoryItem.UK.Find(orderEntry, "RESTOCKING").InventoryID;
+                line.InventoryID   = GetSOLineInventoryID(orderEntry, "RESTOCKING");
                 line.OrderQty      = 1;
                 line.CuryUnitPrice = (decimal)root.restocking_fee;
 
@@ -903,7 +874,7 @@ namespace ExternalLogisticsAPI.Descripter
         }
 
         /// <summary>
-        /// 
+        /// Manaully create sales order header discount record by specificed discount code.
         /// </summary>
         /// <param name="entry"></param>
         /// <param name="discountID"></param>
@@ -922,6 +893,30 @@ namespace ExternalLogisticsAPI.Descripter
             disDetail.CuryDiscountAmt = discountAmt;
 
             entry.DiscountDetails.Update(disDetail);
+        }
+
+        /// <summary>
+        /// Simulate standard SOLineInventoryItemAttribute to consider cross-references to stock item.
+        /// Currently it only considers "Global" & "Customer Part number" type.
+        /// </summary>
+        /// <param name="graph"></param>
+        /// <param name="line"></param>
+        /// <returns></returns>
+        public static int? GetSOLineInventoryID(PXGraph graph, string sku)
+        {
+            int? inventoryID;
+
+            inventoryID = InventoryItem.UK.Find(graph, sku)?.InventoryID;
+
+            if (inventoryID == null)
+            {
+                inventoryID = SelectFrom<INItemXRef>.Where<INItemXRef.alternateID.IsEqual<@P.AsString>
+                                                           .And<Where<INItemXRef.alternateType, Equal<INAlternateType.global>,
+                                                                      Or<INItemXRef.alternateType, Equal<INAlternateType.cPN>>>>>
+                                                    .View.SelectSingleBound(graph, null, sku).TopFirst?.InventoryID;
+            }
+
+            return inventoryID;
         }
         #endregion
     }
