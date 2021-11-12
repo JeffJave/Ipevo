@@ -21,9 +21,9 @@
 				<px:PXGridColumn DataField="RefNbr" Width="140" ></px:PXGridColumn>
 				<px:PXGridColumn DataField="PersonalID" Width="120" ></px:PXGridColumn>
 				<px:PXGridColumn DataField="PropertyID" Width="140" ></px:PXGridColumn>
-				<px:PXGridColumn DataField="TypeOfIn" Width="70" ></px:PXGridColumn>
+				<px:PXGridColumn DataField="TypeOfIn" Width="120" DisplayMode="Hint" ></px:PXGridColumn>
 				<px:PXGridColumn DataField="WHTFmtCode" Width="70" ></px:PXGridColumn>
-				<px:PXGridColumn DataField="WHTFmtSub" Width="70" ></px:PXGridColumn>
+				<px:PXGridColumn DataField="WHTFmtSub" Width="120" DisplayMode="Hint" ></px:PXGridColumn>
 				<px:PXGridColumn DataField="PayeeName" Width="140" ></px:PXGridColumn>
 				<px:PXGridColumn DataField="PayeeAddr" Width="220" ></px:PXGridColumn>
 				<px:PXGridColumn DataField="SecNHIPct" Width="100" ></px:PXGridColumn>
@@ -33,7 +33,9 @@
 				<px:PXGridColumn DataField="WHTAmt" Width="100" ></px:PXGridColumn></Columns>
 			
 				<RowTemplate>
-					<px:PXSelector runat="server" ID="CstPXSelector1" DataField="RefNbr" AllowEdit="True" ></px:PXSelector></RowTemplate></px:PXGridLevel>
+					<px:PXSelector runat="server" ID="CstPXSelector1" DataField="RefNbr" AllowEdit="True" ></px:PXSelector>
+					<px:PXSelector runat="server" ID="CstPXSelector2" DataField="BatchNbr" AllowEdit="True" ></px:PXSelector>
+				</RowTemplate></px:PXGridLevel>
 		</Levels>
 		<AutoSize Container="Window" Enabled="True" MinHeight="150" ></AutoSize>
 		<ActionBar >

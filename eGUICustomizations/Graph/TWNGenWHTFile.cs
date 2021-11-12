@@ -16,7 +16,7 @@ namespace eGUICustomizations.Graph
     public class TWNGenWHTFile : PXGraph<TWNGenWHTFile>
     {
         #region Filter & Process & Features
-        public PXCancel<GUITransFilter> Cancel;
+        public PXCancel<WHTTranFilter> Cancel;
         public PXFilter<WHTTranFilter> Filter;
 
         public PXFilteredProcessing<TWNWHTTran, WHTTranFilter,
@@ -33,7 +33,15 @@ namespace eGUICustomizations.Graph
         {
             WHTTranProc.SetProcessCaption(ActionsMessages.Export);
             WHTTranProc.SetProcessAllCaption(TWMessages.ExportAll);
+            ///<remarks> Because the file is downloaded using the throw exception, an error message may be displayed even if there is no error.
             WHTTranProc.SetProcessDelegate(Export);
+            //WHTTranProc.SetProcessDelegate(delegate (List<TWNWHTTran> list)
+            //{
+            //    TWNGenWHTFile graph = CreateInstance<TWNGenWHTFile>();
+
+            //    graph.Export(list);
+            //});
+            ///</remarks>
         }
         #endregion
 
@@ -58,7 +66,7 @@ namespace eGUICustomizations.Graph
                         foreach (TWNWHTTran row in wHTTranList)
                         {
                             // 稽徵機關代號
-                            lines = gUIPreferences.WHTTaxAuthority;
+                            lines = gUIPreferences?.WHTTaxAuthority;
                             // 流水號
                             lines += AutoNumberAttribute.GetNextNumber(WHTTranProc.Cache, row, gUIPreferences.WHTFileNumbering, Accessinfo.BusinessDate);
                             // 扣繳單位或營利事業統一編號
@@ -68,15 +76,15 @@ namespace eGUICustomizations.Graph
                             // Format Code
                             lines += row.WHTFmtCode;
                             // Personal ID
-                            lines += row.PersonalID;
+                            lines += row.PersonalID.PadRight(10, ' ');
                             // Type Of Income
                             lines += row.TypeOfIn;
                             // Payment Budget
-                            lines += GetStrAmt((row.WHTAmt + row.SecNHIAmt + row.NetAmt).Value);
+                            lines += PadAmt2FixedStrLength((row.WHTAmt + row.SecNHIAmt + row.NetAmt).Value);
                             // Tax Amount
-                            lines += GetStrAmt(row.WHTAmt.Value);
+                            lines += PadAmt2FixedStrLength(row.WHTAmt.Value);
                             // Net Amount
-                            lines += GetStrAmt((row.SecNHIAmt + row.NetAmt).Value);
+                            lines += PadAmt2FixedStrLength((row.SecNHIAmt + row.NetAmt).Value);
                             // 租賃房屋稅籍編號、執行業務者業別代號、所得人代號或帳號、外僑護照號碼
                             lines += GetFormatNbr(row);
                             // Blank
@@ -133,7 +141,7 @@ namespace eGUICustomizations.Graph
             }
         }
 
-        public string GetStrAmt(decimal amount)
+        protected string PadAmt2FixedStrLength(decimal amount)
         {
             mediaGraph.fixedLen  = 10;
             mediaGraph.combinStr = amount.ToString();
@@ -145,7 +153,7 @@ namespace eGUICustomizations.Graph
         /// If TWN_WhtTrans.FormatCode ='9A', then TWN_WhtTrans.FormatSubCode 
         /// else(TWN_WhtTrans.PropertyID if TWN_WhtTrans.PropertyID is not blank)
         /// </summary>
-        public string GetFormatNbr(TWNWHTTran wHTTran)
+        protected string GetFormatNbr(TWNWHTTran wHTTran)
         {
             if (wHTTran.WHTFmtCode == "9A")
             {
@@ -156,10 +164,8 @@ namespace eGUICustomizations.Graph
                 return string.IsNullOrEmpty(wHTTran.PropertyID) ? new string(mediaGraph.space, 12) : wHTTran.PropertyID;
             }
         }
-        #endregion
 
-        #region Search Method
-        private string GetVendCountryID(string docType, string refNbr)
+        protected string GetVendCountryID(string docType, string refNbr)
         {
             Address address= SelectFrom<Address>.LeftJoin<BAccount>.On<BAccount.bAccountID.IsEqual<Address.bAccountID>
                                                                        .And<BAccount.defAddressID.IsEqual<Address.addressID>>>
@@ -174,7 +180,7 @@ namespace eGUICustomizations.Graph
 
     #region Filter DAC
     [Serializable]
-    [PXCacheName("WHT Transaction Filter")]
+    [PXCacheName("Withholding Tax Trans Filter")]
     public class WHTTranFilter : GUITransFilter
     {
         #region FromDate

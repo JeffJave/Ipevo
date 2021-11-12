@@ -52,10 +52,15 @@
     <Reference Include="PX.Objects.FS">
       <HintPath>..\..\..\..\Bin\PX.Objects.FS.dll</HintPath>
     </Reference>
+    <Reference Include="PX.SiteMap, Version=1.0.0.0, Culture=neutral, PublicKeyToken=3b136cac2f602b8e, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Bin\PX.SiteMap.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -80,6 +85,7 @@
     <Compile Include="Descriptor\TWMessages.cs" />
     <Compile Include="Descriptor\TWNB2CPrinter.cs" />
     <Compile Include="Descriptor\TWNGUIValidation.cs" />
+    <Compile Include="Descriptor\TWNSiteMapControlHandler.cs" />
     <Compile Include="Descriptor\TWNStringList.cs" />
     <Compile Include="Graph\TWNCreateNewGUIMaint.cs" />
     <Compile Include="Graph\TWNeGUIInquiry.cs" />

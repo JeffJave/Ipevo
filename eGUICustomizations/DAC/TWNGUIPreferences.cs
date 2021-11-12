@@ -111,6 +111,7 @@ namespace eGUICustomizations.DAC
         [PXUIField(DisplayName = "Company Address")]
         [PXMassMergableField]
         [PXPersonalDataField]
+        [PXDefault()]
         public virtual string AddressLine { get; set; }
         public abstract class addressLine : PX.Data.BQL.BqlString.Field<addressLine> { }
         #endregion

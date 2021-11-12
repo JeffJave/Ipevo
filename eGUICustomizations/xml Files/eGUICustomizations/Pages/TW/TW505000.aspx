@@ -3,7 +3,7 @@
 
 <asp:Content ID="cont1" ContentPlaceHolderID="phDS" Runat="Server">
 	<px:PXDataSource ID="ds" runat="server" Visible="True" Width="100%"
-        TypeName="eGUICustomizations.Graph.TWNGenWHTFile" PrimaryView="WHTTranProc">
+        TypeName="eGUICustomizations.Graph.TWNGenWHTFile" PrimaryView="Filter">
 		<CallbackCommands>
 
 		</CallbackCommands>
@@ -19,7 +19,11 @@
 			<px:PXDateTimeEdit runat="server" ID="CstPXDateTimeEdit5" TimeMode="True" SuppressLabel="True" CommitChanges="True" DataField="FromDate_Time" ></px:PXDateTimeEdit>
 			<px:PXLayoutRule runat="server" ID="CstPXLayoutRule7" Merge="True" ></px:PXLayoutRule>
 			<px:PXDateTimeEdit runat="server" ID="CstPXDateTimeEdit9" CommitChanges="True" DataField="ToDate_Date" ></px:PXDateTimeEdit>
-			<px:PXDateTimeEdit runat="server" ID="CstPXDateTimeEdit10" TimeMode="True" SuppressLabel="True" CommitChanges="True" DataField="ToDate_Time" ></px:PXDateTimeEdit></Template>
+			<px:PXDateTimeEdit runat="server" ID="CstPXDateTimeEdit10" TimeMode="True" SuppressLabel="True" CommitChanges="True" DataField="ToDate_Time" ></px:PXDateTimeEdit>
+			<px:PXLayoutRule runat="server" ID="CstPXLayoutRule3" StartColumn="True" ></px:PXLayoutRule>
+			<px:PXDateTimeEdit runat="server" ID="PXDateTimeEdit1" CommitChanges="True" DataField="FromPaymDate" ></px:PXDateTimeEdit>
+			<px:PXDateTimeEdit runat="server" ID="PXDateTimeEdit2" CommitChanges="True" DataField="ToPaymDate" ></px:PXDateTimeEdit>
+		</Template>
 	</px:PXFormView>
 </asp:Content>
 <asp:Content ID="cont3" ContentPlaceHolderID="phG" Runat="Server">

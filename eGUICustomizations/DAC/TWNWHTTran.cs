@@ -3,6 +3,7 @@ using PX.Data;
 using PX.Objects.AP;
 using eGUICustomizations.Graph;
 using eGUICustomizations.Descriptor;
+using PX.Objects.GL;
 
 namespace eGUICustomizations.DAC
 {
@@ -38,6 +39,7 @@ namespace eGUICustomizations.DAC
         #region BatchNbr
         [PXDBString(15, IsUnicode = true, InputMask = "")]
         [PXUIField(DisplayName = "Batch Nbr.")]
+        [PXSelector(typeof(Search<Batch.batchNbr, Where<Batch.module, Equal<BatchModule.moduleAP>>>))]
         public virtual string BatchNbr { get; set; }
         public abstract class batchNbr : PX.Data.BQL.BqlString.Field<batchNbr> { }
         #endregion
@@ -116,7 +118,7 @@ namespace eGUICustomizations.DAC
         #endregion
 
         #region SecNHIPct
-        [PXDBDecimal()]
+        [PXDBDecimal(3)]
         [PXUIField(DisplayName = "2GNHI %")]
         public virtual decimal? SecNHIPct { get; set; }
         public abstract class secNHIPct : PX.Data.BQL.BqlDecimal.Field<secNHIPct> { }
@@ -125,7 +127,7 @@ namespace eGUICustomizations.DAC
         #region SecNHICode
         [PXDBString(2, IsFixed = true, InputMask = "")]
         [PXUIField(DisplayName = "2GNHI Code")]
-        [GNHI2CodeSelector]
+        [SecNHICodeSelector]
         public virtual string SecNHICode { get; set; }
         public abstract class secNHICode : PX.Data.BQL.BqlString.Field<secNHICode> { }
         #endregion

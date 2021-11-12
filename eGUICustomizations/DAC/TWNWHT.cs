@@ -3,6 +3,7 @@ using PX.Data;
 using PX.Data.BQL.Fluent;
 using PX.Objects.AP;
 using PX.Objects.CS;
+using eGUICustomizations.Descriptor;
 
 namespace eGUICustomizations.DAC
 {
@@ -10,62 +11,23 @@ namespace eGUICustomizations.DAC
     [PXCacheName("Withholding Tax")]
     public class TWNWHT : IBqlTable
     {
-        #region String Classes
+        #region PersonalID
         public const string PersonalName = "PERSONALID";
         public class PersonalAtt : PX.Data.BQL.BqlString.Constant<PersonalAtt>
         {
             public PersonalAtt() : base(PersonalName) { }
         }
 
-        public const string PropertyName = "PROPERTYID";
-        public class PropertyAtt : PX.Data.BQL.BqlString.Constant<PropertyAtt>
-        {
-            public PropertyAtt() : base(PropertyName) { }
-        }
-
-        public const string TypeOfInName = "TYPEOFIN";
-        public class TypeOfInAtt : PX.Data.BQL.BqlString.Constant<TypeOfInAtt>
-        {
-            public TypeOfInAtt() : base(TypeOfInName) { }
-        }
-
-        public const string WHTFmtCodeName = "WHTFMTCODE";
-        public class WHTFmtCodeAtt : PX.Data.BQL.BqlString.Constant<WHTFmtCodeAtt>
-        {
-            public WHTFmtCodeAtt() : base(WHTFmtCodeName) { }
-        }
-
-        public const string WHTFmtSubName = "WHTFMTSUB";
-        public class WHTFmtSubAtt : PX.Data.BQL.BqlString.Constant<WHTFmtSubAtt>
-        {
-            public WHTFmtSubAtt() : base(WHTFmtSubName) { }
-        }
-
-        public const string WHTTaxPctName = "WHTTAXPCT";
-        public class WHTTaxPctAtt : PX.Data.BQL.BqlString.Constant<WHTTaxPctAtt>
-        {
-            public WHTTaxPctAtt() : base(WHTTaxPctName) { }
-        }
-
-        public const string ToGNHICodeName = "TOGNHICODE";
-        public class ToGNHICodeAtt : PX.Data.BQL.BqlString.Constant<ToGNHICodeAtt>
-        {
-            public ToGNHICodeAtt() : base(ToGNHICodeName) { }
-        }
-        #endregion
-
-        #region PersonalID
         [PXDBString(10, IsKey = true, IsUnicode = true)]
         [PXUIField(DisplayName = "Personal ID")]
         [PXDefault(typeof(Search<CSAnswers.value, Where<CSAnswers.refNoteID, Equal<Current<Vendor.noteID>>,
-                                                        And<CSAnswers.attributeID, Equal<PersonalAtt>>>>),
-                   PersistingCheck = PXPersistingCheck.Nothing)]
+                                                        And<CSAnswers.attributeID, Equal<PersonalAtt>>>>))]
         public virtual string PersonalID { get; set; }
         public abstract class personalID : PX.Data.BQL.BqlString.Field<personalID> { }
         #endregion
 
         #region DocType
-        [PXDBString(3, IsFixed = true)]
+        [PXDBString(3, IsKey = true, IsFixed = true)]
         [PXUIField(DisplayName = "Doc. Type", Visible = false)]
         [PXDBDefault(typeof(APInvoice.docType))]
         public virtual string DocType { get; set; }
@@ -73,7 +35,7 @@ namespace eGUICustomizations.DAC
         #endregion
 
         #region RefNbr
-        [PXDBString(15, IsUnicode = true)]
+        [PXDBString(15, IsKey = true, IsUnicode = true)]
         [PXUIField(DisplayName = "Ref. Nbr", Visible = false)]
         [PXDBDefault(typeof(APInvoice.refNbr))]
         [PXParent(typeof(SelectFrom<APInvoice>.Where<APInvoice.docType.IsEqual<TWNWHT.docType.FromCurrent>
@@ -83,6 +45,12 @@ namespace eGUICustomizations.DAC
         #endregion
 
         #region PropertyID
+        public const string PropertyName = "PROPERTYID";
+        public class PropertyAtt : PX.Data.BQL.BqlString.Constant<PropertyAtt>
+        {
+            public PropertyAtt() : base(PropertyName) { }
+        }
+
         [PXDBString(12, IsUnicode = true, InputMask = "")]
         [PXUIField(DisplayName = "Property ID")]
         [PXDefault(typeof(Search<CSAnswers.value, Where<CSAnswers.refNoteID, Equal<Current<Vendor.noteID>>,
@@ -91,8 +59,14 @@ namespace eGUICustomizations.DAC
         public virtual string PropertyID { get; set; }
         public abstract class propertyID : PX.Data.BQL.BqlString.Field<propertyID> { }
         #endregion
-    
+
         #region TypeOfIn
+        public const string TypeOfInName = "TYPEOFIN";
+        public class TypeOfInAtt : PX.Data.BQL.BqlString.Constant<TypeOfInAtt>
+        {
+            public TypeOfInAtt() : base(TypeOfInName) { }
+        }
+
         [PXDBString(1, IsFixed = true, InputMask = "")]
         [PXUIField(DisplayName = "Type Of Income")]
         [PXDefault(typeof(Search<CSAnswers.value, Where<CSAnswers.refNoteID, Equal<Current<Vendor.noteID>>,
@@ -102,8 +76,14 @@ namespace eGUICustomizations.DAC
         public virtual string TypeOfIn { get; set; }
         public abstract class typeOfIn : PX.Data.BQL.BqlString.Field<typeOfIn> { }
         #endregion
-    
+
         #region WHTFmtCode
+        public const string WHTFmtCodeName = "WHTFMTCODE";
+        public class WHTFmtCodeAtt : PX.Data.BQL.BqlString.Constant<WHTFmtCodeAtt>
+        {
+            public WHTFmtCodeAtt() : base(WHTFmtCodeName) { }
+        }
+
         [PXDBString(2, IsFixed = true, InputMask = "")]
         [PXUIField(DisplayName = "Format Code")]
         [PXDefault(typeof(Search<CSAnswers.value, Where<CSAnswers.refNoteID, Equal<Current<Vendor.noteID>>,
@@ -113,8 +93,14 @@ namespace eGUICustomizations.DAC
         public virtual string WHTFmtCode { get; set; }
         public abstract class wHTFmtCode : PX.Data.BQL.BqlString.Field<wHTFmtCode> { }
         #endregion
-    
+
         #region WHTFmtSub
+        public const string WHTFmtSubName = "WHTFMTSUB";
+        public class WHTFmtSubAtt : PX.Data.BQL.BqlString.Constant<WHTFmtSubAtt>
+        {
+            public WHTFmtSubAtt() : base(WHTFmtSubName) { }
+        }
+
         [PXDBString(2, IsFixed = true, InputMask = "")]
         [PXUIField(DisplayName = "Format Sub Code")]
         [PXDefault(typeof(Search<CSAnswers.value, Where<CSAnswers.refNoteID, Equal<Current<Vendor.noteID>>,
@@ -124,12 +110,21 @@ namespace eGUICustomizations.DAC
         public virtual string WHTFmtSub { get; set; }
         public abstract class wHTFmtSub : PX.Data.BQL.BqlString.Field<wHTFmtSub> { }
         #endregion
-    
+
         #region WHTTaxPct
-        [PXDBDecimal()]
+        public const string WHTTaxPctName = "WHTTAXPCT";
+        public class WHTTaxPctAtt : PX.Data.BQL.BqlString.Constant<WHTTaxPctAtt>
+        {
+            public WHTTaxPctAtt() : base(WHTTaxPctName) { }
+        }
+
+        [PXDBString(5, IsFixed = true)]
         [PXUIField(DisplayName = "WHT Tax %")]
-        public virtual decimal? WHTTaxPct { get; set; }
-        public abstract class wHTTaxPct : PX.Data.BQL.BqlDecimal.Field<wHTTaxPct> { }
+        [PXDefault(typeof(Search<CSAnswers.value, Where<CSAnswers.refNoteID, Equal<Current<Vendor.noteID>>,
+                                                        And<CSAnswers.attributeID, Equal<WHTTaxPctAtt>>>>),
+                   PersistingCheck = PXPersistingCheck.Nothing)]
+        public virtual string WHTTaxPct { get; set; }
+        public abstract class wHTTaxPct : PX.Data.BQL.BqlString.Field<wHTTaxPct> { }
         #endregion
 
         #region SecNHIPct
@@ -141,12 +136,19 @@ namespace eGUICustomizations.DAC
         #endregion
 
         #region SecNHICode
+        public const string SecNHICodeName = "SECNHICode";
+        public class SecNHICodeAtt : PX.Data.BQL.BqlString.Constant<SecNHICodeAtt>
+        {
+            public SecNHICodeAtt() : base(SecNHICodeName) { }
+        }
+
+
         [PXDBString(2, IsFixed = true, InputMask = "")]
-        [PXUIField(DisplayName = "2GNHI code")]
+        [PXUIField(DisplayName = "2GNHI Code")]
         [PXDefault(typeof(Search<CSAnswers.value, Where<CSAnswers.refNoteID, Equal<Current<Vendor.noteID>>,
-                                                        And<CSAnswers.attributeID, Equal<ToGNHICodeAtt>>>>),
+                                                        And<CSAnswers.attributeID, Equal<SecNHICodeAtt>>>>),
                    PersistingCheck = PXPersistingCheck.Nothing)]
-        [GNHI2CodeSelector]
+        [SecNHICodeSelector]
         public virtual string SecNHICode { get; set; }
         public abstract class secNHICode : PX.Data.BQL.BqlString.Field<secNHICode> { }
         #endregion
@@ -199,54 +201,4 @@ namespace eGUICustomizations.DAC
         public abstract class tstamp : PX.Data.BQL.BqlByteArray.Field<tstamp> { }
         #endregion
     }
-
-    #region Custom Attributes
-    public class TypeOfInSelectorAttribute : PXSelectorAttribute
-    {
-        public TypeOfInSelectorAttribute() : base(typeof(Search<CSAttributeDetail.valueID,
-                                                                  Where<CSAttributeDetail.attributeID, Equal<TWNWHT.TypeOfInAtt>>>),
-                                                  typeof(CSAttributeDetail.description))
-        {
-            Filterable = true;
-            DirtyRead = true;
-            DescriptionField = typeof(CSAttributeDetail.description);
-        }
-    }
-
-    public class WHTFmtCodeSelectorAttribute : PXSelectorAttribute
-    {
-        public WHTFmtCodeSelectorAttribute() : base(typeof(Search<CSAttributeDetail.valueID,
-                                                                  Where<CSAttributeDetail.attributeID, Equal<TWNWHT.WHTFmtCodeAtt>>>),
-                                                    typeof(CSAttributeDetail.description))
-        {
-            Filterable = true;
-            DirtyRead = true;
-            DescriptionField = typeof(CSAttributeDetail.description);
-        }
-    }
-
-    public class WHTFmtSubSelectorAttribute : PXSelectorAttribute
-    {
-        public WHTFmtSubSelectorAttribute() : base(typeof(Search<CSAttributeDetail.valueID,
-                                                                 Where<CSAttributeDetail.attributeID, Equal<TWNWHT.WHTFmtSubAtt>>>),
-                                                   typeof(CSAttributeDetail.description))
-        {
-            Filterable = true;
-            DirtyRead = true;
-            DescriptionField = typeof(CSAttributeDetail.description);
-        }
-    }
-
-    public class GNHI2CodeSelectorAttribute : PXSelectorAttribute
-    {
-        public GNHI2CodeSelectorAttribute() : base(typeof(Search<CSAttributeDetail.valueID,
-                                                                 Where<CSAttributeDetail.attributeID, Equal<TWNWHT.ToGNHICodeAtt>>>),
-                                                  typeof(CSAttributeDetail.description))
-        {
-            Filterable = true;
-            DirtyRead = true;
-            DescriptionField = typeof(CSAttributeDetail.description);
-        }
-    }
-    #endregion
 }

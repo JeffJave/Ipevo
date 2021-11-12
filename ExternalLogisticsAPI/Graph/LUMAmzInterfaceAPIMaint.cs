@@ -87,6 +87,7 @@ namespace ExternalLogisticsAPI.Graph
                 case AmazonOrderType.Rev_Reimbursement:
                 case AmazonOrderType.FBA_RMA_Exch:
                 case AmazonOrderType.FBA_RMA_RA_Ealier:
+                case AmazonOrderType.FBA_RMA_OI_AmzFee:
                     sOType = "RA";
                     break;
                 case AmazonOrderType.FBA_RMA_RA_Later:
@@ -150,9 +151,9 @@ namespace ExternalLogisticsAPI.Graph
             cache.SetValueExt(cache.Current, PX.Objects.CS.Messages.Attribute + "BUYERTAXID", root.buyer_tax_registration);
             cache.SetValueExt(cache.Current, PX.Objects.CS.Messages.Attribute + "ORITAXABLE", root.seller_tax_registration);
             cache.SetValueExt(cache.Current, PX.Objects.CS.Messages.Attribute + "MKTPLACE"  , root.marketplace);
-            if (!string.IsNullOrWhiteSpace((string)root.paymentReleaseDate))
+            if (!string.IsNullOrWhiteSpace((string)root.paymentReleaseDate) || !string.IsNullOrWhiteSpace((string)root.payment_release_date))
             {
-                cache.SetValueExt(cache.Current, PX.Objects.CS.Messages.Attribute + "PAYMENTREL", (DateTime)root.paymentReleaseDate);
+                cache.SetValueExt(cache.Current, PX.Objects.CS.Messages.Attribute + "PAYMENTREL", root.payment_release_date == null ? (DateTime)root.paymentReleaseDate : (DateTime)root.payment_release_date);
             }
         }
 
@@ -223,7 +224,7 @@ namespace ExternalLogisticsAPI.Graph
 
                                 order.CustomerID       = Customer.UK.Find(orderEntry, AMZCustomer).BAccountID;
                                 order.OrderDate        = orderType == AmazonOrderType.FBA_RMA_RA_Later ? root.item?[0].shipment_date : root.return_date ?? root.item?[0].approval_date ?? root.payments_date;
-                                order.RequestDate      = orderType.IsIn(new List<int>(new int[] { AmazonOrderType.RestockingFee, AmazonOrderType.Reimbursement, AmazonOrderType.Rev_Reimbursement, AmazonOrderType.FBA_RMA_Exch, AmazonOrderType.FBA_RMA_RA_Later, AmazonOrderType.FBA_RMA_RA_Ealier })) ?
+                                order.RequestDate      = orderType.IsIn(new List<int>(new int[] { AmazonOrderType.RestockingFee, AmazonOrderType.Reimbursement, AmazonOrderType.Rev_Reimbursement, AmazonOrderType.FBA_RMA_Exch, AmazonOrderType.FBA_RMA_RA_Later, AmazonOrderType.FBA_RMA_RA_Ealier, AmazonOrderType.FBA_RMA_OI_AmzFee })) ?
                                                          order.OrderDate : string.IsNullOrWhiteSpace((string)root.item?[0].shipment_date) ? root.payments_date : root.item?[0].shipment_date; 
                                 order.CustomerOrderNbr = orderType == AmazonOrderType.Rev_Reimbursement ? $"{list[i].OrderNbr} - {list[i].SequenceNo}" : list[i].OrderNbr;
                                 order.CustomerRefNbr   = orderType == AmazonOrderType.Reimbursement ? root.item?[0].reimbursement_id : 

@@ -25,7 +25,9 @@
         </layout>
         <data>
             <SiteMap>
-                <row Position="21520" Title="Withholding Tax Details" Url="~/Pages/TW/TW402000.aspx" ScreenID="TW402000" NodeID="8dff4c36-8c4f-4d32-8670-05ea0ee13ff6" ParentID="00000000-0000-0000-0000-000000000000" />
+                <row Position="21520" Title="Withholding Tax Details" Url="~/Pages/TW/TW402000.aspx" ScreenID="TW402000" NodeID="8dff4c36-8c4f-4d32-8670-05ea0ee13ff6" ParentID="00000000-0000-0000-0000-000000000000">
+                    <MUIScreen IsPortal="0" WorkspaceID="00000000-0000-0000-0000-000000000000" Order="2740" SubcategoryID="aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa" />
+                </row>
             </SiteMap>
         </data>
     </data-set>

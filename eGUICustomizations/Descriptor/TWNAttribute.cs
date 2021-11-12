@@ -6,6 +6,7 @@ using PX.Data.BQL.Fluent;
 using PX.Objects.AR;
 using PX.Objects.TX;
 using eGUICustomizations.DAC;
+using PX.Objects.CS;
 
 namespace eGUICustomizations.Descriptor
 {
@@ -215,6 +216,58 @@ namespace eGUICustomizations.Descriptor
 
                 sender.SetValue(e.Row, _TaxAmt.Name, taxAmt);
             }
+        }
+    }
+    #endregion
+
+    #region TypeOfInSelectorAttribute
+    public class TypeOfInSelectorAttribute : PXSelectorAttribute
+    {
+        public TypeOfInSelectorAttribute() : base(typeof(Search<CSAttributeDetail.valueID, Where<CSAttributeDetail.attributeID, Equal<TWNWHT.TypeOfInAtt>>>),
+                                                  typeof(CSAttributeDetail.description))
+        {
+            Filterable = true;
+            DirtyRead = true;
+            DescriptionField = typeof(CSAttributeDetail.description);
+        }
+    }
+    #endregion
+
+    #region WHTFmtCodeSelectorAttribute
+    public class WHTFmtCodeSelectorAttribute : PXSelectorAttribute
+    {
+        public WHTFmtCodeSelectorAttribute() : base(typeof(Search<CSAttributeDetail.valueID, Where<CSAttributeDetail.attributeID, Equal<TWNWHT.WHTFmtCodeAtt>>>),
+                                                    typeof(CSAttributeDetail.description))
+        {
+            Filterable = true;
+            DirtyRead = true;
+            DescriptionField = typeof(CSAttributeDetail.description);
+        }
+    }
+    #endregion
+
+    #region WHTFmtSubSelectorAttribute
+    public class WHTFmtSubSelectorAttribute : PXSelectorAttribute
+    {
+        public WHTFmtSubSelectorAttribute() : base(typeof(Search<CSAttributeDetail.valueID, Where<CSAttributeDetail.attributeID, Equal<TWNWHT.WHTFmtSubAtt>>>),
+                                                   typeof(CSAttributeDetail.description))
+        {
+            Filterable = true;
+            DirtyRead = true;
+            DescriptionField = typeof(CSAttributeDetail.description);
+        }
+    }
+    #endregion
+
+    #region SecNHICodeSelectorAttribute
+    public class SecNHICodeSelectorAttribute : PXSelectorAttribute
+    {
+        public SecNHICodeSelectorAttribute() : base(typeof(Search<CSAttributeDetail.valueID, Where<CSAttributeDetail.attributeID, Equal<TWNWHT.SecNHICodeAtt>>>),
+                                                    typeof(CSAttributeDetail.description))
+        {
+            Filterable = true;
+            DirtyRead = true;
+            DescriptionField = typeof(CSAttributeDetail.description);
         }
     }
     #endregion
