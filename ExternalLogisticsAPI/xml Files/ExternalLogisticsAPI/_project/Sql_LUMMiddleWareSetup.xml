@@ -4,7 +4,7 @@
   <col name="SecureURL_login" type="NVarChar(255)" />
   <col name="SecureURL_fbm" type="NVarChar(255)" />
   <col name="ClientID" type="NVarChar(50)" />
-  <col name="ClientSecret" type="NVarChar(50)" />
+  <col name="ClientSecret" type="NVarChar(255)" />
   <col name="NoteID" type="UniqueIdentifier" nullable="true" />
   <col name="CreatedByID" type="UniqueIdentifier" />
   <col name="CreatedByScreenID" type="Char(8)" />
