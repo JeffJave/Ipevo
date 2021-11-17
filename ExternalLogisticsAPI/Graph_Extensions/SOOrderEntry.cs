@@ -390,6 +390,12 @@ namespace ExternalLogisticsAPI.Graph_Extensions
                             var attrMKTPLACE = (Base.Document.Cache.GetValueExt(so, PX.Objects.CS.Messages.Attribute + "MKTPLACE") as PXFieldState)?.Value;
                             // set DocDate
                             ie.Document.Current.DocDate = so.RequestDate;
+                            // set Due Date
+                            ie.Document.Current.DueDate = so.RequestDate;
+                            // set Cash DiscDate
+                            ie.Document.Current.DiscDate = so.RequestDate;
+                            // set FinPeriodID
+                            ie.Document.Current.FinPeriodID = so.RequestDate?.Year.ToString() + so.RequestDate?.Month.ToString("00");
                             // set due data
 
                             if (attrPAYMENTREL != null)
@@ -423,6 +429,15 @@ namespace ExternalLogisticsAPI.Graph_Extensions
                                 ie.Taxes.Cache.MarkUpdated(invoiceTaxInfo[i]);
                             }
                             ie.Document.Cache.MarkUpdated(ie.Document.Current);
+
+                            //set Applications
+                            var adj = ie.Adjustments.Select().FirstOrDefault();
+                            if (adj != null)
+                            {
+                                ie.Adjustments.SetValueExt<ARAdjust.curyAdjdAmt>(adj, ie.Document.Current.CuryDocBal);
+                                ie.Adjustments.Cache.Update(adj);
+                            }
+
                             // save data
                             ie.Actions.PressSave();
                         }
