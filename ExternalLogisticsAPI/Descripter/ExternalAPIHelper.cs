@@ -560,6 +560,7 @@ namespace ExternalLogisticsAPI.Descripter
                         line.InventoryID   = GetSOLineInventoryID(orderEntry, fees[k].name.Contains("Refund") ? "REFUNDADMIN" : fees[k].name.StartsWith("Giftwrap") ? nameof(AMZChargeType.GiftWrap).ToUpper() : "COMMISSION");
                         line.OrderQty      = 1;
                         line.CuryUnitPrice = isCM == true ? -1 * (decimal)fees[k].amount : (decimal)fees[k].amount;
+                        line.ReasonCode    = fees[k].name.Contains("Refund") ? "REFUNDADMIN" : "COMMISSION";
 
                         lineExt = line.GetExtension<SOLineExt>();
 
@@ -715,13 +716,14 @@ namespace ExternalLogisticsAPI.Descripter
             }
             else
             {
-                SOOrderShipment orderShip = SelectFrom<SOOrderShipment>.Where<SOOrderShipment.orderNoteID.IsEqual<@P.AsGuid>>.View.SelectSingleBound(pymtEntry, null, order.NoteID);
-
-                pymtEntry.Adjustments.Insert(new ARAdjust()
+                foreach (SOOrderShipment row in SelectFrom<SOOrderShipment>.Where<SOOrderShipment.orderNoteID.IsEqual<@P.AsGuid>>.View.Select(pymtEntry, order.NoteID))
                 {
-                    AdjdDocType = orderShip.InvoiceType,
-                    AdjdRefNbr  = orderShip.InvoiceNbr
-                });
+                    pymtEntry.Adjustments.Insert(new ARAdjust()
+                    {
+                        AdjdDocType = row.InvoiceType,
+                        AdjdRefNbr  = row.InvoiceNbr
+                    });
+                }
             }
 
             for (int i = 0; i < root.item?.Count; i++)
