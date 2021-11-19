@@ -143,6 +143,9 @@ namespace PX.Objects.SO
         protected void _(Events.RowSelected<SOOrder> e)
         {
             var row = e.Row as SOOrder;
+            
+            if (row == null) { return; }
+
             var customerIsDefined = PXSelect<LMICCustomer, Where<LMICCustomer.customerID, Equal<Required<LMICCustomer.customerID>>>>.Select(Base, row.CustomerID).TopFirst;
 
             if (row.Status == "N" && row.OrderQty > 0 && customerIsDefined != null) CreateICPOAction.SetEnabled(true);
