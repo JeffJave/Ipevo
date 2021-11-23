@@ -128,7 +128,8 @@ namespace ExternalLogisticsAPI.Descripter
                     Processed       = false,
                     BillingAddress  = arrays[i].BillingAddress,
                     ShipmentAddress = arrays[i].ShipmentList[0].ShipmentAddress,
-                    OrderQty        = (decimal)arrays[i].OrderItemList.ToList().Sum(x => x.ItemQuantity)
+                    OrderQty        = (decimal)arrays[i].OrderItemList.ToList().Sum(x => x.ItemQuantity),
+                    PromotionName   = arrays[i].PromotionList.Count > 0 ? arrays[i].PromotionList[0]?.PromotionName : null
                 };
 
                 if (LUM3DCartProcessOrder.UK.Find(graph, procOrder.OrderID, procOrder.InvoiceNumber) == null)
@@ -194,16 +195,24 @@ namespace ExternalLogisticsAPI.Descripter
                     line.OrderQty      = (decimal)itemList[i].ItemQuantity;
                     line.CuryUnitPrice = (decimal)itemList[i].ItemUnitPrice;
 
+                    // Per David's request to include 3D Cart discount to sales order line.
+                    var promotionList = list.Find(x => x.PromotionList.Count > 0)?.PromotionList;
+
+                    for (int j = 0; j < promotionList?.Count; j++)
+                    {
+                        line.CuryDiscAmt = (decimal)promotionList[j].DiscountAmount;
+                    }
+
                     orderEntry.Transactions.Insert(line);
                 }
 
-                // Per David's request to include 3D Cart discount to sales order.
+                /* Per David's request to include 3D Cart discount to sales order.
+                 * Change from header to line.
                 var promotionList = list.Find(x => x.PromotionList.Count > 0)?.PromotionList;
-
                 for (int j = 0; j < promotionList?.Count; j++)
                 {
                     CreateOrderDiscount(orderEntry, "DISCOUNT", (decimal)promotionList[j].DiscountAmount);
-                }
+                }*/
 
                 orderEntry.Taxes.Cache.SetValueExt<SOTaxTran.curyTaxAmt>(orderEntry.Taxes.Current, list[0].SalesTax + list[0].SalesTax2);
                 orderEntry.CurrentDocument.SetValueExt<SOOrder.paymentMethodID>(order, GetAcuPymtMethod(orderEntry, order.CustomerID, list[0].BillingPaymentMethod));

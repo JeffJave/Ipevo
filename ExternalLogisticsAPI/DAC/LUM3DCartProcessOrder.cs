@@ -113,6 +113,13 @@ namespace ExternalLogisticsAPI.DAC
         public abstract class billingEmailID : PX.Data.BQL.BqlString.Field<billingEmailID> { }
         #endregion
 
+        #region Processed
+        [PXDBBool()]
+        [PXUIField(DisplayName = "Processed")]
+        public virtual bool? Processed { get; set; }
+        public abstract class processed : PX.Data.BQL.BqlBool.Field<processed> { }
+        #endregion
+
         #region BillingAddress
         [PXDBString(50, IsUnicode = true)]
         [PXUIField(DisplayName = "Billing Address", Visibility = PXUIVisibility.SelectorVisible)]
@@ -136,11 +143,11 @@ namespace ExternalLogisticsAPI.DAC
         public abstract class orderQty : PX.Data.BQL.BqlDecimal.Field<orderQty> { }
         #endregion
 
-        #region Processed
-        [PXDBBool()]
-        [PXUIField(DisplayName = "Processed")]
-        public virtual bool? Processed { get; set; }
-        public abstract class processed : PX.Data.BQL.BqlBool.Field<processed> { }
+        #region PromotionName
+        [PXDBString(150, IsUnicode = true)]
+        [PXUIField(DisplayName = "Promotion Name", Visibility = PXUIVisibility.SelectorVisible)]
+        public virtual string PromotionName { get; set; }
+        public abstract class promotionName : PX.Data.BQL.BqlString.Field<promotionName> { }
         #endregion
 
         #region CreatedByID
