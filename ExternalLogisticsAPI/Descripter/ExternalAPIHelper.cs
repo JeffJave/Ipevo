@@ -161,7 +161,7 @@ namespace ExternalLogisticsAPI.Descripter
                 order = orderEntry.Document.Insert(order);
 
                 CreateOrderDetail(orderEntry, curSetup, order);
-
+                
                 orderEntry.Save.Press();
 
                 CreatePaymentProcess(order);
@@ -235,20 +235,20 @@ namespace ExternalLogisticsAPI.Descripter
             order.ContactID = CreateSOContact(order.CustomerID, list[0]);
 
             billContact.OverrideContact = true;
-            billContact.Attention = list[0].BillingFirstName + "," + list[0].BillingLastName;
-            billContact.FullName = list[0].BillingCompany;
-            billContact.Phone1 = list[0].BillingPhoneNumber;
-            billContact.Email = list[0].BillingEmail;
+            billContact.Attention       = list[0].BillingFirstName + "," + list[0].BillingLastName;
+            billContact.FullName        = list[0].BillingCompany;
+            billContact.Phone1          = list[0].BillingPhoneNumber;
+            billContact.Email           = list[0].BillingEmail;
 
             orderEntry.Billing_Contact.Update(billContact);
 
             billAddress.OverrideAddress = true;
-            billAddress.AddressLine1 = list[0].BillingAddress;
-            billAddress.AddressLine2 = list[0].BillingAddress2;
-            billAddress.City = list[0].BillingCity;
-            billAddress.CountryID = list[0].BillingCountry;
-            billAddress.PostalCode = list[0].BillingZipCode;
-            billAddress.State = list[0].BillingState;
+            billAddress.AddressLine1    = list[0].BillingAddress;
+            billAddress.AddressLine2    = list[0].BillingAddress2;
+            billAddress.City            = list[0].BillingCity;
+            billAddress.CountryID       = list[0].BillingCountry;
+            billAddress.PostalCode      = list[0].BillingZipCode;
+            billAddress.State           = list[0].BillingState;
 
             orderEntry.Billing_Address.Update(billAddress);
 
@@ -264,20 +264,22 @@ namespace ExternalLogisticsAPI.Descripter
                 orderEntry.Document.Cache.SetValueExt<SOOrder.curyPremiumFreightAmt>(order, (decimal)shipList[i].ShipmentCost);
 
                 shipContact.OverrideContact = true;
-                shipContact.Attention = shipList[i].ShipmentFirstName + "," + shipList[i].ShipmentLastName;
-                shipContact.FullName = shipList[i].ShipmentCompany;
-                shipContact.Phone1 = shipList[i].ShipmentPhone;
-                shipContact.Email = shipList[i].ShipmentEmail;
+                shipContact.Attention       = shipList[i].ShipmentFirstName + "," + shipList[i].ShipmentLastName;
+                shipContact.FullName        = shipList[i].ShipmentCompany;
+                shipContact.Phone1          = shipList[i].ShipmentPhone;
+                shipContact.Email           = shipList[i].ShipmentEmail;
 
                 orderEntry.Shipping_Contact.Update(shipContact);
 
                 shipAddress.OverrideAddress = true;
-                shipAddress.AddressLine1 = shipList[i].ShipmentAddress;
-                shipAddress.AddressLine2 = shipList[i].ShipmentAddress2;
-                shipAddress.City = shipList[i].ShipmentCity;
-                shipAddress.CountryID = shipList[i].ShipmentCountry;
-                shipAddress.PostalCode = shipList[i].ShipmentZipCode;
-                shipAddress.State = shipList[i].ShipmentState;
+                shipAddress.AddressLine1    = shipList[i].ShipmentAddress;
+                shipAddress.AddressLine2    = shipList[i].ShipmentAddress2;
+                shipAddress.City            = shipList[i].ShipmentCity;
+                shipAddress.CountryID       = shipList[i].ShipmentCountry;
+                shipAddress.PostalCode      = shipList[i].ShipmentZipCode;
+                shipAddress.State           = shipList[i].ShipmentState;
+
+                orderEntry.validateAddresses.Press();
 
                 orderEntry.Shipping_Address.Update(shipAddress);
             }
