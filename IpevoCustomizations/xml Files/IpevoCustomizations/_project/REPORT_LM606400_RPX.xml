@@ -5579,7 +5579,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                     </TextBox>
                     <TextBox Name="textBox63">
                         <Format>='yyyy/MM/dd'</Format>
-                        <Location>56px, 312px</Location>
+                        <Location>56px, 328px</Location>
                         <Size>160px, 0.16667in</Size>
                         <Style>
                             <VerticalAlign>Middle</VerticalAlign>
@@ -5598,7 +5598,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                     </TextBox>
                     <TextBox Name="textBox65">
                         <Format>='yyyy/MM/dd'</Format>
-                        <Location>56px, 328px</Location>
+                        <Location>56px, 312px</Location>
                         <Size>160px, 0.16667in</Size>
                         <Style>
                             <VerticalAlign>Middle</VerticalAlign>
@@ -5660,6 +5660,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                         <ValueExpr>=IIF([InventoryItem.ItemType] &lt;&gt; 'N', $TotalQty + [ARTran.Qty], $TotalQty)</ValueExpr>
                     </ReportVariable>
                 </Variables>
+                <VisibleExpr>=IIF(Len([AttrITEMDESEN.Value]) &lt; 46, True, False)</VisibleExpr>
                 <Items>
                     <Panel Name="panel4">
                         <Location>0px, 0px</Location>
@@ -5679,7 +5680,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                         <Items>
                             <TextBox Name="textBox30">
                                 <Location>0px, 4px</Location>
-                                <Size>312px, 16px</Size>
+                                <Size>312px, 20px</Size>
                                 <Style>
                                     <Font>
                                         <Name>Microsoft JhengHei</Name>
@@ -5692,7 +5693,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                                 <VisibleExpr>=IIF([InventoryItem.ItemType] = 'N', False, True)</VisibleExpr>
                             </TextBox>
                             <TextBox Name="textBox31">
-                                <Location>0px, 20px</Location>
+                                <Location>0px, 40px</Location>
                                 <Size>56px, 16px</Size>
                                 <Style>
                                     <Font>
@@ -5707,7 +5708,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                                 <VisibleExpr>=IIF([InventoryItem.ItemType] = 'N', False, True)</VisibleExpr>
                             </TextBox>
                             <TextBox Name="textBox32">
-                                <Location>0px, 36px</Location>
+                                <Location>0px, 24px</Location>
                                 <Size>72px, 16px</Size>
                                 <Style>
                                     <Font>
@@ -5722,7 +5723,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                                 <VisibleExpr>=IIF([InventoryItem.ItemType] = 'N', False, True)</VisibleExpr>
                             </TextBox>
                             <TextBox Name="textBox33">
-                                <Location>0px, 52px</Location>
+                                <Location>0px, 56px</Location>
                                 <Size>112px, 16px</Size>
                                 <Style>
                                     <Font>
@@ -5737,7 +5738,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                                 <VisibleExpr>=IIF([InventoryItem.ItemType] = 'N', False, True)</VisibleExpr>
                             </TextBox>
                             <TextBox Name="textBox34">
-                                <Location>0px, 68px</Location>
+                                <Location>0px, 72px</Location>
                                 <Size>80px, 16px</Size>
                                 <Style>
                                     <Font>
@@ -5753,7 +5754,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                                 <VisibleExpr>=IIF([InvoiceCustomerInfo.CustomerClassID] = 'INTERCO' AND [InventoryItem.ItemType] &lt;&gt; 'N', #010;True, #010;False)</VisibleExpr>
                             </TextBox>
                             <TextBox Name="textBox35">
-                                <Location>80px, 68px</Location>
+                                <Location>80px, 72px</Location>
                                 <Size>232px, 16px</Size>
                                 <Style>
                                     <Font>
@@ -5766,7 +5767,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                                 <VisibleExpr>=IIF([InvoiceCustomerInfo.CustomerClassID] = 'INTERCO' AND [InventoryItem.ItemType] &lt;&gt; 'N', #010;True, #010;False)</VisibleExpr>
                             </TextBox>
                             <TextBox Name="textBox36">
-                                <Location>112px, 52px</Location>
+                                <Location>112px, 56px</Location>
                                 <Size>200px, 16px</Size>
                                 <Style>
                                     <Font>
@@ -5778,7 +5779,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                                 <VisibleExpr>=IIF([InventoryItem.ItemType] = 'N', False, True)</VisibleExpr>
                             </TextBox>
                             <TextBox Name="textBox37">
-                                <Location>72px, 36px</Location>
+                                <Location>72px, 24px</Location>
                                 <Size>240px, 16px</Size>
                                 <Style>
                                     <Font>
@@ -5790,7 +5791,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                                 <VisibleExpr>=IIF([InventoryItem.ItemType] = 'N', False, True)</VisibleExpr>
                             </TextBox>
                             <TextBox Name="textBox38">
-                                <Location>56px, 20px</Location>
+                                <Location>56px, 40px</Location>
                                 <Size>256px, 16px</Size>
                                 <Style>
                                     <Font>
@@ -5802,7 +5803,7 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                                 <VisibleExpr>=IIF([InventoryItem.ItemType] = 'N', False, True)</VisibleExpr>
                             </TextBox>
                             <TextBox Name="textBox69">
-                                <Location>0px, 20px</Location>
+                                <Location>0px, 24px</Location>
                                 <Size>312px, 16px</Size>
                                 <Style>
                                     <Font>
@@ -6062,6 +6063,255 @@ Z9+H3/AELcP/f+X/4uvX4q4YxWfYinVoTjFRVtb979EzXFYWdeSlFnNfsm/wDJL5/+wlL/AOgR17RWN4
                     </TextBox>
                 </Items>
             </PageFooter>
+            <Detail Name="detailSection2">
+                <Height>2.75132cm</Height>
+                <Visible>False</Visible>
+                <VisibleExpr>=IIF(Len([AttrITEMDESEN.Value]) &lt; 46, False, True)</VisibleExpr>
+                <Items>
+                    <Panel Name="panel5">
+                        <Location>0px, 0px</Location>
+                        <Size>312px, 104px</Size>
+                        <Style>
+                            <BorderStyle>
+                                <Bottom>Solid</Bottom>
+                                <Left>Solid</Left>
+                                <Right>Solid</Right>
+                            </BorderStyle>
+                            <BorderWidth>
+                                <Bottom>1px</Bottom>
+                                <Left>1px</Left>
+                                <Right>1px</Right>
+                            </BorderWidth>
+                        </Style>
+                        <Items>
+                            <TextBox Name="textBox74">
+                                <Location>0px, 4px</Location>
+                                <Size>312px, 28px</Size>
+                                <Style>
+                                    <Font>
+                                        <Name>Microsoft JhengHei</Name>
+                                    </Font>
+                                    <Padding>
+                                        <Left>4px</Left>
+                                    </Padding>
+                                </Style>
+                                <Value>=[AttrITEMDESEN.Value]</Value>
+                                <VisibleExpr>=IIF([InventoryItem.ItemType] = 'N', False, True)</VisibleExpr>
+                            </TextBox>
+                            <TextBox Name="textBox75">
+                                <Location>0px, 48px</Location>
+                                <Size>56px, 16px</Size>
+                                <Style>
+                                    <Font>
+                                        <Name>Microsoft JhengHei</Name>
+                                    </Font>
+                                    <Padding>
+                                        <Left>4px</Left>
+                                    </Padding>
+                                    <VerticalAlign>Middle</VerticalAlign>
+                                </Style>
+                                <Value>Part No.:</Value>
+                                <VisibleExpr>=IIF([InventoryItem.ItemType] = 'N', False, True)</VisibleExpr>
+                            </TextBox>
+                            <TextBox Name="textBox76">
+                                <Location>0px, 32px</Location>
+                                <Size>72px, 16px</Size>
+                                <Style>
+                                    <Font>
+                                        <Name>Microsoft JhengHei</Name>
+                                    </Font>
+                                    <Padding>
+                                        <Left>4px</Left>
+                                    </Padding>
+                                    <VerticalAlign>Middle</VerticalAlign>
+                                </Style>
+                                <Value>Model No.:</Value>
+                                <VisibleExpr>=IIF([InventoryItem.ItemType] = 'N', False, True)</VisibleExpr>
+                            </TextBox>
+                            <TextBox Name="textBox77">
+                                <Location>0px, 64px</Location>
+                                <Size>112px, 16px</Size>
+                                <Style>
+                                    <Font>
+                                        <Name>Microsoft JhengHei</Name>
+                                    </Font>
+                                    <Padding>
+                                        <Left>4px</Left>
+                                    </Padding>
+                                    <VerticalAlign>Middle</VerticalAlign>
+                                </Style>
+                                <Value>Country Of Origin: </Value>
+                                <VisibleExpr>=IIF([InventoryItem.ItemType] = 'N', False, True)</VisibleExpr>
+                            </TextBox>
+                            <TextBox Name="textBox78">
+                                <Location>0px, 80px</Location>
+                                <Size>80px, 16px</Size>
+                                <Style>
+                                    <Font>
+                                        <Name>Microsoft JhengHei</Name>
+                                    </Font>
+                                    <Padding>
+                                        <Left>4px</Left>
+                                    </Padding>
+                                    <VerticalAlign>Middle</VerticalAlign>
+                                </Style>
+                                <Value>=IsNull([SOShipment.FOBPoint] + ' ', '') + 'HS Code:'</Value>
+                                <Visible>False</Visible>
+                                <VisibleExpr>=IIF([InvoiceCustomerInfo.CustomerClassID] = 'INTERCO' AND [InventoryItem.ItemType] &lt;&gt; 'N', #010;True, #010;False)</VisibleExpr>
+                            </TextBox>
+                            <TextBox Name="textBox79">
+                                <Location>80px, 80px</Location>
+                                <Size>232px, 16px</Size>
+                                <Style>
+                                    <Font>
+                                        <Name>Microsoft JhengHei</Name>
+                                    </Font>
+                                    <VerticalAlign>Middle</VerticalAlign>
+                                </Style>
+                                <Value>=IIF([SOShipment.FOBPoint] = 'CA', [AttrHSCODECA.Value], #010;	IIF([SOShipment.FOBPoint] = 'JP', [AttrHSCODEJP.Value], #010;	IIF([SOShipment.FOBPoint] = 'NL', [AttrHSCODENL.Value], #010;	IIF([SOShipment.FOBPoint] = 'UK', [AttrHSCODEUK.Value], #010;	IIF([SOShipment.FOBPoint] = 'US', [AttrHSCODEUS.Value], #010;[AttrHSCODE.Value])))))</Value>
+                                <Visible>False</Visible>
+                                <VisibleExpr>=IIF([InvoiceCustomerInfo.CustomerClassID] = 'INTERCO' AND [InventoryItem.ItemType] &lt;&gt; 'N', #010;True, #010;False)</VisibleExpr>
+                            </TextBox>
+                            <TextBox Name="textBox80">
+                                <Location>112px, 64px</Location>
+                                <Size>200px, 16px</Size>
+                                <Style>
+                                    <Font>
+                                        <Name>Microsoft JhengHei</Name>
+                                    </Font>
+                                    <VerticalAlign>Middle</VerticalAlign>
+                                </Style>
+                                <Value>=[InventoryItem.CountryOfOrigin]</Value>
+                                <VisibleExpr>=IIF([InventoryItem.ItemType] = 'N', False, True)</VisibleExpr>
+                            </TextBox>
+                            <TextBox Name="textBox81">
+                                <Location>72px, 32px</Location>
+                                <Size>240px, 16px</Size>
+                                <Style>
+                                    <Font>
+                                        <Name>Microsoft JhengHei</Name>
+                                    </Font>
+                                    <VerticalAlign>Middle</VerticalAlign>
+                                </Style>
+                                <Value>=[AttrMODELNO.Value]</Value>
+                                <VisibleExpr>=IIF([InventoryItem.ItemType] = 'N', False, True)</VisibleExpr>
+                            </TextBox>
+                            <TextBox Name="textBox82">
+                                <Location>56px, 48px</Location>
+                                <Size>256px, 16px</Size>
+                                <Style>
+                                    <Font>
+                                        <Name>Microsoft JhengHei</Name>
+                                    </Font>
+                                    <VerticalAlign>Middle</VerticalAlign>
+                                </Style>
+                                <Value>=[ARTran.InventoryID]</Value>
+                                <VisibleExpr>=IIF([InventoryItem.ItemType] = 'N', False, True)</VisibleExpr>
+                            </TextBox>
+                            <TextBox Name="textBox83">
+                                <Location>0px, 32px</Location>
+                                <Size>312px, 16px</Size>
+                                <Style>
+                                    <Font>
+                                        <Name>Microsoft JhengHei</Name>
+                                    </Font>
+                                    <Padding>
+                                        <Left>4px</Left>
+                                    </Padding>
+                                    <VerticalAlign>Middle</VerticalAlign>
+                                </Style>
+                                <Value>=[ARTran.InventoryID]</Value>
+                                <VisibleExpr>=IIF([InventoryItem.ItemType] = 'N', True, False)</VisibleExpr>
+                            </TextBox>
+                        </Items>
+                    </Panel>
+                    <TextBox Name="textBox70">
+                        <Location>544px, 0px</Location>
+                        <Size>152px, 104px</Size>
+                        <Style>
+                            <BorderStyle>
+                                <Bottom>Solid</Bottom>
+                                <Right>Solid</Right>
+                            </BorderStyle>
+                            <BorderWidth>
+                                <Bottom>1px</Bottom>
+                                <Right>1px</Right>
+                            </BorderWidth>
+                            <Font>
+                                <Name>Microsoft JhengHei</Name>
+                            </Font>
+                            <Padding>
+                                <Left>4px</Left>
+                                <Top>4px</Top>
+                            </Padding>
+                        </Style>
+                        <Value>=IIF([InventoryItem.ItemType] &lt;&gt; 'N',#010;IIF([Note.NoteText] &lt;&gt; Null,#010;[Note.NoteText],#010;IIF([InvoiceCustomerInfo.CustomerClassID] = 'INTERCO', 'Manufacturer Name: \n' + IsNull([AttrVENDENGNA.Value], '') +#010;IsNull('\nAddress:' + [AttrVENDENGAD.Value], ''), '')#010;),#010;'')</Value>
+                    </TextBox>
+                    <TextBox Name="textBox71">
+                        <Format>$#,##0.00;-$#,##0.00</Format>
+                        <Location>464px, 0px</Location>
+                        <Size>80px, 104px</Size>
+                        <Style>
+                            <BorderStyle>
+                                <Bottom>Solid</Bottom>
+                                <Right>Solid</Right>
+                            </BorderStyle>
+                            <BorderWidth>
+                                <Bottom>1px</Bottom>
+                                <Right>1px</Right>
+                            </BorderWidth>
+                            <Font>
+                                <Name>Microsoft JhengHei</Name>
+                            </Font>
+                            <TextAlign>Center</TextAlign>
+                            <VerticalAlign>Middle</VerticalAlign>
+                        </Style>
+                        <Value>=[ARTran.CuryTranAmt]</Value>
+                    </TextBox>
+                    <TextBox Name="textBox72">
+                        <Format>='N0'</Format>
+                        <Location>392px, 0px</Location>
+                        <Size>72px, 104px</Size>
+                        <Style>
+                            <BorderStyle>
+                                <Bottom>Solid</Bottom>
+                                <Right>Solid</Right>
+                            </BorderStyle>
+                            <BorderWidth>
+                                <Bottom>1px</Bottom>
+                                <Right>1px</Right>
+                            </BorderWidth>
+                            <Font>
+                                <Name>Microsoft JhengHei</Name>
+                            </Font>
+                            <TextAlign>Center</TextAlign>
+                            <VerticalAlign>Middle</VerticalAlign>
+                        </Style>
+                        <Value>=IIF([InventoryItem.ItemType] &lt;&gt; 'N', IsNull([ARTran.Qty], ''), '')</Value>
+                    </TextBox>
+                    <TextBox Name="textBox73">
+                        <Format>$#,##0.00;-$#,##0.00</Format>
+                        <Location>312px, 0px</Location>
+                        <Size>80px, 104px</Size>
+                        <Style>
+                            <BorderStyle>
+                                <Bottom>Solid</Bottom>
+                                <Right>Solid</Right>
+                            </BorderStyle>
+                            <BorderWidth>
+                                <Bottom>1px</Bottom>
+                                <Right>1px</Right>
+                            </BorderWidth>
+                            <Font>
+                                <Name>Microsoft JhengHei</Name>
+                            </Font>
+                            <TextAlign>Center</TextAlign>
+                            <VerticalAlign>Middle</VerticalAlign>
+                        </Style>
+                        <Value>=IIF([InventoryItem.ItemType] &lt;&gt; 'N', [ARTran.CuryUnitPrice], '')</Value>
+                    </TextBox>
+                </Items>
+            </Detail>
         </Sections>
     </Report>
 </Report>
