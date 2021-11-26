@@ -19,5 +19,5 @@
     <Column TableName="SOLine" ColumnName="UsrFrtQSTTaxAmt" ColumnType="decimal" AllowNull="True" MaxLength="19" DecimalPrecision="4" DecimalLength="19" IsNewColumn="True" IsUnicode="True" />
     <Column TableName="SOLine" ColumnName="UsrFrtHSTTaxAmt" ColumnType="decimal" AllowNull="True" MaxLength="19" DecimalPrecision="4" DecimalLength="19" IsNewColumn="True" IsUnicode="True" />
     <Column TableName="SOLine" ColumnName="UsrTrackingNbr" ColumnType="string" AllowNull="True" MaxLength="30" DecimalPrecision="0" DecimalLength="0" IsNewColumn="True" IsUnicode="True" />
-    <Column TableName="SOLine" ColumnName="UsrCarrier" ColumnType="string" AllowNull="True" MaxLength="15" DecimalPrecision="0" DecimalLength="0" IsNewColumn="True" IsUnicode="True" />
+    <Column TableName="SOLine" ColumnName="UsrCarrier" ColumnType="string" AllowNull="True" MaxLength="25" DecimalPrecision="0" DecimalLength="0" IsNewColumn="True" IsUnicode="True" />
 </Table>
