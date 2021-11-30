@@ -773,7 +773,7 @@ namespace ExternalLogisticsAPI.Descripter
         /// <summary>
         /// Manually create sales invoice from AMZ inferface.
         /// </summary>
-        public static void CreateCreditMemo(dynamic root, bool isRMA = false)
+        public static void CreateCreditMemo(dynamic root, bool isRMA = false, bool isSample = false)
         {
             SOInvoiceEntry invoiceEntry = PXGraph.CreateInstance<SOInvoiceEntry>();
 
@@ -785,9 +785,9 @@ namespace ExternalLogisticsAPI.Descripter
             invoice = invoiceEntry.Document.Insert(invoice);
 
             invoice.CustomerID = Customer.UK.Find(invoiceEntry, LUMAmzInterfaceAPIMaint.AMZCustomer).BAccountID;
-            invoice.DocDate    = string.IsNullOrWhiteSpace((string)root.item[0]?.shipment_date) ? invoice.DocDate : root.item[0]?.shipment_date;
+            invoice.DocDate    = isSample == false ? string.IsNullOrWhiteSpace((string)root.item[0]?.shipment_date) ? invoice.DocDate : root.item[0]?.shipment_date : root.payments_date;
             invoice.InvoiceNbr = root.amazon_order_id;
-            invoice.DocDesc    = isRMA == false ? $"{nameof(AmazonOrderType.MCF)} | {root.merchant_order_id}" : AmazonOrderType.Labels[7];
+            invoice.DocDesc    = isSample == false ? isRMA == false ? $"{nameof(AmazonOrderType.MCF)} | {root.merchant_order_id}" : AmazonOrderType.Labels[7] : "FBA Sample Order Amazon Fees";
 
             if (State.PK.Find(invoiceEntry, (string)root.ship_country, (string)root.ship_state)?.GetExtension<StateExt>().UsrIsAMZWithheldTax == true)
             {
@@ -800,17 +800,24 @@ namespace ExternalLogisticsAPI.Descripter
 
             if (!string.IsNullOrWhiteSpace((string)root.recipient_name))
             {
-                ARShippingContact shipContact = invoiceEntry.Shipping_Contact.Select();
+                ARShippingContact shipContact = new ARShippingContact();
+
+                ARShippingContactAttribute.CopyContact(shipContact, invoiceEntry.Shipping_Contact.Select().TopFirst);
 
                 shipContact.OverrideContact = true;
+                shipContact.RevisionID      = 0;
                 shipContact.FullName        = root.recipient_name;
 
-                invoiceEntry.Shipping_Contact.Cache.MarkUpdated(shipContact);
+                invoiceEntry.Shipping_Contact.Cache.Update(shipContact);
+
+                invoiceEntry.Document.Cache.SetValue<SOInvoice.shipContactID>(invoiceEntry.Document.Current, invoiceEntry.Shipping_Contact.Current.ContactID);
             }
 
             if (!string.IsNullOrWhiteSpace((string)root.ship_country))
             {
-                ARShippingAddress shipAddress = invoiceEntry.Shipping_Address.Select();
+                ARShippingAddress shipAddress = new ARShippingAddress();
+
+                ARShippingAddressAttribute.Copy(shipAddress, invoiceEntry.Shipping_Address.Select().TopFirst);
 
                 shipAddress.OverrideAddress = true;
                 shipAddress.AddressLine1    = root.ship_address;
@@ -819,11 +826,14 @@ namespace ExternalLogisticsAPI.Descripter
                 shipAddress.State           = root.ship_state;
                 shipAddress.PostalCode      = root.ship_postal_code;
 
-                invoiceEntry.Shipping_Address.Cache.MarkUpdated(shipAddress);
+                invoiceEntry.Shipping_Address.Cache.Update(shipAddress);
+
+                invoiceEntry.Document.Cache.SetValue<SOInvoice.shipAddressID>(invoiceEntry.Document.Current, invoiceEntry.Shipping_Address.Current.AddressID);
             }
 
             string entryTypeID = null;
             string inventoryCD = string.Empty;
+            int?   inventoryID = 0;
 
             for (int i = 0; i < root.item.Count; i++)
             {
@@ -837,11 +847,17 @@ namespace ExternalLogisticsAPI.Descripter
 
                     if ((int)root.item[i].fee[j].type == 3)
                     {
-                        invoiceEntry.Transactions.Cache.SetValueExt<ARTran.inventoryID>(tran, InventoryItem.UK.Find(invoiceEntry, "SHIPPING")?.InventoryID);
+                        inventoryID = InventoryItem.UK.Find(invoiceEntry, "SHIPPING")?.InventoryID;
                     }
+                    else if ((int)root.item[i].fee[j].type == 2)
+                    {
+                        inventoryID = InventoryItem.UK.Find(invoiceEntry, "COMMISSION")?.InventoryID;
+                    }
+    
+                    invoiceEntry.Transactions.Cache.SetValueExt<ARTran.inventoryID>(tran, inventoryID);
 
                     tran.Qty          = root.item[i].qty;
-                    tran.TranDesc     = $"{root.item[i].sku} | {entryTypeID} | {root.item[i].fulfillment_center_id} | {root.item[i].country} | {root.item[i].state}";
+                    tran.TranDesc     = isSample == false ? $"{root.item[i].sku} | {entryTypeID} | {root.item[i].fulfillment_center_id} | {root.item[i].country} | {root.item[i].state}" : root.item[i].fee[j].name;
                     tran.CuryExtPrice = -1 * (decimal)root.item[i].fee[j].amount;
 
                     tran = invoiceEntry.Transactions.Insert(tran);
@@ -870,14 +886,17 @@ namespace ExternalLogisticsAPI.Descripter
                     tran = invoiceEntry.Transactions.Insert(tran);
                 }
 
-                CAEntryType entryType = CAEntryType.PK.Find(invoiceEntry, CashAccountETDetail.PK.Find(invoiceEntry, invoice.CashAccountID, entryTypeID).EntryTypeID);
+                if (isSample == false)
+                {
+                    CAEntryType entryType = CAEntryType.PK.Find(invoiceEntry, CashAccountETDetail.PK.Find(invoiceEntry, invoice.CashAccountID, entryTypeID).EntryTypeID);
 
-                tran.AccountID = entryType.AccountID;
-                tran.SubID     = entryType.SubID;
+                    tran.AccountID = entryType.AccountID;
+                    tran.SubID = entryType.SubID;
 
-                invoiceEntry.Transactions.Update(tran);
+                    invoiceEntry.Transactions.Update(tran);
 
-                PXNoteAttribute.SetNote(invoiceEntry.Transactions.Cache, tran, $"Carrier : {root.item[i].carrier}\nTracking Nbr. : {root.item[i].tracking_no}");
+                    PXNoteAttribute.SetNote(invoiceEntry.Transactions.Cache, tran, $"Carrier : {root.item[i].carrier}\nTracking Nbr. : {root.item[i].tracking_no}");
+                }
             }
 
             LUMAmzInterfaceAPIMaint.UpdateUserDefineFields(invoiceEntry.Document.Cache, root);

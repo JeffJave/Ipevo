@@ -322,6 +322,11 @@ namespace ExternalLogisticsAPI.Graph
                                 orderEntry.Save.Press();
                             }
 
+                            if (orderType == AmazonOrderType.FBA_SO && (decimal)root.salesProceeds == 0m && (decimal)root.amazonFee != 0m)
+                            {
+                                ExternalAPIHelper.CreateCreditMemo(root, false, true);
+                            }
+
                             if ((noAMZFee == false || hasAMZFee == true) && order.CuryOrderTotal > 0 && !order.OrderType.IsIn("RA", "CM") )
                             {
                                 ExternalAPIHelper.CreatePaymentProcess(order, root, curyInfo.CuryMultDiv == CuryMultDivType.Div ? curyInfo.RecipRate : curyInfo.CuryRate);
