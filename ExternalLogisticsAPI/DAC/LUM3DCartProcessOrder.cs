@@ -150,6 +150,13 @@ namespace ExternalLogisticsAPI.DAC
         public abstract class promotionName : PX.Data.BQL.BqlString.Field<promotionName> { }
         #endregion
 
+        #region DiscountAmt
+        [PXDBDecimal()]
+        [PXUIField(DisplayName = "Discount Amount")]
+        public virtual decimal? DiscountAmt { get; set; }
+        public abstract class discountAmt : PX.Data.BQL.BqlDecimal.Field<discountAmt> { }
+        #endregion
+
         #region CreatedByID
         [PXDBCreatedByID()]
         public virtual Guid? CreatedByID { get; set; }

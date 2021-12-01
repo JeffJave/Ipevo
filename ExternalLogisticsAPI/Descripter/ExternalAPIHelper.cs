@@ -129,7 +129,8 @@ namespace ExternalLogisticsAPI.Descripter
                     BillingAddress  = arrays[i].BillingAddress,
                     ShipmentAddress = arrays[i].ShipmentList[0].ShipmentAddress,
                     OrderQty        = (decimal)arrays[i].OrderItemList.ToList().Sum(x => x.ItemQuantity),
-                    PromotionName   = arrays[i].PromotionList.Count > 0 ? arrays[i].PromotionList[0]?.PromotionName : null
+                    PromotionName   = arrays[i].PromotionList.Count > 0 ? arrays[i].PromotionList[0]?.PromotionName : null,
+                    DiscountAmt     = arrays[i].PromotionList.Count > 0 ? (decimal)arrays[i].PromotionList[0]?.DiscountAmount : 0m
                 };
 
                 if (LUM3DCartProcessOrder.UK.Find(graph, procOrder.OrderID, procOrder.InvoiceNumber) == null)
@@ -196,12 +197,12 @@ namespace ExternalLogisticsAPI.Descripter
                     line.CuryUnitPrice = (decimal)itemList[i].ItemUnitPrice;
 
                     // Per David's request to include 3D Cart discount to sales order line.
-                    var promotionList = list.Find(x => x.PromotionList.Count > 0)?.PromotionList;
+                    //var promotionList = list.Find(x => x.PromotionList.Count > 0)?.PromotionList;
 
-                    for (int j = 0; j < promotionList?.Count; j++)
-                    {
-                        line.CuryDiscAmt = (decimal)promotionList[j].DiscountAmount;
-                    }
+                    //for (int j = 0; j < promotionList?.Count; j++)
+                    //{
+                    //    line.CuryDiscAmt = (decimal)promotionList[j].DiscountAmount;
+                    //}
 
                     orderEntry.Transactions.Insert(line);
                 }

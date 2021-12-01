@@ -35,7 +35,8 @@
 				<px:PXGridColumn DataField="BillingAddress" Width="180" ></px:PXGridColumn>
 				<px:PXGridColumn DataField="ShipmentAddress" Width="180" ></px:PXGridColumn>
 				<px:PXGridColumn DataField="OrderQty" Width="100" ></px:PXGridColumn>
-				<px:PXGridColumn DataField="PromotionName" Width="250" /></Columns>
+				<px:PXGridColumn DataField="PromotionName" Width="250" ></px:PXGridColumn>
+				<px:PXGridColumn DataField="DiscountAmt" Width="100" /></Columns>
 			</px:PXGridLevel>
 		</Levels>
 		<AutoSize Container="Window" Enabled="True" MinHeight="150" ></AutoSize>
