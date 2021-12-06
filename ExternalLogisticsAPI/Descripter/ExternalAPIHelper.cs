@@ -423,7 +423,7 @@ namespace ExternalLogisticsAPI.Descripter
         /// </summary>
         public static void CreateOrderDetail(SOOrderEntry orderEntry, dynamic root)
         {
-            int counter = root.item?.Count;
+            int counter = root.item?.Count ?? 1;
             bool isCM   = orderEntry.Document.Current.OrderType == "CM";
 
             for (int i = 0; i < counter; i++)
@@ -433,7 +433,7 @@ namespace ExternalLogisticsAPI.Descripter
 
                 if (orderEntry.Document.Current.OrderType == "RA")
                 {
-                    if (counter == root.item.Count)
+                    if (counter == (root.item?.Count == null ? counter : root.item.Count) )
                     {
                         line.Operation  = SOOperation.Receipt;
                         line.ReasonCode = "RMARECEIPT";
@@ -450,7 +450,19 @@ namespace ExternalLogisticsAPI.Descripter
                     }
                 }
 
-                if (root.item[i].reimbursement_id == null)
+                if (root.item == null)
+                {
+                    line.InventoryID   = GetSOLineInventoryID(orderEntry, (string)root.sku);
+                    line.OrderQty      = root.quantity ?? 0m;
+                    line.CuryUnitPrice = Math.Abs((decimal)(root.item_price ?? 0m) );
+
+                    lineExt.UsrFulfillmentCenter = root.fulfillment_center_id;
+
+                    counter = 1;
+
+                    goto InsertLine;
+                }
+                else if (root.item[i].reimbursement_id == null)
                 {
                     line.InventoryID   = GetSOLineInventoryID(orderEntry, isCM == false ? (string)root.item[i].sku : "RMAPAYMENT");
                     line.OrderQty      = root.item[i].qty;
@@ -532,10 +544,10 @@ namespace ExternalLogisticsAPI.Descripter
 
                     counter = root.item?.Count;
                 }
-
+            InsertLine:
                 orderEntry.Transactions.Insert(line);
 
-                if (root.item[i].charge != null)
+                if (root.item?[i].charge != null)
                 {
                     List<APILibrary.Model.Amazon_Middleware.Charge> list = root.item[i].charge.ToObject<List<APILibrary.Model.Amazon_Middleware.Charge>>();
 
@@ -559,7 +571,7 @@ namespace ExternalLogisticsAPI.Descripter
                     }
                 }
 
-                if (root.item[i].fee != null)
+                if (root.item?[i].fee != null)
                 {
                     List<APILibrary.Model.Amazon_Middleware.Fee> fees = root.item[i].fee.ToObject<List<APILibrary.Model.Amazon_Middleware.Fee>>();
 
@@ -684,6 +696,21 @@ namespace ExternalLogisticsAPI.Descripter
                 shipAddress.CountryID       = root.ship_to_country;
                 shipAddress.PostalCode      = root.ship_to_zipcode;
                 shipAddress.State           = root.ship_to_state;
+
+                orderEntry.Shipping_Address.Cache.Update(shipAddress);
+
+                orderEntry.Document.Cache.SetValue<SOOrder.shipAddressID>(orderEntry.Document.Current, orderEntry.Shipping_Address.Current.AddressID);
+            }
+
+            // Only for Amazon "Customer Returns" type.
+            if (!string.IsNullOrWhiteSpace((string)root.country))
+            {
+                SOShippingAddressAttribute.Copy(shipAddress, orderEntry.Shipping_Address.Select().TopFirst);
+
+                shipAddress.OverrideAddress = true;
+                shipAddress.RevisionID = 0;
+                shipAddress.CountryID = root.country;
+                shipAddress.State = root.state;
 
                 orderEntry.Shipping_Address.Cache.Update(shipAddress);
 
