@@ -42,7 +42,7 @@ namespace PX.Objects.SO
             {
                 PackingList.SetVisible(true);
                 Base.report.AddMenuAction(PackingList);
-                Base.report.AddMenuAction(PackingList_Carton);
+                Base.report.AddMenuAction(PackingListCarton);
             }
         }
 
@@ -95,10 +95,10 @@ namespace PX.Objects.SO
         #endregion
 
         #region Action
-        public PXAction<SOShipment> PackingList_Carton;
+        public PXAction<SOShipment> PackingListCarton;
         [PXButton]
         [PXUIField(DisplayName = "Print Packing List (Carton)", Enabled = true, MapEnableRights = PXCacheRights.Select)]
-        protected virtual IEnumerable packingList_Carton(PXAdapter adapter)
+        protected virtual IEnumerable packingListCarton(PXAdapter adapter)
         {
             if (Base.Document.Current != null)
             {
