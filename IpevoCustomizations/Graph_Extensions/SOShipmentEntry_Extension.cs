@@ -36,11 +36,13 @@ namespace PX.Objects.SO
         {
             base.Initialize();
             PackingList.SetVisible(false);
+            PackingListCarton.SetVisible(false);
 
             var curCoutry = (PXSelect<Branch>.Select(Base, PX.Data.Update.PXInstanceHelper.CurrentCompany)).TopFirst;
             if (curCoutry?.CountryID == "TW" || curCoutry?.BaseCuryID == "TWD")
             {
                 PackingList.SetVisible(true);
+                PackingListCarton.SetVisible(true);
                 Base.report.AddMenuAction(PackingList);
                 Base.report.AddMenuAction(PackingListCarton);
             }
