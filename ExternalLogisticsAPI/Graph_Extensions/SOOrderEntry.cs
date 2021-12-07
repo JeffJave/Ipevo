@@ -438,6 +438,10 @@ namespace ExternalLogisticsAPI.Graph_Extensions
                                 ie.Adjustments.Cache.Update(adj);
                             }
 
+                            // set Financial AR Account
+                            if ((so.CustomerRefNbr ?? "").Contains("ACCT : "))
+                                ie.CurrentDocument.Cache.SetValueExt<ARInvoice.aRAccountID>(ie.CurrentDocument.Current, so.CustomerRefNbr.Replace("ACCT : ", ""));
+
                             // save data
                             ie.Actions.PressSave();
                         }

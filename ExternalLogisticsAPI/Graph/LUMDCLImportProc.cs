@@ -176,7 +176,7 @@ namespace ExternalLogisticsAPI.Graph
                                 newOrder.CustomerOrderNbr = string.IsNullOrEmpty(impRow?.shipments.FirstOrDefault().ship_id) ? null : "8" + impRow.shipments.FirstOrDefault()?.ship_id;
                                 newOrder.CustomerRefNbr = impRow.order_number;
                                 newOrder.OrderDesc = $"Po Number : {impRow.po_number} | Carrier: {impRow.shipping_carrier} | Tacking Number: {impRow.shipments.FirstOrDefault().packages.FirstOrDefault()?.tracking_number}";
-
+                                newOrder.RequestDate = DateTime.Parse(impRow.shipments.FirstOrDefault()?.ship_date);
                                 newOrder = (SOOrder)graph.Document.Cache.Insert(newOrder);
 
                                 foreach (var line in impRow.shipments.SelectMany(x => x.packages).SelectMany(x => x.shipped_items).GroupBy(x => x.item_number).Select(x => new { qty = x.Sum(y => y.quantity),item_number = x.Key}))
