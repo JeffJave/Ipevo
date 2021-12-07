@@ -417,5 +417,12 @@ namespace ExternalLogisticsAPI.Graph
         PST_Gift_Wrap_Tax = 52,
         PST_Item_Tax = 53
     }
+
+    public enum AMZRefundChargeType
+    {
+        Shipping_Tax_Discount = 6,
+        Discount_Shipping = 7,
+        Discount_Item = 8
+    }
     #endregion
 }
