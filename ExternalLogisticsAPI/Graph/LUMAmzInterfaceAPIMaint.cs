@@ -88,9 +88,11 @@ namespace ExternalLogisticsAPI.Graph
                 case AmazonOrderType.FBA_RMA_Exch:
                 case AmazonOrderType.FBA_RMA_RA_Ealier:
                 case AmazonOrderType.FBA_RMA_OI_AmzFee:
+                case AmazonOrderType.Cust_Return:
                     sOType = "RA";
                     break;
                 case AmazonOrderType.FBA_RMA_RA_Later:
+                case AmazonOrderType.Refund_Trans:
                     sOType = "CM";
                     break;
             }
@@ -223,15 +225,19 @@ namespace ExternalLogisticsAPI.Graph
                                 order = orderEntry.Document.Insert(order);
 
                                 order.CustomerID       = Customer.UK.Find(orderEntry, AMZCustomer).BAccountID;
-                                order.OrderDate        = orderType == AmazonOrderType.FBA_RMA_RA_Later ? root.item?[0].shipment_date : root.return_date ?? root.item?[0].approval_date ?? root.payments_date;
-                                order.RequestDate      = orderType.IsIn(new List<int>(new int[] { AmazonOrderType.RestockingFee, AmazonOrderType.Reimbursement, AmazonOrderType.Rev_Reimbursement, AmazonOrderType.FBA_RMA_Exch, AmazonOrderType.FBA_RMA_RA_Later, AmazonOrderType.FBA_RMA_RA_Ealier, AmazonOrderType.FBA_RMA_OI_AmzFee })) ?
+                                order.OrderDate        = orderType.IsIn(AmazonOrderType.FBA_RMA_RA_Later, AmazonOrderType.Refund_Trans) ? root.item?[0].shipment_date : root.return_date ?? root.item?[0].approval_date ?? root.payments_date;
+                                order.RequestDate      = orderType.IsIn(new List<int>(new int[] { AmazonOrderType.RestockingFee, AmazonOrderType.Reimbursement, AmazonOrderType.Rev_Reimbursement, AmazonOrderType.FBA_RMA_Exch, AmazonOrderType.FBA_RMA_RA_Later, AmazonOrderType.FBA_RMA_RA_Ealier, AmazonOrderType.FBA_RMA_OI_AmzFee, AmazonOrderType.Cust_Return, AmazonOrderType.Refund_Trans })) ?
                                                          order.OrderDate : string.IsNullOrWhiteSpace((string)root.item?[0].shipment_date) ? root.payments_date : root.item?[0].shipment_date; 
                                 order.CustomerOrderNbr = orderType == AmazonOrderType.Rev_Reimbursement ? $"{list[i].OrderNbr} - {list[i].SequenceNo}" : list[i].OrderNbr;
                                 order.CustomerRefNbr   = orderType == AmazonOrderType.Reimbursement ? root.item?[0].reimbursement_id : 
                                                                                                       orderType == AmazonOrderType.Rev_Reimbursement ? root.item?[0].original_reimbursement_id : 
-                                                                                                                                                       orderType == AmazonOrderType.FBA_RMA_Exch ? "RA Exchange" : null;
-                                order.OrderDesc        = orderType.IsIn(AmazonOrderType.Reimbursement, AmazonOrderType.Rev_Reimbursement) ? $"{root.item[0].sku} | {root.item[0].reason} | {root.item[0].condition} | {order.CustomerRefNbr ?? root.item[0].fnsku}" : null;
-                                
+                                                                                                                                                       orderType == AmazonOrderType.FBA_RMA_Exch ? "RA Exchange" : 
+                                                                                                                                                                                                   (orderType == AmazonOrderType.Cust_Return && root.refund_before == true) || 
+                                                                                                                                                                                                   (orderType == AmazonOrderType.Refund_Trans && root.refund_before != true) ? "ACCT : 1471001" :
+                                                                                                                                                                                                                                                                               null;
+                                order.OrderDesc        = orderType.IsIn(AmazonOrderType.Reimbursement, AmazonOrderType.Rev_Reimbursement) ? $"{root.item[0].sku} | {root.item[0].reason} | {root.item[0].condition} | {order.CustomerRefNbr ?? root.item[0].fnsku}" : 
+                                                                                                                                            orderType == AmazonOrderType.Cust_Return ? root.reason : 
+                                                                                                                                                                                       null;
                                 orderEntry.Document.Update(order);
 
                                 if (isRSFee == false)
@@ -322,6 +328,11 @@ namespace ExternalLogisticsAPI.Graph
                                 orderEntry.Save.Press();
                             }
 
+                            if (orderType == AmazonOrderType.FBA_SO && (decimal)root.salesProceeds == 0m && (decimal)root.amazonFee != 0m)
+                            {
+                                ExternalAPIHelper.CreateCreditMemo(root, false, true);
+                            }
+
                             if ((noAMZFee == false || hasAMZFee == true) && order.CuryOrderTotal > 0 && !order.OrderType.IsIn("RA", "CM") )
                             {
                                 ExternalAPIHelper.CreatePaymentProcess(order, root, curyInfo.CuryMultDiv == CuryMultDivType.Div ? curyInfo.RecipRate : curyInfo.CuryRate);
@@ -356,19 +367,19 @@ namespace ExternalLogisticsAPI.Graph
                 switch (row.TaxID)
                 {
                     case "AMAZONGST":
-                        orderEntry.Taxes.Cache.SetValueExt<SOTaxTran.curyTaxAmt>(row, row.CuryTaxableAmt > 0 ? Math.Abs((decimal)root.gst) : (decimal)root.gst);
+                        orderEntry.Taxes.Cache.SetValueExt<SOTaxTran.curyTaxAmt>(row, row.CuryTaxableAmt > 0 ? Math.Abs((decimal)(root.gst ?? 0m)) : (decimal)(root.gst ?? 0m));
                         break;
                     case "AMAZONHST":
-                        orderEntry.Taxes.Cache.SetValueExt<SOTaxTran.curyTaxAmt>(row, row.CuryTaxableAmt > 0 ? Math.Abs((decimal)root.hst) : (decimal)root.hst);
+                        orderEntry.Taxes.Cache.SetValueExt<SOTaxTran.curyTaxAmt>(row, row.CuryTaxableAmt > 0 ? Math.Abs((decimal)(root.hst ?? 0m)) : (decimal)(root.hst ?? 0m));
                         break;
                     case "AMAZONPST":
-                        orderEntry.Taxes.Cache.SetValueExt<SOTaxTran.curyTaxAmt>(row, row.CuryTaxableAmt > 0 ? Math.Abs((decimal)root.pst) : (decimal)root.pst);
+                        orderEntry.Taxes.Cache.SetValueExt<SOTaxTran.curyTaxAmt>(row, row.CuryTaxableAmt > 0 ? Math.Abs((decimal)(root.pst ?? 0m)) : (decimal)(root.pst ?? 0m));
                         break;
                     case "AMAZONQST":
-                        orderEntry.Taxes.Cache.SetValueExt<SOTaxTran.curyTaxAmt>(row, row.CuryTaxableAmt > 0 ? Math.Abs((decimal)root.qst) : (decimal)root.qst);
+                        orderEntry.Taxes.Cache.SetValueExt<SOTaxTran.curyTaxAmt>(row, row.CuryTaxableAmt > 0 ? Math.Abs((decimal)(root.qst ?? 0m)) : (decimal)(root.qst ?? 0m));
                         break;
                     default:
-                        orderEntry.Taxes.Cache.SetValueExt<SOTaxTran.curyTaxAmt>(row, row.CuryTaxableAmt > 0 ? Math.Abs((decimal)root.tax) : (decimal)root.tax);
+                        orderEntry.Taxes.Cache.SetValueExt<SOTaxTran.curyTaxAmt>(row, row.CuryTaxableAmt > 0 ? Math.Abs((decimal)(root.tax ?? 0m)) : (decimal)(root.tax ?? 0m));
                         break;
                 }
 

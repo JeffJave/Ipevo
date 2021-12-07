@@ -25,8 +25,8 @@
         </layout>
         <data>
             <SiteMap>
-                <row Title="Print Packing List (Pallet)" Url="~/Frames/ReportLauncher.aspx?ID=LM642005.rpx" ScreenID="LM642005" NodeID="c9ff578e-6f40-408e-972f-21ce149415e4" ParentID="00000000-0000-0000-0000-000000000000">
-                    <MUIScreen IsPortal="0" WorkspaceID="e2c3849a-6280-41df-81f3-552b91adfae5" Order="285" SubcategoryID="0b491e12-c58d-4e47-8a0d-96dd3a8ab395" />
+                <row Title="Print Packing List (Carton)" Url="~/Frames/ReportLauncher.aspx?ID=LM642010.rpx" ScreenID="LM642010" NodeID="7e2deff8-234f-48d2-9bb0-112d52065e3d" ParentID="00000000-0000-0000-0000-000000000000">
+                    <MUIScreen IsPortal="0" WorkspaceID="e2c3849a-6280-41df-81f3-552b91adfae5" Order="355" SubcategoryID="0b491e12-c58d-4e47-8a0d-96dd3a8ab395" />
                 </row>
             </SiteMap>
             <MUIWorkspace>

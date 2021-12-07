@@ -32,9 +32,11 @@
 				<px:PXGridColumn DataField="SalesTaxAmt" Width="100" ></px:PXGridColumn>
 				<px:PXGridColumn DataField="LastUpdated" Width="90" ></px:PXGridColumn>
 				<px:PXGridColumn DataField="BillingEmailID" Width="220" ></px:PXGridColumn>
-				<px:PXGridColumn DataField="BillingAddress" Width="180" />
-				<px:PXGridColumn DataField="ShipmentAddress" Width="180" />
-				<px:PXGridColumn DataField="OrderQty" Width="100" /></Columns>
+				<px:PXGridColumn DataField="BillingAddress" Width="180" ></px:PXGridColumn>
+				<px:PXGridColumn DataField="ShipmentAddress" Width="180" ></px:PXGridColumn>
+				<px:PXGridColumn DataField="OrderQty" Width="100" ></px:PXGridColumn>
+				<px:PXGridColumn DataField="PromotionName" Width="250" ></px:PXGridColumn>
+				<px:PXGridColumn DataField="DiscountAmt" Width="100" /></Columns>
 			</px:PXGridLevel>
 		</Levels>
 		<AutoSize Container="Window" Enabled="True" MinHeight="150" ></AutoSize>

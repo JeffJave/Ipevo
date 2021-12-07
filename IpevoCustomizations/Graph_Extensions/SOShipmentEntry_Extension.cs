@@ -36,12 +36,15 @@ namespace PX.Objects.SO
         {
             base.Initialize();
             PackingList.SetVisible(false);
+            PackingListCarton.SetVisible(false);
 
             var curCoutry = (PXSelect<Branch>.Select(Base, PX.Data.Update.PXInstanceHelper.CurrentCompany)).TopFirst;
             if (curCoutry?.CountryID == "TW" || curCoutry?.BaseCuryID == "TWD")
             {
                 PackingList.SetVisible(true);
+                PackingListCarton.SetVisible(true);
                 Base.report.AddMenuAction(PackingList);
+                Base.report.AddMenuAction(PackingListCarton);
             }
         }
 
@@ -75,7 +78,7 @@ namespace PX.Objects.SO
         #region Action
         public PXAction<SOShipment> PackingList;
         [PXButton]
-        [PXUIField(DisplayName = "Print Packing List", Enabled = true, MapEnableRights = PXCacheRights.Select)]
+        [PXUIField(DisplayName = "Print Packing List (Pallet)", Enabled = true, MapEnableRights = PXCacheRights.Select)]
         protected virtual IEnumerable packingList(PXAdapter adapter)
         {
             if (Base.Document.Current != null)
@@ -88,6 +91,27 @@ namespace PX.Objects.SO
                 parameters["PackageCountNo"] = Convert.ToString(_packageCount);
                 parameters["PackageCountEn"] = Number2English(Convert.ToDecimal(_packageCount));
                 throw new PXReportRequiredException(parameters, "LM642005", "Report LM642005");
+            }
+            return adapter.Get();
+        }
+        #endregion
+
+        #region Action
+        public PXAction<SOShipment> PackingListCarton;
+        [PXButton]
+        [PXUIField(DisplayName = "Print Packing List (Carton)", Enabled = true, MapEnableRights = PXCacheRights.Select)]
+        protected virtual IEnumerable packingListCarton(PXAdapter adapter)
+        {
+            if (Base.Document.Current != null)
+            {
+                var _packagesFromDB = SelectFrom<SOPackageDetail>.Where<SOPackageDetail.shipmentNbr.IsEqual<SOPackageDetail.shipmentNbr.FromCurrent>>.View.Select(Base);
+                int _packageCount = _packagesFromDB.Where(x => Convert.ToInt32(((SOPackageDetail)x).CustomRefNbr1) > 0).Sum(x => Convert.ToInt32(((SOPackageDetail)x).CustomRefNbr1));
+
+                Dictionary<string, string> parameters = new Dictionary<string, string>();
+                parameters["ShipmentNbr"] = Base.Document.Current.ShipmentNbr;
+                parameters["PackageCountNo"] = Convert.ToString(_packageCount);
+                parameters["PackageCountEn"] = Number2English(Convert.ToDecimal(_packageCount));
+                throw new PXReportRequiredException(parameters, "LM642010", "Report LM642010");
             }
             return adapter.Get();
         }

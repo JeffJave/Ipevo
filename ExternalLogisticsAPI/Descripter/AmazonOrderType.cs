@@ -21,6 +21,8 @@ namespace ExternalLogisticsAPI.Descripter
         public const int Rev_Reimbursement = 14;
         public const int MCF = 15;
         public const int FBA_RMA_OI_AmzFee = 16;
+        public const int Cust_Return = 17;
+        public const int Refund_Trans = 18;
         #endregion
 
         public static readonly int[] Values = new int[]
@@ -40,7 +42,9 @@ namespace ExternalLogisticsAPI.Descripter
             Reimbursement, 
             Rev_Reimbursement,
             MCF,
-            FBA_RMA_OI_AmzFee
+            FBA_RMA_OI_AmzFee,
+            Cust_Return,
+            Refund_Trans
         };
         public static readonly string[] Labels = new string[]
         {
@@ -59,7 +63,9 @@ namespace ExternalLogisticsAPI.Descripter
             "Reimbursement(全為正項)", 
             "Reverse Reimbursement(全為負項)",
             "MCF",
-            "FBA RMA RA Open Invoice With Amz Fee"
+            "FBA RMA RA Open Invoice With Amz Fee",
+            "Customer Returns",
+            "Refund Transaction"
         };
 
         public class ListAttribute : PXIntListAttribute

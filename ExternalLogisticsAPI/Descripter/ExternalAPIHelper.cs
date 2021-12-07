@@ -128,7 +128,9 @@ namespace ExternalLogisticsAPI.Descripter
                     Processed       = false,
                     BillingAddress  = arrays[i].BillingAddress,
                     ShipmentAddress = arrays[i].ShipmentList[0].ShipmentAddress,
-                    OrderQty        = (decimal)arrays[i].OrderItemList.ToList().Sum(x => x.ItemQuantity)
+                    OrderQty        = (decimal)arrays[i].OrderItemList.ToList().Sum(x => x.ItemQuantity),
+                    PromotionName   = arrays[i].PromotionList.Count > 0 ? arrays[i].PromotionList[0]?.PromotionName : null,
+                    DiscountAmt     = arrays[i].PromotionList.Count > 0 ? (decimal)arrays[i].PromotionList[0]?.DiscountAmount : 0m
                 };
 
                 if (LUM3DCartProcessOrder.UK.Find(graph, procOrder.OrderID, procOrder.InvoiceNumber) == null)
@@ -161,7 +163,7 @@ namespace ExternalLogisticsAPI.Descripter
                 order = orderEntry.Document.Insert(order);
 
                 CreateOrderDetail(orderEntry, curSetup, order);
-
+                
                 orderEntry.Save.Press();
 
                 CreatePaymentProcess(order);
@@ -194,16 +196,24 @@ namespace ExternalLogisticsAPI.Descripter
                     line.OrderQty      = (decimal)itemList[i].ItemQuantity;
                     line.CuryUnitPrice = (decimal)itemList[i].ItemUnitPrice;
 
+                    // Per David's request to include 3D Cart discount to sales order line.
+                    //var promotionList = list.Find(x => x.PromotionList.Count > 0)?.PromotionList;
+
+                    //for (int j = 0; j < promotionList?.Count; j++)
+                    //{
+                    //    line.CuryDiscAmt = (decimal)promotionList[j].DiscountAmount;
+                    //}
+
                     orderEntry.Transactions.Insert(line);
                 }
 
-                // Per David's request to include 3D Cart discount to sales order.
+                /* Per David's request to include 3D Cart discount to sales order.
+                 * Change from header to line.
                 var promotionList = list.Find(x => x.PromotionList.Count > 0)?.PromotionList;
-
                 for (int j = 0; j < promotionList?.Count; j++)
                 {
                     CreateOrderDiscount(orderEntry, "DISCOUNT", (decimal)promotionList[j].DiscountAmount);
-                }
+                }*/
 
                 orderEntry.Taxes.Cache.SetValueExt<SOTaxTran.curyTaxAmt>(orderEntry.Taxes.Current, list[0].SalesTax + list[0].SalesTax2);
                 orderEntry.CurrentDocument.SetValueExt<SOOrder.paymentMethodID>(order, GetAcuPymtMethod(orderEntry, order.CustomerID, list[0].BillingPaymentMethod));
@@ -235,20 +245,20 @@ namespace ExternalLogisticsAPI.Descripter
             order.ContactID = CreateSOContact(order.CustomerID, list[0]);
 
             billContact.OverrideContact = true;
-            billContact.Attention = list[0].BillingFirstName + "," + list[0].BillingLastName;
-            billContact.FullName = list[0].BillingCompany;
-            billContact.Phone1 = list[0].BillingPhoneNumber;
-            billContact.Email = list[0].BillingEmail;
+            billContact.Attention       = list[0].BillingFirstName + "," + list[0].BillingLastName;
+            billContact.FullName        = list[0].BillingCompany;
+            billContact.Phone1          = list[0].BillingPhoneNumber;
+            billContact.Email           = list[0].BillingEmail;
 
             orderEntry.Billing_Contact.Update(billContact);
 
             billAddress.OverrideAddress = true;
-            billAddress.AddressLine1 = list[0].BillingAddress;
-            billAddress.AddressLine2 = list[0].BillingAddress2;
-            billAddress.City = list[0].BillingCity;
-            billAddress.CountryID = list[0].BillingCountry;
-            billAddress.PostalCode = list[0].BillingZipCode;
-            billAddress.State = list[0].BillingState;
+            billAddress.AddressLine1    = list[0].BillingAddress;
+            billAddress.AddressLine2    = list[0].BillingAddress2;
+            billAddress.City            = list[0].BillingCity;
+            billAddress.CountryID       = list[0].BillingCountry;
+            billAddress.PostalCode      = list[0].BillingZipCode;
+            billAddress.State           = list[0].BillingState;
 
             orderEntry.Billing_Address.Update(billAddress);
 
@@ -264,20 +274,22 @@ namespace ExternalLogisticsAPI.Descripter
                 orderEntry.Document.Cache.SetValueExt<SOOrder.curyPremiumFreightAmt>(order, (decimal)shipList[i].ShipmentCost);
 
                 shipContact.OverrideContact = true;
-                shipContact.Attention = shipList[i].ShipmentFirstName + "," + shipList[i].ShipmentLastName;
-                shipContact.FullName = shipList[i].ShipmentCompany;
-                shipContact.Phone1 = shipList[i].ShipmentPhone;
-                shipContact.Email = shipList[i].ShipmentEmail;
+                shipContact.Attention       = shipList[i].ShipmentFirstName + "," + shipList[i].ShipmentLastName;
+                shipContact.FullName        = shipList[i].ShipmentCompany;
+                shipContact.Phone1          = shipList[i].ShipmentPhone;
+                shipContact.Email           = shipList[i].ShipmentEmail;
 
                 orderEntry.Shipping_Contact.Update(shipContact);
 
                 shipAddress.OverrideAddress = true;
-                shipAddress.AddressLine1 = shipList[i].ShipmentAddress;
-                shipAddress.AddressLine2 = shipList[i].ShipmentAddress2;
-                shipAddress.City = shipList[i].ShipmentCity;
-                shipAddress.CountryID = shipList[i].ShipmentCountry;
-                shipAddress.PostalCode = shipList[i].ShipmentZipCode;
-                shipAddress.State = shipList[i].ShipmentState;
+                shipAddress.AddressLine1    = shipList[i].ShipmentAddress;
+                shipAddress.AddressLine2    = shipList[i].ShipmentAddress2;
+                shipAddress.City            = shipList[i].ShipmentCity;
+                shipAddress.CountryID       = shipList[i].ShipmentCountry;
+                shipAddress.PostalCode      = shipList[i].ShipmentZipCode;
+                shipAddress.State           = shipList[i].ShipmentState;
+
+                orderEntry.validateAddresses.Press();
 
                 orderEntry.Shipping_Address.Update(shipAddress);
             }
@@ -411,7 +423,7 @@ namespace ExternalLogisticsAPI.Descripter
         /// </summary>
         public static void CreateOrderDetail(SOOrderEntry orderEntry, dynamic root)
         {
-            int counter = root.item?.Count;
+            int counter = root.item?.Count ?? 1;
             bool isCM   = orderEntry.Document.Current.OrderType == "CM";
 
             for (int i = 0; i < counter; i++)
@@ -421,7 +433,7 @@ namespace ExternalLogisticsAPI.Descripter
 
                 if (orderEntry.Document.Current.OrderType == "RA")
                 {
-                    if (counter == root.item.Count)
+                    if (counter == (root.item?.Count == null ? counter : root.item.Count) )
                     {
                         line.Operation  = SOOperation.Receipt;
                         line.ReasonCode = "RMARECEIPT";
@@ -438,7 +450,19 @@ namespace ExternalLogisticsAPI.Descripter
                     }
                 }
 
-                if (root.item[i].reimbursement_id == null)
+                if (root.item == null)
+                {
+                    line.InventoryID   = GetSOLineInventoryID(orderEntry, (string)root.sku);
+                    line.OrderQty      = root.quantity ?? 0m;
+                    line.CuryUnitPrice = Math.Abs((decimal)(root.item_price ?? 0m) );
+
+                    lineExt.UsrFulfillmentCenter = root.fulfillment_center_id;
+
+                    counter = 1;
+
+                    goto InsertLine;
+                }
+                else if (root.item[i].reimbursement_id == null)
                 {
                     line.InventoryID   = GetSOLineInventoryID(orderEntry, isCM == false ? (string)root.item[i].sku : "RMAPAYMENT");
                     line.OrderQty      = root.item[i].qty;
@@ -520,10 +544,10 @@ namespace ExternalLogisticsAPI.Descripter
 
                     counter = root.item?.Count;
                 }
-
+            InsertLine:
                 orderEntry.Transactions.Insert(line);
 
-                if (root.item[i].charge != null)
+                if (root.item?[i].charge != null)
                 {
                     List<APILibrary.Model.Amazon_Middleware.Charge> list = root.item[i].charge.ToObject<List<APILibrary.Model.Amazon_Middleware.Charge>>();
 
@@ -547,7 +571,7 @@ namespace ExternalLogisticsAPI.Descripter
                     }
                 }
 
-                if (root.item[i].fee != null)
+                if (root.item?[i].fee != null)
                 {
                     List<APILibrary.Model.Amazon_Middleware.Fee> fees = root.item[i].fee.ToObject<List<APILibrary.Model.Amazon_Middleware.Fee>>();
 
@@ -560,6 +584,7 @@ namespace ExternalLogisticsAPI.Descripter
                         line.InventoryID   = GetSOLineInventoryID(orderEntry, fees[k].name.Contains("Refund") ? "REFUNDADMIN" : fees[k].name.StartsWith("Giftwrap") ? nameof(AMZChargeType.GiftWrap).ToUpper() : "COMMISSION");
                         line.OrderQty      = 1;
                         line.CuryUnitPrice = isCM == true ? -1 * (decimal)fees[k].amount : (decimal)fees[k].amount;
+                        line.ReasonCode    = fees[k].name.Contains("Refund") ? "REFUNDADMIN" : "COMMISSION";
 
                         lineExt = line.GetExtension<SOLineExt>();
 
@@ -676,6 +701,21 @@ namespace ExternalLogisticsAPI.Descripter
 
                 orderEntry.Document.Cache.SetValue<SOOrder.shipAddressID>(orderEntry.Document.Current, orderEntry.Shipping_Address.Current.AddressID);
             }
+
+            // Only for Amazon "Customer Returns" type.
+            if (!string.IsNullOrWhiteSpace((string)root.country))
+            {
+                SOShippingAddressAttribute.Copy(shipAddress, orderEntry.Shipping_Address.Select().TopFirst);
+
+                shipAddress.OverrideAddress = true;
+                shipAddress.RevisionID = 0;
+                shipAddress.CountryID = root.country;
+                shipAddress.State = root.state;
+
+                orderEntry.Shipping_Address.Cache.Update(shipAddress);
+
+                orderEntry.Document.Cache.SetValue<SOOrder.shipAddressID>(orderEntry.Document.Current, orderEntry.Shipping_Address.Current.AddressID);
+            }
         }
 
         /// <summary>
@@ -715,13 +755,14 @@ namespace ExternalLogisticsAPI.Descripter
             }
             else
             {
-                SOOrderShipment orderShip = SelectFrom<SOOrderShipment>.Where<SOOrderShipment.orderNoteID.IsEqual<@P.AsGuid>>.View.SelectSingleBound(pymtEntry, null, order.NoteID);
-
-                pymtEntry.Adjustments.Insert(new ARAdjust()
+                foreach (SOOrderShipment row in SelectFrom<SOOrderShipment>.Where<SOOrderShipment.orderNoteID.IsEqual<@P.AsGuid>>.View.Select(pymtEntry, order.NoteID))
                 {
-                    AdjdDocType = orderShip.InvoiceType,
-                    AdjdRefNbr  = orderShip.InvoiceNbr
-                });
+                    pymtEntry.Adjustments.Insert(new ARAdjust()
+                    {
+                        AdjdDocType = row.InvoiceType,
+                        AdjdRefNbr  = row.InvoiceNbr
+                    });
+                }
             }
 
             for (int i = 0; i < root.item?.Count; i++)
@@ -760,7 +801,7 @@ namespace ExternalLogisticsAPI.Descripter
         /// <summary>
         /// Manually create sales invoice from AMZ inferface.
         /// </summary>
-        public static void CreateCreditMemo(dynamic root, bool isRMA = false)
+        public static void CreateCreditMemo(dynamic root, bool isRMA = false, bool isSample = false)
         {
             SOInvoiceEntry invoiceEntry = PXGraph.CreateInstance<SOInvoiceEntry>();
 
@@ -772,9 +813,9 @@ namespace ExternalLogisticsAPI.Descripter
             invoice = invoiceEntry.Document.Insert(invoice);
 
             invoice.CustomerID = Customer.UK.Find(invoiceEntry, LUMAmzInterfaceAPIMaint.AMZCustomer).BAccountID;
-            invoice.DocDate    = string.IsNullOrWhiteSpace((string)root.item[0]?.shipment_date) ? invoice.DocDate : root.item[0]?.shipment_date;
+            invoice.DocDate    = isSample == false ? string.IsNullOrWhiteSpace((string)root.item[0]?.shipment_date) ? invoice.DocDate : root.item[0]?.shipment_date : root.payments_date;
             invoice.InvoiceNbr = root.amazon_order_id;
-            invoice.DocDesc    = isRMA == false ? $"{nameof(AmazonOrderType.MCF)} | {root.merchant_order_id}" : AmazonOrderType.Labels[7];
+            invoice.DocDesc    = isSample == false ? isRMA == false ? $"{nameof(AmazonOrderType.MCF)} | {root.merchant_order_id}" : AmazonOrderType.Labels[7] : "FBA Sample Order Amazon Fees";
 
             if (State.PK.Find(invoiceEntry, (string)root.ship_country, (string)root.ship_state)?.GetExtension<StateExt>().UsrIsAMZWithheldTax == true)
             {
@@ -787,17 +828,24 @@ namespace ExternalLogisticsAPI.Descripter
 
             if (!string.IsNullOrWhiteSpace((string)root.recipient_name))
             {
-                ARShippingContact shipContact = invoiceEntry.Shipping_Contact.Select();
+                ARShippingContact shipContact = new ARShippingContact();
+
+                ARShippingContactAttribute.CopyContact(shipContact, invoiceEntry.Shipping_Contact.Select().TopFirst);
 
                 shipContact.OverrideContact = true;
+                shipContact.RevisionID      = 0;
                 shipContact.FullName        = root.recipient_name;
 
-                invoiceEntry.Shipping_Contact.Cache.MarkUpdated(shipContact);
+                invoiceEntry.Shipping_Contact.Cache.Update(shipContact);
+
+                invoiceEntry.Document.Cache.SetValue<SOInvoice.shipContactID>(invoiceEntry.Document.Current, invoiceEntry.Shipping_Contact.Current.ContactID);
             }
 
             if (!string.IsNullOrWhiteSpace((string)root.ship_country))
             {
-                ARShippingAddress shipAddress = invoiceEntry.Shipping_Address.Select();
+                ARShippingAddress shipAddress = new ARShippingAddress();
+
+                ARShippingAddressAttribute.Copy(shipAddress, invoiceEntry.Shipping_Address.Select().TopFirst);
 
                 shipAddress.OverrideAddress = true;
                 shipAddress.AddressLine1    = root.ship_address;
@@ -806,11 +854,14 @@ namespace ExternalLogisticsAPI.Descripter
                 shipAddress.State           = root.ship_state;
                 shipAddress.PostalCode      = root.ship_postal_code;
 
-                invoiceEntry.Shipping_Address.Cache.MarkUpdated(shipAddress);
+                invoiceEntry.Shipping_Address.Cache.Update(shipAddress);
+
+                invoiceEntry.Document.Cache.SetValue<SOInvoice.shipAddressID>(invoiceEntry.Document.Current, invoiceEntry.Shipping_Address.Current.AddressID);
             }
 
             string entryTypeID = null;
             string inventoryCD = string.Empty;
+            int?   inventoryID = 0;
 
             for (int i = 0; i < root.item.Count; i++)
             {
@@ -824,11 +875,17 @@ namespace ExternalLogisticsAPI.Descripter
 
                     if ((int)root.item[i].fee[j].type == 3)
                     {
-                        invoiceEntry.Transactions.Cache.SetValueExt<ARTran.inventoryID>(tran, InventoryItem.UK.Find(invoiceEntry, "SHIPPING")?.InventoryID);
+                        inventoryID = InventoryItem.UK.Find(invoiceEntry, "SHIPPING")?.InventoryID;
                     }
+                    else if ((int)root.item[i].fee[j].type == 2)
+                    {
+                        inventoryID = InventoryItem.UK.Find(invoiceEntry, "COMMISSION")?.InventoryID;
+                    }
+    
+                    invoiceEntry.Transactions.Cache.SetValueExt<ARTran.inventoryID>(tran, inventoryID);
 
                     tran.Qty          = root.item[i].qty;
-                    tran.TranDesc     = $"{root.item[i].sku} | {entryTypeID} | {root.item[i].fulfillment_center_id} | {root.item[i].country} | {root.item[i].state}";
+                    tran.TranDesc     = isSample == false ? $"{root.item[i].sku} | {entryTypeID} | {root.item[i].fulfillment_center_id} | {root.item[i].country} | {root.item[i].state}" : root.item[i].fee[j].name;
                     tran.CuryExtPrice = -1 * (decimal)root.item[i].fee[j].amount;
 
                     tran = invoiceEntry.Transactions.Insert(tran);
@@ -857,14 +914,17 @@ namespace ExternalLogisticsAPI.Descripter
                     tran = invoiceEntry.Transactions.Insert(tran);
                 }
 
-                CAEntryType entryType = CAEntryType.PK.Find(invoiceEntry, CashAccountETDetail.PK.Find(invoiceEntry, invoice.CashAccountID, entryTypeID).EntryTypeID);
+                if (isSample == false)
+                {
+                    CAEntryType entryType = CAEntryType.PK.Find(invoiceEntry, CashAccountETDetail.PK.Find(invoiceEntry, invoice.CashAccountID, entryTypeID).EntryTypeID);
 
-                tran.AccountID = entryType.AccountID;
-                tran.SubID     = entryType.SubID;
+                    tran.AccountID = entryType.AccountID;
+                    tran.SubID = entryType.SubID;
 
-                invoiceEntry.Transactions.Update(tran);
+                    invoiceEntry.Transactions.Update(tran);
 
-                PXNoteAttribute.SetNote(invoiceEntry.Transactions.Cache, tran, $"Carrier : {root.item[i].carrier}\nTracking Nbr. : {root.item[i].tracking_no}");
+                    PXNoteAttribute.SetNote(invoiceEntry.Transactions.Cache, tran, $"Carrier : {root.item[i].carrier}\nTracking Nbr. : {root.item[i].tracking_no}");
+                }
             }
 
             LUMAmzInterfaceAPIMaint.UpdateUserDefineFields(invoiceEntry.Document.Cache, root);
