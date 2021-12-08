@@ -483,6 +483,7 @@ namespace ExternalLogisticsAPI.Descripter
                             case (int)AMZChargeType.Discount:
                             case (int)AMZChargeType.Discount_Item:
                             case (int)AMZRefundChargeType.Discount_Item:
+                                line.ManualDisc  = true;
                                 line.CuryDiscAmt = (line.CuryDiscAmt ?? 0m) + Math.Abs((decimal)root.item[i].charge[j].amount);
                                 break;
                             case (int)AMZChargeType.Shipping_Tax:
