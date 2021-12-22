@@ -423,15 +423,16 @@ namespace ExternalLogisticsAPI.Descripter
         /// </summary>
         public static void CreateOrderDetail(SOOrderEntry orderEntry, dynamic root)
         {
-            int counter = root.item?.Count ?? 1;
-            bool isCM   = orderEntry.Document.Current.OrderType == "CM";
+            string orderType = orderEntry.Document.Current.OrderType;
+            int    counter   = root.item?.Count ?? 1;
+            bool   isCM     = orderType == "CM";
 
             for (int i = 0; i < counter; i++)
             {
                 SOLine    line    = orderEntry.Transactions.Cache.CreateInstance() as SOLine;
                 SOLineExt lineExt = line.GetExtension<SOLineExt>();
 
-                if (orderEntry.Document.Current.OrderType == "RA")
+                if (orderType == "RA")
                 {
                     if (counter == (root.item?.Count == null ? counter : root.item.Count) )
                     {
@@ -468,7 +469,7 @@ namespace ExternalLogisticsAPI.Descripter
                     line.OrderQty      = root.item[i].qty;
                     line.CuryUnitPrice = Math.Abs((decimal)root.item[i].unit_price);
                     line.TranDesc      = isCM == false ? null : root.item[i].sku;
-                    line.SiteID        = orderEntry.Document.Current.OrderType == "FM" ? LUMAmzInterfaceAPIMaint.UpdateSOLineWarehouse(orderEntry) : line.SiteID ;
+                    line.SiteID        = orderType == "FM" ? LUMAmzInterfaceAPIMaint.UpdateSOLineWarehouse(orderEntry) : line.SiteID ;
 
                     lineExt.UsrFulfillmentCenter = root.item[i].fulfillment_center_id;
                     lineExt.UsrShipFromCountryID = string.IsNullOrWhiteSpace((string)root.item[i].country) ? null : root.item[i].country;
@@ -478,14 +479,17 @@ namespace ExternalLogisticsAPI.Descripter
 
                     for (int j = 0; j < root.item[i].charge.Count; j++)
                     {
-                        switch ((int)root.item[i].charge[j].type)
+                        int chargeType = (int)root.item[i].charge[j].type;
+
+                        if (chargeType.IsIn((int)AMZChargeType.Discount, chargeType, (int)AMZChargeType.Discount_Item) && isCM == false ||
+                            chargeType == (int)AMZRefundChargeType.Discount_Item && isCM == true)
                         {
-                            case (int)AMZChargeType.Discount:
-                            case (int)AMZChargeType.Discount_Item:
-                            case (int)AMZRefundChargeType.Discount_Item:
-                                line.ManualDisc  = true;
-                                line.CuryDiscAmt = (line.CuryDiscAmt ?? 0m) + Math.Abs((decimal)root.item[i].charge[j].amount);
-                                break;
+                            line.ManualDisc  = true;
+                            line.CuryDiscAmt = (line.CuryDiscAmt ?? 0m) + Math.Abs((decimal)root.item[i].charge[j].amount);
+                        }
+
+                        switch (chargeType)
+                        {
                             case (int)AMZChargeType.Shipping_Tax:
                                 lineExt.UsrFreightTaxAmt  = Math.Abs((decimal)root.item[i].charge[j].amount);
                                 break;
@@ -577,16 +581,19 @@ namespace ExternalLogisticsAPI.Descripter
                 {
                     List<APILibrary.Model.Amazon_Middleware.Fee> fees = root.item[i].fee.ToObject<List<APILibrary.Model.Amazon_Middleware.Fee>>();
 
-                    fees = fees.FindAll(x => (x.name.Contains("Commission") || x.name.StartsWith("Giftwrap")) && (int)x.type == AmazonFeeType.Amz_Commission);
+                    fees = fees.FindAll(x => (x.name.Contains("Commission") || x.name.StartsWith("Giftwrap") || x.name.StartsWith("Shipping")) && (int)x.type == AmazonFeeType.Amz_Commission);
 
                     for (int k = 0; k < fees.Count; k++)
                     {
                         line = orderEntry.Transactions.Cache.CreateInstance() as SOLine;
 
-                        line.InventoryID   = GetSOLineInventoryID(orderEntry, fees[k].name.Contains("Refund") ? "REFUNDADMIN" : fees[k].name.StartsWith("Giftwrap") ? nameof(AMZChargeType.GiftWrap).ToUpper() : "COMMISSION");
+                        line.InventoryID   = GetSOLineInventoryID(orderEntry, fees[k].name.Contains("Refund") ? "REFUNDADMIN" : 
+                                                                                                                fees[k].name.StartsWith("Giftwrap") ? nameof(AMZChargeType.GiftWrap).ToUpper() : 
+                                                                                                                                                      fees[k].name.StartsWith("Shipping") ? "SHIPPING" : 
+                                                                                                                                                                                            "COMMISSION");
                         line.OrderQty      = 1;
                         line.CuryUnitPrice = isCM == true ? -1 * (decimal)fees[k].amount : (decimal)fees[k].amount;
-                        line.ReasonCode    = fees[k].name.Contains("Refund") ? "REFUNDADMIN" : "COMMISSION";
+                        line.ReasonCode    = fees[k].name.Contains("Refund") ? "REFUNDADMIN" : fees[k].name.StartsWith("Shipping") ? "SHIPPING" : "COMMISSION";
 
                         lineExt = line.GetExtension<SOLineExt>();
 
