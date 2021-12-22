@@ -225,7 +225,8 @@ namespace ExternalLogisticsAPI.Graph
                                 order = orderEntry.Document.Insert(order);
 
                                 order.CustomerID = Customer.UK.Find(orderEntry, AMZCustomer).BAccountID;
-                                order.OrderDate = orderType.IsIn(AmazonOrderType.FBA_RMA_RA_Later, AmazonOrderType.Refund_Trans) ? root.item?[0].shipment_date : root.return_date ?? root.item?[0].approval_date ?? root.payments_date;
+                                order.OrderDate = orderType.IsIn(AmazonOrderType.FBA_RMA_RA_Later, AmazonOrderType.Refund_Trans) ? root.item?[0].shipment_date : root.return_date ?? root.item?[0].approval_date ?? (root.item?[0].shipment_date < root.payments_date ? root.item?[0].shipment_date : 
+                                                                                                                                                                                                                                                                        root.payments_date);
                                 order.RequestDate = orderType.IsIn(new List<int>(new int[] { AmazonOrderType.RestockingFee, AmazonOrderType.Reimbursement, AmazonOrderType.Rev_Reimbursement, AmazonOrderType.FBA_RMA_Exch, AmazonOrderType.FBA_RMA_RA_Later, AmazonOrderType.FBA_RMA_RA_Ealier, AmazonOrderType.FBA_RMA_OI_AmzFee, AmazonOrderType.Cust_Return, AmazonOrderType.Refund_Trans })) ?
                                                          order.OrderDate : string.IsNullOrWhiteSpace((string)root.item?[0].shipment_date) ? root.payments_date : root.item?[0].shipment_date;
                                 order.CustomerOrderNbr = orderType == AmazonOrderType.Rev_Reimbursement ? $"{list[i].OrderNbr} - {list[i].SequenceNo}" : list[i].OrderNbr;
