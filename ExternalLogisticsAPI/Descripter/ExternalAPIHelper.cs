@@ -481,7 +481,7 @@ namespace ExternalLogisticsAPI.Descripter
                     {
                         int chargeType = (int)root.item[i].charge[j].type;
 
-                        if (chargeType.IsIn((int)AMZChargeType.Discount, chargeType, (int)AMZChargeType.Discount_Item) && isCM == false ||
+                        if (chargeType.IsIn((int)AMZChargeType.Discount, (int)AMZChargeType.Discount_Item) && isCM == false ||
                             chargeType == (int)AMZRefundChargeType.Discount_Item && isCM == true)
                         {
                             line.ManualDisc  = true;
