@@ -302,7 +302,9 @@ namespace ExternalLogisticsAPI.Graph
                                     {
                                         List<APILibrary.Model.Amazon_Middleware.Charge> charges = root.item[j].charge.ToObject<List<APILibrary.Model.Amazon_Middleware.Charge>>();
 
-                                        charges = charges.FindAll(x => x.type.IsIn((int)AMZChargeType.Discount_Shipping, (int)AMZRefundChargeType.Discount_Shipping));
+                                        charges = charges.FindAll(x => (x.type == (int)AMZChargeType.Discount_Shipping && order.OrderType != "CM") || 
+                                                                       (x.type == (int)AMZRefundChargeType.Discount_Shipping && order.OrderType == "CM"));
+
                                         totalFgtDis += charges.Sum(x => (decimal)x.amount);
                                     }
                                 }
