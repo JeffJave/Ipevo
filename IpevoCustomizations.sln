@@ -2,19 +2,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31112.23
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "D:", "..\..\..\", "{407B75C1-DF84-479F-BD54-F5A5D7012034}"
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "D:", "..\..\", "{407B75C1-DF84-479F-BD54-F5A5D7012034}"
 	ProjectSection(WebsiteProperties) = preProject
 		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.7.1"
 		ProjectReferences = "{9BC6D61A-5D4B-4D57-BC6B-5E3F9D04377E}|IpevoCustomizations.dll;"
 		Debug.AspNetCompiler.VirtualPath = "/localhost_4445"
-		Debug.AspNetCompiler.PhysicalPath = "..\..\..\..\IPEVEO\"
+		Debug.AspNetCompiler.PhysicalPath = "..\..\..\IPEVEO\"
 		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_4445\"
 		Debug.AspNetCompiler.Updateable = "true"
 		Debug.AspNetCompiler.ForceOverwrite = "true"
 		Debug.AspNetCompiler.FixedNames = "false"
 		Debug.AspNetCompiler.Debug = "True"
 		Release.AspNetCompiler.VirtualPath = "/localhost_4445"
-		Release.AspNetCompiler.PhysicalPath = "..\..\..\..\IPEVEO\"
+		Release.AspNetCompiler.PhysicalPath = "..\..\..\IPEVEO\"
 		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_4445\"
 		Release.AspNetCompiler.Updateable = "true"
 		Release.AspNetCompiler.ForceOverwrite = "true"

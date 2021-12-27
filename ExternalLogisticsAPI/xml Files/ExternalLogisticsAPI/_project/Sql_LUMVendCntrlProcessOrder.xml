@@ -7,6 +7,8 @@
   <col name="CustomerID" type="NVarChar(50)" />
   <col name="InvoiceNbr" type="NVarChar(50)" nullable="true" />
   <col name="OrderDate" type="DateTime" nullable="true" />
+  <col name="ShipDate" type="DateTime" nullable="true" />
+  <col name="ReceivedDate" type="DateTime" nullable="true" />
   <col name="PoNumber" type="NVarChar(100)" nullable="true" />
   <col name="OrderStatusID" type="NVarChar(30)" nullable="true" />
   <col name="OrderQty" type="Int" nullable="true" />

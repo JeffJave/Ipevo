@@ -30,6 +30,8 @@
                     <px:PXGridColumn DataField="CustomerID"></px:PXGridColumn>
                     <px:PXGridColumn DataField="InvoiceNbr"></px:PXGridColumn>
                     <px:PXGridColumn DataField="OrderDate"></px:PXGridColumn>
+                    <px:PXGridColumn DataField="ShipDate"></px:PXGridColumn>
+                    <px:PXGridColumn DataField="ReceivedDate"></px:PXGridColumn>
                     <px:PXGridColumn DataField="PoNumber"></px:PXGridColumn>
                     <px:PXGridColumn DataField="OrderStatusID"></px:PXGridColumn>
                     <px:PXGridColumn DataField="OrderQty"></px:PXGridColumn>

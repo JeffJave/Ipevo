@@ -91,8 +91,12 @@ namespace ExternalLogisticsAPI.Graph
                             impRow.OrderID = orders.order_number;
                             impRow.CustomerID = orders.customer_number;
                             if (orders.shipments != null)
-                                impRow.InvoiceNbr = string.IsNullOrEmpty(orders?.shipments.FirstOrDefault().ship_id) ? null : "8" + orders.shipments.FirstOrDefault()?.ship_id;
-                            impRow.OrderDate = DateTime.Parse(orders.ordered_date);
+                            { 
+                                impRow.InvoiceNbr = string.IsNullOrEmpty(orders?.shipments.FirstOrDefault()?.ship_id) ? null : "8" + orders.shipments.FirstOrDefault()?.ship_id;
+                                impRow.ShipDate = DateTime.Parse(orders?.shipments.FirstOrDefault()?.ship_date);
+                            }
+                            impRow.OrderDate = DateTime.Parse(orders?.ordered_date);
+                            impRow.ReceivedDate = DateTime.Parse(orders?.received_date);
                             impRow.OrderStatusID = orders.order_stage.ToString();
                             try
                             {
@@ -266,6 +270,14 @@ namespace ExternalLogisticsAPI.Graph
 
             if (IsUpdated)
                 this.ImportLog.Cache.Update(model);
+        }
+
+        /// <summary> The process ID value is generated based on the number of executions. </summary>
+        public static long? GetProcessID(PXGraph graph)
+        {
+            LUMVendCntrlProcessOrder objProcess = PXSelectGroupBy<LUMVendCntrlProcessOrder, Aggregate<Max<LUMVendCntrlProcessOrder.processID>>>.Select(graph);
+
+            return objProcess != null && objProcess.ProcessID != null ? (objProcess.ProcessID + 1) : 1;
         }
 
         #endregion

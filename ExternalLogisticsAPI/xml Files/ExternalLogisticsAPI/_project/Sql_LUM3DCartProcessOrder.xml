@@ -17,8 +17,6 @@
   <col name="BillingAddress" type="NVarChar(50)" nullable="true" />
   <col name="ShipmentAddress" type="NVarChar(50)" nullable="true" />
   <col name="OrderQty" type="Decimal(25,6)" nullable="true" />
-  <col name="PromotionName" type="NVarChar(150)" nullable="true" />
-  <col name="DiscountAmt" type="Decimal(18,2)" nullable="true" />
   <col name="CreatedByID" type="UniqueIdentifier" />
   <col name="CreatedByScreenID" type="Char(8)" />
   <col name="CreatedDateTime" type="DateTime" />
