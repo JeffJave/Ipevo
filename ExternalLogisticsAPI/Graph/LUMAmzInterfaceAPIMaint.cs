@@ -205,38 +205,39 @@ namespace ExternalLogisticsAPI.Graph
                         int orderType = list[i].OrderType.Value;
 
                         dynamic root = JsonConvert.DeserializeObject(list[i].Data1);
-                        
+
                         if (orderType.IsIn(AmazonOrderType.MCF, AmazonOrderType.FBA_RMA_CM))
                         {
                             ExternalAPIHelper.CreateCreditMemo(root, orderType == AmazonOrderType.FBA_RMA_CM);
                         }
                         else
                         {
-                            bool noAMZFee  = orderType.IsIn(AmazonOrderType.FBM_ShipInfo, AmazonOrderType.FBA_OI_ShipInfo, AmazonOrderType.FBM_OI_ShipInfo);
+                            bool noAMZFee = orderType.IsIn(AmazonOrderType.FBM_ShipInfo, AmazonOrderType.FBA_OI_ShipInfo, AmazonOrderType.FBM_OI_ShipInfo);
                             bool hasAMZFee = orderType.IsIn(AmazonOrderType.FBM_AmzFee, AmazonOrderType.FBA_OI_AmzFee, AmazonOrderType.FBM_OI_AmzFee);
-                            bool isRSFee   = orderType == AmazonOrderType.RestockingFee;
+                            bool isRSFee = orderType == AmazonOrderType.RestockingFee;
 
                             SOOrder order = orderEntry.Document.Cache.CreateInstance() as SOOrder;
 
                             if (hasAMZFee == false)
                             {
-                                order.OrderType  = GetAcumaticaSOType(list[i].OrderType);
+                                order.OrderType = GetAcumaticaSOType(list[i].OrderType);
 
                                 order = orderEntry.Document.Insert(order);
 
-                                order.CustomerID       = Customer.UK.Find(orderEntry, AMZCustomer).BAccountID;
-                                order.OrderDate        = orderType.IsIn(AmazonOrderType.FBA_RMA_RA_Later, AmazonOrderType.Refund_Trans) ? root.item?[0].shipment_date : root.return_date ?? root.item?[0].approval_date ?? root.payments_date;
-                                order.RequestDate      = orderType.IsIn(new List<int>(new int[] { AmazonOrderType.RestockingFee, AmazonOrderType.Reimbursement, AmazonOrderType.Rev_Reimbursement, AmazonOrderType.FBA_RMA_Exch, AmazonOrderType.FBA_RMA_RA_Later, AmazonOrderType.FBA_RMA_RA_Ealier, AmazonOrderType.FBA_RMA_OI_AmzFee, AmazonOrderType.Cust_Return, AmazonOrderType.Refund_Trans })) ?
-                                                         order.OrderDate : string.IsNullOrWhiteSpace((string)root.item?[0].shipment_date) ? root.payments_date : root.item?[0].shipment_date; 
+                                order.CustomerID = Customer.UK.Find(orderEntry, AMZCustomer).BAccountID;
+                                order.OrderDate = orderType.IsIn(AmazonOrderType.FBA_RMA_RA_Later, AmazonOrderType.Refund_Trans) ? root.item?[0].shipment_date : root.return_date ?? root.item?[0].approval_date ?? (root.item?[0].shipment_date < root.payments_date ? root.item?[0].shipment_date : 
+                                                                                                                                                                                                                                                                        root.payments_date);
+                                order.RequestDate = orderType.IsIn(new List<int>(new int[] { AmazonOrderType.RestockingFee, AmazonOrderType.Reimbursement, AmazonOrderType.Rev_Reimbursement, AmazonOrderType.FBA_RMA_Exch, AmazonOrderType.FBA_RMA_RA_Later, AmazonOrderType.FBA_RMA_RA_Ealier, AmazonOrderType.FBA_RMA_OI_AmzFee, AmazonOrderType.Cust_Return, AmazonOrderType.Refund_Trans })) ?
+                                                         order.OrderDate : string.IsNullOrWhiteSpace((string)root.item?[0].shipment_date) ? root.payments_date : root.item?[0].shipment_date;
                                 order.CustomerOrderNbr = orderType == AmazonOrderType.Rev_Reimbursement ? $"{list[i].OrderNbr} - {list[i].SequenceNo}" : list[i].OrderNbr;
-                                order.CustomerRefNbr   = orderType == AmazonOrderType.Reimbursement ? root.item?[0].reimbursement_id : 
-                                                                                                      orderType == AmazonOrderType.Rev_Reimbursement ? root.item?[0].original_reimbursement_id : 
-                                                                                                                                                       orderType == AmazonOrderType.FBA_RMA_Exch ? "RA Exchange" : 
-                                                                                                                                                                                                   (orderType == AmazonOrderType.Cust_Return && root.refund_before == true) || 
-                                                                                                                                                                                                   (orderType == AmazonOrderType.Refund_Trans && root.refund_before != true) ? "ACCT : 1471001" :
+                                order.CustomerRefNbr = orderType == AmazonOrderType.Reimbursement ? root.item?[0].reimbursement_id :
+                                                                                                      orderType == AmazonOrderType.Rev_Reimbursement ? root.item?[0].original_reimbursement_id :
+                                                                                                                                                       orderType == AmazonOrderType.FBA_RMA_Exch ? "RA Exchange" :
+                                                                                                                                                                                                   (orderType == AmazonOrderType.Cust_Return && root.refund_before == true) ||
+                                                                                                                                                                                                   (orderType == AmazonOrderType.Refund_Trans && root.return_before != true) ? "ACCT : 1471001" :
                                                                                                                                                                                                                                                                                null;
-                                order.OrderDesc        = orderType.IsIn(AmazonOrderType.Reimbursement, AmazonOrderType.Rev_Reimbursement) ? $"{root.item[0].sku} | {root.item[0].reason} | {root.item[0].condition} | {order.CustomerRefNbr ?? root.item[0].fnsku}" : 
-                                                                                                                                            orderType == AmazonOrderType.Cust_Return ? root.reason : 
+                                order.OrderDesc = orderType.IsIn(AmazonOrderType.Reimbursement, AmazonOrderType.Rev_Reimbursement) ? $"{root.item[0].sku} | {root.item[0].reason} | {root.item[0].condition} | {order.CustomerRefNbr ?? root.item[0].fnsku}" :
+                                                                                                                                            orderType == AmazonOrderType.Cust_Return ? root.reason :
                                                                                                                                                                                        null;
                                 orderEntry.Document.Update(order);
 
@@ -256,7 +257,7 @@ namespace ExternalLogisticsAPI.Graph
 
                                 foreach (SOLine line in orderEntry.Transactions.Select())
                                 {
-                                    line.GetExtension<SOLineExt>().UsrCarrier     = root.item[(lineCount != itemCount ? 1 : line.SortOrder.Value) - 1].carrier;
+                                    line.GetExtension<SOLineExt>().UsrCarrier = root.item[(lineCount != itemCount ? 1 : line.SortOrder.Value) - 1].carrier;
                                     line.GetExtension<SOLineExt>().UsrTrackingNbr = root.item[(lineCount != itemCount ? 1 : line.SortOrder.Value) - 1].tracking_no;
 
                                     orderEntry.Transactions.Update(line);
@@ -267,8 +268,8 @@ namespace ExternalLogisticsAPI.Graph
 
                             orderEntry.Document.Cache.SetValue<SOOrderExt.usrAPIOrderType>(order, list[i].OrderType);
 
-                            string country  = root.item?[0].country;
-                            string state    = root.item?[0].state;
+                            string country = root.item?[0].country;
+                            string state = root.item?[0].state;
                             string currency = root.item?[0].currency;
 
                             if (orderType.IsIn(AmazonOrderType.RestockingFee, AmazonOrderType.Reimbursement, AmazonOrderType.Rev_Reimbursement, AmazonOrderType.FBA_RMA_Exch))
@@ -290,6 +291,7 @@ namespace ExternalLogisticsAPI.Graph
 
                             ///<remarks> 
                             ///Becuase the standard tax calculation logic write in SOOrder_RowUpdate event which means I must use the following approach.
+                            ///</remarks>
                             if (root.shipment != null)
                             {
                                 decimal totalFgtDis = 0m;
@@ -300,17 +302,20 @@ namespace ExternalLogisticsAPI.Graph
                                     {
                                         List<APILibrary.Model.Amazon_Middleware.Charge> charges = root.item[j].charge.ToObject<List<APILibrary.Model.Amazon_Middleware.Charge>>();
 
-                                        charges = charges.FindAll(x => x.type == (int)AMZChargeType.Discount_Shipping);
+                                        charges = charges.FindAll(x => (x.type == (int)AMZChargeType.Discount_Shipping && order.OrderType != "CM") || 
+                                                                       (x.type == (int)AMZRefundChargeType.Discount_Shipping && order.OrderType == "CM"));
+
                                         totalFgtDis += charges.Sum(x => (decimal)x.amount);
                                     }
                                 }
 
+                                totalFgtDis = totalFgtDis > 0 ? -1 * totalFgtDis : totalFgtDis;
+
                                 order.CuryPremiumFreightAmt = (order.OrderType == "RA" ? (decimal)root.shipment : Math.Abs((decimal)root.shipment)) + totalFgtDis;
                                 orderEntry.Document.Update(order);
                             }
-                            ///</remarks>
 
-                            order.CuryTaxTotal   = UpdateSOTaxAmount(orderEntry, root);
+                            order.CuryTaxTotal = UpdateSOTaxAmount(orderEntry, root);
                             order.CuryOrderTotal = hasAMZFee == false ? (order.CuryOrderTotal + order.CuryTaxTotal) : order.CuryOrderTotal;
 
                             UpdateUserDefineFields(orderEntry.Document.Cache, root);
@@ -333,7 +338,7 @@ namespace ExternalLogisticsAPI.Graph
                                 ExternalAPIHelper.CreateCreditMemo(root, false, true);
                             }
 
-                            if ((noAMZFee == false || hasAMZFee == true) && order.CuryOrderTotal > 0 && !order.OrderType.IsIn("RA", "CM") )
+                            if ((noAMZFee == false || hasAMZFee == true) && order.CuryOrderTotal > 0 && !order.OrderType.IsIn("RA", "CM"))
                             {
                                 ExternalAPIHelper.CreatePaymentProcess(order, root, curyInfo.CuryMultDiv == CuryMultDivType.Div ? curyInfo.RecipRate : curyInfo.CuryRate);
                             }
@@ -416,6 +421,13 @@ namespace ExternalLogisticsAPI.Graph
         PST_Shipping_Tax = 51,
         PST_Gift_Wrap_Tax = 52,
         PST_Item_Tax = 53
+    }
+
+    public enum AMZRefundChargeType
+    {
+        Shipping_Tax_Discount = 6,
+        Discount_Shipping = 7,
+        Discount_Item = 8
     }
     #endregion
 }
