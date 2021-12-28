@@ -90,7 +90,9 @@ namespace ExternalLogisticsAPI.Descripter
                 {
                     DeleteWrkTableRecs();
 
-                    var taskArr = GetResponse(curSetup, string.Format("3dCartWebAPI/v2/Orders?datestart={0}&limit={1}&orderstatus={2}", endDate.Value.AddDays(-7), 1000, ThreeDCartOrderStatus.New)).Result;
+                    // Per David's request to remove order status condition.
+                    //var taskArr = GetResponse(curSetup, string.Format("3dCartWebAPI/v2/Orders?datestart={0}&limit={1}&orderstatus={2}", endDate.Value.AddDays(-7), 1000, ThreeDCartOrderStatus.New)).Result;
+                    var taskArr = GetResponse(curSetup, string.Format("3dCartWebAPI/v2/Orders?datestart={0}&limit={1}", endDate.Value.AddDays(-7), 1000)).Result;
 
                     if (taskArr != null) { CreateProcessOrders(taskArr); }
                 }
