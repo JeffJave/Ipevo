@@ -64,6 +64,20 @@ namespace ExternalLogisticsAPI.DAC
         public abstract class orderDate : PX.Data.BQL.BqlDateTime.Field<orderDate> { }
         #endregion
 
+        #region ShipDate
+        [PXDBDate()]
+        [PXUIField(DisplayName = "Ship Date", Enabled = false)]
+        public virtual DateTime? ShipDate { get; set; }
+        public abstract class shipDate : PX.Data.BQL.BqlDateTime.Field<shipDate> { }
+        #endregion
+
+        #region ReceivedDate
+        [PXDBDate()]
+        [PXUIField(DisplayName = "Received Date", Enabled = false)]
+        public virtual DateTime? ReceivedDate { get; set; }
+        public abstract class receivedDate : PX.Data.BQL.BqlDateTime.Field<receivedDate> { }
+        #endregion
+
         #region OrderStatusID
         [PXDBString(30, IsUnicode = true, InputMask = "")]
         [PXUIField(DisplayName = "Order Status ID", Enabled = false)]

@@ -19,7 +19,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\..\Bin\</OutputPath>
+    <OutputPath>..\..\..\Bin\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
@@ -106,6 +106,7 @@
     <Compile Include="DAC\SQLView\vPACAdjCostIssue.cs" />
     <Compile Include="DAC\SQLView\vPACUnitCost.cs" />
     <Compile Include="DAC\SQLView\vSOSiteMapping.cs" />
+    <Compile Include="DAC_Extensions\LocationExtension.cs" />
     <Compile Include="DAC_Extensions\SOLineExtensions.cs" />
     <Compile Include="DAC_Extensions\ARInvoiceExt.cs" />
     <Compile Include="DAC_Extensions\SOOrderExtensions.cs" />
@@ -128,6 +129,7 @@
     <Compile Include="Graph\LUMPACUnitCostHistoryProc.cs" />
     <Compile Include="Graph\LUMSalesChanelSetup.cs" />
     <Compile Include="Graph\LUMWarehouseImportProc.cs" />
+    <Compile Include="Graph_Extensions\CustomerMaint_Extension.cs" />
     <Compile Include="Graph_Extensions\QuoteMaint.cs" />
     <Compile Include="Graph_Extensions\SOInvoiceEntry_Extension.cs" />
     <Compile Include="Graph_Extensions\SOCreateShipment.cs" />
