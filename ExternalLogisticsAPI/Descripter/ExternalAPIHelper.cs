@@ -471,7 +471,8 @@ namespace ExternalLogisticsAPI.Descripter
                     line.OrderQty      = root.item[i].qty;
                     line.CuryUnitPrice = Math.Abs((decimal)root.item[i].unit_price);
                     line.TranDesc      = isCM == false ? null : root.item[i].sku;
-                    line.SiteID        = orderType == "FM" ? LUMAmzInterfaceAPIMaint.UpdateSOLineWarehouse(orderEntry) : line.SiteID ;
+                    line.SiteID        = orderType == "FM" ? LUMAmzInterfaceAPIMaint.UpdateSOLineWarehouse(orderEntry) : line.SiteID;
+                    line.ManualPrice   = true;
 
                     lineExt.UsrFulfillmentCenter = root.item[i].fulfillment_center_id;
                     lineExt.UsrShipFromCountryID = string.IsNullOrWhiteSpace((string)root.item[i].country) ? null : root.item[i].country;
@@ -566,6 +567,7 @@ namespace ExternalLogisticsAPI.Descripter
                         line.InventoryID   = GetSOLineInventoryID(orderEntry, list.Exists(x => x.type == (int)AMZChargeType.GiftWrap) ? nameof(AMZChargeType.GiftWrap).ToUpper() : nameof(AMZChargeType.COD));
                         line.OrderQty      = 1;
                         line.CuryUnitPrice = root.item[i].charge[list.FindIndex(x => x.type.IsIn((int)AMZChargeType.GiftWrap, (int)AMZChargeType.COD))].amount;
+                        line.ManualPrice   = true;
 
                         lineExt = line.GetExtension<SOLineExt>();
 
@@ -596,6 +598,7 @@ namespace ExternalLogisticsAPI.Descripter
                         line.OrderQty      = 1;
                         line.CuryUnitPrice = isCM == true ? -1 * (decimal)fees[k].amount : (decimal)fees[k].amount;
                         line.ReasonCode    = fees[k].name.Contains("Refund") ? "REFUNDADMIN" : fees[k].name.StartsWith("Shipping") ? "SHIPPING" : "COMMISSION";
+                        line.ManualPrice   = true;
 
                         lineExt = line.GetExtension<SOLineExt>();
 
@@ -624,6 +627,7 @@ namespace ExternalLogisticsAPI.Descripter
                 line.InventoryID   = GetSOLineInventoryID(orderEntry, "RESTOCKING");
                 line.OrderQty      = 1;
                 line.CuryUnitPrice = (decimal)root.restocking_fee;
+                line.ManualPrice   = true;
 
                 orderEntry.Transactions.Insert(line);
             }
