@@ -268,6 +268,12 @@ namespace ExternalLogisticsAPI.Graph
 
                             orderEntry.Document.Cache.SetValue<SOOrderExt.usrAPIOrderType>(order, list[i].OrderType);
 
+                            // Per David's email [IPEVO - NL Order Import Error] request.
+                            if (root.item?[0].carrier == "DPD")
+                            {
+                                orderEntry.Document.Cache.SetValueExt<SOOrder.shipVia>(order, "DPDCLASSIC");
+                            }
+
                             string country = root.item?[0].country;
                             string state = root.item?[0].state;
                             string currency = root.item?[0].currency;
@@ -349,8 +355,9 @@ namespace ExternalLogisticsAPI.Graph
                     }
                     catch (Exception ex)
                     {
-                        PXProcessing.SetError<LUMAmazonInterfaceAPI>(ex.Message);
                         graph.AMZInterfaceAPI.Cache.SetValue<LUMAmazonInterfaceAPI.remark>(list[i], ex.Message);
+
+                        PXProcessing.SetError<LUMAmazonInterfaceAPI>(ex.Message);
                         //throw;
                     }
 

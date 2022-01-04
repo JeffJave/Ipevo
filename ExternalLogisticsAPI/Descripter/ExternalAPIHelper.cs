@@ -675,6 +675,7 @@ namespace ExternalLogisticsAPI.Descripter
                 shipContact.OverrideContact = true;
                 shipContact.RevisionID      = 0;
                 shipContact.FullName        = root.recipient_name;
+                shipContact.Phone1          = root.ship_phone_number;
 
                 orderEntry.Shipping_Contact.Cache.Update(shipContact);
 
