@@ -1,0 +1,199 @@
+﻿<Sql TableName="SP_GenerateLumSplitVarianceCost" CustomScript="#CDATA">
+    <CDATA name="CustomScript"><![CDATA[IF EXISTS
+(
+	SELECT *
+	FROM SYS.procedures
+	WHERE name = 'SP_GenerateLumSplitVarianceCost' AND SCHEMA_ID = SCHEMA_ID('dbo')
+)
+DROP PROCEDURE [dbo].[SP_GenerateLumSplitVarianceCost]
+GO
+
+CREATE PROCEDURE [dbo].[SP_GenerateLumSplitVarianceCost]
+	@P0 Char(6),
+	@P1 Char(6),
+	@CompanyID int,
+	@StCostVarAcct nvarchar(10),
+	@INAccrualAcct nvarchar(10),
+	@KeepKitRecordOnly bit
+
+AS
+BEGIN
+	--Truncate table
+	Truncate Table [dbo].[LumSTDCostVarSplit]
+
+	/* Get Month-end QOH ( Inquiry Name : Month-end QOH ) */
+	INSERT INTO [dbo].[LumSTDCostVarSplit] ([CompanyID], [FinPeriodID], [AccountID], [AccountCD], [AccountDescription], [InventoryID], [InventoryCD], [InventoryDescr], [SubID], [Qty])
+	select
+		MAX(INItemCostHist.CompanyID) as 'CompanyID',
+		MAX(INItemCostHist.FinPeriodID) as 'FinPeriodID',
+		MAX(Account.AccountID) as 'AccountID',
+		MAX(Account.AccountCD) as 'AccountCD',
+		MAX(Account.Description) as 'Description',
+		MAX(InventoryItem.InventoryID) as 'InventoryID',
+		MAX(InventoryItem.InventoryCD) as 'InventoryCD',
+		MAX(InventoryItem.Descr) as 'InventoryDescription',
+		MAX(InventoryItem.InvtSubID) as 'InvtSubID',
+		SUM(CASE WHEN [Period].[FinPeriodID] = @P1 THEN ISNULL([Current].[FinYtdQty], [INItemCostHist].[FinYtdQty]) ELSE 0 END) as 'EndingQty'
+	from (
+		select 
+			[INItemCostHist].[CompanyID] AS [CompanyID], 
+			[INItemCostHist].[InventoryID] AS [InventoryID], 
+			[INItemCostHist].[CostSubItemID] AS [CostSubItemID], 
+			[INItemCostHist].[CostSiteID] AS [CostSiteID], 
+			[INItemCostHist].[AccountID] AS [AccountID], 
+			[INItemCostHist].[SubID] AS [SubID], 
+			MAX( [INItemCostHist].[SiteID]) AS [SiteID], 
+			MAX( [INItemCostHist].[FinPeriodID]) AS [LastActivityPeriod], 
+			[MasterFinPeriod_FinPeriod].[FinPeriodID] AS [FinPeriodID]
+		from [INItemCostHist] [INItemCostHist]
+		inner join [FinPeriod] [MasterFinPeriod_FinPeriod] ON [MasterFinPeriod_FinPeriod].[FinPeriodID] >= [INItemCostHist].[FinPeriodID] AND ( [MasterFinPeriod_FinPeriod].[CompanyID] = [INItemCostHist].[CompanyID])
+		group by [INItemCostHist].[CompanyID], [INItemCostHist].[InventoryID], [INItemCostHist].[CostSubItemID], [INItemCostHist].[CostSiteID], [INItemCostHist].[AccountID], [INItemCostHist].[SubID], [MasterFinPeriod_FinPeriod].[FinPeriodID]
+	) [Period]
+	inner join [INItemCostHist] [INItemCostHist] ON ( [INItemCostHist].[CompanyID] = [Period].[CompanyID]) AND ( [Period].[InventoryID] = [INItemCostHist].[InventoryID] AND [Period].[costSiteID] = [INItemCostHist].[CostSiteID] AND [Period].[accountID] = [INItemCostHist].[AccountID] AND [Period].[lastActivityPeriod] = [INItemCostHist].[FinPeriodID])
+	left join [INItemCostHist] [Current] ON ( [Current].[CompanyID] = [Period].[CompanyID]) AND ( [Period].[inventoryID] = [Current].[InventoryID] AND [Period].[costSiteID] = [Current].[CostSiteID] AND [Period].[accountID] = [Current].[AccountID] AND [Period].[finPeriodID] = [Current].[FinPeriodID])
+	left join [InventoryItem] [InventoryItem] ON ( [InventoryItem].[CompanyID] = [Period].[CompanyID]) AND ( [INItemCostHist].[InventoryID] = [InventoryItem].[InventoryID])
+	inner join Account INAccount on INAccount.AccountID = InventoryItem.InvtAcctID and INAccount.CompanyID = InventoryItem.CompanyID 
+	inner join Account on Account.AccountID = [Period].AccountID and Account.CompanyID = [Period].CompanyID
+	where ([Period].[CompanyID] = @CompanyID AND [Period].[finPeriodID] >= @P0 AND [Period].[finPeriodID] <= @P1 AND INAccount.AccountCD = @INAccrualAcct)
+	group by [Period].[InventoryID]
+	order by MAX( [InventoryItem].[InventoryCD])
+
+	/* Get COGS & Expense Accounts of above Inventory items ( Inquiry Name : Cost Split 03 - COGS Expense Accounts ) */
+	INSERT INTO [dbo].[LumSTDCostVarSplit] ([CompanyID], [FinPeriodID], [AccountID], [AccountCD], [AccountDescription], [InventoryID], [InventoryCD], [InventoryDescr], [KitInventoryID], [KitInventoryCD], [KitInventoryDescr], [GLTranType], [SubID], [Qty])
+	SELECT
+		MAX(Batch.CompanyID) as 'CompanyID',
+		MAX(Batch.FinPeriodID) as 'FinPeriodID',
+		MAX(COA.AccountID) as 'AccountID',
+		MAX(COA.AccountCD) as 'AccountCD',
+		(CASE WHEN MAX(GLTran.TranType) = 'ASY' or MAX(GLTran.TranType) = 'DSY' THEN 'KIT Assembly' ELSE MAX(COA.Description) END) as 'AccountDescription',
+		MAX(InventoryItem.InventoryID) as 'InventoryID',
+		MAX(InventoryItem.InventoryCD) as 'InventoryCD',
+		MAX(InventoryItem.Descr) as 'InventoryDescr',
+		(CASE WHEN MIN(GLTran.TranType) = 'ASY' or MIN(GLTran.TranType) = 'DSY' THEN MAX(KITInventory.InventoryID) ELSE null END) as 'KitInventoryID',
+		(CASE WHEN MIN(GLTran.TranType) = 'ASY' or MIN(GLTran.TranType) = 'DSY' THEN MAX(KITInventory.InventoryCD) ELSE null END) as 'KitInventoryCD',
+		(CASE WHEN MIN(GLTran.TranType) = 'ASY' or MIN(GLTran.TranType) = 'DSY' THEN MAX(KITInventory.Descr) ELSE null END) as 'KitInventoryDescr',
+		MIN(GLTran.TranType) as 'GLTranType',
+		MAX(GLTran.SubID) as 'SubID',
+		(CASE WHEN MAX(GLTran.TranType) = 'ASY' or MAX(GLTran.TranType) = 'DSY' THEN ABS(SUM(GLTran.Qty)) ELSE SUM(GLTran.Qty) END) as 'Qty'
+	FROM [Batch] [Batch]
+	left join Ledger on Ledger.LedgerID = Batch.LedgerID and Ledger.CompanyID = Batch.CompanyID
+	left join Branch on Branch.BranchID = Batch.BranchID and  Branch.CompanyID = Batch.CompanyID
+	inner join GLTran on GLTran.BatchNbr = Batch.BatchNbr and GLTran.Module = Batch.Module and GLTran.CompanyID = Batch.CompanyID
+	left join BAccount on BAccount.BAccountID = GLTran.ReferenceID and BAccount.CompanyID = GLTran.CompanyID
+	inner join Account as COA on COA.AccountID = GLTran.AccountID and COA.CompanyID = GLTran.CompanyID
+	inner join InventoryItem on InventoryItem.InventoryID = GLTran.InventoryID and InventoryItem.CompanyID = GLTran.CompanyID
+	left join (
+		SELECT [INRegister].[BranchID] AS [BranchID], [INRegister].[DocType] AS [DocType], [INRegister].[RefNbr] AS [RefNbr], [INRegister].[OrigModule] AS [OrigModule], [INRegister].[TranDesc] AS [TranDesc], [INRegister].[Released] AS [Released], [INRegister].[Hold] AS [Hold], [INRegister].[Status] AS [Status], [INRegister].[TranDate] AS [TranDate], [INRegister].[TransferType] AS [TransferType], [INRegister].[FinPeriodID] AS [FinPeriodID], [INRegister].[TranPeriodID] AS [TranPeriodID], [INRegister].[LineCntr] AS [LineCntr], [INRegister].[TotalQty] AS [TotalQty], [INRegister].[TotalAmount] AS [TotalAmount], [INRegister].[TotalCost] AS [TotalCost], [INRegister].[ControlQty] AS [ControlQty], [INRegister].[ControlAmount] AS [ControlAmount], [INRegister].[ControlCost] AS [ControlCost], [INRegister].[KitInventoryID] AS [KitInventoryID], [INRegister].[KitRevisionID] AS [KitRevisionID], [INRegister].[KitLineNbr] AS [KitLineNbr], [INRegister].[BatchNbr] AS [BatchNbr], [INRegister].[CreatedByID] AS [CreatedByID], [INRegister].[CreatedByScreenID] AS [CreatedByScreenID], [INRegister].[CreatedDateTime] AS [CreatedDateTime], [INRegister].[LastModifiedByID] AS [LastModifiedByID], [INRegister].[LastModifiedByScreenID] AS [LastModifiedByScreenID], [INRegister].[LastModifiedDateTime] AS [LastModifiedDateTime], [INRegister].[NoteID] AS [NoteID], (SELECT TOP (1) [Note].[NoteText]
+		FROM [Note] [Note]
+		WHERE [Note].[CompanyID] = @CompanyID AND [Note].[NoteId] = [INRegister].[NoteID]) AS [NoteText], (SELECT TOP (1) COUNT( *)
+		FROM [NoteDoc] [NoteDoc]
+		WHERE [NoteDoc].[CompanyID] = @CompanyID AND [NoteDoc].[NoteId] = [INRegister].[NoteID]) AS [NoteFiles], NULL AS [NoteActivity], [INRegister].[tstamp] AS [tstamp], [INTran].[DocType] AS [TranDocType], [INTran].[TranType] AS [TranType], [INTran].[RefNbr] AS [TranRefNbr], [INTran].[BranchID] AS [TranBranchID], [INTran].[LineNbr] AS [LineNbr], [INTran].[AssyType] AS [AssyType], [INTran].[ProjectID] AS [ProjectID], [INTran].[TaskID] AS [TaskID], [INTran].[TranDate] AS [TranTranDate], [INTran].[InvtMult] AS [InvtMult], [INTran].[InventoryID] AS [InventoryID], [INTran].[SubItemID] AS [SubItemID], [INTran].[SiteID] AS [SiteID], [INTran].[LocationID] AS [LocationID], [INTran].[UOM] AS [UOM], [INTran].[Qty] AS [Qty], [INTran].[BaseQty] AS [BaseQty], [INTran].[UnassignedQty] AS [UnassignedQty], [INTran].[Released] AS [TranReleased], [INTran].[FinPeriodID] AS [TranFinPeriodID], [INTran].[TranPeriodID] AS [TranTranPeriodID], [INTran].[UnitPrice] AS [UnitPrice], [INTran].[TranAmt] AS [TranAmt], [INTran].[UnitCost] AS [UnitCost], [INTran].[TranCost] AS [TranCost], [INTran].[TranDesc] AS [TranTranDesc], [INTran].[ReasonCode] AS [ReasonCode], [INTran].[LotSerialNbr] AS [LotSerialNbr], [INTran].[ExpireDate] AS [ExpireDate], [INTran].[UpdateShippedNotInvoiced] AS [UpdateShippedNotInvoiced], [INTran].[IsIntercompany] AS [IsIntercompany], [INTran].[CreatedByID] AS [TranCreatedByID], [INTran].[CreatedByScreenID] AS [TranCreatedByScreenID], [INTran].[CreatedDateTime] AS [TranCreatedDateTime], [INTran].[LastModifiedByID] AS [TranLastModifiedByID], [INTran].[LastModifiedByScreenID] AS [TranLastModifiedByScreenID], [INTran].[LastModifiedDateTime] AS [TranLastModifiedDateTime], [INTran].[tstamp] AS [Trantstamp]
+		FROM [INRegister] [INRegister]
+		INNER JOIN [INTran] [INTran] ON [INTran].[CompanyID] = @CompanyID AND ( [INTran].[DocType] = [INRegister].[DocType] AND [INTran].[RefNbr] = [INRegister].[RefNbr] AND [INTran].[LineNbr] = [INRegister].[KitLineNbr])
+		WHERE [INRegister].[CompanyID] = @CompanyID
+	) [Kit] ON ( [GLTran].[RefNbr] = [Kit].[refNbr])
+	LEFT JOIN [InventoryItem] [IN] ON [IN].[CompanyID] = @CompanyID AND [Kit].[inventoryID] = [IN].[InventoryID]
+	LEFT JOIN [InventoryItem] [KITInventory] ON [KITInventory].[CompanyID] = @CompanyID AND [Kit].[kitInventoryID] = [KITInventory].[InventoryID]
+	where Batch.CompanyID = @CompanyID and (Batch.FinPeriodID >= @P0 and Batch.FinPeriodID <= @P1) and COA.AccountCD <> @StCostVarAcct
+	and (COA.Type = 'E' or COA.Type = 'A' and (GLTran.TranType = 'DSY' or GLTran.TranType = 'ASY'))
+	group by GLTran.InventoryID, GLTran.AccountID
+	order by GLTran.InventoryID desc
+
+	/*Update VAR Cost from Split 1 */
+	UPDATE [dbo].[LumSTDCostVarSplit]
+	SET [VarianceCost] = VarAccount.VarAmount
+	from [dbo].[LumSTDCostVarSplit]
+	inner join
+		(select
+			MAX(Batch.CompanyID) as 'CompanyID',
+			SUM(DebitAmt - CreditAmt) as 'VarAmount',
+			MAX(InventoryItem.InventoryID) as 'InventoryID'
+		from Batch
+		left join Ledger on Ledger.LedgerID = Batch.LedgerID and Ledger.CompanyID = Batch.CompanyID
+		left join Branch on Branch.BranchID = Batch.BranchID and  Branch.CompanyID = Batch.CompanyID
+		inner join GLTran on GLTran.BatchNbr = Batch.BatchNbr and GLTran.Module = Batch.Module and GLTran.CompanyID = Batch.CompanyID
+		left join BAccount on BAccount.BAccountID = GLTran.ReferenceID and BAccount.CompanyID = GLTran.CompanyID
+		inner join Account on Account.AccountID = GLTran.AccountID and Account.CompanyID = GLTran.CompanyID
+		inner join InventoryItem on InventoryItem.InventoryID = GLTran.InventoryID and InventoryItem.CompanyID = GLTran.CompanyID
+		where Account.AccountCD = @StCostVarAcct and Batch.FinPeriodID <= @P0 and Batch.FinPeriodID >= @P1 and Batch.CompanyID = @CompanyID
+		group by GLTran.InventoryID, GLTran.AccountID) VarAccount
+	on VarAccount.CompanyID = LumSTDCostVarSplit.CompanyID and VarAccount.InventoryID = LumSTDCostVarSplit.InventoryID
+
+	--Remove InventoryID = KitInventoryID
+	DELETE LumSTDCostVarSplit where InventoryID = KitInventoryID
+
+	--Remove Var Amount = 0 Row
+	DELETE FROM LumSTDCostVarSplit where [VarianceCost] is null
+
+	UPDATE [dbo].[LumSTDCostVarSplit]
+	SET [SplitQty] = (CASE WHEN [LumSTDCostVarSplit].[Qty] > 0 THEN ISNULL([LumSTDCostVarSplit].[Qty], null) ELSE 0 END)
+
+	--Calculate Split Percentage
+	UPDATE [dbo].[LumSTDCostVarSplit]
+	SET [Split] = (CASE WHEN [SplitQty] > 0 THEN ROUND(CAST(([SplitQty] * 100.0 / SplitSum.SumSplitQty) AS FLOAT), 2) ELSE 0 END)
+	from [LumSTDCostVarSplit]
+	left join
+		(select MAX(InventoryID) as 'InventoryID', SUM(SplitQty) as 'SumSplitQty'
+		from LumSTDCostVarSplit
+		group by InventoryID) SplitSum
+		on SplitSum.InventoryID = LumSTDCostVarSplit.InventoryID
+
+	--Calculate SplitCost
+	UPDATE [dbo].[LumSTDCostVarSplit]
+	SET [SplitCost] = (CASE
+						WHEN [Split] <> MaxSplitValue.MaxSplit
+						THEN CEILING(CAST((([Split] * [VarianceCost]) / 100.0) AS FLOAT)) 
+						ELSE FLOOR(CAST((([Split] * [VarianceCost]) / 100.0) AS FLOAT)) 
+						END)
+	from [LumSTDCostVarSplit]
+	left join
+		(select MAX(InventoryID) as 'InventoryID', MAX(Split) as 'MaxSplit'
+		from LumSTDCostVarSplit 
+		group by InventoryID) MaxSplitValue
+		on MaxSplitValue.InventoryID = LumSTDCostVarSplit.InventoryID
+
+	--adjust SplitCost
+	UPDATE [dbo].[LumSTDCostVarSplit]
+	SET [SplitCost] = (CASE WHEN LumSTDCostVarSplit.AccountID = ModifyValue.AccountID and LumSTDCostVarSplit.InventoryID = ModifyValue.InventoryID and LumSTDCostVarSplit.KitInventoryID is null
+						THEN ModifyValue.NewValue
+						ELSE SplitCost
+						END)
+	from [LumSTDCostVarSplit]
+	left join
+		(select MIN(LumSTDCostVarSplit.AccountID) as 'AccountID', LumSTDCostVarSplit.InventoryID as 'InventoryID',
+			MAX(LumSTDCostVarSplit.SplitCost) + (MAX(LumSTDCostVarSplit.VarianceCost) - MAX(RestSumSplitValue.SUMSplitCost)) as 'NewValue'
+		from [LumSTDCostVarSplit]
+			left join
+				(select MAX(InventoryID) as 'InventoryID', MAX(Split) as 'MaxSplit', SUM(SplitCost) as 'SumSplitCost'
+				from LumSTDCostVarSplit 
+				group by InventoryID) MaxSplitValue
+				on MaxSplitValue.InventoryID = LumSTDCostVarSplit.InventoryID
+			left join
+				(select MIN(AccountID) as 'AccountID', MAX(InventoryID) as 'InventoryID', MAX(Split) as 'MaxSplit', SUM(SplitCost) as 'SumSplitCost'
+				from LumSTDCostVarSplit
+				group by InventoryID) RestSumSplitValue
+				on RestSumSplitValue.InventoryID = LumSTDCostVarSplit.InventoryID
+		where LumSTDCostVarSplit.Split = MaxSplitValue.MaxSplit and LumSTDCostVarSplit.KitInventoryID is null
+		group by LumSTDCostVarSplit.InventoryID) ModifyValue
+		on ModifyValue.InventoryID = LumSTDCostVarSplit.InventoryID and ModifyValue.AccountID = LumSTDCostVarSplit.AccountID
+
+	--Update StdCost from InventoryItem 
+	UPDATE [dbo].[LumSTDCostVarSplit]
+	SET [STDCost] = InventoryItem.StdCost
+	from [LumSTDCostVarSplit]
+	left join InventoryItem on InventoryItem.InventoryID = LumSTDCostVarSplit.InventoryID and InventoryItem.CompanyID = LumSTDCostVarSplit.CompanyID
+	where LumSTDCostVarSplit.AccountCD = @INAccrualAcct and LumSTDCostVarSplit.KitInventoryID is null
+
+	--Update INCost
+	UPDATE [dbo].[LumSTDCostVarSplit] SET [INCost] = [STDCost] * [Qty] where LumSTDCostVarSplit.STDCost is not null
+
+	--Update New STD Cost
+	UPDATE [dbo].[LumSTDCostVarSplit] SET [NewSTDCost] = Round(([INCost] + [SplitCost]) / [Qty], 5) where LumSTDCostVarSplit.STDCost is not null
+
+	--Keep Kit Record or not
+	IF @KeepKitRecordOnly = 1
+	DELETE LumSTDCostVarSplit where　InventoryID not in 
+		(select InventoryID from LumSTDCostVarSplit where CompanyID = @CompanyID and KitInventoryID is not null)
+		and CompanyID = @CompanyID
+END]]></CDATA>
+</Sql>

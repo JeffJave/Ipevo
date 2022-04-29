@@ -1,0 +1,66 @@
+﻿<Sql TableName="SP_GenerateLumCostSplit" CustomScript="#CDATA">
+    <CDATA name="CustomScript"><![CDATA[IF EXISTS
+(
+	SELECT *
+	FROM SYS.procedures
+	WHERE name = 'SP_GenerateLumCostSplit' AND SCHEMA_ID = SCHEMA_ID('dbo')
+)
+DROP PROCEDURE [dbo].[SP_GenerateLumCostSplit]
+GO
+
+CREATE PROCEDURE [dbo].[SP_GenerateLumCostSplit]
+	@P0 Char(6),
+	@CompanyID int,
+	@StCostVarAcct nvarchar(10)
+
+AS
+BEGIN
+	--Truncate table
+	Truncate Table [dbo].[LumCostSplit]
+
+	INSERT INTO [dbo].[LumCostSplit] ([UsrSplited], [CompanyID], [Module], [BatchNbr], [Status], [FinPeriodID], [CuryID], [Description], [CreatedByID], [CreatedDateTime], [LastModifiedByID], [LastModifiedDateTime], [AccountID], [AccountCD], [AccountDescription], [Qty], [DebitAmt], [CreditAmt], [InventoryID], [InventoryCD], [InventoryDescr], [Released], [TranID], [TranType], [StdCost], [StdCostDate], [UnitCost], [CostDiffer], [STDCostVariance], [SubID])
+	SELECT
+		[Batch].[UsrSplited],
+		[Batch].[CompanyID],
+		[Batch].[Module], 
+		[Batch].[BatchNbr], 
+		[Batch].[Status], 
+		[Batch].[FinPeriodID],
+		[Batch].[CuryID], 
+		[Batch].[Description],
+		[Batch].[CreatedByID],
+		[Batch].[CreatedDateTime],
+		[Batch].[LastModifiedByID],
+		[Batch].[LastModifiedDateTime],
+		[Account].[AccountID], 
+		[Account].[AccountCD], 
+		[Account].[Description], 
+		[GLTran].[Qty], 
+		[GLTran].[DebitAmt], 
+		[GLTran].[CreditAmt], 
+		[InventoryItem].[InventoryID], 
+		[InventoryItem].[InventoryCD], 
+		[InventoryItem].[Descr], 
+		[GLTran].[Released], 
+		[GLTran].[TranID], 
+		[GLTran].[TranType], 
+		[InventoryItem].[StdCost], 
+		[InventoryItem].[StdCostDate], 
+		ABS(CASE WHEN([GLTran].[DebitAmt] + [GLTran].[CreditAmt] = 0 OR ([GLTran].[Qty] = 0)) THEN 0 ELSE ([GLTran].[DebitAmt] + [GLTran].[CreditAmt]) / [GLTran].[Qty] END) AS 'UnitCost', 
+		(CASE WHEN CASE WHEN [GLTran].[Qty] <> 0 THEN ([GLTran].[DebitAmt] + [GLTran].[CreditAmt]) - ([InventoryItem].[StdCost] * ABS( [GLTran].[Qty])) ELSE 0 END = 0 THEN '' ELSE 'X' END) AS 'CostDiffer', 
+		(CASE WHEN [GLTran].[Qty] <> 0 THEN ([GLTran].[DebitAmt] + [GLTran].[CreditAmt]) - ([InventoryItem].[StdCost] * ABS([GLTran].[Qty])) ELSE 0 END) AS 'STDCostVariance',
+		[GLTran].[SubID]
+	from Batch
+	left join Ledger on Ledger.CompanyID = Batch.CompanyID and Ledger.LedgerID = Batch.LedgerID
+	left join Branch on Branch.CompanyID = Batch.CompanyID and Branch.BranchID = Batch.BranchID
+	inner join GLTran on GLTran.CompanyID = Batch.CompanyID and GLTran.BatchNbr = Batch.BatchNbr and GLTran.Module = Batch.Module
+	inner join Account on Account.CompanyID = GLTran.CompanyID and Account.AccountID = GLTran.AccountID
+	left join BAccount on BAccount.CompanyID = GLTran.CompanyID and BAccount.BAccountID = GLTran.ReferenceID
+	inner join InventoryItem on InventoryItem.CompanyID = GLTran.CompanyID and InventoryItem.InventoryID = GLTran.InventoryID
+	where Batch.CompanyID = @CompanyID and Batch.FinPeriodID = @P0 and Account.AccountCD <> @StCostVarAcct and Account.Type = 'E'
+	order by InventoryItem.InventoryCD
+
+	--remove differ = X
+	DELETE LumCostSplit where CostDiffer <> 'X'
+END]]></CDATA>
+</Sql>

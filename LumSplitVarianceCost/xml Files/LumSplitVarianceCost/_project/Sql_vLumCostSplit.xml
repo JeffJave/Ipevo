@@ -1,0 +1,52 @@
+﻿<Sql TableName="vLumCostSplit" CustomScript="#CDATA">
+    <CDATA name="CustomScript"><![CDATA[IF EXISTS
+(
+	SELECT *
+	FROM SYS.views
+	WHERE name = 'v_LumCostSplit' AND SCHEMA_ID = SCHEMA_ID('dbo')
+)
+DROP VIEW [dbo].[v_LumCostSplit]	
+GO
+CREATE VIEW v_LumCostSplit AS
+SELECT
+		[Batch].[UsrSplited],
+		[Batch].[CompanyID],
+		[Batch].[Module], 
+		[Batch].[BatchNbr], 
+		[Batch].[Status], 
+		[Batch].[FinPeriodID],
+		[Batch].[CuryID], 
+		[Batch].[Description] as 'BatchDescription',
+		[Batch].[CreatedByID],
+		[Batch].[CreatedDateTime],
+		[Batch].[LastModifiedByID],
+		[Batch].[LastModifiedDateTime],
+		[Account].[AccountID], 
+		[Account].[AccountCD], 
+		[Account].[Description] as 'AccountDescription',
+		[Account].[Type] as 'AccountType',
+		[GLTran].[Qty], 
+		[GLTran].[DebitAmt], 
+		[GLTran].[CreditAmt], 
+		[InventoryItem].[InventoryID], 
+		[InventoryItem].[InventoryCD], 
+		[InventoryItem].[Descr] as 'INDescr', 
+		[GLTran].[Released] as 'GLReleased', 
+		[GLTran].[TranID] as 'GLTranID', 
+		[GLTran].[TranType] as 'GLTranType',
+		[GLTran].[LineNbr] as 'GLTranLineNbr',
+		[InventoryItem].[StdCost], 
+		[InventoryItem].[StdCostDate], 
+		ABS(CASE WHEN([GLTran].[DebitAmt] + [GLTran].[CreditAmt] = 0 OR ([GLTran].[Qty] = 0)) THEN 0 ELSE ([GLTran].[DebitAmt] + [GLTran].[CreditAmt]) / [GLTran].[Qty] END) AS 'UnitCost', 
+		(CASE WHEN CASE WHEN [GLTran].[Qty] <> 0 THEN ([GLTran].[DebitAmt] + [GLTran].[CreditAmt]) - ([InventoryItem].[StdCost] * ABS([GLTran].[Qty])) ELSE 0 END = 0 THEN '' ELSE 1 END) AS 'CostDiffer', 
+		(CASE WHEN [GLTran].[Qty] <> 0 THEN ([GLTran].[DebitAmt] + [GLTran].[CreditAmt]) - ([InventoryItem].[StdCost] * ABS([GLTran].[Qty])) ELSE 0 END) AS 'STDCostVariance',
+		[GLTran].[SubID]
+	from Batch
+	left join Ledger on Ledger.CompanyID = Batch.CompanyID and Ledger.LedgerID = Batch.LedgerID
+	left join Branch on Branch.CompanyID = Batch.CompanyID and Branch.BranchID = Batch.BranchID
+	inner join GLTran on GLTran.CompanyID = Batch.CompanyID and GLTran.BatchNbr = Batch.BatchNbr and GLTran.Module = Batch.Module
+	inner join Account on Account.CompanyID = GLTran.CompanyID and Account.AccountID = GLTran.AccountID
+	left join BAccount on BAccount.CompanyID = GLTran.CompanyID and BAccount.BAccountID = GLTran.ReferenceID
+	inner join InventoryItem on InventoryItem.CompanyID = GLTran.CompanyID and InventoryItem.InventoryID = GLTran.InventoryID
+	where Batch.CompanyID > 0 and Account.Type = 'E']]></CDATA>
+</Sql>

@@ -1,0 +1,38 @@
+﻿<Sql TableName="LumCostSplit" TableSchemaXml="#CDATA">
+    <CDATA name="TableSchemaXml"><![CDATA[<table name="LumCostSplit">
+  <col name="CompanyID" type="Int" default="Zero" />
+  <col name="LineNbr" type="Int" identity="true" />
+  <col name="Module" type="Char(2)" nullable="true" />
+  <col name="BatchNbr" type="NVarChar(15)" />
+  <col name="Status" type="Char(1)" nullable="true" />
+  <col name="FinPeriodID" type="Char(6)" nullable="true" />
+  <col name="CuryID" type="NVarChar(5)" nullable="true" />
+  <col name="Description" type="NVarChar(512)" nullable="true" />
+  <col name="CreatedByID" type="UniqueIdentifier" nullable="true" />
+  <col name="CreatedDateTime" type="DateTime" nullable="true" />
+  <col name="LastModifiedByID" type="UniqueIdentifier" nullable="true" />
+  <col name="LastModifiedDateTime" type="DateTime" nullable="true" />
+  <col name="AccountID" type="Int" />
+  <col name="AccountCD" type="NVarChar(10)" nullable="true" />
+  <col name="AccountDescription" type="NVarChar(60)" nullable="true" />
+  <col name="Qty" type="Decimal(19,6)" nullable="true" />
+  <col name="DebitAmt" type="Decimal(19,6)" nullable="true" />
+  <col name="CreditAmt" type="Decimal(19,6)" nullable="true" />
+  <col name="InventoryID" type="Int" />
+  <col name="InventoryCD" type="NVarChar(30)" nullable="true" />
+  <col name="InventoryDescr" type="NVarChar(256)" nullable="true" />
+  <col name="Released" type="Bit" nullable="true" />
+  <col name="TranID" type="Int" nullable="true" />
+  <col name="TranType" type="Char(3)" nullable="true" />
+  <col name="StdCost" type="Decimal(19,6)" nullable="true" />
+  <col name="StdCostDate" type="DateTime" nullable="true" />
+  <col name="UnitCost" type="Decimal(19,6)" nullable="true" />
+  <col name="CostDiffer" type="Char(1)" nullable="true" />
+  <col name="STDCostVariance" type="Decimal(19,6)" nullable="true" />
+  <col name="SubID" type="Int" nullable="true" />
+  <col name="UsrSplited" type="Bit" nullable="true" />
+  <index name="PK_LumCostSplit" clustered="true" primary="true" unique="true">
+    <col name="LineNbr" />
+  </index>
+</table>]]></CDATA>
+</Sql>
