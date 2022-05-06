@@ -15,8 +15,6 @@ namespace LumSplitVarianceCost.Graph
     public class CostSplitMaint : PXGraph<CostSplitMaint>
     {
         public PXFilter<CostSplitFilter> MasterFilter;
-
-        //public SelectFrom<LumCostSplit>.Where<LumCostSplit.finPeriodID.IsEqual<CostSplitFilter.finPeriodID.FromCurrent>>.OrderBy<Asc<LumCostSplit.inventoryCD>>.View DetailsView;
         public SelectFrom<v_LumCostSplit>.Where<v_LumCostSplit.finPeriodID.IsEqual<CostSplitFilter.finPeriodID.FromCurrent>>.OrderBy<Asc<v_LumCostSplit.inventoryCD>>.View DetailsView;
         public CostSplitMaint()
         {
@@ -30,23 +28,6 @@ namespace LumSplitVarianceCost.Graph
             var periodID = ((CostSplitFilter)this.Caches[typeof(CostSplitFilter)].Current)?.FinPeriodID;
             if (periodID != null)
             {
-                /*
-                var curLumCostSplit = SelectFrom<LumCostSplit>.Where<LumCostSplit.finPeriodID.IsEqual<@P.AsString>>.OrderBy<Asc<LumCostSplit.inventoryCD>>.View.Select(this, periodID);
-                //if (curLumCostSplit.RowCast<LumCostSplit>().ToList().Count() == 0)
-                if (curLumCostSplit != null && curLumCostSplit.Count > 0)
-                {
-                    foreach (LumCostSplit data in curLumCostSplit)
-                    {
-                        result.Add(data);
-                    }
-                    return result;
-                }
-                
-                
-                var pars = new List<PXSPParameter>();
-                PXSPParameter p0 = new PXSPInParameter("@P0", PXDbType.Char, periodID);
-                PXSPParameter companyID = new PXSPInParameter("@companyID", PXDbType.Int, PX.Data.Update.PXInstanceHelper.CurrentCompany);
-                */
                 var varAcct = SelectFrom<Account>.Where<Account.accountID.IsEqual<@P.AsInt>>.View.Select(this, SelectFrom<LumSTDCostVarSetup>.View.Select(this).TopFirst?.VarAcctID).TopFirst?.AccountCD;
                 if (varAcct == null) throw new PXException("Please set Variance Account in STD Cost Variance Account for Split");
 
@@ -59,36 +40,7 @@ namespace LumSplitVarianceCost.Graph
                     result.Add(line);
                 }
 
-                //PXResult<v_LumCostSplit> pXResult = SelectFrom<v_LumCostSplit>.
-                //                                    Where<v_LumCostSplit.finPeriodID.IsEqual<@P.AsString>.
-                //                                    And<v_LumCostSplit.costDiffer.IsEqual<@P.AsInt>.
-                //                                    And<v_LumCostSplit.accountID.IsNotEqual<@P.AsInt>>>>.
-                //                                    OrderBy<Asc<v_LumCostSplit.inventoryCD>>.View.Select(this, periodID, 1, SelectFrom<LumSTDCostVarSetup>.View.Select(this).TopFirst?.VarAcctID);
-
                 return result;
-
-                /*
-                PXSPParameter stCostVarAcct = new PXSPInParameter("@StCostVarAcct", varAcct);
-                pars.Add(p0);
-                pars.Add(companyID);
-                pars.Add(stCostVarAcct);
-
-                using (new PXConnectionScope())
-                {
-                    using (PXTransactionScope ts = new PXTransactionScope())
-                    {
-                        PXDatabase.Execute("SP_GenerateLumCostSplit", pars.ToArray());
-                        ts.Complete();
-                    }
-                }
-
-                PXView select = new PXView(this, true, DetailsView.View.BqlSelect);
-                int totalrow = 0;
-                int startrow = PXView.StartRow;
-                result = select.Select(PXView.Currents, PXView.Parameters, PXView.Searches, PXView.SortColumns, PXView.Descendings, PXView.Filters, ref startrow, PXView.MaximumRows, ref totalrow);
-                PXView.StartRow = 0;
-                return result;
-                */
             }
             return result;
         }

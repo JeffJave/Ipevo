@@ -296,48 +296,6 @@ namespace LumSplitVarianceCost.Graph
 
             throw new PXException("Process Completed");
 
-            /*
-            var curLumSTDCostVarSplit = SelectFrom<LumSTDCostVarSplit>.View.Select(this);
-            if (curLumSTDCostVarSplit.Count() == 0) throw new PXException("There is no data.");
-
-            JournalEntry journalEntry = PXGraph.CreateInstance<JournalEntry>();
-            Batch batch = journalEntry.BatchModule.Insert();
-            DateTime firstDayInFinPeriod = DateTime.ParseExact(curLumSTDCostVarSplit.TopFirst.FinPeriodID.ToString() + "01", "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
-            batch.DateEntered = firstDayInFinPeriod.AddMonths(1).AddDays(-firstDayInFinPeriod.AddMonths(1).Day);
-            journalEntry.BatchModule.Cache.RaiseFieldUpdated<Batch.dateEntered>(batch, null);
-            journalEntry.Actions.PressSave();
-
-            foreach (LumSTDCostVarSplit line in curLumSTDCostVarSplit)
-            {
-                if (line.AccountCD != iNAcct && line.SplitCost != 0m)
-                {
-                    GLTran gLTran = new GLTran();
-                    gLTran.AccountID = line.AccountID;
-                    journalEntry.GLTranModuleBatNbr.Cache.RaiseFieldUpdated<GLTran.accountID>(gLTran, null);
-                    gLTran.SubID = line.SubID; //iNSubAcctID;
-                    gLTran.InventoryID = line.InventoryID;
-                    if (line.SplitCost < 0) gLTran.CuryCreditAmt = Math.Abs((decimal)line.SplitCost);
-                    else gLTran.CuryDebitAmt = line.SplitCost;
-
-                    gLTran = journalEntry.GLTranModuleBatNbr.Insert(gLTran);
-                    journalEntry.Actions.PressSave();
-
-                    //STD Cost Variance
-                    GLTran gLTranVar = new GLTran();
-                    gLTranVar.AccountID = varAcct;
-                    journalEntry.GLTranModuleBatNbr.Cache.RaiseFieldUpdated<GLTran.accountID>(gLTranVar, null);
-                    gLTranVar.SubID = line.SubID; //iNSubAcctID;
-                    gLTranVar.InventoryID = line.InventoryID;
-                    if (line.SplitCost < 0) gLTranVar.CuryDebitAmt = Math.Abs((decimal)line.SplitCost);
-                    else gLTranVar.CuryCreditAmt = line.SplitCost;
-
-                    gLTranVar = journalEntry.GLTranModuleBatNbr.Insert(gLTranVar);
-                    journalEntry.Actions.PressSave();
-                }
-            }
-            */
-
-
             return adapter.Get();
         }
 
@@ -396,23 +354,11 @@ namespace LumSplitVarianceCost.Graph
                     iNUpdateStdCostProcess.ReleaseAdjustment();
 
                     dicInventory.Remove(((INUpdateStdCostRecord)row).InventoryID);
-                    //INUpdateStdCost.UpdateStdCost(iNUpdateStdCostProcess, row);
-                    //INUpdateStdCost.ReleaseAdjustment(iNUpdateStdCostProcess);
-                    //iNUpdateStdCostProcess.UpdateStdCost(row);
                 }
             }
 
             //Update flag in LUMSTDCostVarSetup table
             this.ProviderUpdate<LumSTDCostVarSetup>(new PXDataFieldAssign("EnableCreateAdjmOnLastDayInLastMonth", false));
-
-            //var tt = iNUpdateStdCost.INItemList.Select();
-
-            //INUpdateStdCostProcess iNUpdateStdCostProcess = PXGraph.CreateInstance<INUpdateStdCostProcess>();
-            //iNUpdateStdCostProcess.UpdateStdCost(iNUpdateStdCost.INItemList.Select());
-            //iNUpdateStdCostProcess.ReleaseAdjustment();
-
-            //INUpdateStdCost.UpdateStdCost(iNUpdateStdCostProcess, iNUpdateStdCost.INItemList.Select());
-            //INUpdateStdCost.ReleaseAdjustment(iNUpdateStdCostProcess);
 
             //Second Adjustment - New STD Cost, Fisrt day in the next ToPeriod
             DateTime firstDayInNextFinPeriod = DateTime.ParseExact(curLumSTDCostVarSplitHistory.TopFirst.FinPeriodID.ToString() + "01", "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture).AddMonths(1);
